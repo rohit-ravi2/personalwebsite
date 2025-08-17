@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Single theme palette (no dark mode) */
+    --background: 37 40% 92%;      /* light cream */
+    --foreground: 156 45% 12%;     /* deep forest green */
+
+    --card: 0 0% 100% / 0.55;      /* translucent white */
+    --card-foreground: 156 45% 12%;
+
+    --popover: 37 40% 96%;
+    --popover-foreground: 156 45% 12%;
+
+    --primary: 156 45% 22%;        /* forest */
+    --primary-foreground: 37 40% 96%;
+
+    --secondary: 156 25% 28%;
+    --secondary-foreground: 37 40% 96%;
+
+    --muted: 156 15% 28%;
+    --muted-foreground: 156 15% 35%;
+
+    --accent: 39 75% 45%;          /* golden amber */
+    --accent-foreground: 37 40% 96%;
+
+    --destructive: 0 84% 60%;      
+    --destructive-foreground: 37 40% 96%;
+
+    --border: 156 20% 80%;
+    --input: 156 20% 80%;
+    --ring: 156 45% 22%;
+
+    --radius: 1rem;
+
+    /* Charts (kept) */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen antialiased;
+    background: linear-gradient(135deg,
+      #ffecd2 0%,   /* peach */
+      #fcb69f 25%,  /* coral */
+      #a1c4fd 75%,  /* sky blue */
+      #c2e9fb 100%  /* aqua */
+    );
+    color: #0F3B2E;
+  }
+}
+
+@layer components {
+  /* Global card style */
+  .bg-card {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    @apply rounded-2xl shadow-lg transition-all duration-300 p-6;
+  }
+
+  .bg-card:hover {
+    background-color: hsl(0 0% 100% / 0.8); /* more opaque */
+    @apply shadow-2xl scale-[1.01] -translate-y-1;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+}
