@@ -9,6 +9,7 @@ import Projects from '../components/sections/Projects.astro'
 import StudyCard from '../components/sections/StudyCard.astro'
 import { PROFILE } from "../content/profileData";
 import BlogCard from '../components/sections/BlogCard.astro'
+
 const SITE = PROFILE.site
 ---
 
@@ -16,57 +17,105 @@ const SITE = PROFILE.site
   title={SITE.SEO.title}
   description={SITE.SEO.description}
 >
+  <!-- Loader -->
   <div
     slot="loader"
-    class="fixed top-0 right-0 bottom-0 left-0 z-50 flex h-screen w-screen items-center justify-center text-3xl font-black uppercase text-neutral-50 loader bg-darkslate-700"
+    class="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center text-3xl font-black uppercase text-neutral-50 bg-darkslate-700"
   >
   </div>
+
+  <!-- Main Content Grid -->
   <main
     transition:animate="fade"
     class="relative m-auto grid w-full max-w-6xl gap-2 overflow-hidden p-2 sm:gap-2 sm:p-4 md:grid-cols-2 md:gap-3 md:p-6 lg:grid-cols-12 lg:gap-4"
   >
+    <!-- Intro -->
     <Card colSpan="lg:col-span-9 md:col-span-2" rowSpan="md:row-span-1 lg:row-span-4">
       <IntroCard/>
     </Card>
-    <Card colSpan="lg:col-span-3 md:col-span-1" rowSpan="md:row-span-3 lg:row-span-6" title="About me">
+
+    <!-- About Me -->
+    <Card colSpan="lg:col-span-3 md:col-span-1" rowSpan="md:row-span-3 lg:row-span-6" title="About Me">
       <AboutMe/>
     </Card>
 
+    <!-- Projects -->
     <Card colSpan="lg:col-span-3 md:col-span-1" rowSpan="md:row-span-3 lg:row-span-4" title="Projects">
       <Projects/>
     </Card>
 
-    <!-- Removed Your time / My time cards -->
-
+    <!-- Quote -->
     <Card colSpan="lg:col-span-4 md:col-span-1" rowSpan="md:row-span-1 lg:row-span-2">
       <div class="flex h-full flex-col justify-between">
         <blockquote class="mt-6 border-l-2 pl-6 italic">
           “{PROFILE.words[0]}”
         </blockquote>
-        <p class="mt-2 text-xs"></p>
       </div>
     </Card>
-    <Card colSpan="md:col-span-1 lg:col-span-5" rowSpan="md:row-span-2 lg:row-span-2"
-          title="Education and Certificates">
+
+    <!-- Education -->
+    <Card colSpan="md:col-span-1 lg:col-span-5" rowSpan="md:row-span-2 lg:row-span-2" title="Education & Certificates">
       <StudyCard/>
     </Card>
 
+    <!-- Experiences -->
     <Card colSpan="md:col-span-1 lg:col-span-3" rowSpan="md:row-span-2 lg:row-span-2" title="Experiences">
       <ExperienceCard/>
     </Card>
 
+    <!-- Blog -->
     <Card colSpan="md:col-span-1 lg:col-span-6" rowSpan="md:row-span-1 lg:row-span-1" title="Blog Posts">
       <BlogCard/>
     </Card>
-    <Card colSpan="md:col-span-1 lg:col-span-3" rowSpan="md:row-span-2 lg:row-span-2" title="Books I read">
+
+    <!-- Reading List -->
+    <Card colSpan="md:col-span-1 lg:col-span-3" rowSpan="md:row-span-2 lg:row-span-2" title="Reading List">
       <Books/>
     </Card>
+
+    <!-- Contact -->
     <Card colSpan="md:col-span-1 lg:col-span-6" rowSpan="md:row-span-2 lg:row-span-1" title="Contact">
-      <div class="flex h-full w-full items-center justify-center text-center text-sm">
-        <i>
-          Please feel free to reach out to me through <a href={PROFILE.links.twitter} class="underline hover:font-bold">Twitter
-          message</a> or <a href={PROFILE.repo+'/issues'} class="underline hover:font-bold">Github issue</a>.
-        </i>
+      <div class="flex h-full w-full items-center justify-center">
+        <form
+          action="mailto:YOUR_EMAIL@gmail.com"
+          method="POST"
+          enctype="text/plain"
+          class="flex w-full max-w-md flex-col gap-3 text-sm"
+        >
+          <label for="name" class="text-left font-medium">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            class="rounded-md border border-gray-300 p-2 text-black"
+          />
+
+          <label for="email" class="text-left font-medium">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            class="rounded-md border border-gray-300 p-2 text-black"
+          />
+
+          <label for="message" class="text-left font-medium">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            required
+            class="rounded-md border border-gray-300 p-2 text-black"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="mt-2 rounded-md bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-800"
+          >
+            Send Message
+          </button>
+        </form>
       </div>
     </Card>
   </main>

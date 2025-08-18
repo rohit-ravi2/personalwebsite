@@ -1,5 +1,6 @@
 // Import utilities from `astro:content`
 import { z, defineCollection } from "astro:content";
+
 // Define a `type` and `schema` for each collection
 const projectCollection = defineCollection({
   type: "content",
@@ -28,12 +29,13 @@ const experienceCollection = defineCollection({
   }),
 });
 
+// ✅ Removed `slug` (Astro auto-generates it)
 const bookCollection = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
-    readYear: z.number(),
     author: z.string(),
+    readYear: z.number().optional().nullable(),
     tags: z.array(z.string()).optional(),
   }),
 });
