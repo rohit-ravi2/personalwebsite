@@ -1,0 +1,14 @@
+{
+  "classes": [
+    "Human",
+    "AI"
+  ],
+  "input_shape": [
+    1,
+    3,
+    128,
+    128
+  ],
+  "preprocessing": "resize to 128x128, divide by 255 (no further normalisation)",
+  "note": "PLACEHOLDER \u2014 randomly-initialised weights matching the architecture from the notebook. Predictions are ~uniform; replace with trained weights via scripts/train_art_classifier.py."
+}

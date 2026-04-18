@@ -5,7 +5,15 @@ description: "A deep-learning classifier that distinguishes AI-generated from hu
 tags: ["Deep Learning", "Computer Vision", "Interpretability", "CNNs"]
 ---
 
+import { ArtClassifierDemo } from "../../components/react/ArtClassifierDemo";
+
 A CNN classifier trained on the [Kaggle Human AI Artwork Dataset](https://www.kaggle.com/datasets/adamelkholyy/human-ai-artwork-dataset) (270k+ images across 47 style categories) that answers three progressively harder questions — is this image AI-generated; which generator made it; and what style is it in — while making its decisions inspectable.
+
+## Try it in your browser
+
+<ArtClassifierDemo client:only="react" />
+
+Everything runs locally via ONNX Runtime Web — the image never leaves your device. The saliency overlay is produced by sliding a 24×24 gray occlusion patch across the image and measuring how much the predicted-class confidence drops when each region is blocked.
 
 ## Results
 
