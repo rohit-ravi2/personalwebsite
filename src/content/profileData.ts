@@ -13,8 +13,8 @@ export const PROFILE = {
   headLine: "Bridging AI, Philosophy, and the Science of Mind",
   headLine2:
     "I explore consciousness and intelligence through data science, Vedanta, and computational models — building projects that connect science, philosophy, and technology.",
-  website: "https://rohitravi.com", // or GitHub Pages if not set up yet
-  repo: "https://github.com/rohit-ravi2/Portfolio",
+  website: "https://www.rohitravi.com",
+  repo: "https://github.com/rohit-ravi2/personalwebsite",
   avatarUrl: "https://avatars.githubusercontent.com/u/your-github-id", // update with real avatar later
   shortIntros: [
     "💻 Data Scientist | AI Researcher | Philosopher of Mind",
