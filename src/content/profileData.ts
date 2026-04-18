@@ -15,7 +15,7 @@ export const PROFILE = {
     "Undergraduate at NYU (Data Science, Philosophy minor). Working at the intersection of deep learning, computational neuroscience, and philosophy of mind — with a long-running interest in the Vedanta–science interface.",
   website: "https://www.rohitravi.com",
   repo: "https://github.com/rohit-ravi2/personalwebsite",
-  avatarUrl: "https://github.com/rohit-ravi2.png",
+  avatarUrl: "/avatar.png",
   shortIntros: [
     "Data Science @ NYU · Philosophy minor",
     "Research: connectomics, neural-symbolic reasoning, consciousness",
