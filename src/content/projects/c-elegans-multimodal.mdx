@@ -1,0 +1,31 @@
+---
+title: "C. elegans Connectomics + Transcriptomics"
+startDate: 2025-09-01
+description: "Multi-modal analysis asking how much of local wiring in a small nervous system is determined by topology vs. gene expression."
+tags: ["Connectomics", "Graph Neural Networks", "Computational Neuroscience", "Research"]
+---
+
+## Thesis
+
+Local connectomic topology in *C. elegans* is largely self-determining, while gene expression acts as a modulatory refinement layer rather than a primary architect of wiring.
+
+## What I built
+
+A multi-modal pipeline over the hermaphrodite *C. elegans* connectome (N=91 somatic neurons with both connectivity and single-cell expression data):
+
+- **GNCA (Graph Neural Cellular Automata)** predicting outgoing synaptic strength — **r = 0.987** on held-out edges. Controls: shuffled-expression r = 0.934 (topology carries the signal), graph-only r = 0.861, expression-only r = 0.27.
+- **Neuron-role classifier** — 92.7% accuracy predicting 3-class behavioral role (sensory / inter / motor) from expression alone.
+- **CCA** between expression space and motif space: canonical correlations ρ = [0.875, 0.836, 0.809].
+- **Honest null** — a PhaseD hybrid gene-graph LSTM showed `gene_causal_by_shuffle: False`: dynamics prediction doesn't improve with gene expression on this dataset.
+
+## Methodology notes
+
+- Shuffle / ablation / null controls throughout — the thesis rests on the *gap* between topology-only and expression-augmented models.
+- Triangulation across CCA (linear), GNCA (nonlinear message passing), and classifier probes.
+- Cross-species *Caenorhabditis* and parasitic-nematode genomes loaded for a planned comparative follow-up.
+
+## Status
+
+In progress. Draft manuscript structured around the topology-dominant / gene-modulatory framing. Target venues: *eLife*, *PLOS Computational Biology*, or *Network Neuroscience* for the main paper; NeurIPS GRL / ICLR LMRL workshops for the GNCA methods paper.
+
+Repo is private while the work is unfinished.

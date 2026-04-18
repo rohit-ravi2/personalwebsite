@@ -1,0 +1,29 @@
+---
+title: "HSDE — Hybrid Symbolic Discovery Engine"
+startDate: 2024-06-01
+description: "Neural-symbolic reasoning prototypes: a recursive CA + attention + symbolic hybrid, and an Enhanced Symbolic Discovery Engine targeting AIME / SAT / GSM8K."
+tags: ["Neural-Symbolic", "Reasoning", "LLMs", "Research"]
+---
+
+Exploratory architectures for reasoning systems that sit between pure neural methods and pure symbolic methods — built around the hypothesis that the right intermediate representation for LLM reasoning is a *rule-mined causal graph extracted from attention*, not free-form chain-of-thought.
+
+## Module 1 — ASI (Recursive CA + Attention + Symbolic)
+
+Phased architecture:
+
+1. 2D cellular automaton as a controllable dynamical substrate.
+2. Transformer trained on the CA trajectories with attention hooks exposed.
+3. Attention tensors → binary causal matrix → temporal causal graph → FP-growth rule mining over that graph.
+
+The bet: attention isn't the explanation, but the causal graph *built from* attention is a substrate you can do symbolic discovery on.
+
+## Module 2 — ESDE (Enhanced Symbolic Discovery Engine)
+
+Targets AIME / SAT / GSM8K via a neural-symbolic hybrid: Phi-3 / Mistral via Ollama → SketchNegotiator → RuleEngine backed by SymPy / Z3 → Contrastive Evolver → CodeBERT embeddings + FAISS MemoryGraph + FP-growth → FeedbackLoop.
+
+## Status
+
+Prototypes, not products. Architectural boundaries are clean and the core ideas survive contact with real data, but benchmark results, ablations, and end-to-end reliability aren't there yet. The strongest publishable slice is ASI Phases 1–3B with controlled experiments against a transformer-only baseline — fits ICLR ME-FoMo, NeurIPS SRI, or NeSy workshop.
+
+- Main repo: [rohit-ravi2/recursive-research](https://github.com/rohit-ravi2/recursive-research)
+- HSDE (nested, separate repo): [rohit-ravi2/hsde](https://github.com/rohit-ravi2/hsde)
