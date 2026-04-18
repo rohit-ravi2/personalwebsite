@@ -1,10 +1,42 @@
 ---
 import { PROFILE } from "../content/profileData";
+import { Github, Linkedin, Mail, Instagram } from "lucide-react";
 
 const year = new Date().getFullYear();
 ---
-<footer class="w-full max-w-screen-lg border-t py-6 md:py-8">
-  <div class="container mx-auto flex flex-col items-center justify-center gap-2 text-xs text-muted-foreground">
+<footer class="w-full max-w-screen-lg border-t mt-6 py-6">
+  <div class="container mx-auto flex flex-col items-center justify-between gap-3 px-4 text-xs text-muted-foreground md:flex-row">
     <p>© {year} {PROFILE.name}</p>
+    <nav class="flex items-center gap-4">
+      {PROFILE.links?.github && (
+        <a href={PROFILE.links.github} target="_blank" rel="noreferrer" aria-label="GitHub" class="hover:text-primary">
+          <Github size={16} />
+        </a>
+      )}
+      {PROFILE.links?.linkedin && (
+        <a href={PROFILE.links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" class="hover:text-primary">
+          <Linkedin size={16} />
+        </a>
+      )}
+      {PROFILE.links?.email && (
+        <a href={PROFILE.links.email} aria-label="Email" class="hover:text-primary">
+          <Mail size={16} />
+        </a>
+      )}
+      {PROFILE.links?.instagram && (
+        <a href={PROFILE.links.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" class="hover:text-primary">
+          <Instagram size={16} />
+        </a>
+      )}
+    </nav>
+    <nav class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/projects" class="hover:text-primary">Projects</a>
+      <span>·</span>
+      <a href="/experiences" class="hover:text-primary">Experience</a>
+      <span>·</span>
+      <a href="/certifications" class="hover:text-primary">Certifications</a>
+      <span>·</span>
+      <a href="/books" class="hover:text-primary">Books</a>
+    </nav>
   </div>
 </footer>

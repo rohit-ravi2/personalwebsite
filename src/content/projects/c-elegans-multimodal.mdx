@@ -26,6 +26,8 @@ A multi-modal pipeline over the hermaphrodite *C. elegans* connectome (N=91 soma
 - **CCA** between expression space and motif space: canonical correlations ρ = [0.875, 0.836, 0.809].
 - **Honest null** — a PhaseD hybrid gene-graph LSTM showed `gene_causal_by_shuffle: False`: dynamics prediction doesn't improve with gene expression on this dataset.
 
+<img src="/images/projects/celegans-collapse-curve.png" alt="Genetic collapse curve: model correlation (red) vs. cumulative top-driver gene knockouts, alongside average probability assigned to hub neurons (navy). Performance plateaus well above chance even after 200 genes removed — evidence of genetic redundancy supporting the topology-dominant thesis." class="mx-auto max-w-2xl rounded-lg border" />
+
 ## Methodology notes
 
 - Shuffle / ablation / null controls throughout — the thesis rests on the *gap* between topology-only and expression-augmented models.

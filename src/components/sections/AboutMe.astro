@@ -1,38 +1,26 @@
 ---
-import { getAndGroupUniqueTags } from "../../lib/utils";
 import { PROFILE } from "../../content/profileData";
-
-const tagsMap = await getAndGroupUniqueTags();
-const skills = PROFILE.skills;
 ---
 
-<div class="flex flex-col gap-2 animate-appear">
-  <p class="text-md font-medium mb-1">
-    {PROFILE.headLine}
+<div class="flex flex-col gap-3 animate-appear text-sm leading-relaxed">
+  <p>
+    I'm a Data Science major at NYU (Philosophy minor), working at the intersection
+    of deep learning, computational neuroscience, and philosophy of mind.
   </p>
-
-  <p class="text-sm font-light mb-1">
-    {PROFILE.headLine2}
+  <p>
+    My research threads braid together: a multi-modal study of the <em>C. elegans</em>
+    connectome asking how much of local wiring is determined by topology vs. gene
+    expression; neural-symbolic prototypes for reasoning systems that sit between
+    pure neural and pure symbolic methods; and a long-running writing project
+    mapping Advaita Vedanta and Sāṅkhya onto modern physics and cognitive science
+    — with <em>falsifiability</em> as the rule of engagement, not analogy.
   </p>
-
-  <hr/>
-
-  <p class="text-sm font-light">
-    Areas I work in:
+  <p class="text-muted-foreground">
+    I like small nervous systems, interpretability, and arguments that can lose.
   </p>
-  <ul class="list-inside list-disc text-sm">
-    {skills.map((skill) => (
-      tagsMap.has(skill) ? (
-        <li>
-          <a href={`/tags/${skill}`} class="hover:font-bold">{skill}</a>
-        </li>
-      ) : (
-        <li><span>{skill}</span></li>
-      )
-    ))}
-  </ul>
-
-  <p class="text-sm font-light">
-    More on <a href="/projects" class="underline hover:font-bold">Projects</a> and <a href="/experiences" class="underline hover:font-bold">Experience</a>.
+  <p class="pt-1">
+    More on <a href="/projects" class="underline hover:font-bold">Projects</a>,
+    {" "}<a href="/experiences" class="underline hover:font-bold">Experience</a>,
+    and <a href="/certifications" class="underline hover:font-bold">Certifications</a>.
   </p>
 </div>
