@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a2a4a"/>
+      <stop offset="100%" stop-color="#0f1a33"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- RR mark top-left -->
+  <rect x="64" y="64" width="96" height="96" rx="14" fill="#f2ead3"/>
+  <text x="112" y="112" text-anchor="middle" dominant-baseline="central"
+        font-family="'PT Serif', 'Georgia', serif" font-weight="700" font-size="56"
+        fill="#1a2a4a" letter-spacing="-1.5">RR</text>
+  <!-- Name -->
+  <text x="64" y="340" font-family="'PT Serif', 'Georgia', serif" font-weight="700" font-size="88" fill="#f2ead3">Rohit Ravi</text>
+  <!-- Tagline -->
+  <text x="64" y="410" font-family="'PT Serif', 'Georgia', serif" font-size="42" fill="#f2ead3" fill-opacity="0.82">AI, philosophy, and the science of mind.</text>
+  <!-- Sub -->
+  <text x="64" y="510" font-family="'PT Serif', 'Georgia', serif" font-size="28" fill="#f2ead3" fill-opacity="0.6">
+    Data Science @ NYU · Philosophy minor
+  </text>
+  <text x="64" y="545" font-family="'PT Serif', 'Georgia', serif" font-size="28" fill="#f2ead3" fill-opacity="0.6">
+    rohitravi.com
+  </text>
+</svg>

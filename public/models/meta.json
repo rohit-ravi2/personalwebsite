@@ -10,5 +10,5 @@
     128
   ],
   "preprocessing": "resize to 128x128, divide by 255 (no further normalisation)",
-  "note": "PLACEHOLDER \u2014 randomly-initialised weights matching the architecture from the notebook. Predictions are ~uniform; replace with trained weights via scripts/train_art_classifier.py."
+  "note": "Binary Human-vs-AI classifier (3-conv CNN, 32/64/64 filters + dense 128). Trained on a ~30,000-image subset of Hemg/AI-Generated-vs-Real-Images-Datasets (HuggingFace); Human=label 0, AI=label 1. Held-out validation accuracy: 0.938. A separate fuller model described on this page reaches 93.71% on the original 270k-image 47-category dataset \u2014 the in-browser demo intentionally uses a smaller, faster variant."
 }

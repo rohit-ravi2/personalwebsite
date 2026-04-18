@@ -25,6 +25,8 @@ Everything runs locally via ONNX Runtime Web — the image never leaves your dev
 
 Tuned architecture: 3 conv layers (32 → 64 → 64), batch norm, L2, dropout 0.42, lr 0.005.
 
+<img src="/images/projects/ai-art-confusion.png" alt="Confusion matrix for the tuned binary CNN — 14,391 Human correct, 36,586 AI correct, misclassifications symmetric" class="mx-auto max-w-md rounded-lg border" />
+
 ## Interpretability
 
 Three lenses on what the model learned:
@@ -32,6 +34,8 @@ Three lenses on what the model learned:
 - **Grad-CAM** — spatial attention maps per image, useful for checking whether the model keys on brushstroke-level features vs. composition-level ones.
 - **t-SNE / PCA** on the penultimate layer — clusters separate AI generators cleanly; human styles overlap more.
 - **Style prototypes** — per-class nearest neighbors to the class centroid, which surface what each style "looks like" to the model.
+
+<img src="/images/projects/ai-art-tsne.jpg" alt="t-SNE projection of the 47-style flat CNN's 128-dim latent space. AI sub-generators cluster tightly; human styles spread and overlap." class="mx-auto max-w-2xl rounded-lg border" />
 
 ## Takeaways
 

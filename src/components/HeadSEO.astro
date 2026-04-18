@@ -10,6 +10,7 @@ interface Props {
 
 const {title, description, ogImage, canonicalURL} = Astro.props
 const canonical = canonicalURL? canonicalURL: new URL(Astro.url.pathname, Astro.site)
+const resolvedOgImage = ogImage ?? new URL('/og-image.png', Astro.site)
 ---
 
 <meta charset="utf-8"/>
@@ -29,14 +30,8 @@ const canonical = canonicalURL? canonicalURL: new URL(Astro.url.pathname, Astro.
 <meta property="og:url" content={canonical}/>
 <meta property="og:title" content={title}/>
 <meta property="og:description" content={description}/>
-{
-  ogImage ?
-  <>
-    <meta property="og:image" content={ogImage}/>
-    <meta property="twitter:image" content={ogImage}/>
-  </>:
-  <></>
-  }
+<meta property="og:image" content={resolvedOgImage}/>
+<meta property="twitter:image" content={resolvedOgImage}/>
 
 <meta property="twitter:card" content="summary_large_image"/>
 <meta property="twitter:url" content={canonical}/>
