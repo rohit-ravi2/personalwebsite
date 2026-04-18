@@ -4,7 +4,12 @@ import { Button } from "../ui/button";
 
 let books = await getCollection("books");
 
-books.sort((a, b) => b.data.readYear - a.data.readYear);
+books.sort((a, b) => {
+  const ay = a.data.readYear ?? 0;
+  const by = b.data.readYear ?? 0;
+  if (by !== ay) return by - ay;
+  return a.data.title.localeCompare(b.data.title);
+});
 let topBooks = books.slice(0, 5);
 ---
 

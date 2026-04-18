@@ -15,22 +15,21 @@ projects.sort((a: any, b: any) => {
 ---
 
 <IndexPageLayout title="Projects" description="Projects I have worked on recently." subTitle="My Projects">
-  <div class="grid grid-cols-3 gap-3">
-
-  {
-    projects.map((entity: any) => (
-      <ProjectCard
-        key={entity.data.title}
-        href={'/projects/' + entity.slug}
-        heading={entity.data.title}
-        subheading={entity.data.description}
-        altText={entity?.data?.image.alt}
-        imagePath={entity?.data?.image.url}
-        dateStart={entity.data.startDate}
-      />
-    ))
-  }
-  </div>
-
-
+  {projects.length === 0 ? (
+    <p class="text-sm text-muted-foreground italic">More projects coming soon.</p>
+  ) : (
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((entity: any) => (
+        <ProjectCard
+          key={entity.data.title}
+          href={'/projects/' + entity.slug}
+          heading={entity.data.title}
+          subheading={entity.data.description}
+          altText={entity?.data?.image?.alt}
+          imagePath={entity?.data?.image?.url}
+          dateStart={entity.data.startDate}
+        />
+      ))}
+    </div>
+  )}
 </IndexPageLayout>

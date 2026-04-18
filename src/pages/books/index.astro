@@ -1,16 +1,17 @@
 ---
 import { getCollection } from "astro:content";
-import { formateLocalDate, formateLocalMonth } from "../../lib/utils";
-import { Badge } from "../../components/ui/badge";
 import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
-import { TableCell, TableRow, Table, TableHeader, TableHead, TableBody } from "../../components/ui/table";
+import { TableCell, TableRow, Table, TableBody } from "../../components/ui/table";
 import { ArrowRight } from "lucide-react";
 import ContentTags from "../../components/ContentTags.astro";
 
 const books = await getCollection('books');
 
 books.sort((a, b) => {
-  return new Date(b.data.startDate) - new Date(a.data.startDate);
+  const ay = a.data.readYear ?? 0;
+  const by = b.data.readYear ?? 0;
+  if (by !== ay) return by - ay;
+  return a.data.title.localeCompare(b.data.title);
 });
 ---
 <IndexPageLayout title="Books I have read"
@@ -25,8 +26,8 @@ books.sort((a, b) => {
             <TableCell className="font-medium ">
               <div class="flex flex-col gap-1 min-w-20">
                 <a
-                  href={'/books/' + entry.slug ?? ''}
-                  class={`font-semibold hover:font-extrabold ${entry?.slug ? 'text-primary' : 'text-foreground'}`}
+                  href={'/books/' + entry.slug}
+                  class="font-semibold text-primary hover:font-extrabold"
                 >
                   {entry.data.title}
                 </a>
@@ -37,11 +38,8 @@ books.sort((a, b) => {
               </div>
             </TableCell>
             <TableCell>
-              <div class="ml-4 flex p-2 flex-col gap-2  text-sm max-w-lg min-w-16 ">
-                {entry.data.company}
-
+              <div class="ml-4 flex p-2 flex-col gap-2 text-sm max-w-lg min-w-16">
                 <ContentTags tags={entry.data.tags} />
-
               </div>
             </TableCell>
             <TableCell>

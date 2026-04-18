@@ -1,60 +1,47 @@
 ---
-import {buttonVariants} from '../components/ui/button'
-import {PROFILE} from "../content/profileData";
-
-const SITE = PROFILE.site
+import { buttonVariants } from './ui/button'
+import { PROFILE } from "../content/profileData";
+import { ModeToggle } from "./react/ThemeToggle";
 ---
 
 <header
   class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
-  <div
-    class="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0"
-  >
-    <div class="flex gap-6 md:gap-10">
-      <a href="/" class="flex items-center space-x-2">
-        <span class="inline-block font-bold">{PROFILE.name}</span>
+  <div class="container flex h-16 items-center justify-between gap-2 px-4">
+    <a href="/" class="flex items-center space-x-2">
+      <span class="inline-block font-bold">{PROFILE.name}</span>
+    </a>
+    <nav class="flex items-center gap-1">
+      <a href="/projects" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Projects</a>
+      <a href="/experiences" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Experience</a>
+      <a href="/books" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Books</a>
+      <a href="/posts" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Blog</a>
+      <a
+        href={PROFILE.repo}
+        target="_blank"
+        rel="noreferrer"
+        class={buttonVariants({ variant: 'ghost', size: 'sm' })}
+      >
+        GitHub
       </a>
-    </div>
-    <div class="flex flex-1 items-center justify-end space-x-4">
-      <nav class="flex items-center space-x-1">
-        <a
-          href="/posts"
-          class={buttonVariants({variant: 'ghost'})}
-        >
-          Blog
-        </a>
-        <a
-          href="/projects"
-          class={buttonVariants({variant: 'ghost'})}
-        >
-          Projects
-        </a>
-        <a
-          href={PROFILE.repo}
-          target="_blank"
-          rel="noreferrer"
-          class={buttonVariants({variant: 'ghost'})}
-        >
-          GitHub
-        </a>
-
-      </nav>
-    </div>
+      <ModeToggle client:load />
+    </nav>
   </div>
 </header>
 
-
 <script is:inline>
-  document.addEventListener('astro:after-swap', function () {
-    if (localStorage.getItem('theme') === 'dark')
-      document.documentElement.classList.toggle('dark', true)
-  })
-
   const getThemePreference = () => {
-    return localStorage.getItem('theme')
-  }
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
 
-  const isDark = getThemePreference() === 'dark'
-  document.documentElement.classList[isDark ? 'add' : 'remove']('dark')
+  const applyTheme = () => {
+    const isDark = getThemePreference() === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+  };
+
+  applyTheme();
+  document.addEventListener('astro:after-swap', applyTheme);
 </script>

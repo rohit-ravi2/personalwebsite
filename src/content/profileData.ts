@@ -15,7 +15,7 @@ export const PROFILE = {
     "I explore consciousness and intelligence through data science, Vedanta, and computational models — building projects that connect science, philosophy, and technology.",
   website: "https://www.rohitravi.com",
   repo: "https://github.com/rohit-ravi2/personalwebsite",
-  avatarUrl: "https://avatars.githubusercontent.com/u/your-github-id", // update with real avatar later
+  avatarUrl: "https://github.com/rohit-ravi2.png",
   shortIntros: [
     "💻 Data Scientist | AI Researcher | Philosopher of Mind",
     "🧠 Exploring Consciousness, Connectomes, and Computational Neuroscience",
