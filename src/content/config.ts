@@ -57,10 +57,24 @@ const postCollection = defineCollection({
   }),
 });
 
+const certificationCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    issuer: z.string(),
+    issueDate: z.date(),
+    courseCount: z.number().optional(),
+    verifyUrl: z.string().optional(),
+    pdfPath: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
 // Export a single `collections` object to register your collection(s)
 export const collections = {
   projects: projectCollection,
   experiences: experienceCollection,
   books: bookCollection,
   posts: postCollection,
+  certifications: certificationCollection,
 };

@@ -1,0 +1,65 @@
+---
+import { getCollection } from "astro:content";
+import { formateLocalMonth } from "../../lib/utils";
+import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
+import { Badge } from "../../components/ui/badge";
+import { ExternalLink, FileText } from "lucide-react";
+
+const certs = await getCollection("certifications");
+
+certs.sort((a, b) => {
+  return new Date(b.data.issueDate).getTime() - new Date(a.data.issueDate).getTime();
+});
+---
+
+<IndexPageLayout
+  title="Certifications"
+  description="Coursera specializations, professional certificates, and applied projects."
+  subTitle="Certifications"
+>
+  {certs.length === 0 ? (
+    <p class="text-sm text-muted-foreground italic">No certifications yet.</p>
+  ) : (
+    <div class="flex flex-col gap-4">
+      {certs.map((cert) => (
+        <div class="rounded-lg border p-4 hover:border-primary transition-colors">
+          <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-start">
+            <div class="flex flex-col gap-1">
+              <a href={`/certifications/${cert.slug}`} class="text-lg font-semibold text-primary hover:underline">
+                {cert.data.title}
+              </a>
+              <p class="text-sm text-muted-foreground">
+                {cert.data.issuer}
+                {cert.data.courseCount && ` · ${cert.data.courseCount} courses`}
+                {` · ${formateLocalMonth(cert.data.issueDate)}`}
+              </p>
+              {cert.data.tags && (
+                <div class="flex gap-1 flex-wrap mt-1">
+                  {cert.data.tags.map((tag) => (
+                    <Badge variant="outline" className="text-xs">{tag}</Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div class="flex gap-3 text-sm shrink-0">
+              {cert.data.verifyUrl && (
+                <a href={cert.data.verifyUrl} target="_blank" rel="noreferrer"
+                   class="flex items-center gap-1 text-primary hover:underline">
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Verify
+                </a>
+              )}
+              {cert.data.pdfPath && (
+                <a href={cert.data.pdfPath} target="_blank" rel="noreferrer"
+                   class="flex items-center gap-1 text-primary hover:underline">
+                  <FileText className="h-3.5 w-3.5" />
+                  PDF
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</IndexPageLayout>

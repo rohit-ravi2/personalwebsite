@@ -34,16 +34,8 @@ export const PROFILE = {
   ],
   links: {
     github: "https://github.com/rohit-ravi2",
-    linkedin: "",
-    medium: "",
-    twitter: "",
-    bluesky: "",
-    thread: "",
-    mastodon: "",
-    youtube: "",
-    stackoverflow: "",
-    devto: "",
-    goodreads: "",
+    email: "mailto:rohit.ravi2@gmail.com",
+    instagram: "https://instagram.com/rohitravi_",
   },
   studies: [
     {
@@ -57,9 +49,19 @@ export const PROFILE = {
       institution: "NYU",
     },
     {
-      category: "Competition",
-      title: "Stanford RNA 3D Folding",
-      institution: "Kaggle",
+      category: "Certification",
+      title: "Computational Neuroscience",
+      institution: "University of Washington",
+    },
+    {
+      category: "Certification",
+      title: "Mind and Machine",
+      institution: "CU Boulder",
+    },
+    {
+      category: "Certification",
+      title: "Meta Data Analyst",
+      institution: "Meta · 5 courses",
     },
     {
       category: "Independent Research",

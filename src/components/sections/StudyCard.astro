@@ -1,9 +1,10 @@
 ---
 import { PROFILE } from "../../content/profileData";
+import { getCollection } from "astro:content";
 
 type Study = { category: string; title: string; institution?: string };
 
-const CATEGORY_ORDER = ["Education", "Coursework", "Competition", "Independent Research"];
+const CATEGORY_ORDER = ["Education", "Coursework", "Certification", "Independent Research"];
 
 const groups = new Map<string, Study[]>();
 for (const study of PROFILE.studies as Study[]) {
@@ -15,6 +16,8 @@ for (const study of PROFILE.studies as Study[]) {
 const orderedGroups = [...CATEGORY_ORDER, ...[...groups.keys()].filter((k) => !CATEGORY_ORDER.includes(k))]
   .filter((k) => groups.has(k))
   .map((k) => [k, groups.get(k)!] as const);
+
+const certCount = (await getCollection("certifications")).length;
 ---
 
 <div class="mt-1 flex flex-col gap-3 text-sm">
@@ -33,6 +36,11 @@ const orderedGroups = [...CATEGORY_ORDER, ...[...groups.keys()].filter((k) => !C
           </li>
         ))}
       </ul>
+      {category === "Certification" && certCount > 0 && (
+        <a href="/certifications" class="text-xs text-primary hover:underline mt-1 inline-block">
+          View all {certCount} certifications →
+        </a>
+      )}
     </div>
   ))}
 </div>

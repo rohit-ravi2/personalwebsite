@@ -1,0 +1,28 @@
+---
+title: "ARC Prize 2025"
+startDate: 2025-11-01
+description: "Ongoing attempt at the ARC-AGI benchmark — a pipeline-based approach to program synthesis, symmetry reasoning, and abstraction discovery."
+tags: ["ARC-AGI", "Program Synthesis", "Reasoning", "Research"]
+---
+
+**Status: work in progress.**
+
+Iterating on a pipeline-oriented approach to the [ARC-AGI](https://arcprize.org/) benchmark — the François Chollet-authored test suite that requires solving novel visual reasoning puzzles from a handful of training examples each. ARC resists the standard deep-learning playbook because every task is effectively out-of-distribution.
+
+## Architecture
+
+Built as a series of staged pipelines, each refining the previous. Core components include:
+
+- **Symmetry and transformation inference** — detect rotational, reflective, and color-permutation structure across training pairs before attempting synthesis.
+- **Multi-phase candidate generation** — symbolic rule proposals, program-space search, and learned priors running in parallel.
+- **Solution scoring** — IoU and exact-match metrics on held-out grids; calibration against ARC evaluation solutions.
+
+Current pipeline is at iteration 11 with multiple checkpoint directories per experimental phase.
+
+## What's still open
+
+- Wiring the symmetry detector to the full candidate proposer cleanly.
+- Coverage gaps on tasks that require novel primitive composition.
+- Establishing a reliable in-distribution validation split that tracks Kaggle leaderboard behavior.
+
+Repo is local while the architecture is still in flux.

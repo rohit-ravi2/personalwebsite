@@ -1,0 +1,23 @@
+---
+title: "Stanford RNA 3D Folding"
+startDate: 2025-06-01
+description: "Kaggle competition entry for predicting RNA 3D structure from sequence — a pipeline + evaluation stack using TM-align for structural scoring."
+tags: ["Deep Learning", "RNA", "Structural Biology", "Kaggle"]
+---
+
+Entry for the [Stanford RNA 3D Folding](https://www.kaggle.com/competitions/stanford-rna-3d-folding) Kaggle competition — predicting 3D atomic coordinates for RNA molecules from primary sequence, evaluated by structural similarity against experimentally determined targets.
+
+## What's in the repo
+
+Five iterative pipelines (`pipeline1` → `pipeline5`) progressing from baseline featurization to more sophisticated architectures, plus:
+
+- **TM-align integration** (`TMalign.cpp` compiled locally) for structural scoring against ground-truth coordinates — the closer the predicted tertiary structure, the higher the score.
+- **Evaluation harness** (`evaluation.ipynb`) running per-molecule structural comparisons and summarizing by length bin, family, and difficulty.
+
+## Approach
+
+RNA folding sits at an awkward intersection: much less data than protein folding (no RNA-level equivalent of AlphaFold's training set), but the same underlying physics. The pipelines explore featurization choices — base-pairing priors, sequence embeddings, pairwise distance maps — and evaluate which features carry the most signal once you score by TM-align rather than per-residue error.
+
+Primary artifacts (trained checkpoints, 290GB of competition sequence data) kept locally; repo carries the pipeline code and evaluation stack.
+
+Code: [github.com/rohit-ravi2/rnafold-v2](https://github.com/rohit-ravi2/rnafold-v2)

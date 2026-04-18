@@ -1,0 +1,22 @@
+---
+title: "NeurIPS Polymer Prediction"
+startDate: 2025-07-01
+description: "Kaggle competition for predicting polymer properties from SMILES-style representations — a multi-phase hybrid pipeline combining gradient-boosted and deep models."
+tags: ["Deep Learning", "Cheminformatics", "Gradient Boosting", "Kaggle"]
+---
+
+Entry for the NeurIPS 2025 Open Polymer Prediction Kaggle competition — predicting physical properties of polymers from their chemical structure representations.
+
+## Approach
+
+Split across five phased notebooks (`phase1` → `phase5`) plus a hybrid pipeline combining:
+
+- **CatBoost** on engineered chemical descriptors (the `catboost_info/` directory in the repo).
+- **Deep representations** via a hybrid pipeline notebook, exploring whether learned embeddings add signal over hand-crafted features.
+- **Track 2 notebook** — separate run targeting the competition's secondary evaluation criterion.
+
+## What I took from it
+
+The gradient-boosted baseline on engineered features was harder to beat than I expected. The hybrid model improves on it, but the gain is smaller than the corresponding jump you'd get from richer data — a reminder that in structured-prediction problems with limited labels, feature engineering still earns its keep.
+
+Code: [github.com/rohit-ravi2/neurips-polymerprediction](https://github.com/rohit-ravi2/neurips-polymerprediction)

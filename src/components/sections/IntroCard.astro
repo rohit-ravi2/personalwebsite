@@ -1,71 +1,44 @@
 ---
-import {Button} from '../ui/button'
-import {PROFILE} from "../../content/profileData";
-import {Linkedin, Github, Mail, Youtube, Twitter, Rss, Book, PanelsTopLeft} from 'lucide-react'
+import { Button } from '../ui/button'
+import { PROFILE } from "../../content/profileData";
+import { Github, Mail, Instagram } from 'lucide-react'
 ---
 
 <div class="flex h-full w-full animate-appear">
   <div class="flex flex-col justify-between gap-4 md:max-h-[300px]">
     <div class="flex h-full flex-col">
       <p class="m-0 text-xl font-light">
-        Hi, I'm
-        <b class="font-bold">{PROFILE.firstName}</b>.
+        Hi, I'm <b class="font-bold">{PROFILE.firstName}</b>.
       </p>
-      <ul class="pt-4">
-        {PROFILE.shortIntros.map((intro, index) => (
-          <>
-            {index === (PROFILE.shortIntros.length / 2)
-              //when it is even number, and in the middle add an empty line
-
-              ? <br/>
-              :
-              <></>
-            }
-            <li>{intro}</li>
-          </>
+      <ul class="pt-4 space-y-1">
+        {PROFILE.shortIntros.map((intro) => (
+          <li>{intro}</li>
         ))}
       </ul>
     </div>
-    <div class="flex gap-4">
-      <a href={PROFILE.links.github} aria-label="github profile" target="_blank">
-        <Button aria-label="github profile">
+    <div class="flex gap-2">
+      <a href={PROFILE.links.github} aria-label="GitHub profile" target="_blank" rel="noreferrer">
+        <Button aria-label="GitHub profile">
           <Github/>
-          <span class="sr-only">GitHub Profile</span>
+          <span class="sr-only">GitHub profile</span>
         </Button>
       </a>
-      {
-        PROFILE.links?.youtube && <a href={PROFILE.links.youtube} aria-label="youtube channel" target="_blank">
-          <Button aria-label="youtube channel">
-            <Youtube/>
-            <span class="sr-only">YouTube Channel</span>
+      {PROFILE.links?.email && (
+        <a href={PROFILE.links.email} aria-label="Email">
+          <Button aria-label="Email">
+            <Mail/>
+            <span class="sr-only">Email</span>
           </Button>
         </a>
-      }
-      {
-        PROFILE.links?.bluesky && <a href={PROFILE.links.bluesky} aria-label="bluesky profile" target="_blank">
-          <Button>
-            <PanelsTopLeft/>
-            <span class="sr-only">bluesky profile</span>
+      )}
+      {PROFILE.links?.instagram && (
+        <a href={PROFILE.links.instagram} aria-label="Instagram profile" target="_blank" rel="noreferrer">
+          <Button aria-label="Instagram profile">
+            <Instagram/>
+            <span class="sr-only">Instagram profile</span>
           </Button>
         </a>
-      }
-      {
-        PROFILE.links?.twitter && <a href={PROFILE.links.twitter} aria-label="twitter profile" target="_blank">
-          <Button>
-            <Twitter/>
-            <span class="sr-only">Twitter profile</span>
-          </Button>
-        </a>
-      }
-
-      {
-        PROFILE.links?.goodreads && <a href={PROFILE.links.goodreads} aria-label="goodreads profile" target="_blank">
-          <Button>
-            <Book/>
-            <span class="sr-only">Goodreads</span>
-          </Button>
-        </a>
-      }
+      )}
     </div>
   </div>
   <img
@@ -76,4 +49,3 @@ import {Linkedin, Github, Mail, Youtube, Twitter, Rss, Book, PanelsTopLeft} from
     alt={`image of ${PROFILE.name}`}
   />
 </div>
-
