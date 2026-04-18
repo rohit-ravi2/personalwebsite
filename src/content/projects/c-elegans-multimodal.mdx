@@ -5,9 +5,17 @@ description: "Multi-modal analysis asking how much of local wiring in a small ne
 tags: ["Connectomics", "Graph Neural Networks", "Computational Neuroscience", "Research"]
 ---
 
+import { ConnectomeExplorer } from "../../components/react/ConnectomeExplorer";
+
 ## Thesis
 
 Local connectomic topology in *C. elegans* is largely self-determining, while gene expression acts as a modulatory refinement layer rather than a primary architect of wiring.
+
+## Interactive: the hermaphrodite connectome
+
+<ConnectomeExplorer client:only="react" />
+
+Click any neuron class to highlight its immediate neighborhood — outgoing chemical synapses and gap junctions. Colors encode the 3-class behavioral role (sensory / inter / motor) that the expression-only classifier predicts at **92.7% accuracy** in this project.
 
 ## What I built
 
