@@ -9,6 +9,7 @@ image:
 ---
 
 import { ConnectomeExplorer } from "../../components/react/ConnectomeExplorer";
+import { WormBody } from "../../components/react/WormBody";
 
 ## Thesis
 
@@ -42,3 +43,11 @@ A multi-modal pipeline over the hermaphrodite *C. elegans* connectome (N=91 soma
 In progress. Draft manuscript structured around the topology-dominant / gene-modulatory framing. Target venues: *eLife*, *PLOS Computational Biology*, or *Network Neuroscience* for the main paper; NeurIPS GRL / ICLR LMRL workshops for the GNCA methods paper.
 
 Repo is private while the work is unfinished.
+
+## Digital worm — Phase 1a
+
+Early prototype of a long-term effort to build a browser-native, expression-aware *C. elegans* body simulator that plugs into the connectome-constrained brain model the analyses above feed into. Below is the 20-segment body performing kinematic sinusoidal wave locomotion. The underlying body geometry is a MuJoCo MJCF (`/data/wormbody.xml`) — 21 bodies, 20 joints, 19 muscle actuators — that the later phases will train physics-based controllers against.
+
+<WormBody client:only="react" />
+
+Next phases: (2) imitation learning on [Atanas et al. 2023](https://wormwideweb.org) worm kinematics with MuJoCo physics, (3) replacing the controller with a Brian2 LIF brain built from the Cook 2019 connectome + the GNCA-predicted synaptic weights, (4) connectome-and-expression-constrained perturbation experiments against known knockout phenotypes.
