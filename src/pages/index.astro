@@ -24,6 +24,8 @@ const SITE = PROFILE.site
   >
   </div>
 
+  <h1 class="sr-only">Rohit Ravi — {PROFILE.headLine} · Data Science (Philosophy minor) at New York University</h1>
+
   <!-- Main Content Grid -->
   <main
     transition:animate="fade"
@@ -46,8 +48,8 @@ const SITE = PROFILE.site
 
     <!-- Quote -->
     <Card colSpan="lg:col-span-4 md:col-span-1" rowSpan="md:row-span-1 lg:row-span-2">
-      <div class="flex h-full flex-col justify-between">
-        <blockquote class="mt-6 border-l-2 pl-6 italic">
+      <div class="flex h-full flex-col justify-center">
+        <blockquote class="italic text-center md:text-left md:border-l-2 md:pl-6">
           “{PROFILE.words[0]}”
         </blockquote>
       </div>

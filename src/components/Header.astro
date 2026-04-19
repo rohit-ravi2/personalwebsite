@@ -2,47 +2,118 @@
 import { buttonVariants } from './ui/button'
 import { PROFILE } from "../content/profileData";
 import { ModeToggle } from "./react/ThemeToggle";
+import { Menu, X } from "lucide-react";
+
+const navLinks = [
+  { href: "/projects", label: "Projects" },
+  { href: "/experiences", label: "Experience" },
+  { href: "/certifications", label: "Certifications" },
+  { href: "/books", label: "Books" },
+  { href: "/posts", label: "Blog" },
+];
 ---
 
-<header
-  class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
->
+<header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
   <div class="container flex h-16 items-center justify-between gap-2 px-4">
-    <a href="/" class="flex items-center space-x-2">
+    <a href="/" class="flex items-center space-x-2 shrink-0" aria-label="Rohit Ravi — home">
       <span class="inline-block font-bold">{PROFILE.name}</span>
     </a>
-    <nav class="flex items-center gap-1">
-      <a href="/projects" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Projects</a>
-      <a href="/experiences" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Experience</a>
-      <a href="/certifications" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Certifications</a>
-      <a href="/books" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Books</a>
-      <a href="/posts" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Blog</a>
-      <a
-        href={PROFILE.repo}
-        target="_blank"
-        rel="noreferrer"
-        class={buttonVariants({ variant: 'ghost', size: 'sm' })}
-      >
-        GitHub
-      </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
+      {navLinks.map((l) => (
+        <a href={l.href} class={buttonVariants({ variant: 'ghost', size: 'sm' })}>{l.label}</a>
+      ))}
+      <a href={PROFILE.repo} target="_blank" rel="noreferrer" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>GitHub</a>
       <ModeToggle client:load />
     </nav>
+
+    <!-- Mobile controls -->
+    <div class="flex md:hidden items-center gap-1">
+      <ModeToggle client:load />
+      <button
+        id="mobile-nav-toggle"
+        type="button"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+      >
+        <Menu className="h-5 w-5 mobile-nav-open-icon" aria-hidden="true" />
+        <X className="h-5 w-5 hidden mobile-nav-close-icon" aria-hidden="true" />
+      </button>
+    </div>
   </div>
+
+  <!-- Mobile dropdown panel -->
+  <nav
+    id="mobile-nav"
+    class="md:hidden hidden border-t bg-background/95 backdrop-blur"
+    aria-label="Mobile primary"
+  >
+    <ul class="flex flex-col p-2">
+      {navLinks.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            class="block rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+          >
+            {l.label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a
+          href={PROFILE.repo}
+          target="_blank"
+          rel="noreferrer"
+          class="block rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+        >
+          GitHub
+        </a>
+      </li>
+    </ul>
+  </nav>
 </header>
 
 <script is:inline>
-  const getThemePreference = () => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
+  // Theme init (runs before hydration to avoid dark-mode flash).
+  (() => {
+    const getThemePreference = () => {
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme');
+      }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    const applyTheme = () => {
+      const isDark = getThemePreference() === 'dark';
+      document.documentElement.classList.toggle('dark', isDark);
+    };
+    applyTheme();
+    document.addEventListener('astro:after-swap', applyTheme);
+  })();
+
+  // Mobile nav toggle — reattach on view transitions so it keeps working.
+  (() => {
+    function wire() {
+      const btn = document.getElementById('mobile-nav-toggle');
+      const nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      const openIcon = btn.querySelector('.mobile-nav-open-icon');
+      const closeIcon = btn.querySelector('.mobile-nav-close-icon');
+      const setOpen = (open) => {
+        nav.classList.toggle('hidden', !open);
+        btn.setAttribute('aria-expanded', String(open));
+        if (openIcon) openIcon.classList.toggle('hidden', open);
+        if (closeIcon) closeIcon.classList.toggle('hidden', !open);
+      };
+      btn.onclick = () => setOpen(nav.classList.contains('hidden'));
+      nav.querySelectorAll('a').forEach((a) => {
+        a.addEventListener('click', () => setOpen(false));
+      });
+      setOpen(false);
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  };
-
-  const applyTheme = () => {
-    const isDark = getThemePreference() === 'dark';
-    document.documentElement.classList.toggle('dark', isDark);
-  };
-
-  applyTheme();
-  document.addEventListener('astro:after-swap', applyTheme);
+    wire();
+    document.addEventListener('astro:after-swap', wire);
+  })();
 </script>

@@ -4,9 +4,9 @@ import { PROFILE } from "../../content/profileData";
 import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
 ---
 
-<div class="flex h-full w-full animate-appear">
-  <div class="flex flex-col justify-between gap-4 md:max-h-[300px]">
-    <div class="flex h-full flex-col">
+<div class="flex h-full w-full animate-appear flex-col md:flex-row">
+  <div class="flex flex-col justify-between gap-4 text-center md:text-left md:max-h-[300px] md:flex-1">
+    <div class="flex h-full flex-col items-center md:items-start">
       <p class="m-0 text-xl font-light">
         Hi, I'm <b class="font-bold">{PROFILE.firstName}</b>.
       </p>
@@ -16,34 +16,34 @@ import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
         ))}
       </ul>
     </div>
-    <div class="flex gap-2">
-      <a href={PROFILE.links.github} aria-label="GitHub profile" target="_blank" rel="noreferrer">
-        <Button aria-label="GitHub profile">
+    <div class="flex gap-2 justify-center md:justify-start">
+      <a href={PROFILE.links.github} aria-label="Rohit Ravi on GitHub" target="_blank" rel="noreferrer">
+        <Button aria-label="Rohit Ravi on GitHub">
           <Github/>
-          <span class="sr-only">GitHub profile</span>
+          <span class="sr-only">Rohit Ravi on GitHub</span>
         </Button>
       </a>
       {PROFILE.links?.linkedin && (
-        <a href={PROFILE.links.linkedin} aria-label="LinkedIn profile" target="_blank" rel="noreferrer">
-          <Button aria-label="LinkedIn profile">
+        <a href={PROFILE.links.linkedin} aria-label="Rohit Ravi on LinkedIn" target="_blank" rel="noreferrer">
+          <Button aria-label="Rohit Ravi on LinkedIn">
             <Linkedin/>
-            <span class="sr-only">LinkedIn profile</span>
+            <span class="sr-only">Rohit Ravi on LinkedIn</span>
           </Button>
         </a>
       )}
       {PROFILE.links?.email && (
-        <a href={PROFILE.links.email} aria-label="Email">
-          <Button aria-label="Email">
+        <a href={PROFILE.links.email} aria-label="Email Rohit Ravi">
+          <Button aria-label="Email Rohit Ravi">
             <Mail/>
-            <span class="sr-only">Email</span>
+            <span class="sr-only">Email Rohit Ravi</span>
           </Button>
         </a>
       )}
       {PROFILE.links?.instagram && (
-        <a href={PROFILE.links.instagram} aria-label="Instagram profile" target="_blank" rel="noreferrer">
-          <Button aria-label="Instagram profile">
+        <a href={PROFILE.links.instagram} aria-label="Rohit Ravi on Instagram" target="_blank" rel="noreferrer">
+          <Button aria-label="Rohit Ravi on Instagram">
             <Instagram/>
-            <span class="sr-only">Instagram profile</span>
+            <span class="sr-only">Rohit Ravi on Instagram</span>
           </Button>
         </a>
       )}
@@ -52,6 +52,6 @@ import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
   <img
     src={PROFILE.avatarUrl}
     class="hidden md:block h-auto max-h-[260px] w-auto self-center ml-auto select-none"
-    alt={`Portrait of ${PROFILE.name}`}
+    alt={`Portrait illustration of Rohit Ravi — NYU Data Science undergraduate researcher`}
   />
 </div>

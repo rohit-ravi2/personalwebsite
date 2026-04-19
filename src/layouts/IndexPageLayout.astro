@@ -23,12 +23,12 @@ if (!subTitle) {
         <div class="mb-8">
           <CustomisedBreadCrumbs/>
         </div>
-        <h2
-          class="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-center"
+        <h1
+          class="scroll-m-20 pb-2 text-2xl sm:text-3xl font-semibold tracking-tight first:mt-0 text-center"
         >
           {subTitle}
-        </h2>
-        <p class={`mx-10 italic py-4 text-sm ${description?.length > 50 ? 'text-left' : 'text-center'}`}>
+        </h1>
+        <p class="mx-auto max-w-prose px-2 italic py-4 text-sm text-center">
           {description}
         </p>
       </div>

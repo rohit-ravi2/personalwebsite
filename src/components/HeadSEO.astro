@@ -1,5 +1,6 @@
 ---
 import '@/styles/globals.css'
+import { PROFILE } from '../content/profileData'
 
 interface Props {
   title?: string
@@ -8,35 +9,120 @@ interface Props {
   canonicalURL?: URL
 }
 
-const {title, description, ogImage, canonicalURL} = Astro.props
-const canonical = canonicalURL? canonicalURL: new URL(Astro.url.pathname, Astro.site)
+const { title, description, ogImage, canonicalURL } = Astro.props
+const canonical = canonicalURL ? canonicalURL : new URL(Astro.url.pathname, Astro.site)
 const resolvedOgImage = ogImage ?? new URL('/og-image.png', Astro.site)
+
+// Ensure every page title surfaces "Rohit Ravi" for SEO + tab recognition.
+const rawTitle = title ?? PROFILE.site.SEO.title
+const seoTitle = rawTitle.toLowerCase().includes('rohit ravi')
+  ? rawTitle
+  : `${rawTitle} · Rohit Ravi`
+
+// Build a keyword string prominently featuring the name without keyword-stuffing.
+const KEYWORDS = [
+  'Rohit Ravi',
+  'Rohit Ravi portfolio',
+  'Rohit Ravi NYU',
+  'Rohit Ravi Data Science',
+  'Rohit Ravi AI researcher',
+  'rohitravi.com',
+  'AI researcher',
+  'computational neuroscience',
+  'connectomics',
+  'philosophy of mind',
+  'Vedanta and science',
+  'neural-symbolic reasoning',
+  'deep learning portfolio',
+  'NYU Data Science',
+].join(', ')
+
+const sameAs = Object.values(PROFILE.links ?? {}).filter(
+  (v): v is string => typeof v === 'string' && v.length > 0 && !v.startsWith('mailto:'),
+)
+
+// Person JSON-LD — keeps "Rohit Ravi" prominent in structured data.
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: PROFILE.name,
+  alternateName: ['Rohit', '@rohit-ravi2'],
+  url: PROFILE.website,
+  image: new URL('/avatar.png', Astro.site).toString(),
+  jobTitle: 'Undergraduate Researcher',
+  description: PROFILE.site.SEO.description,
+  email: PROFILE.links?.email?.replace(/^mailto:/, ''),
+  affiliation: {
+    '@type': 'CollegeOrUniversity',
+    name: 'New York University',
+    sameAs: 'https://www.nyu.edu/',
+  },
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: 'New York University',
+  },
+  knowsAbout: [
+    'Artificial Intelligence',
+    'Deep Learning',
+    'Computational Neuroscience',
+    'Connectomics',
+    'Graph Neural Networks',
+    'Philosophy of Mind',
+    'Consciousness Studies',
+    'Vedanta',
+    'Neural-Symbolic Reasoning',
+    'Data Science',
+  ],
+  sameAs,
+}
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: `${PROFILE.name} — ${PROFILE.headLine}`,
+  alternateName: 'Rohit Ravi personal website',
+  url: PROFILE.website,
+  author: { '@type': 'Person', name: PROFILE.name },
+}
 ---
 
 <meta charset="utf-8"/>
-<meta name="robots" content="index, follow"/>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
 <meta name="googlebot" content="index, follow"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="generator" content={Astro.generator}/>
+<meta name="author" content="Rohit Ravi"/>
+<meta name="keywords" content={KEYWORDS}/>
+<meta name="theme-color" content="#1a2a4a" media="(prefers-color-scheme: dark)"/>
+<meta name="theme-color" content="#f2ead3" media="(prefers-color-scheme: light)"/>
+<meta name="application-name" content="Rohit Ravi"/>
 <link rel="canonical" href={canonical}/>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-<title>{title}</title>
-<meta name="title" content={title}/>
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml"/>
+<title>{seoTitle}</title>
+<meta name="title" content={seoTitle}/>
 <meta name="description" content={description}/>
 
 <meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Rohit Ravi"/>
 <meta property="og:url" content={canonical}/>
-<meta property="og:title" content={title}/>
+<meta property="og:title" content={seoTitle}/>
 <meta property="og:description" content={description}/>
 <meta property="og:image" content={resolvedOgImage}/>
-<meta property="twitter:image" content={resolvedOgImage}/>
-
+<meta property="og:image:alt" content={`Rohit Ravi — ${PROFILE.headLine}`}/>
+<meta property="og:locale" content="en_US"/>
 <meta property="twitter:card" content="summary_large_image"/>
 <meta property="twitter:url" content={canonical}/>
-<meta property="twitter:title" content={title}/>
+<meta property="twitter:title" content={seoTitle}/>
 <meta property="twitter:description" content={description}/>
+<meta property="twitter:image" content={resolvedOgImage}/>
+<meta property="twitter:image:alt" content={`Rohit Ravi — ${PROFILE.headLine}`}/>
+
+<!-- Structured data: Person + WebSite -->
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"></noscript>
