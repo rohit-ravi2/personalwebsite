@@ -25,7 +25,7 @@ let topBooks = books.slice(0, 5);
             <a href={`/books/${book.slug}`} class="hover:font-bold hover:underline">
               {book.data.title}
             </a>
-            <span class="text-xs font-thin italic"> — {book.data.author}</span>
+            <span class="text-xs italic text-muted-foreground"> — {book.data.author}</span>
           </li>
         ))}
       </ul>

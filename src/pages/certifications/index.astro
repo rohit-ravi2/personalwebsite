@@ -28,7 +28,7 @@ certs.sort((a, b) => {
               <a href={`/certifications/${cert.slug}`} class="text-lg font-semibold text-primary hover:underline">
                 {cert.data.title}
               </a>
-              <p class="text-sm text-muted-foreground">
+              <p class="text-sm font-medium">
                 {cert.data.issuer}
                 {cert.data.courseCount && ` · ${cert.data.courseCount} courses`}
                 {` · ${formateLocalMonth(cert.data.issueDate)}`}
