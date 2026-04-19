@@ -23,7 +23,7 @@ const LOGICAL_BODY_LENGTH_PX = 380;
 const SEGMENT_LENGTH_PX = LOGICAL_BODY_LENGTH_PX / NUM_SEGMENTS;
 const PROPULSION_COEFF = 24;
 
-type Mode = "kinematic" | "physics" | "imitation";
+type Mode = "kinematic" | "physics" | "imitation" | "real";
 
 type PlaybackTrace = {
   meta: {
@@ -134,7 +134,9 @@ export function WormBody() {
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [physicsTrace, setPhysicsTrace] = useState<PlaybackTrace | null>(null);
   const [imitationTrace, setImitationTrace] = useState<PlaybackTrace | null>(null);
+  const [realTrace, setRealTrace] = useState<PlaybackTrace | null>(null);
   const [imitationErr, setImitationErr] = useState<string | null>(null);
+  const [realErr, setRealErr] = useState<string | null>(null);
   const [traceErr, setTraceErr] = useState<string | null>(null);
   const [width, setWidth] = useState(720);
 
@@ -147,8 +149,10 @@ export function WormBody() {
   paramRef.current = { mode, freq, wavelength, amplitude, paused, playbackSpeed };
   const physicsRef = useRef<PlaybackTrace | null>(null);
   const imitationRef = useRef<PlaybackTrace | null>(null);
+  const realRef = useRef<PlaybackTrace | null>(null);
   physicsRef.current = physicsTrace;
   imitationRef.current = imitationTrace;
+  realRef.current = realTrace;
 
   // Fetch both traces on mount.
   useEffect(() => {
@@ -157,9 +161,8 @@ export function WormBody() {
       .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
       .then((d: PlaybackTrace) => { if (!cancelled) setPhysicsTrace(d); })
       .catch((e) => { if (!cancelled) setTraceErr(String(e)); });
-    // Prefer learned trace; fall back to reference trajectory (the target
-    // the imitation controller learns to match) if training hasn't
-    // shipped a result yet.
+    // Imitation mode prefers the trained learned rollout; falls back to
+    // the synthetic reference (target trajectory) otherwise.
     fetch("/data/wormbody-learned-trace.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
       .then((d: PlaybackTrace) => { if (!cancelled) setImitationTrace(d); })
@@ -169,6 +172,12 @@ export function WormBody() {
           .then((d: PlaybackTrace) => { if (!cancelled) setImitationTrace(d); })
           .catch((e) => { if (!cancelled) setImitationErr(String(e)); }),
       );
+    // Real-worm mode plays back actual centerlines parsed from the
+    // Tierpsy test-data skeletons (Zenodo 3837679).
+    fetch("/data/wormbody-reference-real.json")
+      .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+      .then((d: PlaybackTrace) => { if (!cancelled) setRealTrace(d); })
+      .catch((e) => { if (!cancelled) setRealErr(String(e)); });
     return () => { cancelled = true; };
   }, []);
 
@@ -237,10 +246,16 @@ export function WormBody() {
 
         drawWorm(ctx, width, height, segs, segs[0].theta);
       } else {
-        // Physics / imitation playback
-        const tr = p.mode === "physics" ? physicsRef.current : imitationRef.current;
-        const loadErr = p.mode === "physics" ? traceErr : imitationErr;
-        const loadLabel = p.mode === "physics" ? "physics trace" : "imitation trace";
+        // Physics / imitation / real playback
+        const tr = p.mode === "physics" ? physicsRef.current
+                 : p.mode === "imitation" ? imitationRef.current
+                 : realRef.current;
+        const loadErr = p.mode === "physics" ? traceErr
+                      : p.mode === "imitation" ? imitationErr
+                      : realErr;
+        const loadLabel = p.mode === "physics" ? "physics trace"
+                        : p.mode === "imitation" ? "imitation trace"
+                        : "real-worm trace";
         if (!tr) {
           ctx.fillStyle = "rgba(247, 237, 211, 0.95)";
           ctx.fillRect(0, 0, width, height);
@@ -324,8 +339,8 @@ export function WormBody() {
   return (
     <div className="my-6 flex flex-col gap-3" ref={wrapRef}>
       {/* Mode toggle */}
-      <div className="inline-flex rounded-lg border p-0.5 text-xs w-fit self-start flex-wrap">
-        {(["kinematic", "physics", "imitation"] as Mode[]).map((m) => (
+      <div className="inline-flex flex-wrap rounded-lg border p-0.5 text-xs w-fit self-start gap-0.5">
+        {(["kinematic", "physics", "imitation", "real"] as Mode[]).map((m) => (
           <button
             key={m}
             onClick={() => setMode(m)}
@@ -333,7 +348,13 @@ export function WormBody() {
               mode === m ? "bg-primary text-primary-foreground" : "hover:bg-accent"
             }`}
           >
-            {m === "kinematic" ? "Kinematic (live)" : m === "physics" ? "Physics (MuJoCo CPG)" : "Imitation (RL-trained)"}
+            {m === "kinematic"
+              ? "Kinematic (live)"
+              : m === "physics"
+              ? "Physics (MuJoCo CPG)"
+              : m === "imitation"
+              ? "Imitation (RL-trained)"
+              : "Real worm (Tierpsy)"}
           </button>
         ))}
       </div>
@@ -411,6 +432,16 @@ export function WormBody() {
                   Body advances ~0.87 sim-m in 6 s → ~145 µm/s in real units, within the biological range for crawling <em>C. elegans</em>.
                 </>
               ) : traceErr ? <>Trace load failed: {traceErr}</> : "Loading physics trace…"
+            ) : mode === "real" ? (
+              realTrace ? (
+                <>
+                  <strong>Real <em>C. elegans</em> crawl.</strong>{" "}
+                  Centerlines extracted from the Tierpsy Tracker test dataset
+                  (Zenodo <a className="underline" href="https://zenodo.org/records/3837679">3837679</a>) — 49-point skeletons per frame, resampled to our 20-segment grid and normalised so body length = 1 sim-unit.
+                  The clip shown is worm #{realTrace.meta.source_worm_index ?? "?"} at source rate {(realTrace.meta.source_frame_rate_hz ?? 25).toFixed?.(0) ?? realTrace.meta.source_frame_rate_hz} Hz.
+                  Real worms don't perform pure forward crawl — they pause, reorient, and occasionally reverse — so expect noticeably different behavior from the simulated modes.
+                </>
+              ) : realErr ? <>Real-worm trace load failed: {realErr}</> : "Loading real-worm trace…"
             ) : (
               imitationTrace ? (
                 imitationInfo?.kind === "imitation_ppo_mlp" ? (
