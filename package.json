@@ -38,7 +38,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",
-    "moment-timezone": "^0.5.45",
+    "moment-timezone": "^0.6.0",
     "motion": "^10.18.0",
     "onnxruntime-web": "^1.24.3",
     "react": "^18.3.1",
