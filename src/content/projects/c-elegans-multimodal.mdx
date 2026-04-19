@@ -44,10 +44,14 @@ In progress. Draft manuscript structured around the topology-dominant / gene-mod
 
 Repo is private while the work is unfinished.
 
-## Digital worm — Phase 1a
+## Digital worm — embodied simulator in progress
 
-Early prototype of a long-term effort to build a browser-native, expression-aware *C. elegans* body simulator that plugs into the connectome-constrained brain model the analyses above feed into. Below is the 20-segment body performing kinematic sinusoidal wave locomotion. The underlying body geometry is a MuJoCo MJCF (`/data/wormbody.xml`) — 21 bodies, 20 joints, 19 muscle actuators — that the later phases will train physics-based controllers against.
+A long-term effort to build a browser-native, expression-aware *C. elegans* body simulator that plugs into the connectome-constrained brain model the analyses above feed into. The body is a MuJoCo MJCF (`/data/wormbody.xml`) — 21 bodies, 20 joints, 19 muscle actuators — and three controllers are running on it below:
 
 <WormBody client:only="react" />
 
-Next phases: (2) imitation learning on [Atanas et al. 2023](https://wormwideweb.org) worm kinematics with MuJoCo physics, (3) replacing the controller with a Brian2 LIF brain built from the Cook 2019 connectome + the GNCA-predicted synaptic weights, (4) connectome-and-expression-constrained perturbation experiments against known knockout phenotypes.
+- **Kinematic (live)** — browser-side wave-equation model with interactive sliders. Fast, smooth, not physics-constrained.
+- **Physics (MuJoCo CPG)** — the MJCF body driven by a tuned central-pattern-generator controller with anisotropic resistive-force-theory drag (c⊥/c∥ = 2.0). The anisotropy is what converts lateral undulation into forward thrust. Crawls at ~145 µm/s, in the biological range.
+- **Imitation (RL-trained)** — MLP policy trained with PPO against a biologically parameterised reference (Fang-Yen 2010 / Boyle-Berri-Cohen 2012 crawling parameters) using MSE-of-segment-positions as reward. The action is a residual on top of the CPG baseline, so training only has to learn the physics-vs-kinematics correction, not the whole gait. 120k env steps of training, final rollout crawls at ~117 µm/s with peak per-segment curvature of ~22°.
+
+Next phases: (3) swap the controller for a Brian2 LIF brain built from the Cook 2019 connectome + the GNCA-predicted synaptic weights (the C. elegans analog of Shiu et al. 2024's fly brain model); (4) connectome-and-expression-constrained perturbation experiments against known knockout phenotypes from the C. elegans behavioral genetics literature.
