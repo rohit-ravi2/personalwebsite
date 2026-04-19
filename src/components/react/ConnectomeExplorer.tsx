@@ -45,32 +45,7 @@ const LIGHT = {
   dim: "rgba(156,163,175,0.25)",
 };
 
-const DARK = {
-  sensory: "#f59e42",
-  inter: "#93c5fd",
-  motor: "#86efac",
-  other: "#9ca3af",
-  edgeChemical: "rgba(147,197,253,0.22)",
-  edgeGap: "rgba(245,158,66,0.24)",
-  edgeHighlight: "rgba(247,237,211,0.95)",
-  bg: "transparent",
-  text: "#f2ead3",
-  dim: "rgba(148,163,184,0.22)",
-};
-
-function useDarkMode() {
-  const [dark, setDark] = useState<boolean>(() =>
-    typeof document !== "undefined" && document.documentElement.classList.contains("dark"),
-  );
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const root = document.documentElement;
-    const obs = new MutationObserver(() => setDark(root.classList.contains("dark")));
-    obs.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => obs.disconnect();
-  }, []);
-  return dark;
-}
+const PALETTE = LIGHT;
 
 function useElementSize(): [React.RefObject<HTMLDivElement>, { w: number; h: number }] {
   const ref = useRef<HTMLDivElement>(null);
@@ -96,8 +71,7 @@ export function ConnectomeExplorer() {
   const [selected, setSelected] = useState<string | null>(null);
   const [showGap, setShowGap] = useState(true);
   const [showChemical, setShowChemical] = useState(true);
-  const dark = useDarkMode();
-  const palette = dark ? DARK : LIGHT;
+  const palette = PALETTE;
   const [wrapRef, { w, h }] = useElementSize();
   const fgRef = useRef<any>(null);
 

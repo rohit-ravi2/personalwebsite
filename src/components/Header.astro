@@ -1,7 +1,6 @@
 ---
 import { buttonVariants } from './ui/button'
 import { PROFILE } from "../content/profileData";
-import { ModeToggle } from "./react/ThemeToggle";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -25,12 +24,10 @@ const navLinks = [
         <a href={l.href} class={buttonVariants({ variant: 'ghost', size: 'sm' })}>{l.label}</a>
       ))}
       <a href={PROFILE.repo} target="_blank" rel="noreferrer" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>GitHub</a>
-      <ModeToggle client:load />
     </nav>
 
     <!-- Mobile controls -->
     <div class="flex md:hidden items-center gap-1">
-      <ModeToggle client:load />
       <button
         id="mobile-nav-toggle"
         type="button"
@@ -77,22 +74,6 @@ const navLinks = [
 </header>
 
 <script is:inline>
-  // Theme init (runs before hydration to avoid dark-mode flash).
-  (() => {
-    const getThemePreference = () => {
-      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-        return localStorage.getItem('theme');
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    };
-    const applyTheme = () => {
-      const isDark = getThemePreference() === 'dark';
-      document.documentElement.classList.toggle('dark', isDark);
-    };
-    applyTheme();
-    document.addEventListener('astro:after-swap', applyTheme);
-  })();
-
   // Mobile nav toggle — reattach on view transitions so it keeps working.
   (() => {
     function wire() {
@@ -116,4 +97,7 @@ const navLinks = [
     wire();
     document.addEventListener('astro:after-swap', wire);
   })();
+
+  // Scrub any stale .dark class applied by the old theme toggle.
+  document.documentElement.classList.remove('dark');
 </script>
