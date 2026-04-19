@@ -64,7 +64,7 @@ body {
     #ffecd2
   );
   background-size: 800% 800%;
-  animation: gradientFlow 100s ease-in-out infinite;
+  animation: gradientFlow 50s ease-in-out infinite;
   color: #0F3B2E;
 }
 
@@ -105,5 +105,67 @@ body {
   .c-breadcrumbs__separator {
     color: hsl(var(--muted-foreground));
     opacity: 0.7;
+  }
+
+  /* Override Tailwind Typography (`prose`) color tokens so MDX body,
+     headings, lists, bold, blockquotes, and links all render in the
+     site's forest ink — readable against the pastel gradient without
+     giving up the cream-on-gradient aesthetic. Hierarchy comes from
+     size + weight, not color variation. */
+  .prose {
+    --tw-prose-body: hsl(var(--foreground));
+    --tw-prose-headings: hsl(var(--foreground));
+    --tw-prose-lead: hsl(var(--foreground));
+    --tw-prose-links: hsl(var(--primary));
+    --tw-prose-bold: hsl(var(--foreground));
+    --tw-prose-counters: hsl(var(--foreground));
+    --tw-prose-bullets: hsl(var(--foreground));
+    --tw-prose-hr: hsl(var(--border));
+    --tw-prose-quotes: hsl(var(--foreground));
+    --tw-prose-quote-borders: hsl(var(--primary));
+    --tw-prose-captions: hsl(var(--muted-foreground));
+    --tw-prose-code: hsl(var(--foreground));
+    --tw-prose-pre-code: hsl(var(--foreground));
+    --tw-prose-pre-bg: hsl(0 0% 100% / 0.55);
+    --tw-prose-th-borders: hsl(var(--border));
+    --tw-prose-td-borders: hsl(var(--border));
+  }
+
+  /* Prose links — underlined by default so they're discoverable
+     without hover on the gradient backdrop. */
+  .prose a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 500;
+  }
+  .prose a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  /* Inline code — translucent cream background so it reads against the
+     gradient; keep it subtle so it doesn't compete with body text. */
+  .prose :where(code):not(:where([class~="not-prose"] *)) {
+    background-color: hsl(37 40% 92% / 0.7);
+    padding: 0.15em 0.4em;
+    border-radius: 0.25rem;
+    font-weight: 500;
+  }
+  .prose :where(code):not(:where([class~="not-prose"] *))::before,
+  .prose :where(code):not(:where([class~="not-prose"] *))::after {
+    content: "";
+  }
+
+  /* Code blocks — cream card treatment to match the rest of the site */
+  .prose pre {
+    background-color: hsl(37 40% 92% / 0.7);
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+  }
+
+  /* Blockquotes — forest ink, left border in primary green */
+  .prose blockquote {
+    border-left-width: 3px;
+    font-style: italic;
+    font-weight: 400;
   }
 }
