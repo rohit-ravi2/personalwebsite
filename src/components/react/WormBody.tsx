@@ -2,37 +2,46 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * WormBody — Phase 1a of the digital C. elegans project.
+ * WormBody — digital C. elegans body preview.
  *
- * Browser-side kinematic visualisation of a 20-segment worm performing
- * sinusoidal traveling-wave locomotion. The underlying body geometry
- * is the MuJoCo MJCF shipped at /data/wormbody.xml — that's the
- * scientific spec future phases will use for physics + RL. Here we
- * render a visual preview using a kinematic wave model so visitors
- * can see what the worm looks like moving without needing WASM MuJoCo
- * in the page.
+ * Two modes:
+ *   - "kinematic":   browser-side live wave model, interactive sliders for
+ *                    frequency, wavelength, curvature amplitude. Fast, always
+ *                    smooth. Useful for intuition and exploration.
+ *   - "physics":     plays back a precomputed MuJoCo physics trajectory
+ *                    driven by a central-pattern-generator controller with
+ *                    resistive-force-theory anisotropic drag. This is the
+ *                    actual physics that will drive Phase 2c imitation-
+ *                    learned controllers and Phase 3+ brain coupling.
  *
- * Wave equation: θ(s, t) = amplitude · sin(2π (s/λ − f·t))
- *   where s ∈ [0,1] is fractional arc length along the body and
- *   θ is the cumulative heading change per unit arc length.
- * Propulsion: forward speed ≈ k · frequency · amplitude² (empirical
- *   scaling from resistive-force-theory derivations on low-Re media).
+ * The underlying MuJoCo MJCF lives at /data/wormbody.xml. The physics
+ * trace lives at /data/wormbody-physics-trace.json.
  */
 
 const NUM_SEGMENTS = 20;
 const LOGICAL_BODY_LENGTH_PX = 380;
 const SEGMENT_LENGTH_PX = LOGICAL_BODY_LENGTH_PX / NUM_SEGMENTS;
-const PROPULSION_COEFF = 24; // px/sec per (freq * amp²)
+const PROPULSION_COEFF = 24;
 
-type WormState = {
-  headX: number;
-  headY: number;
-  heading: number;
-  timeSec: number;
+type Mode = "kinematic" | "physics";
+
+type PhysicsTrace = {
+  meta: {
+    num_segments: number;
+    num_frames: number;
+    record_hz: number;
+    duration_sec: number;
+    controller: { kind: string; freq_hz: number; wavelength_body: number; amplitude_rad: number };
+    drag: { kind: string; c_para: number; c_perp: number; anisotropy: number };
+    units: string;
+  };
+  frames: Array<{ t: number; positions: Array<[number, number]> }>;
 };
 
-function computeSegments(
-  state: WormState,
+type KinState = { headX: number; headY: number; heading: number; timeSec: number };
+
+function computeKinematicSegments(
+  state: KinState,
   freq: number,
   wavelength: number,
   amplitude: number,
@@ -43,8 +52,6 @@ function computeSegments(
   let heading = state.heading;
   segments.push({ x, y, theta: heading });
   for (let i = 0; i < NUM_SEGMENTS; i++) {
-    // Curvature integrated over this segment: the wave's second-derivative
-    // contribution scaled by amplitude gives the heading rate per arc-unit.
     const s = (i + 0.5) / NUM_SEGMENTS;
     const phase = 2 * Math.PI * (s / wavelength - freq * state.timeSec);
     const segCurvature = (amplitude * 2 * Math.PI / wavelength) * Math.cos(phase);
@@ -57,31 +64,101 @@ function computeSegments(
 }
 
 function segmentWidth(i: number, total: number): number {
-  // Tapered body: narrower at head (i=0) and tail (i=total-1), thickest mid-body.
   const t = i / (total - 1);
-  const profile = Math.sin(Math.PI * t); // 0→1→0
+  const profile = Math.sin(Math.PI * t);
   return 4 + 10 * profile;
+}
+
+function drawWorm(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  segments: Array<{ x: number; y: number }>,
+  headAngle: number,
+) {
+  ctx.clearRect(0, 0, width, height);
+  const bg = ctx.createRadialGradient(width / 2, height / 2, 40, width / 2, height / 2, Math.max(width, height));
+  bg.addColorStop(0, "rgba(247, 237, 211, 0.95)");
+  bg.addColorStop(1, "rgba(229, 215, 185, 0.92)");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(26, 42, 74, 0.06)";
+  ctx.lineWidth = 1;
+  const gridSize = 32;
+  ctx.beginPath();
+  for (let x = 0; x <= width; x += gridSize) {
+    ctx.moveTo(x, 0); ctx.lineTo(x, height);
+  }
+  for (let y = 0; y <= height; y += gridSize) {
+    ctx.moveTo(0, y); ctx.lineTo(width, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  for (let i = 0; i < segments.length - 1; i++) {
+    const a = segments[i];
+    const b = segments[i + 1];
+    const w = segmentWidth(i, segments.length);
+    ctx.strokeStyle = i === 0 ? "#1a2a4a" : "#2f5233";
+    ctx.lineWidth = w;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+
+  const head = segments[0];
+  ctx.fillStyle = "#f2ead3";
+  ctx.beginPath();
+  ctx.arc(head.x - 4 * Math.cos(headAngle), head.y - 4 * Math.sin(headAngle), 2.2, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 export function WormBody() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [freq, setFreq] = useState(1.5); // Hz
-  const [wavelength, setWavelength] = useState(0.7); // fraction of body length
-  const [amplitude, setAmplitude] = useState(0.9); // radians per 2π·s (wave curvature amplitude)
+  const [mode, setMode] = useState<Mode>("kinematic");
+
+  // Kinematic-mode controls
+  const [freq, setFreq] = useState(1.5);
+  const [wavelength, setWavelength] = useState(0.7);
+  const [amplitude, setAmplitude] = useState(0.9);
   const [paused, setPaused] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
+  const [trace, setTrace] = useState<PhysicsTrace | null>(null);
+  const [traceErr, setTraceErr] = useState<string | null>(null);
   const [width, setWidth] = useState(720);
 
-  // Runtime state lives in a ref so control changes don't blow away the worm's pose.
-  const stateRef = useRef<WormState>({
-    headX: 0,
-    headY: 0,
-    heading: 0,
-    timeSec: 0,
-  });
-  // Parameter refs mirror React state for the animation loop (closure capture).
-  const paramRef = useRef({ freq, wavelength, amplitude, paused });
-  paramRef.current = { freq, wavelength, amplitude, paused };
+  // Runtime state
+  const kinRef = useRef<KinState>({ headX: 0, headY: 0, heading: Math.PI, timeSec: 0 });
+  const physTimeRef = useRef(0); // elapsed sim-time in physics playback (seconds)
+
+  // Mirror controls into refs so the RAF loop sees the latest values.
+  const paramRef = useRef({ mode, freq, wavelength, amplitude, paused, playbackSpeed });
+  paramRef.current = { mode, freq, wavelength, amplitude, paused, playbackSpeed };
+  const traceRef = useRef<PhysicsTrace | null>(null);
+  traceRef.current = trace;
+
+  // Fetch the physics trace once on mount.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/data/wormbody-physics-trace.json")
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((d: PhysicsTrace) => {
+        if (!cancelled) setTrace(d);
+      })
+      .catch((e) => {
+        if (!cancelled) setTraceErr(String(e));
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   // Responsive width
   useEffect(() => {
@@ -96,12 +173,12 @@ export function WormBody() {
     return () => ro.disconnect();
   }, []);
 
-  // Initialise worm pose at center of canvas whenever dimensions change.
+  // Initialise kinematic worm pose when dimensions change.
   useEffect(() => {
-    stateRef.current = {
+    kinRef.current = {
       headX: width / 2 + LOGICAL_BODY_LENGTH_PX / 2,
       headY: 180,
-      heading: Math.PI, // initial heading points "backward" so the body trails to the right-start position
+      heading: Math.PI,
       timeSec: 0,
     };
   }, [width]);
@@ -121,83 +198,90 @@ export function WormBody() {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
 
-      const state = stateRef.current;
       const p = paramRef.current;
 
-      if (!p.paused) {
-        state.timeSec += dt;
-      }
-
-      const segs = computeSegments(state, p.freq, p.wavelength, p.amplitude);
-
-      // Forward propulsion: move head in the direction of the averaged body axis.
-      // Propulsion is driven by wave frequency × amplitude²; pause disables motion
-      // but leaves the wave evolving so you can still see the shape.
-      if (!p.paused) {
-        // Average heading from first 5 segments (the anterior half directs motion).
-        let meanHeading = 0;
-        for (let i = 0; i < 5; i++) meanHeading += segs[i].theta;
-        meanHeading /= 5;
-        const speed = PROPULSION_COEFF * p.freq * p.amplitude * p.amplitude;
-        state.headX += speed * Math.cos(meanHeading) * dt;
-        state.headY += speed * Math.sin(meanHeading) * dt;
-      }
-
-      // Wrap around (so the worm keeps going rather than leaving the canvas).
-      const margin = 40;
-      const effectiveW = width;
-      if (state.headX < -margin) state.headX += effectiveW + 2 * margin;
-      if (state.headX > effectiveW + margin) state.headX -= effectiveW + 2 * margin;
-      if (state.headY < -margin) state.headY += height + 2 * margin;
-      if (state.headY > height + margin) state.headY -= height + 2 * margin;
-
-      // Resize canvas each frame if width changed.
       if (canvas.width !== width) canvas.width = width;
       if (canvas.height !== height) canvas.height = height;
 
-      // Substrate (agar-ish): subtle speckled cream with a faint radial vignette.
-      ctx.clearRect(0, 0, width, height);
-      const bg = ctx.createRadialGradient(width / 2, height / 2, 40, width / 2, height / 2, Math.max(width, height));
-      bg.addColorStop(0, "rgba(247, 237, 211, 0.95)");
-      bg.addColorStop(1, "rgba(229, 215, 185, 0.92)");
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, width, height);
-      // Fine grid to suggest texture / scale
-      ctx.save();
-      ctx.strokeStyle = "rgba(26, 42, 74, 0.06)";
-      ctx.lineWidth = 1;
-      const gridSize = 32;
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += gridSize) {
-        ctx.moveTo(x, 0); ctx.lineTo(x, height);
-      }
-      for (let y = 0; y <= height; y += gridSize) {
-        ctx.moveTo(0, y); ctx.lineTo(width, y);
-      }
-      ctx.stroke();
-      ctx.restore();
+      if (p.mode === "kinematic") {
+        const state = kinRef.current;
+        if (!p.paused) state.timeSec += dt;
+        const segs = computeKinematicSegments(state, p.freq, p.wavelength, p.amplitude);
 
-      // Worm body: draw as a tapered chain of capsules.
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      for (let i = 0; i < segs.length - 1; i++) {
-        const a = segs[i];
-        const b = segs[i + 1];
-        const w = segmentWidth(i, segs.length);
-        ctx.strokeStyle = i === 0 ? "#1a2a4a" : "#2f5233";
-        ctx.lineWidth = w;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+        if (!p.paused) {
+          let meanHeading = 0;
+          for (let i = 0; i < 5; i++) meanHeading += segs[i].theta;
+          meanHeading /= 5;
+          const speed = PROPULSION_COEFF * p.freq * p.amplitude * p.amplitude;
+          state.headX += speed * Math.cos(meanHeading) * dt;
+          state.headY += speed * Math.sin(meanHeading) * dt;
+        }
+
+        const margin = 40;
+        if (state.headX < -margin) state.headX += width + 2 * margin;
+        if (state.headX > width + margin) state.headX -= width + 2 * margin;
+        if (state.headY < -margin) state.headY += height + 2 * margin;
+        if (state.headY > height + margin) state.headY -= height + 2 * margin;
+
+        drawWorm(ctx, width, height, segs, segs[0].theta);
+      } else {
+        // Physics playback
+        const tr = traceRef.current;
+        if (!tr) {
+          // waiting for trace — show a faint message
+          ctx.fillStyle = "rgba(247, 237, 211, 0.95)";
+          ctx.fillRect(0, 0, width, height);
+          ctx.fillStyle = "#6b5e3d";
+          ctx.font = "14px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(
+            traceErr ? `Trace failed to load: ${traceErr}` : "Loading physics trace…",
+            width / 2, height / 2,
+          );
+          rafId = requestAnimationFrame(draw);
+          return;
+        }
+
+        if (!p.paused) physTimeRef.current += dt * p.playbackSpeed;
+        const totalDur = tr.meta.duration_sec;
+        const tLoop = physTimeRef.current % totalDur;
+        const frameIdx = Math.min(
+          tr.frames.length - 1,
+          Math.floor((tLoop / totalDur) * tr.frames.length),
+        );
+        const framePositions = tr.frames[frameIdx].positions;
+
+        // Scale: spread sim-m range across a fixed visual size.
+        // Sim positions are in meters (model scale). Full body is ~1 m.
+        // Render body such that a 1-m body spans 400px.
+        const pxPerSimM = 220;
+        // Center trajectory in the canvas; track moving centroid so the
+        // worm doesn't wander off-screen — translate entire frame to
+        // keep the centroid pinned.
+        let cx = 0, cy = 0;
+        for (const [x, y] of framePositions) { cx += x; cy += y; }
+        cx /= framePositions.length;
+        cy /= framePositions.length;
+        const originX = width / 2 - cx * pxPerSimM;
+        const originY = height / 2 - cy * pxPerSimM;
+        const segs: Array<{ x: number; y: number; theta: number }> = [];
+        for (let i = 0; i < framePositions.length; i++) {
+          const [sx, sy] = framePositions[i];
+          const x = originX + sx * pxPerSimM;
+          const y = originY + sy * pxPerSimM;
+          let theta = 0;
+          if (i + 1 < framePositions.length) {
+            const [nx, ny] = framePositions[i + 1];
+            theta = Math.atan2(ny - sy, nx - sx);
+          } else if (i > 0) {
+            const [px, py] = framePositions[i - 1];
+            theta = Math.atan2(sy - py, sx - px);
+          }
+          segs.push({ x, y, theta });
+        }
+
+        drawWorm(ctx, width, height, segs, segs[0].theta);
       }
-      // Head marker — small dot indicating anterior.
-      const head = segs[0];
-      const headAngle = segs[0].theta;
-      ctx.fillStyle = "#f2ead3";
-      ctx.beginPath();
-      ctx.arc(head.x - 4 * Math.cos(headAngle), head.y - 4 * Math.sin(headAngle), 2.2, 0, Math.PI * 2);
-      ctx.fill();
 
       rafId = requestAnimationFrame(draw);
     };
@@ -206,70 +290,115 @@ export function WormBody() {
     return () => cancelAnimationFrame(rafId);
   }, [width]);
 
-  const reset = () => {
-    stateRef.current = {
+  const resetKin = () => {
+    kinRef.current = {
       headX: width / 2 + LOGICAL_BODY_LENGTH_PX / 2,
       headY: 180,
       heading: Math.PI,
       timeSec: 0,
     };
   };
+  const resetPhys = () => { physTimeRef.current = 0; };
+
+  const controllerInfo = trace?.meta.controller;
+  const dragInfo = trace?.meta.drag;
 
   return (
     <div className="my-6 flex flex-col gap-3" ref={wrapRef}>
+      {/* Mode toggle */}
+      <div className="inline-flex rounded-lg border p-0.5 text-xs w-fit self-start">
+        {(["kinematic", "physics"] as Mode[]).map((m) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+              mode === m ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+            }`}
+          >
+            {m === "kinematic" ? "Kinematic (live)" : "Physics (MuJoCo playback)"}
+          </button>
+        ))}
+      </div>
+
+      {/* Canvas */}
       <div className="rounded-lg border overflow-hidden">
         <canvas ref={canvasRef} className="block w-full" width={720} height={360} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-        <label className="flex flex-col gap-1">
-          <span className="font-medium">
-            Wave frequency · <span className="tabular-nums">{freq.toFixed(2)}</span> Hz
-          </span>
-          <input
-            type="range" min="0" max="4" step="0.05"
-            value={freq} onChange={(e) => setFreq(+e.target.value)}
-            className="accent-primary"
-          />
-        </label>
-        <label className="flex flex-col gap-1">
-          <span className="font-medium">
-            Wavelength · <span className="tabular-nums">{wavelength.toFixed(2)}</span> body
-          </span>
-          <input
-            type="range" min="0.3" max="1.5" step="0.02"
-            value={wavelength} onChange={(e) => setWavelength(+e.target.value)}
-            className="accent-primary"
-          />
-        </label>
-        <label className="flex flex-col gap-1">
-          <span className="font-medium">
-            Curvature · <span className="tabular-nums">{amplitude.toFixed(2)}</span> rad
-          </span>
-          <input
-            type="range" min="0" max="1.8" step="0.02"
-            value={amplitude} onChange={(e) => setAmplitude(+e.target.value)}
-            className="accent-primary"
-          />
-        </label>
-      </div>
-      <div className="flex flex-wrap items-center gap-2 text-xs">
-        <button
-          onClick={() => setPaused((v) => !v)}
-          className="rounded border px-3 py-1 hover:bg-accent"
-        >
-          {paused ? "Resume" : "Pause"}
-        </button>
-        <button
-          onClick={reset}
-          className="rounded border px-3 py-1 hover:bg-accent"
-        >
-          Reset position
-        </button>
-        <span className="text-muted-foreground ml-2">
-          20-segment kinematic preview. The <a href="/data/wormbody.xml" className="underline">MJCF body spec</a> (loadable in MuJoCo) is the
-          scientific artifact the next phase will train on.
-        </span>
-      </div>
+
+      {/* Mode-specific controls */}
+      {mode === "kinematic" ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <label className="flex flex-col gap-1">
+              <span className="font-medium">
+                Wave frequency · <span className="tabular-nums">{freq.toFixed(2)}</span> Hz
+              </span>
+              <input type="range" min="0" max="4" step="0.05"
+                value={freq} onChange={(e) => setFreq(+e.target.value)}
+                className="accent-primary"/>
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="font-medium">
+                Wavelength · <span className="tabular-nums">{wavelength.toFixed(2)}</span> body
+              </span>
+              <input type="range" min="0.3" max="1.5" step="0.02"
+                value={wavelength} onChange={(e) => setWavelength(+e.target.value)}
+                className="accent-primary"/>
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="font-medium">
+                Curvature · <span className="tabular-nums">{amplitude.toFixed(2)}</span> rad
+              </span>
+              <input type="range" min="0" max="1.8" step="0.02"
+                value={amplitude} onChange={(e) => setAmplitude(+e.target.value)}
+                className="accent-primary"/>
+            </label>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <button onClick={() => setPaused((v) => !v)} className="rounded border px-3 py-1 hover:bg-accent">
+              {paused ? "Resume" : "Pause"}
+            </button>
+            <button onClick={resetKin} className="rounded border px-3 py-1 hover:bg-accent">Reset position</button>
+            <span className="text-muted-foreground ml-2">
+              Browser-side wave kinematics. Interactive, not physics-constrained.
+            </span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <label className="flex flex-col gap-1">
+              <span className="font-medium">
+                Playback speed · <span className="tabular-nums">{playbackSpeed.toFixed(2)}×</span>
+              </span>
+              <input type="range" min="0.1" max="4" step="0.1"
+                value={playbackSpeed} onChange={(e) => setPlaybackSpeed(+e.target.value)}
+                className="accent-primary"/>
+            </label>
+            <div className="flex items-end gap-2">
+              <button onClick={() => setPaused((v) => !v)} className="rounded border px-3 py-1 hover:bg-accent">
+                {paused ? "Resume" : "Pause"}
+              </button>
+              <button onClick={resetPhys} className="rounded border px-3 py-1 hover:bg-accent">Restart</button>
+            </div>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {trace ? (
+              <>
+                <strong>6-second precomputed MuJoCo trace.</strong>{" "}
+                CPG controller ({controllerInfo?.freq_hz} Hz, {controllerInfo?.wavelength_body}-body wavelength, {controllerInfo?.amplitude_rad} rad amplitude)
+                driving position actuators on the {trace.meta.num_segments}-segment body.
+                Resistive-force-theory drag with anisotropy {dragInfo?.anisotropy}× (c⊥/c∥), which is what produces the net forward thrust from lateral undulation.
+                Frame rate: {trace.meta.record_hz} Hz. Body advances ~0.87 sim-m in 6 s → ~145 µm/s in real units, within the biological range for crawling <em>C. elegans</em>.
+              </>
+            ) : traceErr ? (
+              <>Trace load failed: {traceErr}</>
+            ) : (
+              "Loading physics trace…"
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -42,10 +42,14 @@ SEGMENT_LENGTH_M = 5.0e-2     # 50 sim-mm  (real: 50 µm)
 SEGMENT_RADIUS_M = 4.0e-2     # 40 sim-mm  (real: 40 µm)
 SUBSTRATE_CLEARANCE_M = 2 * SEGMENT_RADIUS_M
 JOINT_RANGE_RAD = 0.5         # ±0.5 rad per hinge ≈ max observed curvature
-JOINT_DAMPING = 0.001         # scaled damping
-JOINT_STIFFNESS = 0.0         # muscles supply active torque; body is soft
-ACTUATOR_GEAR = 0.001         # scales unit control command to realistic torque
-ACTUATOR_CTRLRANGE = (-1.0, 1.0)
+JOINT_DAMPING = 0.5           # damping large enough to stabilise strong muscle
+JOINT_STIFFNESS = 0.0         # body is soft — muscles define the shape
+# Position actuators: target angle ∈ [-0.5, 0.5], PD controller pushes
+# joint toward target. kp tuned for the scaled body mass so muscles can
+# actually bend the body at 1–2 Hz under anisotropic drag.
+ACTUATOR_KP = 60.0
+ACTUATOR_KV = 2.0
+ACTUATOR_CTRLRANGE = (-JOINT_RANGE_RAD, JOINT_RANGE_RAD)
 BODY_COLOR = "0.35 0.48 0.32 1"   # forest-greenish
 HEAD_COLOR = "0.25 0.38 0.25 1"   # slightly darker for the head
 SUBSTRATE_COLOR = "0.95 0.92 0.82 1"
@@ -72,7 +76,7 @@ def _render(num_segments: int) -> str:
     push('  <default>')
     push(f'    <joint damping="{JOINT_DAMPING}" stiffness="{JOINT_STIFFNESS}" limited="true" range="{-JOINT_RANGE_RAD} {JOINT_RANGE_RAD}"/>')
     push('    <geom density="1000" friction="0.5 0.1 0.01"/>')
-    push(f'    <motor ctrllimited="true" ctrlrange="{ACTUATOR_CTRLRANGE[0]} {ACTUATOR_CTRLRANGE[1]}" gear="{ACTUATOR_GEAR}"/>')
+    push(f'    <position ctrllimited="true" ctrlrange="{ACTUATOR_CTRLRANGE[0]} {ACTUATOR_CTRLRANGE[1]}" kp="{ACTUATOR_KP}" kv="{ACTUATOR_KV}"/>')
     push('  </default>')
     push('  <worldbody>')
     push(f'    <geom name="substrate" type="plane" size="0.01 0.01 0.001" rgba="{SUBSTRATE_COLOR}"/>')
@@ -111,7 +115,7 @@ def _render(num_segments: int) -> str:
     push('  </worldbody>')
     push('  <actuator>')
     for i in range(1, num_segments):
-        push(f'    <motor name="muscle_{i}" joint="hinge_{i}"/>')
+        push(f'    <position name="muscle_{i}" joint="hinge_{i}"/>')
     push('  </actuator>')
     push('  <sensor>')
     for i in range(num_segments):

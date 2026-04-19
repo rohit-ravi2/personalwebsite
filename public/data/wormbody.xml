@@ -7,9 +7,9 @@
     <global offwidth="1200" offheight="800"/>
   </visual>
   <default>
-    <joint damping="0.001" stiffness="0.0" limited="true" range="-0.5 0.5"/>
+    <joint damping="0.5" stiffness="0.0" limited="true" range="-0.5 0.5"/>
     <geom density="1000" friction="0.5 0.1 0.01"/>
-    <motor ctrllimited="true" ctrlrange="-1.0 1.0" gear="0.001"/>
+    <position ctrllimited="true" ctrlrange="-0.5 0.5" kp="60.0" kv="2.0"/>
   </default>
   <worldbody>
     <geom name="substrate" type="plane" size="0.01 0.01 0.001" rgba="0.95 0.92 0.82 1"/>
@@ -96,25 +96,25 @@
       </body>
   </worldbody>
   <actuator>
-    <motor name="muscle_1" joint="hinge_1"/>
-    <motor name="muscle_2" joint="hinge_2"/>
-    <motor name="muscle_3" joint="hinge_3"/>
-    <motor name="muscle_4" joint="hinge_4"/>
-    <motor name="muscle_5" joint="hinge_5"/>
-    <motor name="muscle_6" joint="hinge_6"/>
-    <motor name="muscle_7" joint="hinge_7"/>
-    <motor name="muscle_8" joint="hinge_8"/>
-    <motor name="muscle_9" joint="hinge_9"/>
-    <motor name="muscle_10" joint="hinge_10"/>
-    <motor name="muscle_11" joint="hinge_11"/>
-    <motor name="muscle_12" joint="hinge_12"/>
-    <motor name="muscle_13" joint="hinge_13"/>
-    <motor name="muscle_14" joint="hinge_14"/>
-    <motor name="muscle_15" joint="hinge_15"/>
-    <motor name="muscle_16" joint="hinge_16"/>
-    <motor name="muscle_17" joint="hinge_17"/>
-    <motor name="muscle_18" joint="hinge_18"/>
-    <motor name="muscle_19" joint="hinge_19"/>
+    <position name="muscle_1" joint="hinge_1"/>
+    <position name="muscle_2" joint="hinge_2"/>
+    <position name="muscle_3" joint="hinge_3"/>
+    <position name="muscle_4" joint="hinge_4"/>
+    <position name="muscle_5" joint="hinge_5"/>
+    <position name="muscle_6" joint="hinge_6"/>
+    <position name="muscle_7" joint="hinge_7"/>
+    <position name="muscle_8" joint="hinge_8"/>
+    <position name="muscle_9" joint="hinge_9"/>
+    <position name="muscle_10" joint="hinge_10"/>
+    <position name="muscle_11" joint="hinge_11"/>
+    <position name="muscle_12" joint="hinge_12"/>
+    <position name="muscle_13" joint="hinge_13"/>
+    <position name="muscle_14" joint="hinge_14"/>
+    <position name="muscle_15" joint="hinge_15"/>
+    <position name="muscle_16" joint="hinge_16"/>
+    <position name="muscle_17" joint="hinge_17"/>
+    <position name="muscle_18" joint="hinge_18"/>
+    <position name="muscle_19" joint="hinge_19"/>
   </actuator>
   <sensor>
     <framepos name="pos_segment_0" objtype="body" objname="segment_0"/>
