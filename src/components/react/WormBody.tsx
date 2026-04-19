@@ -23,17 +23,20 @@ const LOGICAL_BODY_LENGTH_PX = 380;
 const SEGMENT_LENGTH_PX = LOGICAL_BODY_LENGTH_PX / NUM_SEGMENTS;
 const PROPULSION_COEFF = 24;
 
-type Mode = "kinematic" | "physics";
+type Mode = "kinematic" | "physics" | "imitation";
 
-type PhysicsTrace = {
+type PlaybackTrace = {
   meta: {
     num_segments: number;
     num_frames: number;
     record_hz: number;
     duration_sec: number;
-    controller: { kind: string; freq_hz: number; wavelength_body: number; amplitude_rad: number };
-    drag: { kind: string; c_para: number; c_perp: number; anisotropy: number };
-    units: string;
+    controller?: Record<string, any>;
+    drag?: Record<string, any>;
+    parameters?: Record<string, any>;
+    source?: string;
+    references?: string[];
+    units?: string;
   };
   frames: Array<{ t: number; positions: Array<[number, number]> }>;
 };
@@ -129,7 +132,9 @@ export function WormBody() {
   const [amplitude, setAmplitude] = useState(0.9);
   const [paused, setPaused] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
-  const [trace, setTrace] = useState<PhysicsTrace | null>(null);
+  const [physicsTrace, setPhysicsTrace] = useState<PlaybackTrace | null>(null);
+  const [imitationTrace, setImitationTrace] = useState<PlaybackTrace | null>(null);
+  const [imitationErr, setImitationErr] = useState<string | null>(null);
   const [traceErr, setTraceErr] = useState<string | null>(null);
   const [width, setWidth] = useState(720);
 
@@ -140,23 +145,30 @@ export function WormBody() {
   // Mirror controls into refs so the RAF loop sees the latest values.
   const paramRef = useRef({ mode, freq, wavelength, amplitude, paused, playbackSpeed });
   paramRef.current = { mode, freq, wavelength, amplitude, paused, playbackSpeed };
-  const traceRef = useRef<PhysicsTrace | null>(null);
-  traceRef.current = trace;
+  const physicsRef = useRef<PlaybackTrace | null>(null);
+  const imitationRef = useRef<PlaybackTrace | null>(null);
+  physicsRef.current = physicsTrace;
+  imitationRef.current = imitationTrace;
 
-  // Fetch the physics trace once on mount.
+  // Fetch both traces on mount.
   useEffect(() => {
     let cancelled = false;
     fetch("/data/wormbody-physics-trace.json")
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((d: PhysicsTrace) => {
-        if (!cancelled) setTrace(d);
-      })
-      .catch((e) => {
-        if (!cancelled) setTraceErr(String(e));
-      });
+      .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+      .then((d: PlaybackTrace) => { if (!cancelled) setPhysicsTrace(d); })
+      .catch((e) => { if (!cancelled) setTraceErr(String(e)); });
+    // Prefer learned trace; fall back to reference trajectory (the target
+    // the imitation controller learns to match) if training hasn't
+    // shipped a result yet.
+    fetch("/data/wormbody-learned-trace.json")
+      .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+      .then((d: PlaybackTrace) => { if (!cancelled) setImitationTrace(d); })
+      .catch(() =>
+        fetch("/data/wormbody-reference-trace.json")
+          .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+          .then((d: PlaybackTrace) => { if (!cancelled) setImitationTrace(d); })
+          .catch((e) => { if (!cancelled) setImitationErr(String(e)); }),
+      );
     return () => { cancelled = true; };
   }, []);
 
@@ -225,17 +237,22 @@ export function WormBody() {
 
         drawWorm(ctx, width, height, segs, segs[0].theta);
       } else {
-        // Physics playback
-        const tr = traceRef.current;
+        // Physics / imitation playback
+        const tr = p.mode === "physics" ? physicsRef.current : imitationRef.current;
+        const loadErr = p.mode === "physics" ? traceErr : imitationErr;
+        const loadLabel = p.mode === "physics" ? "physics trace" : "imitation trace";
         if (!tr) {
-          // waiting for trace — show a faint message
           ctx.fillStyle = "rgba(247, 237, 211, 0.95)";
           ctx.fillRect(0, 0, width, height);
           ctx.fillStyle = "#6b5e3d";
           ctx.font = "14px sans-serif";
           ctx.textAlign = "center";
           ctx.fillText(
-            traceErr ? `Trace failed to load: ${traceErr}` : "Loading physics trace…",
+            loadErr
+              ? p.mode === "imitation"
+                ? "Imitation controller not yet available — training in progress."
+                : `Trace failed to load: ${loadErr}`
+              : `Loading ${loadLabel}…`,
             width / 2, height / 2,
           );
           rafId = requestAnimationFrame(draw);
@@ -300,14 +317,15 @@ export function WormBody() {
   };
   const resetPhys = () => { physTimeRef.current = 0; };
 
-  const controllerInfo = trace?.meta.controller;
-  const dragInfo = trace?.meta.drag;
+  const controllerInfo = physicsTrace?.meta.controller;
+  const dragInfo = physicsTrace?.meta.drag;
+  const imitationInfo = imitationTrace?.meta.controller;
 
   return (
     <div className="my-6 flex flex-col gap-3" ref={wrapRef}>
       {/* Mode toggle */}
-      <div className="inline-flex rounded-lg border p-0.5 text-xs w-fit self-start">
-        {(["kinematic", "physics"] as Mode[]).map((m) => (
+      <div className="inline-flex rounded-lg border p-0.5 text-xs w-fit self-start flex-wrap">
+        {(["kinematic", "physics", "imitation"] as Mode[]).map((m) => (
           <button
             key={m}
             onClick={() => setMode(m)}
@@ -315,7 +333,7 @@ export function WormBody() {
               mode === m ? "bg-primary text-primary-foreground" : "hover:bg-accent"
             }`}
           >
-            {m === "kinematic" ? "Kinematic (live)" : "Physics (MuJoCo playback)"}
+            {m === "kinematic" ? "Kinematic (live)" : m === "physics" ? "Physics (MuJoCo CPG)" : "Imitation (RL-trained)"}
           </button>
         ))}
       </div>
@@ -383,18 +401,34 @@ export function WormBody() {
             </div>
           </div>
           <div className="text-xs text-muted-foreground">
-            {trace ? (
-              <>
-                <strong>6-second precomputed MuJoCo trace.</strong>{" "}
-                CPG controller ({controllerInfo?.freq_hz} Hz, {controllerInfo?.wavelength_body}-body wavelength, {controllerInfo?.amplitude_rad} rad amplitude)
-                driving position actuators on the {trace.meta.num_segments}-segment body.
-                Resistive-force-theory drag with anisotropy {dragInfo?.anisotropy}× (c⊥/c∥), which is what produces the net forward thrust from lateral undulation.
-                Frame rate: {trace.meta.record_hz} Hz. Body advances ~0.87 sim-m in 6 s → ~145 µm/s in real units, within the biological range for crawling <em>C. elegans</em>.
-              </>
-            ) : traceErr ? (
-              <>Trace load failed: {traceErr}</>
+            {mode === "physics" ? (
+              physicsTrace ? (
+                <>
+                  <strong>6-second precomputed MuJoCo trace.</strong>{" "}
+                  CPG controller ({controllerInfo?.freq_hz} Hz, {controllerInfo?.wavelength_body}-body wavelength, {controllerInfo?.amplitude_rad} rad amplitude)
+                  driving position actuators on the {physicsTrace.meta.num_segments}-segment body.
+                  Resistive-force-theory drag with anisotropy {dragInfo?.anisotropy}× (c⊥/c∥), which produces the net forward thrust from lateral undulation.
+                  Body advances ~0.87 sim-m in 6 s → ~145 µm/s in real units, within the biological range for crawling <em>C. elegans</em>.
+                </>
+              ) : traceErr ? <>Trace load failed: {traceErr}</> : "Loading physics trace…"
             ) : (
-              "Loading physics trace…"
+              imitationTrace ? (
+                imitationInfo?.kind === "imitation_ppo_mlp" ? (
+                  <>
+                    <strong>Rollout from an RL-trained MLP controller.</strong>{" "}
+                    The policy observes joint angles + velocities + a reference-phase clock and outputs a residual on top of a baseline CPG (freq {imitationInfo?.base_cpg_freq_hz} Hz, wavelength {imitationInfo?.base_cpg_wavelength} body).
+                    Trained with PPO against a biologically parameterised reference trajectory (Fang-Yen 2010 / Boyle-Berri-Cohen 2012 crawling parameters) with MSE-of-segment-positions reward. This is Phase 2c — the pipeline generalizes to real pose-tracking data when it's swapped in.
+                  </>
+                ) : (
+                  <>
+                    <strong>Target trajectory.</strong> This is the biologically parameterised reference (Fang-Yen 2010 / Boyle-Berri-Cohen 2012 crawling parameters — freq {imitationTrace.meta.parameters?.freq_hz} Hz, wavelength {imitationTrace.meta.parameters?.wavelength_body} body, peak curvature {imitationTrace.meta.parameters?.curvature_amplitude_rad} rad) that a PPO-trained MLP controller learns to reproduce in Phase 2c. Training pipeline is in place; the learned-controller rollout will appear in this slot once training completes.
+                  </>
+                )
+              ) : imitationErr ? (
+                <>
+                  <strong>Imitation trace unavailable.</strong> {imitationErr}
+                </>
+              ) : "Loading imitation trace…"
             )}
           </div>
         </>
