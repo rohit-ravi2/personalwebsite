@@ -32,3 +32,5 @@ scripts/__pycache__/
 yarn-debug.log*
 yarn-error.log*
 data/external/
+# Per-worm Atanas artifacts — 15 MB of regeneratable .npz from raw DANDI
+scripts/brain/artifacts/atanas_worm_*.npz
