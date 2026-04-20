@@ -424,6 +424,7 @@ function drawBrain3D(
   edgeAlpha: number,
   highlightedReleasers: Set<number> | null,
   rotRad: number,
+  dimMask: Set<number> | null,
 ) {
   // Dark gradient backdrop
   const bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -514,7 +515,8 @@ function drawBrain3D(
 
   for (const i of order) {
     const { sx, sy, depthT } = projectNeuron(positions[i], bounds, w, h, rotRad);
-    const depthFade = 0.5 + 0.5 * depthT;
+    const isDimmed = dimMask !== null && dimMask.has(i);
+    const depthFade = (0.5 + 0.5 * depthT) * (isDimmed ? 0.2 : 1);
     const isActive = activeSet.has(i);
     const isReadout = readoutSet.has(names[i] ?? "");
     const isHover = hoverIdx === i;
@@ -1029,6 +1031,9 @@ export function CelegansDashboard() {
   currentTRef.current = currentT;
   hoverRef.current = hoverNeuron;
 
+  // NT-type filter — empty set means "show all"
+  const [ntFilter, setNtFilter] = useState<Set<string>>(new Set());
+
   // Precompute bounds + name->index map ONCE per trace load
   const brainDerived = useMemo(() => {
     if (!trace?.neuron_positions || !trace?.neuron_names) return null;
@@ -1038,6 +1043,32 @@ export function CelegansDashboard() {
     const readoutSet = new Set(trace.meta.readout_neurons);
     return { bounds, nameToIdx, readoutSet };
   }, [trace]);
+
+  // Map NT category -> set of raw NT strings from neuronMeta
+  const NT_CATEGORIES: Record<string, string[]> = {
+    "ACh":    ["Acetylcholine (ACh)", "ACh (unc-17, no cho-1)"],
+    "Glu":    ["Glutamate (Glu)"],
+    "GABA":   ["GABA"],
+    "Modulatory": ["Dopamine (DA)", "Serotonin / 5HT", "Octopamine (OA)", "Tyramine (TA)"],
+    "Unknown": ["Unknown", "unknown"],
+  };
+
+  // Dim mask: indices NOT in active NT filter become dimmed
+  const ntDimMask = useMemo(() => {
+    if (ntFilter.size === 0 || !trace?.neuron_names || !neuronMeta) return null;
+    const allowed = new Set<string>();
+    Array.from(ntFilter).forEach((cat) => {
+      for (const nt of (NT_CATEGORIES[cat] ?? [])) allowed.add(nt);
+    });
+    const nameToNT = new Map<string, string>();
+    for (const m of neuronMeta) nameToNT.set(m.name, m.nt);
+    const dim = new Set<number>();
+    trace.neuron_names.forEach((nm, i) => {
+      const nt = nameToNT.get(nm);
+      if (!nt || !allowed.has(nt)) dim.add(i);
+    });
+    return dim;
+  }, [ntFilter, trace, neuronMeta]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -1285,6 +1316,7 @@ export function CelegansDashboard() {
             edgeAlpha,
             highlighted,
             brainRot,
+            ntDimMask,
           );
         } else if (ctx) {
           const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
@@ -1350,7 +1382,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
@@ -1920,6 +1952,48 @@ export function CelegansDashboard() {
               )}
             </div>
           </div>
+          {/* NT filter chips (below title row, above canvas) */}
+          {brainViewMode === "3d" && (
+            <div className="flex items-center gap-1 text-[0.6rem] mb-1 flex-wrap">
+              <span className="text-muted-foreground font-medium">NT filter:</span>
+              {Object.keys(NT_CATEGORIES).map((cat) => {
+                const active = ntFilter.has(cat);
+                const colors: Record<string, string> = {
+                  "ACh": "#38bdf8",
+                  "Glu": "#a3e635",
+                  "GABA": "#f87171",
+                  "Modulatory": "#c084fc",
+                  "Unknown": "#94a3b8",
+                };
+                const col = colors[cat] ?? "#94a3b8";
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      const next = new Set(ntFilter);
+                      if (active) next.delete(cat); else next.add(cat);
+                      setNtFilter(next);
+                    }}
+                    className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 transition-colors"
+                    style={{
+                      backgroundColor: active ? hexAlpha(col, 0.18) : "transparent",
+                      borderColor: active ? col : "hsl(var(--border))",
+                      color: active ? "var(--foreground)" : "hsl(var(--muted-foreground))",
+                    }}
+                  >
+                    <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: col }} />
+                    {cat}
+                  </button>
+                );
+              })}
+              {ntFilter.size > 0 && (
+                <button
+                  onClick={() => setNtFilter(new Set())}
+                  className="text-muted-foreground hover:text-foreground underline-offset-2 hover:underline ml-1"
+                >clear</button>
+              )}
+            </div>
+          )}
           <div className="relative rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas
               ref={brainCanvasRef}
