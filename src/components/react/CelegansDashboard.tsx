@@ -1089,6 +1089,7 @@ export function CelegansDashboard() {
   const [showFps, setShowFps] = useState(false);
   const fpsRef = useRef({ last: 0, frames: 0, fps: 0 });
   const [copiedLink, setCopiedLink] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   // Read scenario + time from URL hash (#scenario=touch&t=5.2) on first mount
   const didInitFromUrl = useRef(false);
@@ -1305,6 +1306,12 @@ export function CelegansDashboard() {
         }
       } else if (e.code === "KeyF") {
         setShowFps((v) => !v);
+      } else if (e.code === "Slash" && e.shiftKey) {
+        // Shift+/ → "?"
+        setShowHelp((v) => !v);
+      } else if (e.code === "Escape") {
+        setShowHelp(false);
+        setLockedNeuron(null);
       } else if (e.code === "Digit1" || e.code === "Digit2" ||
                  e.code === "Digit3" || e.code === "Digit4" || e.code === "Digit5") {
         const idx = parseInt(e.code.replace("Digit", "")) - 1;
@@ -1983,6 +1990,13 @@ export function CelegansDashboard() {
           title="Copy a link to this exact moment"
           aria-label="Copy shareable link to current scenario and time"
         >{copiedLink ? "✓ copied" : "🔗 link"}</button>
+        <button
+          onClick={() => setShowHelp((v) => !v)}
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          aria-label="Show help overlay"
+          title="Help / shortcuts (?)"
+          aria-expanded={showHelp}
+        >? help</button>
         <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
           <span className="tabular-nums font-mono">
             t = {currentT.toFixed(1)} / {meta?.duration_s?.toFixed(0) ?? "–"} s
@@ -2572,6 +2586,71 @@ export function CelegansDashboard() {
       {showFps && (
         <div className="fixed top-4 right-4 z-50 rounded bg-black/80 text-white text-xs px-2 py-1 font-mono">
           {Math.round(fpsRef.current.fps)} fps
+        </div>
+      )}
+
+      {/* Help overlay */}
+      {showHelp && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setShowHelp(false)}
+          role="dialog"
+          aria-labelledby="dashboard-help-title"
+          aria-modal="true"
+        >
+          <div
+            className="max-w-xl w-full rounded-xl bg-card border shadow-2xl p-5 text-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h2 id="dashboard-help-title" className="text-lg font-semibold">Dashboard guide</h2>
+              <button
+                onClick={() => setShowHelp(false)}
+                className="text-muted-foreground hover:text-foreground text-xl leading-none"
+                aria-label="Close help"
+              >×</button>
+            </div>
+            <div className="space-y-2.5 text-[0.8rem]">
+              <div>
+                <div className="font-semibold text-foreground mb-0.5">Panels</div>
+                <ul className="pl-4 list-disc text-muted-foreground space-y-0.5">
+                  <li><b>Body</b> — MuJoCo 20-segment worm, colored by FSM state.</li>
+                  <li><b>Brain</b> — 300 neurons in 3D. Active = bright glow (colored by NT).</li>
+                  <li><b>Arena</b> — 2D agar field + food patch (chemotaxis scenario only).</li>
+                  <li><b>Modulator strip</b> — 9 peptide/monoamine concentrations × time.</li>
+                  <li><b>FSM + events</b> — behavioural-state timeline with stim + event carets.</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-semibold text-foreground mb-0.5">Interactions</div>
+                <ul className="pl-4 list-disc text-muted-foreground space-y-0.5">
+                  <li>Click a neuron to lock — shows class/NT, 1-hop edges, firing-rate history.</li>
+                  <li>Shift-drag the brain to rotate around the AP axis.</li>
+                  <li>Hover a circuit or modulator badge to highlight its neurons.</li>
+                  <li>Type in the search box to jump to a neuron by name.</li>
+                  <li>Scrub the timeline — hover shows state + time preview.</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-semibold text-foreground mb-0.5">Keyboard</div>
+                <div className="text-muted-foreground text-[0.75rem] flex flex-wrap gap-x-3 gap-y-1">
+                  <span><kbd className="px-1 rounded border">space</kbd> play/pause</span>
+                  <span><kbd className="px-1 rounded border">← →</kbd> ±1 s</span>
+                  <span><kbd className="px-1 rounded border">, .</kbd> frame step</span>
+                  <span><kbd className="px-1 rounded border">R</kbd> restart</span>
+                  <span><kbd className="px-1 rounded border">1–5</kbd> scenarios</span>
+                  <span><kbd className="px-1 rounded border">F</kbd> fps</span>
+                  <span><kbd className="px-1 rounded border">?</kbd> this help</span>
+                  <span><kbd className="px-1 rounded border">Esc</kbd> close</span>
+                </div>
+              </div>
+              <div className="pt-1 text-muted-foreground text-[0.7rem] italic">
+                All scenarios are pre-rendered from Brian2 + MuJoCo simulations.
+                v3 LIF brain; Tier 1 graded-brain stack available in the Python
+                backend but awaits v3.4 classifier retraining before shipping.
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
