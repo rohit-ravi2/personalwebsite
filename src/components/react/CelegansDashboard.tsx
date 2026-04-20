@@ -780,6 +780,46 @@ function drawStimMarkers(
     ctx.stroke();
   }
   ctx.setLineDash([]);
+  // Label each stim with its preset name
+  ctx.fillStyle = "#fbbf24";
+  ctx.font = "9px system-ui, sans-serif";
+  for (const s of stims) {
+    const frac = s.t / durationS;
+    const x = labelW + frac * (w - labelW - 8);
+    const label = s.preset.replace(/_/g, " ");
+    ctx.fillText(label, x + 3, 10);
+  }
+  ctx.restore();
+}
+
+function drawEventFireMarkers(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number, labelW: number,
+  probs: Record<string, number[]>,
+  eventNames: string[] | undefined,
+  durationS: number,
+) {
+  if (!eventNames) return;
+  ctx.save();
+  for (const ev of eventNames) {
+    const arr = probs[ev];
+    if (!arr || arr.length < 2) continue;
+    const col = EVENT_COLORS[ev] ?? "#94a3b8";
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i - 1] < 0.5 && arr[i] >= 0.5) {
+        const frac = i / arr.length;
+        const x = labelW + frac * (w - labelW - 8);
+        // Small caret at the top of the FSM strip
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x - 3, 4);
+        ctx.lineTo(x + 3, 4);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
   ctx.restore();
 }
 
@@ -1487,6 +1527,7 @@ export function CelegansDashboard() {
         if (ctx && tr) {
           const curFrac = t / tr.meta.duration_s;
           drawFsmTimeline(ctx, stripsW, STRIP_FSM_H, tr.fsm_states, curFrac, tr.meta.duration_s);
+          drawEventFireMarkers(ctx, stripsW, STRIP_FSM_H, 68, tr.event_probs, tr.meta.events_tracked, tr.meta.duration_s);
           if (tr.stim_log) drawStimMarkers(ctx, stripsW, STRIP_FSM_H, 68, tr.stim_log, tr.meta.duration_s);
         } else if (ctx) {
           ctx.fillStyle = "#0a0e1a";
