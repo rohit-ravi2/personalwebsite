@@ -166,13 +166,23 @@ function projectNeuron(
   bounds: PosBounds,
   w: number,
   h: number,
+  rotRad: number = 0,
 ): { sx: number; sy: number; depthT: number } {
   const yRange = bounds.yMax - bounds.yMin || 1;
   const zRange = bounds.zMax - bounds.zMin || 1;
   const xRange = bounds.xMax - bounds.xMin || 1;
-  const sx = ((p[1] - bounds.yMin) / yRange) * w * 0.9 + w * 0.05;
-  const sy = h / 2 - ((p[2] - bounds.zMin) / zRange - 0.5) * h * 0.8;
-  const depthT = (p[0] - bounds.xMin) / xRange;
+  // Normalise to [-1, 1]
+  const ny = ((p[1] - bounds.yMin) / yRange) * 2 - 1;
+  const nx = ((p[0] - bounds.xMin) / xRange) * 2 - 1;
+  const nz = ((p[2] - bounds.zMin) / zRange) * 2 - 1;
+  // Rotate around the y (AP) axis: mixes x (LR) into z for depth.
+  const cos = Math.cos(rotRad);
+  const sin = Math.sin(rotRad);
+  const xR = nx * cos - nz * sin;
+  const zR = nx * sin + nz * cos;
+  const sx = (ny + 1) / 2 * w * 0.9 + w * 0.05;
+  const sy = h / 2 - zR * h * 0.4;
+  const depthT = (xR + 1) / 2;  // 0 = back, 1 = front
   return { sx, sy, depthT };
 }
 
@@ -259,6 +269,7 @@ function drawBrain3D(
   edges: BrainEdges | null,
   edgeAlpha: number,
   highlightedReleasers: Set<number> | null,
+  rotRad: number,
 ) {
   // Dark gradient backdrop
   const bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -297,8 +308,8 @@ function drawBrain3D(
       const pPre = positions[pre];
       const pPost = positions[post];
       if (!pPre || !pPost) continue;
-      const { sx: x1, sy: y1 } = projectNeuron(pPre, bounds, w, h);
-      const { sx: x2, sy: y2 } = projectNeuron(pPost, bounds, w, h);
+      const { sx: x1, sy: y1 } = projectNeuron(pPre, bounds, w, h, rotRad);
+      const { sx: x2, sy: y2 } = projectNeuron(pPost, bounds, w, h, rotRad);
       const wNorm = Math.min(1, weight / 30);
       const color = preSign > 0 ? "#10b981" : preSign < 0 ? "#ef4444" : "#94a3b8";
       ctx.strokeStyle = hexAlpha(color, edgeAlpha * (0.25 + 0.6 * wNorm));
@@ -326,7 +337,7 @@ function drawBrain3D(
       for (const rn of releasers) {
         const idx = nameToIdx.get(rn);
         if (idx === undefined) continue;
-        const { sx, sy } = projectNeuron(positions[idx], bounds, w, h);
+        const { sx, sy } = projectNeuron(positions[idx], bounds, w, h, rotRad);
         const r = 5 + 18 * intensity;
         const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
         grad.addColorStop(0, hexAlpha(color, 0.55 * intensity));
@@ -348,7 +359,7 @@ function drawBrain3D(
   let hoverDrawn = false;
 
   for (const i of order) {
-    const { sx, sy, depthT } = projectNeuron(positions[i], bounds, w, h);
+    const { sx, sy, depthT } = projectNeuron(positions[i], bounds, w, h, rotRad);
     const depthFade = 0.5 + 0.5 * depthT;
     const isActive = activeSet.has(i);
     const isReadout = readoutSet.has(names[i] ?? "");
@@ -768,6 +779,9 @@ export function CelegansDashboard() {
   const [lockedNeuron, setLockedNeuron] = useState<number | null>(null);
   const [neuronMeta, setNeuronMeta] = useState<NeuronMeta[] | null>(null);
   const [hoverModulator, setHoverModulator] = useState<string | null>(null);
+  const [brainRot, setBrainRot] = useState(0);           // rotation in radians
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef<{ x: number; rot: number } | null>(null);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1005,6 +1019,7 @@ export function CelegansDashboard() {
             showEdges ? edges : null,
             edgeAlpha,
             highlighted,
+            brainRot,
           );
         } else if (ctx) {
           const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
@@ -1070,9 +1085,8 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot]);
 
-  // Hover on brain → find nearest neuron
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
     const derived = brainDerived;
@@ -1080,12 +1094,17 @@ export function CelegansDashboard() {
     const canvas = brainCanvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
+    if (isDragging && dragStartRef.current) {
+      const dx = e.clientX - dragStartRef.current.x;
+      setBrainRot(dragStartRef.current.rot + dx * 0.005);
+      return;
+    }
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     const cssW = rect.width, cssH = rect.height;
     let best = -1, bestD = 400;
     for (let i = 0; i < tr.neuron_positions.length; i++) {
-      const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, cssW, cssH);
+      const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, cssW, cssH, brainRot);
       const d = (sx - mx) ** 2 + (sy - my) ** 2;
       if (d < bestD) { bestD = d; best = i; }
     }
@@ -1093,8 +1112,19 @@ export function CelegansDashboard() {
   };
 
   const onBrainLeave = () => setHoverNeuron(null);
+  const onBrainMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (e.shiftKey) {
+      setIsDragging(true);
+      dragStartRef.current = { x: e.clientX, rot: brainRot };
+    }
+  };
+  const onBrainMouseUp = () => {
+    setIsDragging(false);
+    dragStartRef.current = null;
+  };
 
   const onBrainClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (e.shiftKey) return;  // shift-click is for drag, don't also lock
     const tr = traceRef.current;
     const derived = brainDerived;
     if (!tr || !tr.neuron_positions || !derived) return;
@@ -1105,14 +1135,11 @@ export function CelegansDashboard() {
     const my = e.clientY - rect.top;
     let best = -1, bestD = 400;
     for (let i = 0; i < tr.neuron_positions.length; i++) {
-      const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, rect.width, rect.height);
+      const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, rect.width, rect.height, brainRot);
       const d = (sx - mx) ** 2 + (sy - my) ** 2;
       if (d < bestD) { bestD = d; best = i; }
     }
-    if (best >= 0) {
-      // Toggle lock: click same neuron unlocks
-      setLockedNeuron((prev) => (prev === best ? null : best));
-    }
+    if (best >= 0) setLockedNeuron((prev) => (prev === best ? null : best));
   };
 
   const lockedMeta = useMemo(() => {
@@ -1328,11 +1355,21 @@ export function CelegansDashboard() {
           <div className="relative rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas
               ref={brainCanvasRef}
-              className="block w-full cursor-crosshair"
+              className={`block w-full ${isDragging ? "cursor-grabbing" : "cursor-crosshair"}`}
               onMouseMove={onBrainMove}
-              onMouseLeave={onBrainLeave}
+              onMouseLeave={(e) => { onBrainMouseUp(); onBrainLeave(); }}
+              onMouseDown={onBrainMouseDown}
+              onMouseUp={onBrainMouseUp}
               onClick={onBrainClick}
             />
+            {/* Rotation indicator + reset */}
+            <div className="absolute top-2 left-2 flex items-center gap-2 rounded-md bg-[#0f1429]/70 px-2 py-1 text-[0.6rem] text-[#94a3b8]">
+              <span>⇄ shift-drag to rotate · {Math.round((brainRot * 180 / Math.PI) % 360)}°</span>
+              <button
+                onClick={() => setBrainRot(0)}
+                className="text-[#a5b4fc] hover:text-[#f2ead3]"
+              >reset</button>
+            </div>
             {lockedMeta && (
               <div className="absolute top-2 right-2 w-60 rounded-lg bg-[#0f1429]/95 border border-[#a5b4fc]/40 p-3 shadow-lg text-[0.7rem] text-[#e2e8f0]">
                 <div className="flex items-baseline justify-between mb-1">
