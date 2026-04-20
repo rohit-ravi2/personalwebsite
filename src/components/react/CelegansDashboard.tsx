@@ -575,6 +575,17 @@ function drawBrain3D(
         nt.includes("Dopamine") || nt.includes("Serotonin") ||
         nt.includes("Octopamine") || nt.includes("Tyramine")
       ) spikeColor = "#c084fc";
+      // Expanding spike ring — radius grows with (1-pulse), alpha fades out
+      if (pulse > 0.05) {
+        const ringR = 3 + (1 - pulse) * 14;
+        ctx.save();
+        ctx.strokeStyle = hexAlpha(spikeColor, 0.6 * pulse * depthFade);
+        ctx.lineWidth = 1.2 * pulse;
+        ctx.beginPath();
+        ctx.arc(sx, sy, ringR, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
       ctx.shadowBlur = 6 + 12 * pulse;
       ctx.shadowColor = spikeColor;
       ctx.fillStyle = hexAlpha(spikeColor, 0.9 * glow * depthFade);
