@@ -73,6 +73,7 @@ type Trace = {
 const SCENARIOS: Record<Scenario, {
   label: string; desc: string; watch: string[];
   moments: Array<{ t: number; label: string }>;
+  lit?: string;
 }> = {
   spontaneous: {
     label: "Spontaneous",
@@ -86,6 +87,7 @@ const SCENARIOS: Record<Scenario, {
       { t: 10, label: "mid" },
       { t: 25, label: "late" },
     ],
+    lit: "Gray, Hill & Bargmann 2005 — roaming/dwelling distribution baseline",
   },
   touch: {
     label: "Head touch",
@@ -100,6 +102,7 @@ const SCENARIOS: Record<Scenario, {
       { t: 5.8, label: "reversal onset" },
       { t: 8, label: "post-recovery" },
     ],
+    lit: "Chalfie 1985 — AVA ablation abolishes reversal. v3 reproduces at ΔREV = −0.57 ± 0.37 (n=3 seeds).",
   },
   osmotic_shock: {
     label: "Osmotic shock",
@@ -115,6 +118,7 @@ const SCENARIOS: Record<Scenario, {
       { t: 6.0, label: "reversal + FLP-11 surge" },
       { t: 8.5, label: "omega entry" },
     ],
+    lit: "Hart 1995 — ASH drives avoidance. Turek 2016 — RIS/FLP-11 pathway (ΔQUI ≈ −0.24 ± 0.33 at n=3 seeds).",
   },
   food: {
     label: "Food",
@@ -130,6 +134,7 @@ const SCENARIOS: Record<Scenario, {
       { t: 10, label: "5-HT elevated" },
       { t: 25, label: "dwelling" },
     ],
+    lit: "Flavell 2013 — NSM 5-HT signalling induces dwelling on food.",
   },
   chemotaxis: {
     label: "Chemotaxis",
@@ -145,6 +150,7 @@ const SCENARIOS: Record<Scenario, {
       { t: 30, label: "mid-run" },
       { t: 55, label: "final approach" },
     ],
+    lit: "Pierce-Shimomura, Morse & Lockery 1999 — klinotaxis navigation via biased random walk. Chalasani 2007 — AWC OFF-cell dynamics.",
   },
 };
 
@@ -2397,6 +2403,12 @@ export function CelegansDashboard() {
         <div className="text-xs text-muted-foreground">
           {SCENARIOS[scenario].desc}
         </div>
+        {SCENARIOS[scenario].lit && (
+          <div className="text-[0.65rem] text-muted-foreground border-l-2 border-primary/40 pl-2 italic">
+            <span className="not-italic text-foreground/70 font-medium mr-1">Compare to literature:</span>
+            {SCENARIOS[scenario].lit}
+          </div>
+        )}
         <div className="flex flex-wrap gap-2 text-[0.65rem]">
           <span className="text-muted-foreground font-medium">watch for:</span>
           {SCENARIOS[scenario].watch.map((w, i) => (
