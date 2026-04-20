@@ -147,6 +147,16 @@ const EVENT_COLORS: Record<string, string> = {
   speed_burst_onset:   "#f59e0b",
 };
 
+// Named biological circuits — shown as badges when their member
+// neurons light up together.
+const CIRCUITS: Record<string, { members: string[]; color: string; desc: string }> = {
+  "reversal":  { members: ["AVAL", "AVAR", "AIBL", "AIBR", "AVEL", "AVER"], color: "#b94b4b", desc: "AVA/AIB/AVE command interneurons" },
+  "forward":   { members: ["AVBL", "AVBR", "PVCL", "PVCR", "RIBL", "RIBR"], color: "#2f5233", desc: "AVB/PVC/RIB forward command" },
+  "head-nose": { members: ["ASHL", "ASHR", "OLQDL", "OLQDR", "FLPL", "FLPR"], color: "#7c3aed", desc: "ASH/OLQ/FLP polymodal nose sensors" },
+  "feeding":   { members: ["NSML", "NSMR", "M3L", "M3R", "M4"], color: "#10b981", desc: "NSM serotonergic + pharyngeal motor" },
+  "omega":     { members: ["SMDVL", "SMDVR", "RIVL", "RIVR", "RMEL"], color: "#8b5cf6", desc: "SMDV/RIV omega-turn circuit" },
+};
+
 const RELEASERS: Record<string, string[]> = {
   "FLP-11": ["RIS"],
   "FLP-1":  ["AVKL", "AVKR"],
@@ -1480,8 +1490,9 @@ export function CelegansDashboard() {
   const liveStats = useMemo(() => {
     if (!trace || !brainDerived) return null;
     const t = currentT;
-    // Active neurons (raster events in last 100 ms)
+    // Active neurons (raster events in last 400 ms — wider for circuit detection)
     const activeNames = new Set<string>();
+    const activeWideNames = new Set<string>();
     if (trace.raster) {
       for (const e of trace.raster) {
         if (e.t > t - 0.1 && e.t <= t) {
@@ -1490,8 +1501,22 @@ export function CelegansDashboard() {
             if (nm) activeNames.add(nm);
           }
         }
+        if (e.t > t - 0.4 && e.t <= t) {
+          for (const rIdx of e.n) {
+            const nm = trace.meta.readout_neurons[rIdx];
+            if (nm) activeWideNames.add(nm);
+          }
+        }
       }
     }
+    // Circuit activation: fraction of circuit members firing in window
+    const activeCircuits: Array<{ name: string; frac: number; color: string; desc: string }> = [];
+    for (const [name, c] of Object.entries(CIRCUITS)) {
+      const fires = c.members.filter((m) => activeWideNames.has(m)).length;
+      const frac = fires / c.members.length;
+      if (frac > 0.0) activeCircuits.push({ name, frac, color: c.color, desc: c.desc });
+    }
+    activeCircuits.sort((a, b) => b.frac - a.frac);
     // Modulator current values + top-3
     let topMods: Array<[string, number]> = [];
     let totalMod = 0;
@@ -1527,7 +1552,7 @@ export function CelegansDashboard() {
       }
       if (crossed) recentEvents++;
     }
-    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents };
+    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits };
   }, [trace, currentT, brainDerived]);
 
   return (
@@ -1645,21 +1670,47 @@ export function CelegansDashboard() {
 
       {/* Live stats readout */}
       {liveStats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.65rem]">
-          <StatCard label="active neurons" value={`${liveStats.activeCount}/18`} />
-          <StatCard
-            label="dominant modulator"
-            value={liveStats.topMods[0]?.[0] ?? "—"}
-            sub={liveStats.topMods[0] ? `C = ${liveStats.topMods[0][1].toFixed(1)}` : ""}
-            accent={liveStats.topMods[0] ? MODULATOR_COLORS[liveStats.topMods[0][0]] : undefined}
-          />
-          <StatCard
-            label="state dwell"
-            value={`${liveStats.dwellS.toFixed(1)}s`}
-            sub={liveStats.currState}
-            accent={STATE_COLORS[liveStats.currState]}
-          />
-          <StatCard label="events firing" value={`${liveStats.recentEvents}`} sub="of 8 canonical" />
+        <div className="space-y-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.65rem]">
+            <StatCard label="active neurons" value={`${liveStats.activeCount}/18`} />
+            <StatCard
+              label="dominant modulator"
+              value={liveStats.topMods[0]?.[0] ?? "—"}
+              sub={liveStats.topMods[0] ? `C = ${liveStats.topMods[0][1].toFixed(1)}` : ""}
+              accent={liveStats.topMods[0] ? MODULATOR_COLORS[liveStats.topMods[0][0]] : undefined}
+            />
+            <StatCard
+              label="state dwell"
+              value={`${liveStats.dwellS.toFixed(1)}s`}
+              sub={liveStats.currState}
+              accent={STATE_COLORS[liveStats.currState]}
+            />
+            <StatCard label="events firing" value={`${liveStats.recentEvents}`} sub="of 8 canonical" />
+          </div>
+          {/* Active-circuit badges */}
+          {liveStats.activeCircuits.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 text-[0.65rem]">
+              <span className="text-muted-foreground font-medium">active circuits:</span>
+              {liveStats.activeCircuits.map((c) => (
+                <span
+                  key={c.name}
+                  title={c.desc}
+                  className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5"
+                  style={{
+                    backgroundColor: hexAlpha(c.color, 0.10),
+                    borderColor: hexAlpha(c.color, 0.5),
+                    color: "var(--foreground)",
+                  }}
+                >
+                  <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c.color }} />
+                  <span className="font-semibold">{c.name}</span>
+                  <span className="text-muted-foreground font-mono text-[0.6rem]">
+                    {Math.round(c.frac * 100)}%
+                  </span>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
