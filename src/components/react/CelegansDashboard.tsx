@@ -1030,6 +1030,30 @@ export function CelegansDashboard() {
   const [arenaZoomMm, setArenaZoomMm] = useState(20);  // world extent in arena view
   const [showFps, setShowFps] = useState(false);
   const fpsRef = useRef({ last: 0, frames: 0, fps: 0 });
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  // Read scenario + time from URL hash (#scenario=touch&t=5.2) on first mount
+  const didInitFromUrl = useRef(false);
+  useEffect(() => {
+    if (didInitFromUrl.current || typeof window === "undefined") return;
+    didInitFromUrl.current = true;
+    const hash = window.location.hash.replace(/^#/, "");
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    const s = params.get("scenario") as Scenario | null;
+    if (s && (["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis"] as Scenario[]).includes(s)) {
+      setScenario(s);
+    }
+    const tRaw = params.get("t");
+    if (tRaw) {
+      const tN = parseFloat(tRaw);
+      if (isFinite(tN)) {
+        currentTRef.current = tN;
+        setCurrentT(tN);
+        setPaused(true);
+      }
+    }
+  }, []);
 
   // Respect prefers-reduced-motion — disable the pulse/trail/edge animations
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -1878,6 +1902,19 @@ export function CelegansDashboard() {
           title="Download PNG snapshot of current state"
           aria-label="Download PNG snapshot of all panels at current time"
         >📷 snapshot</button>
+        <button
+          onClick={() => {
+            const url = new URL(window.location.href);
+            url.hash = `scenario=${scenario}&t=${currentT.toFixed(2)}`;
+            navigator.clipboard?.writeText(url.toString()).then(() => {
+              setCopiedLink(true);
+              setTimeout(() => setCopiedLink(false), 1600);
+            });
+          }}
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          title="Copy a link to this exact moment"
+          aria-label="Copy shareable link to current scenario and time"
+        >{copiedLink ? "✓ copied" : "🔗 link"}</button>
         <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
           <span className="tabular-nums font-mono">
             t = {currentT.toFixed(1)} / {meta?.duration_s?.toFixed(0) ?? "–"} s
