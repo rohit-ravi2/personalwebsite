@@ -139,7 +139,19 @@ class LIFBrain:
         v_rest_bias=V_REST_BIAS_DEFAULT,
         include_gap=True,
         sign_overrides: dict[str, int] | None = None,
+        use_per_edge_glu_signs: bool = False,
     ):
+        """LIF brain constructor.
+
+        use_per_edge_glu_signs: if True and W_chem_per_edge is present
+            in the connectome artifact, use CeNGEN-derived per-edge
+            glutamate receptor signs (v3.2 infrastructure). If False
+            (default), use legacy per-neuron NT signs + hand-picked
+            overrides (v3.1 behaviour). Per-edge is more biologically
+            accurate but requires re-tuning of modulation strengths
+            and FSM thresholds — kept optional pending v3.3
+            re-calibration.
+        """
         if sign_overrides is None:
             sign_overrides = DEFAULT_SIGN_OVERRIDES
         d = np.load(ARTIFACT, allow_pickle=True)
@@ -152,16 +164,26 @@ class LIFBrain:
         W_chem_raw: np.ndarray = d["W_chem_raw"].astype(np.float32)
         sign_base = np.array(d["sign"], dtype=np.int8).copy()
 
-        # Apply per-neuron sign overrides (Glu→iGluR exceptions)
+        # v3.2: per-edge glutamate receptor signs (Phase 3d-4) are
+        # available if computed by build_connectome_matrix.py. They're
+        # more biologically accurate but require re-tuning of modulation
+        # strengths + FSM thresholds — default off pending v3.3 recal.
         self.sign_overrides_applied: list[tuple[str, int, int]] = []
-        for name, new_sign in sign_overrides.items():
-            if name in self.idx:
-                old = int(sign_base[self.idx[name]])
-                if old != new_sign:
-                    sign_base[self.idx[name]] = new_sign
-                    self.sign_overrides_applied.append((name, old, new_sign))
+        has_per_edge = "W_chem_per_edge" in d.files
+        if use_per_edge_glu_signs and has_per_edge:
+            W_chem: np.ndarray = d["W_chem_per_edge"].astype(np.float32)
+            self._using_per_edge_signs = True
+        else:
+            # Legacy path (default): apply per-neuron Glu→iGluR exceptions
+            for name, new_sign in sign_overrides.items():
+                if name in self.idx:
+                    old = int(sign_base[self.idx[name]])
+                    if old != new_sign:
+                        sign_base[self.idx[name]] = new_sign
+                        self.sign_overrides_applied.append((name, old, new_sign))
+            W_chem: np.ndarray = (sign_base[:, None].astype(np.float32) * W_chem_raw)
+            self._using_per_edge_signs = False
 
-        W_chem: np.ndarray = (sign_base[:, None].astype(np.float32) * W_chem_raw)
         W_gap: np.ndarray = d["W_gap"].astype(np.float32)
 
         # Build Brian2 network
@@ -258,6 +280,7 @@ class LIFBrain:
             n_inh_syn=int(len(inh_pre)),
             n_gap=int(len(gap_i)) if include_gap and len(gap_i) else 0,
             n_sign_overrides=len(self.sign_overrides_applied),
+            per_edge_glu_signs=self._using_per_edge_signs,
         )
 
     # ------------------------------------------------------------

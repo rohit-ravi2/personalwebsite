@@ -64,6 +64,12 @@ OUT_META = OUT.with_suffix(".json")
 # The compiled signs reflect consensus from cited references (see
 # module docstring).
 
+PHARYNGEAL_NEURONS = {
+    "M1", "M2L", "M2R", "M3L", "M3R", "M4", "M5",
+    "MCL", "MCR", "MI", "I1L", "I1R", "I2L", "I2R",
+    "I3", "I4", "I5", "I6",
+}
+
 MODULATORS = {
     # --- Neuropeptides ---------------------------------------------
     "FLP-11": {
@@ -107,7 +113,16 @@ MODULATORS = {
                        "ser-6": +1,  # Gs excitatory
                        "ser-7": +1}, # Gs excitatory
         "tau_s": 5.0,
-        "note": "NSM/HSN/ADF serotonin — dwelling, feeding state (Tsalik 2003).",
+        # v3.1 (Phase 3d-5): exclude pharyngeal neurons from NSM 5HT
+        # targets. Pharyngeal 5HT is released by a separate source
+        # (MC/I1/RIP) and acts on pharyngeal targets anatomically
+        # isolated from NSM-derived head 5HT. Without this exclusion,
+        # pharyngeal MOD-1 / SER-1 / SER-7 expression dominates the
+        # target vector and masks the locomotion-relevant SER-4 signal
+        # on AVB. Phase 3d-3 perturbation study flagged this (NSM
+        # ablation went wrong direction).
+        "target_exclude": PHARYNGEAL_NEURONS,
+        "note": "NSM/HSN/ADF serotonin — dwelling, feeding state (Tsalik 2003). Pharyngeal excluded (v3.1).",
     },
     "DA": {
         "synthesis_gene": "cat-2",   # tyrosine hydroxylase
@@ -329,6 +344,22 @@ def main() -> None:
             rec_expr = expr_by_neuron[rec_wb].reindex(conn_names, fill_value=0.0)
             tgt += sgn * rec_expr.values.astype(np.float32)
             resolved_receptors.append(rec_sym)
+
+        # Apply per-modulator target exclusion mask if specified (v3.1:
+        # 5HT excludes pharyngeal neurons since they're anatomically
+        # isolated from NSM-derived central 5HT).
+        exclude_set = spec.get("target_exclude", set())
+        if exclude_set:
+            excluded_count = 0
+            for i, name in enumerate(conn_names):
+                if name in exclude_set:
+                    if tgt[i] != 0:
+                        excluded_count += 1
+                    tgt[i] = 0.0
+            if excluded_count > 0:
+                print(f"  ↳ {mod_name}: excluded {excluded_count} "
+                      f"pharyngeal/anatomically-isolated targets")
+
         target_weights[mod_name] = tgt
         receptors_used[mod_name] = resolved_receptors
 

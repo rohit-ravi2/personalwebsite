@@ -1,119 +1,189 @@
-# Phase 3d-3 — Perturbation validation report
+# Phase 3d-3 — Perturbation validation report (v3.1 + v3.2)
 
-In-silico neuron ablations run on the v3 model with full 
-neuromodulation layer enabled. Each experiment pairs a 
-control and an ablated run (20 s each, shared 
-random seed). State proportions are fractions of simulation 
-time spent in each FSM state.
+In-silico neuron ablations run on the v3.1 model (per-neuron NT signs +
+5HT pharyngeal exclusion) with full neuromodulation layer enabled.
+Each experiment pairs a control and an ablated run (20 s each, shared
+`np.random.seed`). State proportions are fractions of simulation time
+spent in each FSM state.
+
+**Honest note on variance.** Brian2's internal RNG is not locked to
+`np.random.seed`, so absolute state proportions drift between re-runs
+by ~0.05–0.15 per state. Deltas < 0.10 should be interpreted as noise.
+This reproducibility gap is flagged as v3.3 work.
 
 ## RIS ablation / osmotic shock
 
 **Target neurons:** RIS  
-**Scenario:** `osmotic_shock`
-
-**Expected phenotype:** QUIESCENCE ↓ — RIS drives sleep-like quiescence via FLP-11 (Turek 2016). Ablating RIS should abolish the quiescence surge under aversive stimulation.
+**Scenario:** `osmotic_shock`  
+**Expected phenotype:** QUIESCENCE ↓ (Turek 2016).
 
 | state | control | ablated | Δ |
 |---|---:|---:|---:|
-| FORWARD | 0.07 | 0.05 | -0.02 |
-| REVERSE | 0.13 | 0.69 | **+0.55** |
-| OMEGA | 0.05 | 0.05 | +0.00 |
+| FORWARD | 0.06 | 0.06 | -0.00 |
+| REVERSE | 0.34 | 0.40 | +0.06 |
+| OMEGA | 0.15 | 0.10 | -0.05 |
 | PIROUETTE | 0.00 | 0.00 | +0.00 |
-| QUIESCENT | 0.75 | 0.22 | **-0.53** |
+| QUIESCENT | 0.45 | 0.44 | -0.01 |
+
+**Verdict:** null result in this run. An earlier v3.0 run (before 5HT
+pharyngeal exclusion) reported Δ QUIESCENT = -0.53 for this ablation;
+adding biologically-correct 5HT target filtering appears to have
+shifted the network dynamics such that the FLP-11/RIS quiescence
+pathway no longer dominates. The regression reveals that the earlier
+flagship result was fragile to parameter changes. The real biology
+(Turek 2016) should still hold — recovering it will need v3.3
+re-tuning of FLP-11 mod_strength or longer simulation windows to
+average out Brian2 stochastic drift.
 
 ## NSM ablation / food
 
 **Target neurons:** NSML, NSMR  
-**Scenario:** `food`
-
-**Expected phenotype:** QUIESCENCE/dwelling ↓ — NSM serotonin drives dwelling state under food (Flavell 2013). Ablating NSM should reduce feeding-state quiescence (if our 5HT pathway is connected).
+**Scenario:** `food`  
+**Expected phenotype:** dwelling/quiescence ↓ (Flavell 2013).
 
 | state | control | ablated | Δ |
 |---|---:|---:|---:|
-| FORWARD | 0.06 | 0.07 | +0.01 |
-| REVERSE | 0.79 | 0.34 | **-0.44** |
-| OMEGA | 0.05 | 0.20 | **+0.15** |
+| FORWARD | 0.06 | 0.06 | -0.00 |
+| REVERSE | 0.79 | 0.00 | **-0.79** |
+| OMEGA | 0.05 | 0.35 | **+0.30** |
 | PIROUETTE | 0.00 | 0.00 | +0.00 |
-| QUIESCENT | 0.10 | 0.38 | **+0.28** |
+| QUIESCENT | 0.10 | 0.59 | **+0.49** |
+
+**Verdict:** large effect in the wrong direction on quiescence — NSM
+ablation *increases* quiescence by 0.49 instead of decreasing it.
+However the dramatic REVERSE collapse (-0.79) and OMEGA surge (+0.30)
+show NSM ablation IS changing behaviour substantially. Hypothesis:
+without NSM's 5HT inhibition of AIZ/AIM/PVC (the pharyngeal-excluded
+target set from v3.1), these locomotion interneurons disinhibit and
+drive a different failure mode than expected — the network's lack of
+sensorimotor drive collapses into quiescence. A proper Flavell 2013
+reproduction would require the forward-promoting serotonergic
+pathway (NSM → MOD-1 → SIA), which isn't distinctly represented in
+our current target weighting.
 
 ## RIM ablation / touch
 
 **Target neurons:** RIML, RIMR  
-**Scenario:** `touch`
-
-**Expected phenotype:** REVERSE altered — RIM tyramine biases reversal bout duration (Alkema 2005, Donnelly 2013). Ablating RIM should change the reversal response profile to mechanosensory stimulus.
+**Scenario:** `touch`  
+**Expected phenotype:** REVERSE altered (Alkema 2005 vs Gordus 2015).
 
 | state | control | ablated | Δ |
 |---|---:|---:|---:|
-| FORWARD | 0.11 | 0.10 | -0.00 |
-| REVERSE | 0.18 | 0.39 | **+0.21** |
+| FORWARD | 0.14 | 0.10 | -0.03 |
+| REVERSE | 0.15 | 0.39 | **+0.24** |
 | OMEGA | 0.05 | 0.05 | +0.00 |
 | PIROUETTE | 0.15 | 0.15 | +0.00 |
 | QUIESCENT | 0.52 | 0.31 | **-0.21** |
+
+**Verdict:** matches Gordus 2015 — RIM ablation *lengthens* reversal
+bouts (REVERSE +0.24). Suggests tyramine-gated termination is
+disabled, keeping the worm in reverse once triggered. RIM ablation
+also exits quiescence faster (-0.21). This is a clean directional
+match to one camp of the mixed literature.
 
 ## AVA ablation / touch
 
 **Target neurons:** AVAL, AVAR  
 **Scenario:** `touch`
 
-**Expected phenotype:** REVERSE ↓ — AVA is the primary reversal command interneuron (Chalfie 1985). Ablating AVA should drastically reduce reversal.
-
 | state | control | ablated | Δ |
 |---|---:|---:|---:|
-| FORWARD | 0.11 | 0.12 | +0.01 |
-| REVERSE | 0.18 | 0.03 | **-0.15** |
+| FORWARD | 0.14 | 0.12 | -0.02 |
+| REVERSE | 0.15 | 0.37 | **+0.23** |
 | OMEGA | 0.05 | 0.05 | +0.00 |
 | PIROUETTE | 0.15 | 0.15 | +0.00 |
-| QUIESCENT | 0.52 | 0.65 | **+0.13** |
+| QUIESCENT | 0.52 | 0.31 | **-0.21** |
+
+**Verdict:** wrong direction in this run. Chalfie 1985 expects AVA
+ablation to *abolish* reversal — we see it *increased* (+0.23). An
+earlier v3.0 run gave the correct Δ REVERSE = -0.15. The regression
+echoes the RIS finding: phenotype reproduction is fragile to network-
+parameter changes. The AVA-reversal causal link needs re-validation
+under v3.3 recal.
 
 ## AVB ablation / spontaneous
 
 **Target neurons:** AVBL, AVBR  
 **Scenario:** `spontaneous`
 
-**Expected phenotype:** FORWARD ↓ — AVB drives forward locomotion (Chalfie 1985). Ablating AVB should reduce forward-run time.
-
 | state | control | ablated | Δ |
 |---|---:|---:|---:|
-| FORWARD | 0.06 | 0.05 | -0.01 |
-| REVERSE | 0.52 | 0.59 | **+0.07** |
+| FORWARD | 0.04 | 0.05 | +0.00 |
+| REVERSE | 0.54 | 0.59 | +0.06 |
 | OMEGA | 0.05 | 0.05 | +0.00 |
 | PIROUETTE | 0.15 | 0.00 | **-0.15** |
-| QUIESCENT | 0.22 | 0.31 | **+0.09** |
+| QUIESCENT | 0.22 | 0.31 | +0.09 |
+
+**Verdict:** Pirouette structure disrupted (-0.15), consistent with
+AVB's role in coordinated locomotion sequences. FORWARD already low
+in control.
 
 ## PDE ablation / spontaneous
 
-**Target neurons:** PDEL, PDER  
-**Scenario:** `spontaneous`
-
-**Expected phenotype:** PIROUETTE / roaming altered — PDE dopamine modulates pirouette duration (Chase 2004, Ben Arous 2009).
+**Target neurons:** PDEL, PDER
 
 | state | control | ablated | Δ |
 |---|---:|---:|---:|
-| FORWARD | 0.06 | 0.04 | -0.01 |
-| REVERSE | 0.52 | 0.54 | +0.02 |
+| FORWARD | 0.04 | 0.04 | +0.00 |
+| REVERSE | 0.54 | 0.54 | +0.00 |
 | OMEGA | 0.05 | 0.05 | +0.00 |
 | PIROUETTE | 0.15 | 0.15 | +0.00 |
 | QUIESCENT | 0.22 | 0.22 | +0.00 |
 
+**Verdict:** no measurable effect. Dopamine modulation too weak in
+spontaneous mode to produce behavioural change at 20 s duration.
 
-## Verdict table
+## Summary & verdict
 
-| ablation | expected effect | observed | verdict |
-|---|---|---|---|
-| **RIS / osmotic shock** | QUIESCENCE ↓ (Turek 2016) | **QUIESCENCE -0.53** | ✓ **strong success** — flagship result: v3 FLP-11/RIS sleep pathway is operative |
-| **AVA / touch** | REVERSE abolished (Chalfie 1985) | REVERSE -0.15 (dropped to 3% from 18%) | ✓ reversal essentially abolished, matches expected |
-| RIM / touch | REVERSE shorter (Alkema 2005) / longer (Gordus 2015) | REVERSE +0.21 | ~ mixed-literature, matches Gordus-type finding of sustained reversal post-RIM loss |
-| AVB / spontaneous | FORWARD ↓ (Chalfie 1985) | FORWARD -0.01, PIROUETTE -0.15 | ~ FORWARD already low, but pirouette structure disrupted |
-| NSM / food | dwelling ↓ (Flavell 2013) | QUIESCENCE **+0.28** (opposite direction) | ✗ target-weight mismatch — 5HT in CeNGEN predominantly targets pharyngeal neurons, not locomotion interneurons, so NSM ablation doesn't release dwelling brake |
-| PDE / spontaneous | pirouette altered (Chase 2004) | no significant change | ✗ DA modulation too weak in spontaneous mode to show effect |
+| ablation | expected | v3.0 result | v3.1 result | Δ v3.0→v3.1 |
+|---|---|---|---|---|
+| RIS / osmotic | QUIESCENCE ↓ | ✓ Δ=-0.53 | ✗ Δ=-0.01 | flagship lost |
+| AVA / touch | REVERSE ↓ | ✓ Δ=-0.15 | ✗ Δ=+0.23 | direction flip |
+| NSM / food | dwelling ↓ | ✗ wrong dir | ✗ wrong dir (larger) | worse |
+| RIM / touch | REVERSE altered | ~ Gordus-like | ✓ Gordus-like +0.24 | improved |
+| AVB / spont | FORWARD ↓ | ~ partial | ~ pirouette disruption | similar |
+| PDE / spont | pirouette altered | — | — | unchanged |
 
-## Headline finding
+## Scientific interpretation
 
-**RIS ablation abolishes osmotic-shock quiescence.** Control shows QUIESCENCE occupying 75% of the 20-second simulation under stress; with RIS silenced, QUIESCENCE collapses to 22% and the worm spends 69% of the time in REVERSE instead. This is the Turek et al. 2016 phenotype reproduced in silico: without RIS, FLP-11 concentration can't rise, broad peptidergic inhibition is absent, and the worm can't enter sleep-like quiescence. The v3 neuromodulation layer captures this causal circuit.
+**The v3.0 "2/6 success" was fragile.** Adding two biologically-
+justified corrections (5HT pharyngeal exclusion, per-edge Glu signs)
+regressed both flagship reproductions. This is actually an important
+finding:
 
-## Limitations exposed by the audit
+1. **Phenotype reproduction in this model is fragile to parameter
+   changes.** Our 20 s ablation deltas are comparable to run-to-run
+   Brian2 stochastic variance. Robust validation requires longer
+   simulations and ensemble averaging.
 
-The NSM/food result reveals a real modeling gap: 5HT target weights extracted from CeNGEN weight pharyngeal neurons (MI/I5/M4/M5, all +2.4 receptor expression) far higher than locomotion interneurons. Biologically, 5HT dwelling requires targeted action on AVB via SER-4 (which CeNGEN shows at moderate expression on AVB, but masked by the huge pharyngeal signal). Fix options: (1) weight target weights by post-synaptic circuit role, not raw receptor expression; (2) hand-add AVB SER-4 receptor weight; (3) retrain classifiers under modulated dynamics.
+2. **The earlier RIS/AVA successes likely depended on specific
+   network firing patterns** that shifted under the v3.1 corrections.
+   The biology is real (Turek 2016 and Chalfie 1985 are canonical) —
+   but the *model* isn't stable enough to reliably reproduce them
+   across variants.
 
-The PDE/spontaneous null confirms the dopamine pathway is too weak in spontaneous mode to show measurable effect. May need stronger mod_strength for DA specifically, or longer simulation to detect subtle pirouette-duration changes.
+3. **Per-edge Glu receptor signs** (v3.2 infrastructure, default off
+   pending re-tuning) make the network substantially more active
+   (+415 Glu edges flipped from inhibitory to excitatory), which
+   further alters the FLP-11 dominance. These will need explicit
+   modulation recalibration to re-establish phenotype reproduction.
+
+## Path to v3.3
+
+To recover phenotype reproduction robustly:
+
+1. **Longer simulations** (60 s instead of 20 s) to average out
+   Brian2 stochastic variance.
+2. **Fixed RNG state** including Brian2's internal RNG (via
+   `seed(42)` and `BrianObject` seed settings).
+3. **Ensemble runs** (10 seeds × 60 s) with reported mean±std per
+   ablation × scenario.
+4. **Modulation strength recalibration** — FLP-11 needs stronger
+   inhibitory effect to dominate stress-induced quiescence against
+   the now-more-active network.
+5. **5HT target re-weighting** (not just exclusion) — explicit
+   circuit-role weighting that preserves NSM→AVB SER-4 dwelling
+   pathway while filtering pharyngeal contribution.
+
+These are v3.3 items. v3.1/v3.2 ships with the honest regression
+documented above.

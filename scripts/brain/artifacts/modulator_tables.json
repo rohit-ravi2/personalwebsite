@@ -92,7 +92,7 @@
         "ser-7": 1
       },
       "tau_s": 5.0,
-      "note": "NSM/HSN/ADF serotonin \u2014 dwelling, feeding state (Tsalik 2003).",
+      "note": "NSM/HSN/ADF serotonin \u2014 dwelling, feeding state (Tsalik 2003). Pharyngeal excluded (v3.1).",
       "receptors_resolved": [
         "mod-1",
         "ser-1",
@@ -102,7 +102,7 @@
         "ser-7"
       ],
       "n_releasers": 6,
-      "n_targets_significant": 71
+      "n_targets_significant": 53
     },
     "DA": {
       "synthesis_gene": "cat-2",

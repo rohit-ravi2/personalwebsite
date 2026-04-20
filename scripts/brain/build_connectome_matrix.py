@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
-"""Phase 3a step 1 — build a signed connectome adjacency matrix for the
-LIF brain.
+"""Phase 3a/3d-4 — build a signed connectome adjacency matrix for the
+LIF brain with per-edge glutamate receptor signs.
 
-This is the C. elegans analog of the pre-processing Shiu et al. 2024
-did for their *Drosophila* brain model (`philshiu/Drosophila_brain_model`):
-take a wiring diagram with synapse counts and a neurotransmitter
-identity table, produce a signed adjacency matrix where
+Phase 3a (v1): per-neuron NT-based signs. Glutamatergic neurons all
+got sign=-1 (GluCl-dominant convention from Kunert 2014), with
+hand-picked per-neuron overrides for circuits known to use iGluR.
 
-    W_chem[pre, post] = sign(NT_pre) * raw_serial_section_count
+Phase 3d-4 (v3.2): per-edge glutamate signs derived from CeNGEN
+receptor expression. For each glutamatergic presynaptic neuron, the
+sign of its output onto a specific postsynaptic target depends on
+that target's iGluR vs GluCl receptor composition:
+    +1 if postsynaptic iGluR expression >> GluCl expression
+    -1 if postsynaptic GluCl expression >> iGluR expression
+    -1 (default) if ambiguous / low expression
 
-and an unsigned symmetric gap-junction matrix.
+This replaces the 22 hand-picked per-neuron overrides with data-
+driven per-edge signs. Same principle could apply to GABA (unc-49
+vs exp-1) and ACh (ionotropic vs acc-N chloride channels), but v3.2
+focuses on Glu since that's the dominant miscategorisation issue.
 
 Sources (cite these verbatim on the project page):
   - Cook et al. 2019, *Whole-animal connectomes of both Caenorhabditis
@@ -64,7 +72,31 @@ NT_XLSX = (
     / "data" / "expression" / "neurotransmitter"
     / "Ce_NTtables_Loer&Rand2022.xlsx"
 )
+CENGEN_MEAN = (
+    CELEGANS
+    / "data" / "expression" / "cengen" / "derived" / "expression_neuron_mean.csv"
+)
+GENE_ASSOC = (
+    CELEGANS
+    / "data" / "wormbase_release_WS297" / "associations"
+    / "c_elegans.PRJNA13758.WS297.gene_association.wb"
+)
 OUT = Path(__file__).resolve().parent / "artifacts" / "connectome.npz"
+
+# Ionotropic glutamate receptor genes — excitatory postsynaptic
+# responses to glutamate (Brockie 2001, Maricq 1995).
+IGLUR_GENES = ["glr-1", "glr-2", "glr-3", "glr-4", "glr-5",
+               "glr-6", "glr-7", "glr-8", "nmr-1", "nmr-2"]
+
+# GluCl chloride-channel genes — inhibitory postsynaptic responses.
+# These are the dominant worm glutamate response for many targets
+# (Vassilatis 1997, Laughton 1997).
+GLUCL_GENES = ["avr-14", "avr-15", "glc-1", "glc-2", "glc-3", "glc-4"]
+
+# Ratio threshold for per-edge sign assignment: iGluR must exceed
+# GluCl by at least this factor to call the synapse excitatory.
+# Below threshold defaults to inhibitory (GluCl convention).
+IGLUR_VS_GLUCL_RATIO = 1.5
 
 # NT → sign mapping for LIF brain v1 (see module docstring).
 # Keys are normalised NT category labels. The Loer & Rand sheet uses
@@ -207,6 +239,68 @@ def _nt_to_sign(nt1: str, nt2: str) -> int:
 
 # ---------- main ----------
 
+def _load_gene_symbol_map() -> dict[str, str]:
+    """Return {gene_symbol: WBGene_id} from WormBase gene_association."""
+    sym_to_wb: dict[str, str] = {}
+    with open(GENE_ASSOC) as f:
+        for line in f:
+            if line.startswith("!"):
+                continue
+            parts = line.rstrip().split("\t")
+            if len(parts) < 3:
+                continue
+            wb, sym = parts[1], parts[2]
+            if wb.startswith("WBGene") and sym and sym not in sym_to_wb:
+                sym_to_wb[sym] = wb
+    return sym_to_wb
+
+
+def _expand_class(cls: str, conn_set: set[str]) -> list[str]:
+    """Map a CeNGEN neuron class (e.g. 'ASH') to connectome names
+    (ASHL/ASHR). Handles unpaired and L/R pair classes."""
+    import re as _re
+    # Unpaired neurons (one per class in connectome)
+    unpaired = {"AVG", "AVL", "AVM", "AQR", "DVA", "DVB", "DVC", "PDA",
+                 "PVR", "PVT", "PQR", "RID", "RIH", "RIS", "ALA",
+                 "M1", "M4", "M5", "MI", "I3", "I4", "I5", "I6"}
+    if cls in unpaired:
+        return [cls] if cls in conn_set else []
+    # L/R pairs: default expansion
+    candidates = [cls + "L", cls + "R"]
+    return [n for n in candidates if n in conn_set]
+
+
+def _cengen_receptor_expression(conn_names: list[str],
+                                 receptor_genes: list[str],
+                                 sym_to_wb: dict[str, str]
+                                 ) -> np.ndarray:
+    """Read CeNGEN and return (N_neurons,) summed expression for the
+    given receptor gene list, mapped onto connectome neuron order."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        cengen = pd.read_csv(CENGEN_MEAN, index_col=0)
+
+    conn_set = set(conn_names)
+    N = len(conn_names)
+
+    out = np.zeros(N, dtype=np.float32)
+    resolved: list[str] = []
+    for gene in receptor_genes:
+        wb = sym_to_wb.get(gene)
+        if wb is None or wb not in cengen.columns:
+            continue
+        resolved.append(gene)
+        expr = cengen[wb]  # indexed by neuron class
+        # Expand each class to its connectome-member neurons
+        for cls, val in expr.items():
+            for n in _expand_class(str(cls), conn_set):
+                idx = conn_names.index(n)
+                out[idx] += float(val)
+    print(f"  resolved {len(resolved)}/{len(receptor_genes)} receptor genes: "
+          f"{resolved}")
+    return out
+
+
 def main() -> None:
     print(f"Reading Cook 2019 SI 5 from:\n  {COOK_SI5}")
     chem = _parse_cook_matrix("hermaphrodite chemical")
@@ -262,6 +356,44 @@ def main() -> None:
     # Signed chemical weights: sign multiplies each row (presynaptic).
     W_chem = (sign[:, None].astype(np.float32) * W_chem_raw).astype(np.float32)
 
+    # Phase 3d-4: per-edge glutamate receptor signs from CeNGEN.
+    # For each glutamatergic presynaptic neuron, the sign of each
+    # outgoing edge is decided by the postsynaptic neuron's iGluR vs
+    # GluCl receptor expression balance.
+    print("\n[Phase 3d-4] Loading CeNGEN iGluR & GluCl expression…")
+    sym_to_wb = _load_gene_symbol_map()
+    iGluR_expr = _cengen_receptor_expression(canonical, IGLUR_GENES, sym_to_wb)
+    GluCl_expr = _cengen_receptor_expression(canonical, GLUCL_GENES, sym_to_wb)
+    # Per-target sign: +1 if iGluR dominates, -1 if GluCl dominates,
+    # -1 default for ambiguous (Kunert convention).
+    eps = 1e-3
+    post_sign_glu = np.where(
+        iGluR_expr > GluCl_expr * IGLUR_VS_GLUCL_RATIO + eps, +1,
+        np.where(GluCl_expr > iGluR_expr * IGLUR_VS_GLUCL_RATIO + eps, -1, -1)
+    ).astype(np.int8)
+    n_excite = int((post_sign_glu == +1).sum())
+    print(f"  per-edge Glu-sign distribution: {n_excite}/{N} targets "
+          f"excited (iGluR-dominant), {N - n_excite} inhibited or ambiguous")
+
+    # Build W_chem_per_edge: for Glu presynaptic rows, use per-edge
+    # sign from post. For other presynaptic NTs, use per-neuron sign.
+    nt_norm = np.array([_normalise_nt(p) for p in nt_primary])
+    is_glu_pre = (nt_norm == "Glu")
+    W_chem_per_edge = np.zeros_like(W_chem_raw)
+    for pre in range(N):
+        if is_glu_pre[pre]:
+            # Per-edge sign from post's receptor balance
+            W_chem_per_edge[pre] = post_sign_glu * W_chem_raw[pre]
+        else:
+            W_chem_per_edge[pre] = sign[pre] * W_chem_raw[pre]
+    W_chem_per_edge = W_chem_per_edge.astype(np.float32)
+
+    # Report how many Glu edges flipped vs per-neuron convention
+    flipped = int(np.sum((W_chem_per_edge > 0) & (W_chem < 0)))
+    kept = int(np.sum((W_chem_per_edge < 0) & (W_chem < 0)))
+    print(f"  Glu edges flipped (GluCl→iGluR): {flipped}")
+    print(f"  Glu edges kept inhibitory:      {kept}")
+
     # Diagnostic stats
     n_chem_edges = int(np.sum(W_chem_raw > 0))
     n_gap_edges = int(np.sum(W_gap > 0)) // 2  # undirected
@@ -291,9 +423,13 @@ def main() -> None:
         nt_secondary=nt_secondary,
         klass=klass,
         sign=sign,
-        W_chem=W_chem,
+        W_chem=W_chem,                        # per-neuron signs (legacy)
+        W_chem_per_edge=W_chem_per_edge,      # per-edge signs (v3.2)
         W_chem_raw=W_chem_raw,
         W_gap=W_gap,
+        iGluR_expr=iGluR_expr,
+        GluCl_expr=GluCl_expr,
+        post_sign_glu=post_sign_glu,
     )
     print(f"\nwrote {OUT} ({OUT.stat().st_size/1024:.1f} KB)")
 
