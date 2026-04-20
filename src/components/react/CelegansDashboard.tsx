@@ -172,6 +172,21 @@ function drawWormBody(
   ctx.fill();
 }
 
+// Known releaser neurons per modulator — based on Phase 3d-1 findings.
+// Drawing these with distinctive markers on the brain panel lets viewers
+// see which neurons are sources for each modulator concentration.
+const RELEASERS: Record<string, string[]> = {
+  "FLP-11": ["RIS"],
+  "FLP-1":  ["AVKL", "AVKR"],
+  "FLP-2":  ["AVKL", "AVKR"],
+  "NLP-12": ["DVA"],
+  "PDF-1":  ["AVBL", "AVBR", "AVBR", "ALA", "RIA"],
+  "5HT":    ["NSML", "NSMR", "HSNL", "HSNR", "ADFL", "ADFR"],
+  "DA":     ["PDEL", "PDER", "ADEL", "ADER", "CEPDL", "CEPDR", "CEPVL", "CEPVR"],
+  "TA":     ["RIML", "RIMR"],
+  "OA":     ["RICL", "RICR"],
+};
+
 function drawBrain3D(
   ctx: CanvasRenderingContext2D,
   w: number,
@@ -181,6 +196,8 @@ function drawBrain3D(
   activeSet: Set<number>,
   hoverIdx: number | null,
   readoutSet: Set<string>,
+  modConcentrations: number[] | null,
+  modNames: string[] | null,
 ) {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#0a0e1a";
@@ -210,6 +227,44 @@ function drawBrain3D(
   ctx.moveTo(w * 0.05, cy);
   ctx.lineTo(w * 0.95, cy);
   ctx.stroke();
+
+  // Releaser "glow" halos — for each modulator with elevated concentration,
+  // render a soft colored glow around its releaser neurons. Gives visual
+  // feedback of the volume-transmission layer. Only render if we have
+  // modulator telemetry.
+  const nameToIdx = new Map<string, number>();
+  names.forEach((nm, i) => nameToIdx.set(nm, i));
+  const maxConc = 8.0;  // normalisation — matches concentration_cap
+  if (modConcentrations && modNames) {
+    for (let mi = 0; mi < modNames.length; mi++) {
+      const mod = modNames[mi];
+      const conc = modConcentrations[mi];
+      if (conc <= 0.2) continue;
+      const color = MODULATOR_COLORS[mod] ?? "#94a3b8";
+      const intensity = Math.min(1.0, conc / maxConc);
+      const releasers = RELEASERS[mod] ?? [];
+      for (const rn of releasers) {
+        const idx = nameToIdx.get(rn);
+        if (idx === undefined) continue;
+        const [x, y, z] = positions[idx];
+        const ys = positions.map((p) => p[1]);
+        const zs = positions.map((p) => p[2]);
+        const yMin = Math.min(...ys), yMax = Math.max(...ys);
+        const zMin = Math.min(...zs), zMax = Math.max(...zs);
+        const sx = ((y - yMin) / (yMax - yMin || 1)) * w * 0.9 + w * 0.05;
+        const sy = cy - ((z - zMin) / (zMax - zMin || 1) - 0.5) * h * 0.75;
+        const r = 4 + 18 * intensity;
+        const alpha = 0.08 + 0.5 * intensity;
+        const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
+        grad.addColorStop(0, color + Math.round(alpha * 255).toString(16).padStart(2, "0"));
+        grad.addColorStop(1, color + "00");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
 
   // Depth-sorted draw (x = left-right, used for depth shading)
   const idxSorted = [...Array(positions.length).keys()].sort(
@@ -689,6 +744,13 @@ export function CelegansDashboard() {
             }
           }
           const readoutSet = new Set(tr.meta.readout_neurons);
+          // Current modulator concentrations (interpolated to currentT)
+          let modAt: number[] | null = null;
+          if (tr.modulator_concentrations && tr.modulator_concentrations.length > 0) {
+            const nT = tr.modulator_concentrations.length;
+            const ti = Math.min(nT - 1, Math.floor((t / tr.meta.duration_s) * nT));
+            modAt = tr.modulator_concentrations[ti];
+          }
           drawBrain3D(
             ctx, brainW, panelH,
             tr.neuron_positions ?? [],
@@ -696,6 +758,8 @@ export function CelegansDashboard() {
             activeFullSet,
             hoverRef.current,
             readoutSet,
+            modAt,
+            tr.modulator_names ?? null,
           );
         }
       }
