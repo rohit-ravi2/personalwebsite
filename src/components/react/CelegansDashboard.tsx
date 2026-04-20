@@ -1930,7 +1930,22 @@ export function CelegansDashboard() {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
-    // Tighter pick radius so clicking empty space unlocks
+    // Raster mode: map y → row → readout neuron → global index
+    if (brainViewMode === "raster") {
+      const rasterH = rect.height;
+      const nNeurons = tr.meta.readout_neurons.length;
+      const rowH = (rasterH - 12) / Math.max(1, nNeurons);
+      const row = Math.floor((my - 6) / rowH);
+      if (row >= 0 && row < nNeurons) {
+        const nm = tr.meta.readout_neurons[row];
+        const gIdx = derived.nameToIdx.get(nm);
+        if (gIdx !== undefined) {
+          setLockedNeuron((prev) => (prev === gIdx ? null : gIdx));
+        }
+      }
+      return;
+    }
+    // 3D mode: project and pick
     const PICK_RADIUS_SQ = 120;
     let best = -1, bestD = PICK_RADIUS_SQ;
     for (let i = 0; i < tr.neuron_positions.length; i++) {
