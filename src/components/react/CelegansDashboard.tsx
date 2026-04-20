@@ -19,7 +19,7 @@ import { useEffect, useRef, useState } from "react";
  * synchronised. Canvas 2D throughout for 60 fps animation.
  */
 
-type Scenario = "spontaneous" | "touch" | "osmotic_shock" | "food";
+type Scenario = "spontaneous" | "touch" | "osmotic_shock" | "food" | "chemotaxis";
 
 type Trace = {
   scenario: string;
@@ -79,6 +79,11 @@ const SCENARIOS: Record<Scenario, { label: string; desc: string; tagline: string
     label: "Food",
     desc: "ASI/ASJ/ADF feeding-state tonic drive from t=2s (Flavell 2013).",
     tagline: "Satiety → dwelling.",
+  },
+  chemotaxis: {
+    label: "Chemotaxis",
+    desc: "2D agar, food patch at (4 mm, 0). ASE/AWC/AWA driven by real concentration field (Pierce-Shimomura 1999).",
+    tagline: "Navigate toward food.",
   },
 };
 
@@ -358,6 +363,30 @@ function drawFsmTimeline(
   ctx.stroke();
 }
 
+function drawStimMarkers(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number, labelW: number,
+  stims: Trace["stim_log"], durationS: number,
+) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.7)";
+  ctx.fillStyle = "rgba(245, 158, 11, 0.9)";
+  ctx.lineWidth = 1;
+  ctx.font = "9px system-ui, sans-serif";
+  ctx.setLineDash([2, 3]);
+  for (const s of stims) {
+    const frac = s.t / durationS;
+    const x = labelW + frac * (w - labelW - 4);
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+    ctx.fillText(s.preset, x + 2, 10);
+  }
+  ctx.restore();
+  ctx.setLineDash([]);
+}
+
 function drawEventProbs(
   ctx: CanvasRenderingContext2D,
   w: number,
@@ -528,6 +557,33 @@ export function CelegansDashboard() {
   currentTRef.current = currentT;
   hoverRef.current = hoverNeuron;
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.target && (e.target as HTMLElement).tagName === "INPUT") return;
+      if (e.code === "Space") {
+        e.preventDefault();
+        setPaused((v) => !v);
+      } else if (e.code === "ArrowLeft") {
+        e.preventDefault();
+        const tr = traceRef.current;
+        if (tr) {
+          currentTRef.current = Math.max(0, currentTRef.current - 1);
+          setCurrentT(currentTRef.current);
+        }
+      } else if (e.code === "ArrowRight") {
+        e.preventDefault();
+        const tr = traceRef.current;
+        if (tr) {
+          currentTRef.current = Math.min(tr.meta.duration_s, currentTRef.current + 1);
+          setCurrentT(currentTRef.current);
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   // Fetch trace
   useEffect(() => {
     let cancel = false;
@@ -673,7 +729,10 @@ export function CelegansDashboard() {
         if (c.width !== stripsW) c.width = stripsW;
         if (c.height !== 32) c.height = 32;
         const ctx = c.getContext("2d");
-        if (ctx) drawFsmTimeline(ctx, stripsW, 32, tr.fsm_states, curFrac);
+        if (ctx) {
+          drawFsmTimeline(ctx, stripsW, 32, tr.fsm_states, curFrac);
+          if (tr.stim_log) drawStimMarkers(ctx, stripsW, 32, 52, tr.stim_log, tr.meta.duration_s);
+        }
       }
 
       if (evCanvasRef.current && tr) {
@@ -792,10 +851,24 @@ export function CelegansDashboard() {
         </div>
       </div>
 
-      {/* Scenario description */}
-      <div className="text-xs text-muted-foreground flex items-center gap-2">
+      {/* Scenario description + chemotaxis index if present */}
+      <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-2">
         <span className="font-semibold text-foreground">{SCENARIOS[scenario].tagline}</span>
         <span className="opacity-70">— {SCENARIOS[scenario].desc}</span>
+        {trace?.environment?.chemotaxis_index?.CI !== undefined && (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[0.65rem] font-mono">
+            <span className="text-muted-foreground">CI</span>
+            <span className="text-foreground font-semibold">
+              {(trace.environment.chemotaxis_index.CI as number).toFixed(2)}
+            </span>
+          </span>
+        )}
+      </div>
+
+      {/* Keyboard hint */}
+      <div className="text-[0.65rem] text-muted-foreground/70">
+        ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play/pause ·
+        <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ±1 s scrub
       </div>
 
       {/* Main panel grid */}
