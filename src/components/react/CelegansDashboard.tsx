@@ -1761,13 +1761,20 @@ export function CelegansDashboard() {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
-    let best = -1, bestD = 400;
+    // Tighter pick radius so clicking empty space unlocks
+    const PICK_RADIUS_SQ = 120;
+    let best = -1, bestD = PICK_RADIUS_SQ;
     for (let i = 0; i < tr.neuron_positions.length; i++) {
       const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, rect.width, rect.height, brainRot);
       const d = (sx - mx) ** 2 + (sy - my) ** 2;
       if (d < bestD) { bestD = d; best = i; }
     }
-    if (best >= 0) setLockedNeuron((prev) => (prev === best ? null : best));
+    if (best >= 0) {
+      setLockedNeuron((prev) => (prev === best ? null : best));
+    } else if (lockedNeuron !== null) {
+      // Clicked empty space → unlock
+      setLockedNeuron(null);
+    }
   };
 
   const lockedMeta = useMemo(() => {
