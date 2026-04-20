@@ -1,0 +1,94 @@
+{
+  "events": [
+    "reversal_onset",
+    "reversal_offset",
+    "forward_run_onset",
+    "forward_run_offset",
+    "omega_onset",
+    "pirouette_entry",
+    "quiescence_onset",
+    "speed_burst_onset"
+  ],
+  "configs": {
+    "reversal_onset": {
+      "horizon": 1,
+      "features": "derivs",
+      "C": 10.0
+    },
+    "reversal_offset": {
+      "horizon": 1,
+      "features": "derivs",
+      "C": 1.0
+    },
+    "forward_run_onset": {
+      "horizon": 1,
+      "features": "derivs",
+      "C": 10.0
+    },
+    "forward_run_offset": {
+      "horizon": 3,
+      "features": "derivs",
+      "C": 10.0
+    },
+    "omega_onset": {
+      "horizon": 1,
+      "features": "derivs",
+      "C": 0.1
+    },
+    "pirouette_entry": {
+      "horizon": 3,
+      "features": "lags",
+      "C": 1.0
+    },
+    "quiescence_onset": {
+      "horizon": 3,
+      "features": "lags",
+      "C": 1.0
+    },
+    "speed_burst_onset": {
+      "horizon": 1,
+      "features": "derivs",
+      "C": 1.0
+    }
+  },
+  "train_auc": {
+    "reversal_onset": 0.7602747514508827,
+    "reversal_offset": 0.8487074684999212,
+    "forward_run_onset": 0.8342419149140072,
+    "forward_run_offset": 0.7914887233934859,
+    "omega_onset": 0.9002655309304098,
+    "pirouette_entry": 0.7536877953140028,
+    "quiescence_onset": 0.7737267258222706,
+    "speed_burst_onset": 0.8124906932663141
+  },
+  "test_auc": {
+    "reversal_onset": 0.7945328898814373,
+    "reversal_offset": 0.8035297237371365,
+    "forward_run_onset": 0.7522441608006931,
+    "forward_run_offset": 0.7479116160878583,
+    "omega_onset": 0.8617661759360233,
+    "pirouette_entry": 0.8062930426106636,
+    "quiescence_onset": 0.7856138820221996,
+    "speed_burst_onset": 0.7613481690625458
+  },
+  "neuron_order": [
+    "AIBL",
+    "ASEL",
+    "AUAL",
+    "AVEL",
+    "AVER",
+    "CEPDL",
+    "I3",
+    "IL2DL",
+    "M3L",
+    "M3R",
+    "NSML",
+    "NSMR",
+    "OLQDL",
+    "OLQDR",
+    "OLQVL",
+    "RMER",
+    "SMDVL",
+    "URXL"
+  ]
+}

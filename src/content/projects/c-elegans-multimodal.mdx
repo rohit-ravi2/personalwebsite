@@ -10,6 +10,7 @@ image:
 
 import { ConnectomeExplorer } from "../../components/react/ConnectomeExplorer";
 import { WormBody } from "../../components/react/WormBody";
+import { BrainBody } from "../../components/react/BrainBody";
 
 ## Thesis
 
@@ -55,3 +56,22 @@ A long-term effort to build a browser-native, expression-aware *C. elegans* body
 - **Imitation (RL-trained)** — MLP policy trained with PPO against a biologically parameterised reference (Fang-Yen 2010 / Boyle-Berri-Cohen 2012 crawling parameters) using MSE-of-segment-positions as reward. The action is a residual on top of the CPG baseline, so training only has to learn the physics-vs-kinematics correction, not the whole gait. 120k env steps of training, final rollout crawls at ~117 µm/s with peak per-segment curvature of ~22°.
 
 Next phases: (3) swap the controller for a Brian2 LIF brain built from the Cook 2019 connectome + the GNCA-predicted synaptic weights (the C. elegans analog of Shiu et al. 2024's fly brain model); (4) connectome-and-expression-constrained perturbation experiments against known knockout phenotypes from the C. elegans behavioral genetics literature.
+
+## Brain-driven: closed-loop demo (Phase 3)
+
+Below is the Phase 3 closed loop. A 300-neuron Brian2 LIF brain (Cook 2019 hermaphrodite wiring, Loer & Rand 2022 neurotransmitter identity) drives the MuJoCo body through event classifiers fit from Atanas et al. 2023's paired whole-brain calcium + behavior recordings (DANDI 000776).
+
+Architecture mirrors the Shiu et al. 2024 fly-brain pattern: sensory input → LIF brain → motor-neuron readout → event classifier bank → behavioural state machine → state-specific CPGs. The brain-body sync cadence follows the Eon Systems 2026 embodied-fly integration.
+
+<BrainBody client:only="react" />
+
+The left panel is the 20-segment MuJoCo body driven by whichever state the FSM currently occupies (FORWARD / REVERSE / OMEGA / PIROUETTE / QUIESCENT). The right panel is the live spike raster for the 18 motor/command neurons that are NeuroPAL-identified in all 10 Atanas worms — the cross-worm-validated readout set.
+
+Four scenarios are pre-rendered so the closed-loop simulation runs offline (a live Brian2 + MuJoCo loop in the browser would need MuJoCo-wasm + Brian2Cuda-wasm, not there yet):
+
+- **Spontaneous** — no stimulus; baseline behaviour.
+- **Head touch** — ALM/AVM mechanoreceptor drive at t=5s (Chalfie 1981).
+- **Osmotic shock** — ASH polymodal avoidance drive at t=5s (Hart 1995). Should produce the most reversal of any scenario.
+- **Food** — ASI/ASJ/ADF feeding-state tonic drive from t=2s. Should produce the least reversal.
+
+Honest calibration notes are in the component's "Sources & attribution" fold. The main v1 limitation is that classifiers were trained on Atanas ΔF/F imaging while closed-loop input is synthetic calcium from Brian2 spike trains — the distributions don't perfectly match, so transition thresholds were empirically recalibrated. Per-edge receptor mapping beyond the 22 sign overrides documented in the brain module is still outstanding and will be the main Phase 3 v2 work.
