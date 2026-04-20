@@ -1681,6 +1681,49 @@ export function CelegansDashboard() {
     setCurrentT(currentTRef.current);
   };
 
+  const exportCSV = () => {
+    const tr = traceRef.current;
+    if (!tr) return;
+    const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
+    const events = tr.meta.events_tracked ?? [];
+    const mods = tr.modulator_names ?? [];
+    const header = ["t_s", "state"]
+      .concat(events.map((e) => `p_${e}`))
+      .concat(mods.map((m) => `c_${m}`));
+    const rows: string[] = [header.join(",")];
+    const nSync = tr.fsm_states.length;
+    const dt = tr.meta.brain_sync_ms / 1000;
+    for (let i = 0; i < nSync; i++) {
+      const t = i * dt;
+      const state = stateNames[tr.fsm_states[i]] ?? "";
+      const evalEvent = (ev: string) => {
+        const arr = tr.event_probs[ev];
+        if (!arr || arr.length === 0) return "";
+        const ei = Math.min(arr.length - 1, Math.floor((t / tr.meta.duration_s) * arr.length));
+        return arr[ei].toFixed(3);
+      };
+      const evCols = events.map(evalEvent);
+      let modCols: string[] = [];
+      if (tr.modulator_concentrations && tr.modulator_concentrations.length > 0) {
+        const nMT = tr.modulator_concentrations.length;
+        const mi = Math.min(nMT - 1, Math.floor((t / tr.meta.duration_s) * nMT));
+        modCols = mods.map((_, k) => (tr.modulator_concentrations![mi][k] ?? 0).toFixed(3));
+      } else {
+        modCols = mods.map(() => "");
+      }
+      rows.push([t.toFixed(3), state, ...evCols, ...modCols].join(","));
+    }
+    const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `celegans-${scenario}-trace.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const exportPNG = () => {
     // Composite all canvases into one image + download
     const refs = [
@@ -1990,6 +2033,12 @@ export function CelegansDashboard() {
           title="Copy a link to this exact moment"
           aria-label="Copy shareable link to current scenario and time"
         >{copiedLink ? "✓ copied" : "🔗 link"}</button>
+        <button
+          onClick={exportCSV}
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          aria-label="Download scenario trace as CSV"
+          title="Export trace (state, event probs, modulators) as CSV"
+        >⇩ csv</button>
         <button
           onClick={() => setShowHelp((v) => !v)}
           className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
