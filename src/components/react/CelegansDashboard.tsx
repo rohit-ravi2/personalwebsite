@@ -1031,6 +1031,17 @@ export function CelegansDashboard() {
   const [showFps, setShowFps] = useState(false);
   const fpsRef = useRef({ last: 0, frames: 0, fps: 0 });
 
+  // Respect prefers-reduced-motion — disable the pulse/trail/edge animations
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReducedMotion(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
   const brainCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1271,7 +1282,7 @@ export function CelegansDashboard() {
       const tr = traceRef.current;
       const derived = brainDerived;
 
-      if (tr && !pausedRef.current) {
+      if (tr && !pausedRef.current && !reducedMotion) {
         currentTRef.current = (currentTRef.current + dt * speedRef.current) % tr.meta.duration_s;
         setCurrentT(currentTRef.current);
       }
@@ -1481,7 +1492,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit, reducedMotion]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
@@ -1775,7 +1786,12 @@ export function CelegansDashboard() {
   }, [searchQ, trace, neuronMeta]);
 
   return (
-    <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
+    <div
+      className="my-8 flex flex-col gap-4 text-sm"
+      ref={wrapRef}
+      role="region"
+      aria-label="C. elegans closed-loop brain-body simulator"
+    >
       {/* Hero intro */}
       <div className="rounded-xl border bg-gradient-to-br from-card via-card/80 to-card/60 p-4 mb-1">
         <div className="flex items-center gap-2 flex-wrap">
@@ -1808,12 +1824,14 @@ export function CelegansDashboard() {
               <button
                 key={s}
                 onClick={() => setScenario(s)}
-                className={`rounded-md px-3 py-1.5 font-medium transition-all flex items-center gap-1.5 ${
+                className={`rounded-md px-3 py-1.5 font-medium transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 ${
                   scenario === s
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "hover:bg-accent text-foreground/80"
                 }`}
                 title={stats ? `FWD ${(stats.fwd*100).toFixed(0)}% · REV ${(stats.rev*100).toFixed(0)}% · OMG ${(stats.omg*100).toFixed(0)}% · PIR ${(stats.pir*100).toFixed(0)}% · QUI ${(stats.qui*100).toFixed(0)}%` : undefined}
+                aria-label={`Select scenario: ${SCENARIOS[s].label}. ${SCENARIOS[s].desc}`}
+                aria-pressed={scenario === s}
               >
                 <span>{SCENARIOS[s].label}</span>
                 {/* Mini FSM timeline — mode-per-bin over the whole scenario */}
@@ -1837,7 +1855,9 @@ export function CelegansDashboard() {
         </div>
         <button
           onClick={() => setPaused((v) => !v)}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          aria-label={paused ? "Play simulation" : "Pause simulation"}
+          aria-pressed={!paused}
         >
           {paused ? "▶ Play" : "⏸ Pause"}
         </button>
@@ -1847,14 +1867,16 @@ export function CelegansDashboard() {
             type="range" min="0.25" max="3" step="0.25"
             value={speed}
             onChange={(e) => setSpeed(+e.target.value)}
-            className="accent-primary w-24"
+            className="accent-primary w-24 focus:outline-none focus:ring-2 focus:ring-primary rounded"
+            aria-label={`Playback speed: ${speed.toFixed(2)} times normal`}
           />
           <span className="tabular-nums font-mono text-[0.65rem] w-8">{speed.toFixed(2)}×</span>
         </label>
         <button
           onClick={exportPNG}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           title="Download PNG snapshot of current state"
+          aria-label="Download PNG snapshot of all panels at current time"
         >📷 snapshot</button>
         <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
           <span className="tabular-nums font-mono">
@@ -2050,7 +2072,12 @@ export function CelegansDashboard() {
         <div>
           <PanelLabel>body · 20-segment MuJoCo · state-coloured glow</PanelLabel>
           <div className="rounded-lg overflow-hidden border bg-[#f9f0d6]">
-            <canvas ref={bodyCanvasRef} className="block w-full" />
+            <canvas
+              ref={bodyCanvasRef}
+              className="block w-full"
+              role="img"
+              aria-label={`20-segment worm body in state ${currentFrame?.state ?? "unknown"} at time ${currentT.toFixed(1)} seconds`}
+            />
           </div>
         </div>
         <div>
@@ -2146,6 +2173,8 @@ export function CelegansDashboard() {
               onMouseDown={onBrainMouseDown}
               onMouseUp={onBrainMouseUp}
               onClick={onBrainClick}
+              role="img"
+              aria-label={`Brain view: ${brainViewMode === "3d" ? "300 neurons in 3D with active neurons highlighted in green" : "Spike raster of 18 readout neurons over time"}. Click neurons to lock, shift-drag to rotate.`}
             />
             {/* Rotation indicator + reset */}
             <div className="absolute top-2 left-2 flex items-center gap-2 rounded-md bg-[#0f1429]/70 px-2 py-1 text-[0.6rem] text-[#94a3b8]">
