@@ -1330,6 +1330,7 @@ export function CelegansDashboard() {
   const fpsRef = useRef({ last: 0, frames: 0, fps: 0 });
   const [copiedLink, setCopiedLink] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [copiedCite, setCopiedCite] = useState(false);
 
   // Read scenario + time from URL hash (#scenario=touch&t=5.2) on first mount
   const didInitFromUrl = useRef(false);
@@ -3244,6 +3245,25 @@ export function CelegansDashboard() {
           <div><strong>v3 modulation:</strong> 9 peptidergic + monoaminergic concentrations (FLP-11, FLP-1, FLP-2, NLP-12, PDF-1, 5-HT, dopamine, tyramine, octopamine) with releaser + receptor tables from CeNGEN single-cell expression (Taylor et al. 2021).</div>
           <div><strong>Tier 1 upgrades (opt-in):</strong> graded non-spiking dynamics (Kunert-Graf 2014), L-type Ca plateau channels, volume-transmission distance-weighted modulator diffusion, real closed-loop proprioception, 2D agar environment for Pierce-Shimomura 1999 chemotaxis validation.</div>
           <div className="pt-1 italic">Current shipped scenarios use v3 LIF brain. Tier 1 graded stack requires v3.4 classifier retraining to reproduce phenotypes. Honest perturbation numbers with n=3 seed error bars documented in <code className="text-[0.7rem]">artifacts/ensemble_report.md</code>.</div>
+          <div className="pt-2 border-t border-border/40">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <span className="text-foreground font-semibold">Cite this simulator</span>
+              <button
+                onClick={() => {
+                  const cite = `Ravi, R. (${new Date().getFullYear()}). Connectome-constrained C. elegans digital twin (v3). https://rohitravi.com/projects/c-elegans-multimodal`;
+                  navigator.clipboard?.writeText(cite).then(() => {
+                    setCopiedCite(true);
+                    setTimeout(() => setCopiedCite(false), 1600);
+                  });
+                }}
+                className="rounded-md border px-2 py-0.5 text-[0.65rem] hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
+                aria-label="Copy citation to clipboard"
+              >{copiedCite ? "✓ copied" : "copy citation"}</button>
+            </div>
+            <code className="block bg-background/60 rounded p-2 text-[0.7rem] whitespace-pre-wrap">
+              Ravi, R. ({new Date().getFullYear()}). Connectome-constrained C. elegans digital twin (v3). https://rohitravi.com/projects/c-elegans-multimodal
+            </code>
+          </div>
         </div>
       </details>
     </div>
