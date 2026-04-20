@@ -1047,6 +1047,25 @@ function drawEnvironment(
   ctx.arc(foodSX, foodSY, radialR, 0, Math.PI * 2);
   ctx.fill();
 
+  // Concentration contour rings — iso-lines at C = 0.75, 0.50, 0.25 of peak.
+  // For a Gaussian with σ, C/Cmax = exp(-d²/(2σ²)) → d = σ*sqrt(-2*ln(frac))
+  ctx.save();
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.4)";
+  ctx.setLineDash([3, 4]);
+  ctx.lineWidth = 0.8;
+  ctx.font = "8px ui-monospace, monospace";
+  ctx.fillStyle = "rgba(251, 191, 36, 0.7)";
+  for (const frac of [0.75, 0.5, 0.25]) {
+    const d_mm = env.sigma_mm * Math.sqrt(-2 * Math.log(frac));
+    const rPx = d_mm * pxPerMm;
+    ctx.beginPath();
+    ctx.arc(foodSX, foodSY, rPx, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillText(`${Math.round(frac * 100)}%`, foodSX + rPx - 12, foodSY - 2);
+  }
+  ctx.setLineDash([]);
+  ctx.restore();
+
   // Food marker
   ctx.fillStyle = "#f59e0b";
   ctx.beginPath();
