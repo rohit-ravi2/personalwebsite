@@ -11,6 +11,7 @@ image:
 import { ConnectomeExplorer } from "../../components/react/ConnectomeExplorer";
 import { WormBody } from "../../components/react/WormBody";
 import { BrainBody } from "../../components/react/BrainBody";
+import { CelegansDashboard } from "../../components/react/CelegansDashboard";
 
 ## Thesis
 
@@ -63,7 +64,7 @@ Below is the Phase 3 closed loop. A 300-neuron Brian2 LIF brain (Cook 2019 herma
 
 Architecture mirrors the Shiu et al. 2024 fly-brain pattern: sensory input → LIF brain → motor-neuron readout → event classifier bank → behavioural state machine → state-specific CPGs. The brain-body sync cadence follows the Eon Systems 2026 embodied-fly integration.
 
-<BrainBody client:only="react" />
+<CelegansDashboard client:only="react" />
 
 The left panel is the 20-segment MuJoCo body driven by whichever state the FSM currently occupies (FORWARD / REVERSE / OMEGA / PIROUETTE / QUIESCENT). The right panel is the live spike raster for the 18 motor/command neurons that are NeuroPAL-identified in all 10 Atanas worms — the cross-worm-validated readout set.
 

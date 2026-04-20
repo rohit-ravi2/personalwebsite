@@ -201,6 +201,9 @@ class ClosedLoopEnv:
         self.fsm_states: list[int] = []
         self.body_frames: list[dict] = []
         self.stim_log: list[dict] = []
+        # T1 UI — richer telemetry for the dashboard
+        self.modulator_buffer: list[np.ndarray] = []  # (M,) per sync
+        self.environment_trail: list[dict] = []       # worm xy over time
         # Track previous spike-monitor length to get rates per sync window
         self._prev_spike_len = 0
 
@@ -315,6 +318,12 @@ class ClosedLoopEnv:
         curv = np.mean(np.abs(np.diff(headings)))
         self._inject_proprio(curv)
 
+        # Snapshot modulator concentrations for the dashboard
+        if self.modulation is not None:
+            self.modulator_buffer.append(
+                self.modulation.concentrations.copy()
+            )
+
         # 9) T1e — environment coupling (if present)
         if self.environment is not None:
             # Head position — first segment's CoM, in MuJoCo sim-m units.
@@ -327,6 +336,11 @@ class ClosedLoopEnv:
                 head_x_real, head_y_real, t_env_s
             )
             self.environment.inject_into_brain(self.brain)
+            self.environment_trail.append({
+                "t": round(t_env_s, 3),
+                "x": round(head_x_real * 1e3, 3),  # mm
+                "y": round(head_y_real * 1e3, 3),
+            })
 
     def run(self, duration_s: float, stim_schedule: list[tuple] = ()):
         """Run the closed loop for duration_s seconds. stim_schedule is
@@ -393,6 +407,29 @@ class ClosedLoopEnv:
             "fsm_states": self.fsm_states,
             "stim_log": self.stim_log,
         }
+
+        # T1 UI — include neuron 3D positions + modulator timeseries
+        pos_path = Path(__file__).resolve().parent / "artifacts" / "neuron_positions.npz"
+        if pos_path.exists():
+            pos_data = np.load(pos_path, allow_pickle=True)
+            payload["neuron_positions"] = pos_data["positions"].tolist()
+            payload["neuron_names"] = [str(s) for s in pos_data["names"]]
+        if self.modulation is not None and self.modulator_buffer:
+            mod_arr = np.stack(self.modulator_buffer, axis=0)  # (T, M)
+            payload["modulator_concentrations"] = [
+                [round(float(x), 3) for x in row] for row in mod_arr
+            ]
+            payload["modulator_names"] = list(self.modulation.modulators)
+        if self.environment is not None:
+            payload["environment"] = {
+                "food_xy_mm": [
+                    self.environment.gradient.food_x * 1e3,
+                    self.environment.gradient.food_y * 1e3,
+                ],
+                "sigma_mm": self.environment.gradient.sigma * 1e3,
+                "trail": self.environment_trail,
+                "chemotaxis_index": self.environment.chemotaxis_index(),
+            }
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(payload, separators=(",", ":")))
         kb = out_path.stat().st_size / 1024
