@@ -1145,6 +1145,27 @@ function drawEnvironment(
   }
   ctx.stroke();
 
+  // Time tick marks along the trail — every 10 s
+  ctx.save();
+  ctx.fillStyle = "rgba(94, 199, 122, 0.85)";
+  ctx.font = "8px ui-monospace, monospace";
+  let nextTick = 10;
+  for (const p of env.trail) {
+    if (p.t > currentTS + 0.15) break;
+    if (p.t >= nextTick) {
+      const sx = cx + p.x * pxPerMm;
+      const sy = cy - p.y * pxPerMm;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(226, 232, 240, 0.75)";
+      ctx.fillText(`${nextTick}s`, sx + 4, sy + 3);
+      ctx.fillStyle = "rgba(94, 199, 122, 0.85)";
+      nextTick += 10;
+    }
+  }
+  ctx.restore();
+
   // Worm head
   ctx.shadowBlur = 8;
   ctx.shadowColor = "#5ec77a";
