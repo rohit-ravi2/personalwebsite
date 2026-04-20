@@ -1552,7 +1552,44 @@ export function CelegansDashboard() {
       }
       if (crossed) recentEvents++;
     }
-    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits };
+    // Rolling history for sparklines — 40 samples over the last 4 s
+    const HIST_N = 40;
+    const HIST_WINDOW_S = 4;
+    const hist = {
+      active: new Array<number>(HIST_N).fill(0),
+      topMod: new Array<number>(HIST_N).fill(0),
+      events: new Array<number>(HIST_N).fill(0),
+    };
+    for (let k = 0; k < HIST_N; k++) {
+      const tk = Math.max(0, t - HIST_WINDOW_S + (k / (HIST_N - 1)) * HIST_WINDOW_S);
+      // Active neurons at tk — count spikes within last 100ms window
+      let ak = 0;
+      const seen = new Set<number>();
+      if (trace.raster) {
+        for (const e of trace.raster) {
+          if (e.t > tk - 0.1 && e.t <= tk) {
+            for (const ni of e.n) if (!seen.has(ni)) { seen.add(ni); ak++; }
+          }
+        }
+      }
+      hist.active[k] = ak;
+      if (trace.modulator_concentrations && trace.modulator_names && topMods[0]) {
+        const nT = trace.modulator_concentrations.length;
+        const tiK = Math.min(nT - 1, Math.floor((tk / trace.meta.duration_s) * nT));
+        const mi = trace.modulator_names.indexOf(topMods[0][0]);
+        if (mi >= 0) hist.topMod[k] = trace.modulator_concentrations[tiK][mi];
+      }
+      let ek = 0;
+      const eventsNames2 = trace.meta.events_tracked ?? [];
+      for (const ev of eventsNames2) {
+        const arr = trace.event_probs[ev];
+        if (!arr) continue;
+        const tiE = Math.min(arr.length - 1, Math.floor((tk / trace.meta.duration_s) * arr.length));
+        if (arr[tiE] > 0.5) ek++;
+      }
+      hist.events[k] = ek;
+    }
+    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits, hist };
   }, [trace, currentT, brainDerived]);
 
   return (
@@ -1672,12 +1709,19 @@ export function CelegansDashboard() {
       {liveStats && (
         <div className="space-y-2">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.65rem]">
-            <StatCard label="active neurons" value={`${liveStats.activeCount}/18`} />
+            <StatCard
+              label="active neurons"
+              value={`${liveStats.activeCount}/18`}
+              spark={liveStats.hist.active}
+              sparkColor="#5ec77a"
+            />
             <StatCard
               label="dominant modulator"
               value={liveStats.topMods[0]?.[0] ?? "—"}
               sub={liveStats.topMods[0] ? `C = ${liveStats.topMods[0][1].toFixed(1)}` : ""}
               accent={liveStats.topMods[0] ? MODULATOR_COLORS[liveStats.topMods[0][0]] : undefined}
+              spark={liveStats.hist.topMod}
+              sparkColor={liveStats.topMods[0] ? MODULATOR_COLORS[liveStats.topMods[0][0]] : "#94a3b8"}
             />
             <StatCard
               label="state dwell"
@@ -1685,7 +1729,13 @@ export function CelegansDashboard() {
               sub={liveStats.currState}
               accent={STATE_COLORS[liveStats.currState]}
             />
-            <StatCard label="events firing" value={`${liveStats.recentEvents}`} sub="of 8 canonical" />
+            <StatCard
+              label="events firing"
+              value={`${liveStats.recentEvents}`}
+              sub="of 8 canonical"
+              spark={liveStats.hist.events}
+              sparkColor="#f59e0b"
+            />
           </div>
           {/* Active-circuit badges */}
           {liveStats.activeCircuits.length > 0 && (
@@ -2059,23 +2109,62 @@ function PanelLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function StatCard({ label, value, sub, accent }: {
+function StatCard({ label, value, sub, accent, spark, sparkColor }: {
   label: string; value: string; sub?: string; accent?: string;
+  spark?: number[]; sparkColor?: string;
 }) {
   return (
-    <div className="rounded-lg border bg-card/40 px-3 py-1.5">
-      <div className="text-[0.6rem] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="flex items-baseline gap-1.5 mt-0.5">
-        {accent && (
-          <span
-            className="inline-block w-2 h-2 rounded-full shrink-0"
-            style={{ backgroundColor: accent }}
-          />
-        )}
-        <span className="font-semibold text-foreground text-sm tabular-nums">{value}</span>
-        {sub && <span className="text-muted-foreground text-[0.65rem]">{sub}</span>}
+    <div className="rounded-lg border bg-card/40 px-3 py-1.5 relative overflow-hidden">
+      {spark && spark.length > 1 && (
+        <Sparkline values={spark} color={sparkColor ?? "#94a3b8"} />
+      )}
+      <div className="relative z-10">
+        <div className="text-[0.6rem] uppercase tracking-wider text-muted-foreground">{label}</div>
+        <div className="flex items-baseline gap-1.5 mt-0.5">
+          {accent && (
+            <span
+              className="inline-block w-2 h-2 rounded-full shrink-0"
+              style={{ backgroundColor: accent }}
+            />
+          )}
+          <span className="font-semibold text-foreground text-sm tabular-nums">{value}</span>
+          {sub && <span className="text-muted-foreground text-[0.65rem]">{sub}</span>}
+        </div>
       </div>
     </div>
+  );
+}
+
+function Sparkline({ values, color }: { values: number[]; color: string }) {
+  const n = values.length;
+  const max = Math.max(1, ...values);
+  const min = Math.min(...values);
+  const rng = Math.max(1e-6, max - min);
+  // Normalise so max -> 0 (top) and min -> 1 (bottom) of sparkline band
+  const pts = values.map((v, i) => {
+    const x = (i / (n - 1)) * 100;
+    const y = 100 - ((v - min) / rng) * 100;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const areaPath = `M 0,100 L ${pts.join(" L ")} L 100,100 Z`;
+  const linePath = `M ${pts.join(" L ")}`;
+  const gradId = `sparkGrad-${color.replace("#", "")}`;
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full opacity-[0.35]"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.55" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#${gradId})`} />
+      <path d={linePath} fill="none" stroke={color} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
+    </svg>
   );
 }
 
