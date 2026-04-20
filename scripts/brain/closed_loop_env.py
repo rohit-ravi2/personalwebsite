@@ -39,6 +39,7 @@ from lif_brain import LIFBrain  # noqa: E402
 from neural_classifier_bank import ClassifierBank, spikes_to_calcium  # noqa: E402
 from behavioral_fsm import BehavioralFSM, State, STATE_CPG  # noqa: E402
 from sensory_injection import stimulate  # noqa: E402
+from modulation_layer import ModulationLayer, TABLES as MOD_TABLES  # noqa: E402
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -92,11 +93,17 @@ def cpg_ctrl(nu: int, t: float, params: dict) -> np.ndarray:
 class ClosedLoopEnv:
     """Closed-loop brain-body simulation."""
 
-    def __init__(self, seed: int = 0):
+    def __init__(self, seed: int = 0, enable_modulation: bool = True):
         np.random.seed(seed)
         self.brain = LIFBrain()
         self.bank = ClassifierBank()
         self.fsm = BehavioralFSM(State.FORWARD)
+
+        # v3 slow neuromodulation layer (Phase 3d-2)
+        self.modulation: ModulationLayer | None = None
+        if enable_modulation and MOD_TABLES.exists():
+            self.modulation = ModulationLayer(self.brain.names)
+            self.modulation.attach_to_brain(self.brain)
 
         # Per-neuron affine distribution calibration (v1.5 fix):
         # maps Brian2 synthetic calcium moments onto the Atanas ΔF/F
@@ -302,10 +309,14 @@ class ClosedLoopEnv:
                 "events_tracked": self.bank.events,
                 "states": ["FORWARD", "REVERSE", "OMEGA", "PIROUETTE",
                            "QUIESCENT"],
+                "modulation_enabled": self.modulation is not None,
+                "modulators": (list(self.modulation.modulators)
+                               if self.modulation else []),
                 "sources": {
                     "brain": "Shiu et al. 2024 Nature analog (worm Cook 2019 + Loer&Rand 2022 NT)",
                     "body": "Phase 1a/2a MuJoCo, Boyle-Berri-Cohen 2012 CPG",
                     "classifier": "Phase 3b harness (Atanas 2023)",
+                    "modulation": "v3 9-modulator peptidergic+monoamine layer from CeNGEN expression",
                     "sync_pattern": "Eon Systems 2026",
                 },
             },

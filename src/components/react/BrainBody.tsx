@@ -352,7 +352,8 @@ export function BrainBody() {
           <div><strong>Body:</strong> 20-segment MuJoCo wormbody with Boyle-Berri-Cohen 2012 CPG parameters and resistive-force-theory drag.</div>
           <div><strong>Event classifiers:</strong> Logistic regression fit on Atanas et al. 2023 (DANDI 000776) paired calcium+behavior recordings across 10 worms. Cross-worm generalization validated (train 1-8, test 9-10) on 18-neuron strict intersection readout.</div>
           <div><strong>Integration pattern:</strong> brain-body sync cadence after Eon Systems 2026 embodied-fly demonstration.</div>
-          <div className="pt-1 italic">v1.5: per-neuron affine distribution calibration maps Brian2 synthetic-calcium moments onto the Atanas ΔF/F training distribution; biological face-validity improved (osmotic → omega+pirouette surge, food → quiescence bias). Remaining: classifier joint structure still differs post-moment-match, so event thresholds remain empirically set. Per-edge receptor mapping beyond the 22 sign overrides is v2.</div>
+          <div><strong>v3 neuromodulation layer:</strong> 9 peptidergic + monoaminergic modulators (FLP-11, FLP-1, FLP-2, NLP-12, PDF-1, 5-HT, dopamine, tyramine, octopamine) with releaser and receptor tables extracted from CeNGEN single-cell expression (Taylor 2021). Concentrations evolve on τ = 4–30 s, produce per-neuron slow modulation currents. RIS→FLP-11→broad inhibition now gives a real sleep-like quiescence pathway (previously was statistical correlate via NSM).</div>
+          <div className="pt-1 italic">Remaining v2 work: classifier joint-structure mismatch between Brian2 synthetic calcium and Atanas ΔF/F still requires empirical threshold tuning; per-edge receptor mapping beyond the 22 sign overrides outstanding.</div>
         </div>
       </details>
     </div>
