@@ -2278,12 +2278,29 @@ export function CelegansDashboard() {
         </div>
       )}
 
-      {/* Scrubbable timeline */}
+      {/* Scrubbable timeline — thicker + drag-capable */}
       <div
-        className="h-1.5 rounded-full bg-muted cursor-pointer relative group"
+        className="h-2.5 rounded-full bg-muted cursor-pointer relative group hover:bg-muted/70 transition-colors"
         onClick={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           scrubTo((e.clientX - r.left) / r.width);
+        }}
+        onPointerDown={(e) => {
+          // Enable click-and-drag scrubbing
+          const el = e.currentTarget;
+          const r = el.getBoundingClientRect();
+          const update = (clientX: number) => {
+            const frac = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+            scrubTo(frac);
+          };
+          update(e.clientX);
+          const move = (ev: PointerEvent) => update(ev.clientX);
+          const up = () => {
+            window.removeEventListener("pointermove", move);
+            window.removeEventListener("pointerup", up);
+          };
+          window.addEventListener("pointermove", move);
+          window.addEventListener("pointerup", up);
         }}
         onMouseMove={(e) => {
           const tr = traceRef.current;
@@ -2300,9 +2317,12 @@ export function CelegansDashboard() {
         onMouseLeave={() => setScrubHover(null)}
       >
         <div
-          className="h-full rounded-full bg-primary transition-[width] duration-75"
+          className="h-full rounded-full bg-primary transition-[width] duration-75 relative"
           style={{ width: `${meta ? (currentT / meta.duration_s) * 100 : 0}%` }}
-        />
+        >
+          {/* Draggable knob */}
+          <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary border-2 border-background shadow-md group-hover:scale-125 transition-transform" />
+        </div>
         {/* Stim markers on the scrub bar itself */}
         {trace?.stim_log?.map((s, i) => (
           <div
