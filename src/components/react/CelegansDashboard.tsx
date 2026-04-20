@@ -951,6 +951,8 @@ export function CelegansDashboard() {
   const dragStartRef = useRef<{ x: number; rot: number } | null>(null);
   const [brainViewMode, setBrainViewMode] = useState<"3d" | "raster">("3d");
   const [arenaZoomMm, setArenaZoomMm] = useState(20);  // world extent in arena view
+  const [showFps, setShowFps] = useState(false);
+  const fpsRef = useRef({ last: 0, frames: 0, fps: 0 });
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1034,11 +1036,12 @@ export function CelegansDashboard() {
           setPaused(true);
         }
       } else if (e.code === "KeyR") {
-        // restart
         if (tr) {
           currentTRef.current = 0;
           setCurrentT(0);
         }
+      } else if (e.code === "KeyF") {
+        setShowFps((v) => !v);
       } else if (e.code === "Digit1" || e.code === "Digit2" ||
                  e.code === "Digit3" || e.code === "Digit4" || e.code === "Digit5") {
         const idx = parseInt(e.code.replace("Digit", "")) - 1;
@@ -1094,6 +1097,15 @@ export function CelegansDashboard() {
     const draw = (now: number) => {
       const dt = Math.min(0.1, (now - last) / 1000);
       last = now;
+
+      // FPS counter
+      fpsRef.current.frames++;
+      if (now - fpsRef.current.last > 500) {
+        fpsRef.current.fps = fpsRef.current.frames / ((now - fpsRef.current.last) / 1000);
+        fpsRef.current.last = now;
+        fpsRef.current.frames = 0;
+      }
+
       const tr = traceRef.current;
       const derived = brainDerived;
 
@@ -1805,12 +1817,20 @@ export function CelegansDashboard() {
           <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ±1s ·
           <kbd className="mx-1 px-1 rounded border text-[0.6rem]">, .</kbd> ±frame ·
           <kbd className="mx-1 px-1 rounded border text-[0.6rem]">R</kbd> restart ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">1–5</kbd> scenarios
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">1–5</kbd> scenarios ·
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">F</kbd> fps
         </span>
       </div>
 
       {loadErr && (
         <div className="text-xs text-destructive">Trace load failed: {loadErr}</div>
+      )}
+
+      {/* FPS overlay */}
+      {showFps && (
+        <div className="fixed top-4 right-4 z-50 rounded bg-black/80 text-white text-xs px-2 py-1 font-mono">
+          {Math.round(fpsRef.current.fps)} fps
+        </div>
       )}
 
       {/* Attribution fold */}
