@@ -2923,6 +2923,35 @@ export function CelegansDashboard() {
         <div className="text-xs text-destructive">Trace load failed: {loadErr}</div>
       )}
 
+      {/* Shimmer animation styles */}
+      <style>{`
+        @keyframes celegans-shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(400%); }
+        }
+        .celegans-shimmer {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(165, 180, 252, 0.12) 50%,
+            transparent 100%
+          );
+          animation: celegans-shimmer 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+          pointer-events: none;
+        }
+      `}</style>
+
+      {/* Loading shimmer overlay — shows on top of panels during scenario switch */}
+      {loading && (
+        <div className="fixed top-2 left-1/2 -translate-x-1/2 z-40 rounded-full bg-card border shadow-md px-3 py-1 text-[0.65rem] font-medium text-muted-foreground flex items-center gap-2 overflow-hidden relative" aria-live="polite">
+          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          loading {SCENARIOS[scenario].label.toLowerCase()}…
+          <div className="celegans-shimmer" />
+        </div>
+      )}
+
       {/* FPS overlay */}
       {showFps && (
         <div className="fixed top-4 right-4 z-50 rounded bg-black/80 text-white text-xs px-2 py-1 font-mono">
