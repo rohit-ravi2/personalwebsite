@@ -1549,6 +1549,10 @@ export function CelegansDashboard() {
         }
       } else if (e.code === "KeyF") {
         setShowFps((v) => !v);
+      } else if (e.code === "KeyE") {
+        setShowEdges((v) => !v);
+      } else if (e.code === "KeyV") {
+        setBrainViewMode((v) => (v === "3d" ? "raster" : "3d"));
       } else if (e.code === "Slash" && e.shiftKey) {
         // Shift+/ → "?"
         setShowHelp((v) => !v);
@@ -3166,6 +3170,8 @@ export function CelegansDashboard() {
                   <span><kbd className="px-1 rounded border">R</kbd> restart</span>
                   <span><kbd className="px-1 rounded border">1–5</kbd> scenarios</span>
                   <span><kbd className="px-1 rounded border">F</kbd> fps</span>
+                  <span><kbd className="px-1 rounded border">E</kbd> edges</span>
+                  <span><kbd className="px-1 rounded border">V</kbd> view</span>
                   <span><kbd className="px-1 rounded border">?</kbd> this help</span>
                   <span><kbd className="px-1 rounded border">Esc</kbd> close</span>
                 </div>
