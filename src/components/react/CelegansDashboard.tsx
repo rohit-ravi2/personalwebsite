@@ -307,6 +307,57 @@ function drawWormBody(
   ctx.stroke();
 }
 
+function drawSpikeRaster(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number,
+  raster: Trace["raster"],
+  readoutNames: string[],
+  durationS: number,
+  currentFrac: number,
+) {
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#0f1429"); bg.addColorStop(1, "#0a0e1a");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  const labelW = 68;
+  const plotW = w - labelW - 8;
+  const nNeurons = readoutNames.length;
+  if (nNeurons === 0) return;
+  const rowH = (h - 12) / nNeurons;
+
+  // Labels
+  ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
+  ctx.font = "9px system-ui, sans-serif";
+  for (let i = 0; i < nNeurons; i++) {
+    ctx.fillText(readoutNames[i], 4, 8 + i * rowH + rowH * 0.7);
+  }
+
+  // Spike dots
+  ctx.fillStyle = "#5ec77a";
+  for (const e of raster) {
+    const x = labelW + (e.t / durationS) * plotW;
+    for (const ni of e.n) {
+      if (ni >= 0 && ni < nNeurons) {
+        ctx.fillRect(x, 6 + ni * rowH + 1, 2, Math.max(2, rowH - 2));
+      }
+    }
+  }
+
+  // Cursor
+  const cursorX = labelW + currentFrac * plotW;
+  ctx.strokeStyle = "#f2ead3";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(cursorX, 0);
+  ctx.lineTo(cursorX, h);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(148, 163, 184, 0.7)";
+  ctx.font = "9px system-ui, sans-serif";
+  ctx.fillText("spike raster · 18 readout × time", 4, h - 2);
+}
+
 function drawBrain3D(
   ctx: CanvasRenderingContext2D,
   w: number, h: number,
@@ -837,6 +888,7 @@ export function CelegansDashboard() {
   const [brainRot, setBrainRot] = useState(0);           // rotation in radians
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ x: number; rot: number } | null>(null);
+  const [brainViewMode, setBrainViewMode] = useState<"3d" | "raster">("3d");
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1026,7 +1078,13 @@ export function CelegansDashboard() {
       // Brain canvas
       if (brainCanvasRef.current) {
         const ctx = setupCanvasDPR(brainCanvasRef.current, brainW, PANEL_H);
-        if (ctx && tr && derived) {
+        if (brainViewMode === "raster" && ctx && tr) {
+          drawSpikeRaster(
+            ctx, brainW, PANEL_H,
+            tr.raster, tr.meta.readout_neurons,
+            tr.meta.duration_s, t / tr.meta.duration_s,
+          );
+        } else if (ctx && tr && derived) {
           // Active set from raster within last 100ms
           const activeIdxs = new Set<number>();
           if (tr.raster) {
@@ -1153,7 +1211,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
@@ -1398,25 +1456,43 @@ export function CelegansDashboard() {
         </div>
         <div>
           <div className="flex items-baseline justify-between gap-2">
-            <PanelLabel>brain · 300 neurons · synapses on active</PanelLabel>
+            <PanelLabel>brain · {brainViewMode === "3d" ? "300 neurons · 3D" : "spike raster"}</PanelLabel>
             <div className="flex items-center gap-2 text-[0.65rem] text-muted-foreground">
-              <label className="inline-flex items-center gap-1 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={showEdges}
-                  onChange={(e) => setShowEdges(e.target.checked)}
-                  className="accent-primary"
-                />
-                edges
-              </label>
-              {showEdges && (
-                <input
-                  type="range" min="0.1" max="1" step="0.05"
-                  value={edgeAlpha}
-                  onChange={(e) => setEdgeAlpha(+e.target.value)}
-                  className="accent-primary w-12"
-                  title="edge opacity"
-                />
+              <div className="inline-flex rounded-md border p-0.5 bg-muted/30">
+                <button
+                  onClick={() => setBrainViewMode("3d")}
+                  className={`px-2 py-0.5 rounded text-[0.6rem] ${
+                    brainViewMode === "3d" ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  }`}
+                >3D</button>
+                <button
+                  onClick={() => setBrainViewMode("raster")}
+                  className={`px-2 py-0.5 rounded text-[0.6rem] ${
+                    brainViewMode === "raster" ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                  }`}
+                >raster</button>
+              </div>
+              {brainViewMode === "3d" && (
+                <>
+                  <label className="inline-flex items-center gap-1 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showEdges}
+                      onChange={(e) => setShowEdges(e.target.checked)}
+                      className="accent-primary"
+                    />
+                    edges
+                  </label>
+                  {showEdges && (
+                    <input
+                      type="range" min="0.1" max="1" step="0.05"
+                      value={edgeAlpha}
+                      onChange={(e) => setEdgeAlpha(+e.target.value)}
+                      className="accent-primary w-12"
+                      title="edge opacity"
+                    />
+                  )}
+                </>
               )}
             </div>
           </div>
