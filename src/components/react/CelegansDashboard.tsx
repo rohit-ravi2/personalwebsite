@@ -2119,6 +2119,21 @@ export function CelegansDashboard() {
           title="Export trace (state, event probs, modulators) as CSV"
         >⇩ csv</button>
         <button
+          onClick={() => {
+            setLockedNeuron(null);
+            setBrainRot(0);
+            setNtFilter(new Set());
+            setSearchQ("");
+            setBrainViewMode("3d");
+            setShowEdges(true);
+            setEdgeAlpha(0.6);
+            setArenaZoomMm(20);
+          }}
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          aria-label="Reset brain view and filters to defaults"
+          title="Clear locks, filters, rotation, zoom"
+        >↺ reset</button>
+        <button
           onClick={() => setShowHelp((v) => !v)}
           className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           aria-label="Show help overlay"
