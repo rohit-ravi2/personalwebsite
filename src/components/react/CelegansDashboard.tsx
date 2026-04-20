@@ -980,9 +980,11 @@ export function CelegansDashboard() {
   const evLegendRef = useRef<HTMLCanvasElement>(null);
 
   // Fetch state distribution for all scenarios once (for picker sparklines)
+  const [scenarioTimelines, setScenarioTimelines] = useState<Record<Scenario, number[]> | null>(null);
   useEffect(() => {
     const scenarioKeys: Scenario[] = ["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis"];
     const stats: Partial<Record<Scenario, any>> = {};
+    const timelines: Partial<Record<Scenario, number[]>> = {};
     let pending = scenarioKeys.length;
     scenarioKeys.forEach((s) => {
       fetch(`/data/wormbody-brain-${s}.json`)
@@ -997,11 +999,36 @@ export function CelegansDashboard() {
               omg: counts[3] / total, pir: counts[4] / total,
               qui: counts[5] / total,
             };
+            // Downsample FSM sequence to 40 bins (mode per bin)
+            const nBins = 40;
+            const bins: number[] = new Array(nBins);
+            for (let b = 0; b < nBins; b++) {
+              const start = Math.floor((b / nBins) * total);
+              const end = Math.floor(((b + 1) / nBins) * total);
+              const counts2 = [0, 0, 0, 0, 0, 0];
+              for (let i = start; i < end; i++) {
+                const x = d.fsm_states[i];
+                if (x >= 0 && x <= 5) counts2[x]++;
+              }
+              let mx = 0, mi = 0;
+              for (let i = 0; i < 6; i++) if (counts2[i] > mx) { mx = counts2[i]; mi = i; }
+              bins[b] = mi;
+            }
+            timelines[s] = bins;
           }
           pending--;
-          if (pending === 0) setScenarioStats(stats as any);
+          if (pending === 0) {
+            setScenarioStats(stats as any);
+            setScenarioTimelines(timelines as any);
+          }
         })
-        .catch(() => { pending--; if (pending === 0) setScenarioStats(stats as any); });
+        .catch(() => {
+          pending--;
+          if (pending === 0) {
+            setScenarioStats(stats as any);
+            setScenarioTimelines(timelines as any);
+          }
+        });
     });
   }, []);
 
@@ -1707,6 +1734,8 @@ export function CelegansDashboard() {
         <div className="inline-flex flex-wrap rounded-lg border bg-muted/40 p-0.5 gap-0.5 text-xs">
           {(Object.keys(SCENARIOS) as Scenario[]).map((s) => {
             const stats = scenarioStats?.[s];
+            const timeline = scenarioTimelines?.[s];
+            const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
             return (
               <button
                 key={s}
@@ -1716,16 +1745,22 @@ export function CelegansDashboard() {
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "hover:bg-accent text-foreground/80"
                 }`}
+                title={stats ? `FWD ${(stats.fwd*100).toFixed(0)}% · REV ${(stats.rev*100).toFixed(0)}% · OMG ${(stats.omg*100).toFixed(0)}% · PIR ${(stats.pir*100).toFixed(0)}% · QUI ${(stats.qui*100).toFixed(0)}%` : undefined}
               >
                 <span>{SCENARIOS[s].label}</span>
-                {/* State distribution bar */}
-                {stats && (
-                  <span className="inline-flex h-1.5 w-10 rounded overflow-hidden ring-1 ring-border/40 opacity-90" title={`FWD ${(stats.fwd*100).toFixed(0)}% · REV ${(stats.rev*100).toFixed(0)}% · QUI ${(stats.qui*100).toFixed(0)}%`}>
-                    <span className="h-full" style={{ width: `${stats.fwd*100}%`, backgroundColor: STATE_COLORS.FORWARD }} />
-                    <span className="h-full" style={{ width: `${stats.rev*100}%`, backgroundColor: STATE_COLORS.REVERSE }} />
-                    <span className="h-full" style={{ width: `${stats.omg*100}%`, backgroundColor: STATE_COLORS.OMEGA }} />
-                    <span className="h-full" style={{ width: `${stats.pir*100}%`, backgroundColor: STATE_COLORS.PIROUETTE }} />
-                    <span className="h-full" style={{ width: `${stats.qui*100}%`, backgroundColor: STATE_COLORS.QUIESCENT }} />
+                {/* Mini FSM timeline — mode-per-bin over the whole scenario */}
+                {timeline && (
+                  <span className="inline-flex h-2 w-12 rounded overflow-hidden ring-1 ring-border/40 opacity-90">
+                    {timeline.map((si, i) => (
+                      <span
+                        key={i}
+                        className="h-full"
+                        style={{
+                          flex: 1,
+                          backgroundColor: STATE_COLORS[stateNames[si]] ?? "#1e293b",
+                        }}
+                      />
+                    ))}
                   </span>
                 )}
               </button>
