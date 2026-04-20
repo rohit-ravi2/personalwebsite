@@ -38,6 +38,28 @@ from brian2 import amp, pA, ms, network_operation
 
 ART = Path(__file__).resolve().parent / "artifacts"
 TABLES = ART / "modulator_tables.npz"
+POSITIONS = ART / "neuron_positions.npz"
+
+# T1c — per-modulator diffusion length scales (µm). Values from
+# worm volume-transmission estimates:
+#   peptides travel farther than monoamines (larger molecules, but
+#   release-to-receptor distances can still reach mm in the
+#   pseudocoelomic fluid).
+# Faumont 2013, Choi 2021 (for peptides); Chase 2004, Nuttley 2002
+# (for monoamines) inform these order-of-magnitude estimates.
+DIFFUSION_LENGTH_UM = {
+    # Peptides — long range (~0.5-1 mm)
+    "FLP-11": 500.0,
+    "FLP-1":  500.0,
+    "FLP-2":  500.0,
+    "NLP-12": 400.0,
+    "PDF-1":  700.0,   # longest — PDF is known long-range arousal signal
+    # Monoamines — shorter range (~150-300 µm)
+    "5HT":    250.0,
+    "DA":     200.0,
+    "TA":     150.0,   # shortest — tyramine relatively local
+    "OA":     250.0,
+}
 
 # Default update cadence — 50 ms, same as closed-loop sync. All
 # modulators have τ ≥ 4 s so this is well below their dynamics.
@@ -74,6 +96,7 @@ class ModulationLayer:
         release_gain: float = DEFAULT_RELEASE_GAIN,
         mod_strength_pa: float = DEFAULT_MOD_STRENGTH_PA,
         concentration_cap: float = DEFAULT_CONCENTRATION_CAP,
+        use_volume_transmission: bool = True,
     ):
         d = np.load(tables_path, allow_pickle=True)
         self.modulators = [str(m) for m in d["modulators"]]
@@ -126,6 +149,15 @@ class ModulationLayer:
         # Cached decay factors per modulator
         self._decay = np.exp(-self.update_dt_s / self.taus_s).astype(np.float32)
 
+        # T1c — volume-transmission setup. If neuron positions are
+        # available, precompute per-modulator distance-weighted
+        # "effective target" matrices. Each releaser then maintains
+        # its own local concentration, and its effect at each target
+        # is attenuated by exp(-distance / λ_modulator).
+        self.use_volume = use_volume_transmission and POSITIONS.exists()
+        if self.use_volume:
+            self._init_volume_transmission(brain_neuron_names)
+
         # Tracking: we read spikes from a SpikeMonitor. Track last-seen
         # spike index so each update only processes new events.
         self._prev_spike_idx = 0
@@ -133,6 +165,65 @@ class ModulationLayer:
         # History for diagnostics (optional, small memory footprint)
         self.history_concentrations: list[np.ndarray] = []
         self.history_times_s: list[float] = []
+
+    # --------------------------------------------------------------
+
+    def _init_volume_transmission(self, brain_neuron_names):
+        """Precompute per-modulator effective-target matrices.
+
+        For each modulator m:
+          effective_target[m][r, i] = exp(-dist(r, i) / λ_m) × target_weight[m, i]
+        where r indexes the releaser neurons (those where
+        releaser_weights[m, r] > threshold) and i indexes all targets.
+        """
+        pos = np.load(POSITIONS, allow_pickle=True)
+        pos_names = [str(s) for s in pos["names"]]
+        positions = pos["positions"].astype(np.float32)  # (N_pos, 3)
+
+        # Reorder positions to match brain neuron order (should be identical)
+        name_to_pos_idx = {n: i for i, n in enumerate(pos_names)}
+        pos_ordered = np.zeros((self.N, 3), dtype=np.float32)
+        for bi, n in enumerate(brain_neuron_names):
+            if n in name_to_pos_idx:
+                pos_ordered[bi] = positions[name_to_pos_idx[n]]
+
+        self.positions = pos_ordered
+
+        # Per-modulator releaser sets and effective target matrices
+        self.releaser_indices: list[np.ndarray] = []
+        self.effective_target: list[np.ndarray] = []
+        for mi, mod in enumerate(self.modulators):
+            lam_um = float(DIFFUSION_LENGTH_UM.get(mod, 300.0))
+            rw = self.releaser_weights[mi]
+            r_idx = np.where(rw > 0.01)[0]  # releasers for this modulator
+            self.releaser_indices.append(r_idx)
+            if len(r_idx) == 0:
+                self.effective_target.append(np.zeros((0, self.N),
+                                                       dtype=np.float32))
+                continue
+            # Compute pairwise distances from each releaser to all targets
+            # and attenuate target weights accordingly.
+            # dist[k, i] = || positions[r_idx[k]] - positions[i] ||
+            R = pos_ordered[r_idx]       # (n_r, 3)
+            diffs = R[:, None, :] - pos_ordered[None, :, :]  # (n_r, N, 3)
+            dists = np.linalg.norm(diffs, axis=2)             # (n_r, N)
+            attn = np.exp(-dists / lam_um).astype(np.float32)
+            # Effective target for releaser k on target i:
+            # the base receptor expression modulated by distance.
+            eff = attn * self.target_weights[mi][None, :]
+            self.effective_target.append(eff)
+
+        # Per-releaser concentration state for volume-transmission mode
+        self.per_releaser_conc: list[np.ndarray] = [
+            np.zeros(len(idx), dtype=np.float32)
+            for idx in self.releaser_indices
+        ]
+        # Per-modulator total source rate (Σ releaser_weights over releasers
+        # in this mod) — used for normalisation
+        self.releaser_total_weights: list[np.ndarray] = [
+            self.releaser_weights[mi][idx]
+            for mi, idx in enumerate(self.releaser_indices)
+        ]
 
     # --------------------------------------------------------------
 
@@ -148,23 +239,43 @@ class ModulationLayer:
             (N,) float32 array of modulation currents in pA to be added
             to each neuron's I_ext.
         """
-        # Release contribution per modulator: dot product of releaser
-        # weights with spike counts. Non-releasers have zero weight so
-        # they don't contribute.
-        release = self.releaser_weights @ spike_counts.astype(np.float32)
+        if self.use_volume:
+            return self._step_volume(spike_counts)
 
-        # Exponential-decay + impulse update, clamped to the saturation
-        # cap to model biological binding-site saturation:
-        #   C_new = min(C_old × exp(-dt/τ) + release_gain × release, C_max)
+        # Legacy non-spatial path: single aggregate concentration per modulator.
+        release = self.releaser_weights @ spike_counts.astype(np.float32)
         self.concentrations = np.minimum(
             self.concentrations * self._decay + self.release_gain * release,
             self.concentration_cap,
         )
-
-        # Per-neuron modulation current:
-        #   I_mod[i] = Σ_m (target_weights[m, i] × concentration[m]) × strength
         I_mod = (self.target_weights.T @ self.concentrations) * self.mod_strength_pa
         return I_mod.astype(np.float32)
+
+    def _step_volume(self, spike_counts: np.ndarray) -> np.ndarray:
+        """T1c volume-transmission step — per-releaser concentrations
+        diffuse distance-weighted to each target."""
+        sc = spike_counts.astype(np.float32)
+        I_mod = np.zeros(self.N, dtype=np.float32)
+        for mi, mod in enumerate(self.modulators):
+            r_idx = self.releaser_indices[mi]
+            if len(r_idx) == 0:
+                continue
+            # Release per releaser: spike-count × that releaser's weight
+            # (their normalised release factor from build_modulator_tables).
+            r_weights = self.releaser_total_weights[mi]
+            release_per = r_weights * sc[r_idx]
+            # Exponential-decay + impulse update, capped.
+            new_c = (self.per_releaser_conc[mi] * self._decay[mi]
+                     + self.release_gain * release_per)
+            np.clip(new_c, 0.0, self.concentration_cap, out=new_c)
+            self.per_releaser_conc[mi] = new_c
+            # Aggregate modulator concentration (for diagnostics — sum
+            # across releasers, a proxy for "whole-brain concentration")
+            self.concentrations[mi] = float(new_c.sum())
+            # Contribution to I_mod: per-releaser concentration × effective
+            # target matrix (distance-weighted per-target modulator effect)
+            I_mod += new_c @ self.effective_target[mi]
+        return (I_mod * self.mod_strength_pa).astype(np.float32)
 
     def record_history(self, t_s: float) -> None:
         self.history_concentrations.append(self.concentrations.copy())
