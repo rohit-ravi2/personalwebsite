@@ -449,6 +449,7 @@ function drawSpikeRaster(
   durationS: number,
   currentFrac: number,
   neuronMeta: NeuronMeta[] | null,
+  lockedReadoutIdx: number | null,
 ) {
   const bg = ctx.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, "#0f1429"); bg.addColorStop(1, "#0a0e1a");
@@ -461,10 +462,21 @@ function drawSpikeRaster(
   if (nNeurons === 0) return;
   const rowH = (h - 12) / nNeurons;
 
+  // Row highlight for locked neuron
+  if (lockedReadoutIdx !== null && lockedReadoutIdx >= 0 && lockedReadoutIdx < nNeurons) {
+    ctx.fillStyle = "rgba(242, 234, 211, 0.1)";
+    ctx.fillRect(0, 6 + lockedReadoutIdx * rowH, w, rowH);
+    ctx.strokeStyle = "rgba(242, 234, 211, 0.5)";
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(0, 6 + lockedReadoutIdx * rowH, w, rowH);
+  }
+
   // Labels
-  ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
   ctx.font = "9px system-ui, sans-serif";
   for (let i = 0; i < nNeurons; i++) {
+    ctx.fillStyle = i === lockedReadoutIdx ? "#f2ead3" : "rgba(226, 232, 240, 0.85)";
+    if (i === lockedReadoutIdx) ctx.font = "bold 9px system-ui, sans-serif";
+    else ctx.font = "9px system-ui, sans-serif";
     ctx.fillText(readoutNames[i], 4, 8 + i * rowH + rowH * 0.7);
   }
 
@@ -1702,11 +1714,15 @@ export function CelegansDashboard() {
       if (brainCanvasRef.current) {
         const ctx = setupCanvasDPR(brainCanvasRef.current, brainW, PANEL_H);
         if (brainViewMode === "raster" && ctx && tr) {
+          // Map global lockedNeuron index → readout index, if applicable
+          const lockedName = lockedNeuron !== null ? tr.neuron_names?.[lockedNeuron] : null;
+          const lockedRIdx = lockedName ? tr.meta.readout_neurons.indexOf(lockedName) : -1;
           drawSpikeRaster(
             ctx, brainW, PANEL_H,
             tr.raster, tr.meta.readout_neurons,
             tr.meta.duration_s, t / tr.meta.duration_s,
             neuronMeta,
+            lockedRIdx >= 0 ? lockedRIdx : null,
           );
         } else if (ctx && tr && derived) {
           // Active set from raster within last 100ms
