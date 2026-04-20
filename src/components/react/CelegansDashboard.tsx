@@ -1103,6 +1103,29 @@ function drawEnvironment(
   ctx.fillText("food", foodSX + 8, foodSY - 6);
   ctx.fillText("worm", lastSX + 8, lastSY - 4);
 
+  // Compute current distance to food + local concentration (Gaussian model)
+  let wormX = 0, wormY = 0;
+  for (const p of env.trail) {
+    if (p.t > currentTS + 0.15) break;
+    wormX = p.x; wormY = p.y;
+  }
+  const dx = wormX - env.food_xy_mm[0];
+  const dy = wormY - env.food_xy_mm[1];
+  const distMm = Math.sqrt(dx * dx + dy * dy);
+  const cRel = Math.exp(-(distMm * distMm) / (2 * env.sigma_mm * env.sigma_mm));
+
+  // Telemetry box in top-right of arena
+  ctx.save();
+  ctx.fillStyle = "rgba(15, 20, 41, 0.78)";
+  ctx.fillRect(w - 108, 4, 104, 34);
+  ctx.strokeStyle = "rgba(100, 116, 139, 0.3)";
+  ctx.strokeRect(w - 108, 4, 104, 34);
+  ctx.fillStyle = "rgba(226, 232, 240, 0.95)";
+  ctx.font = "9px ui-monospace, monospace";
+  ctx.fillText(`d(food) = ${distMm.toFixed(2)} mm`, w - 102, 17);
+  ctx.fillText(`C(worm) = ${(cRel * 100).toFixed(1)}%`, w - 102, 30);
+  ctx.restore();
+
   // Scale bar
   ctx.strokeStyle = "rgba(148, 163, 184, 0.7)";
   ctx.fillStyle = "rgba(148, 163, 184, 0.9)";
