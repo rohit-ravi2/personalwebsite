@@ -1,0 +1,169 @@
+{
+  "modulators": {
+    "FLP-11": {
+      "synthesis_gene": "flp-11",
+      "receptors": {
+        "npr-1": -1,
+        "npr-22": -1,
+        "dmsr-1": -1,
+        "dmsr-7": -1,
+        "npr-11": -1
+      },
+      "tau_s": 20.0,
+      "note": "Released by RIS \u2192 broad inhibition for sleep-like quiescence (Turek 2016).",
+      "receptors_resolved": [
+        "npr-1",
+        "npr-22",
+        "dmsr-1",
+        "dmsr-7",
+        "npr-11"
+      ],
+      "n_releasers": 1,
+      "n_targets_significant": 93
+    },
+    "FLP-1": {
+      "synthesis_gene": "flp-1",
+      "receptors": {
+        "npr-4": -1,
+        "npr-5": -1,
+        "npr-11": -1
+      },
+      "tau_s": 15.0,
+      "note": "AVK-derived; modulates forward/reverse balance (Bhattacharya 2014).",
+      "receptors_resolved": [
+        "npr-4",
+        "npr-5",
+        "npr-11"
+      ],
+      "n_releasers": 2,
+      "n_targets_significant": 42
+    },
+    "FLP-2": {
+      "synthesis_gene": "flp-2",
+      "receptors": {
+        "npr-30": -1,
+        "frpr-18": -1
+      },
+      "tau_s": 15.0,
+      "note": "Exploratory/exploitatory transitions (Oranth 2018).",
+      "receptors_resolved": [
+        "npr-30",
+        "frpr-18"
+      ],
+      "n_releasers": 2,
+      "n_targets_significant": 13
+    },
+    "NLP-12": {
+      "synthesis_gene": "nlp-12",
+      "receptors": {
+        "ckr-1": 1,
+        "ckr-2": 1
+      },
+      "tau_s": 10.0,
+      "note": "DVA-derived proprioceptive modulation of reversal frequency (Hu 2011).",
+      "receptors_resolved": [
+        "ckr-1",
+        "ckr-2"
+      ],
+      "n_releasers": 1,
+      "n_targets_significant": 24
+    },
+    "PDF-1": {
+      "synthesis_gene": "pdf-1",
+      "receptors": {
+        "pdfr-1": 1
+      },
+      "tau_s": 30.0,
+      "note": "Arousal / exploratory drive (Janssen 2008).",
+      "receptors_resolved": [
+        "pdfr-1"
+      ],
+      "n_releasers": 6,
+      "n_targets_significant": 71
+    },
+    "5HT": {
+      "synthesis_gene": "tph-1",
+      "receptors": {
+        "mod-1": -1,
+        "ser-1": 1,
+        "ser-4": -1,
+        "ser-5": 1,
+        "ser-6": 1,
+        "ser-7": 1
+      },
+      "tau_s": 5.0,
+      "note": "NSM/HSN/ADF serotonin \u2014 dwelling, feeding state (Tsalik 2003).",
+      "receptors_resolved": [
+        "mod-1",
+        "ser-1",
+        "ser-4",
+        "ser-5",
+        "ser-6",
+        "ser-7"
+      ],
+      "n_releasers": 6,
+      "n_targets_significant": 71
+    },
+    "DA": {
+      "synthesis_gene": "cat-2",
+      "receptors": {
+        "dop-1": 1,
+        "dop-2": -1,
+        "dop-3": -1,
+        "dop-4": 1,
+        "dop-5": -1,
+        "dop-6": 1
+      },
+      "tau_s": 4.0,
+      "note": "PDE/ADE/CEP dopamine \u2014 pirouette duration, roaming (Chase 2004).",
+      "receptors_resolved": [
+        "dop-1",
+        "dop-2",
+        "dop-3",
+        "dop-4",
+        "dop-5",
+        "dop-6"
+      ],
+      "n_releasers": 2,
+      "n_targets_significant": 72
+    },
+    "TA": {
+      "synthesis_gene": "tdc-1",
+      "receptors": {
+        "ser-2": -1,
+        "lgc-55": -1,
+        "tyra-2": -1,
+        "tyra-3": 1
+      },
+      "tau_s": 4.0,
+      "note": "RIM tyramine \u2014 reversal gate, head-steering gain (Alkema 2005).",
+      "receptors_resolved": [
+        "ser-2",
+        "lgc-55",
+        "tyra-2",
+        "tyra-3"
+      ],
+      "n_releasers": 2,
+      "n_targets_significant": 65
+    },
+    "OA": {
+      "synthesis_gene": "tbh-1",
+      "receptors": {
+        "ser-3": 1,
+        "ser-6": 1,
+        "octr-1": -1
+      },
+      "tau_s": 4.0,
+      "note": "RIC octopamine \u2014 stress arousal (Roeder 2005).",
+      "receptors_resolved": [
+        "ser-3",
+        "ser-6",
+        "octr-1"
+      ],
+      "n_releasers": 2,
+      "n_targets_significant": 45
+    }
+  },
+  "unmatched_genes": [],
+  "n_connectome_neurons": 300
+}
