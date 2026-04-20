@@ -600,7 +600,16 @@ function drawBrain3D(
     const isHighlight = highlightedReleasers?.has(i) ?? false;
     const isLocked = lockedIdx === i;
     if (isLocked) {
-      ctx.shadowBlur = 16;
+      // Pulsing outline — sine oscillation based on performance.now().
+      const phase = 0.5 + 0.5 * Math.sin(performance.now() / 400);
+      ctx.save();
+      ctx.strokeStyle = hexAlpha("#f2ead3", 0.5 + 0.5 * phase);
+      ctx.lineWidth = 1 + phase;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 10 + 2 * phase, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+      ctx.shadowBlur = 18;
       ctx.shadowColor = "#f2ead3";
       ctx.fillStyle = "#f2ead3";
       r = 5.5;
