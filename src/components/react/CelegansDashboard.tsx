@@ -18,6 +18,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 type Scenario = "spontaneous" | "touch" | "osmotic_shock" | "food" | "chemotaxis";
 
+type BrainEdges = {
+  names: string[];
+  edges: Array<[number, number, number, number]>; // [pre, post, weight, pre_sign]
+};
+
 type Trace = {
   scenario: string;
   meta: {
@@ -235,11 +240,14 @@ function drawBrain3D(
   names: string[],
   bounds: PosBounds,
   activeSet: Set<number>,
+  recentPulses: Map<number, number>, // idx → pulse-decay factor [0,1]
   hoverIdx: number | null,
   readoutSet: Set<string>,
   modConcentrations: number[] | null,
   modNames: string[] | null,
   nameToIdx: Map<string, number>,
+  edges: BrainEdges | null,
+  edgeAlpha: number,
 ) {
   // Dark gradient backdrop
   const bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -264,6 +272,36 @@ function drawBrain3D(
   ctx.moveTo(w * 0.05, h / 2);
   ctx.lineTo(w * 0.95, h / 2);
   ctx.stroke();
+
+  // Synapse edges — only draw edges touching currently-active neurons
+  // (otherwise 400 edges would clutter). Active neurons' outgoing edges
+  // fade by weight + by edge alpha (user-controlled).
+  if (edges && edgeAlpha > 0.01 && activeSet.size > 0) {
+    // Build idx mapping from edges.names to our `names` array
+    // (should be identical order since both derived from connectome.npz)
+    ctx.save();
+    ctx.lineCap = "round";
+    for (const [pre, post, weight, preSign] of edges.edges) {
+      if (!activeSet.has(pre)) continue;
+      const pPre = positions[pre];
+      const pPost = positions[post];
+      if (!pPre || !pPost) continue;
+      const { sx: x1, sy: y1 } = projectNeuron(pPre, bounds, w, h);
+      const { sx: x2, sy: y2 } = projectNeuron(pPost, bounds, w, h);
+      const wNorm = Math.min(1, weight / 30);
+      const color = preSign > 0 ? "#10b981" : preSign < 0 ? "#ef4444" : "#94a3b8";
+      ctx.strokeStyle = hexAlpha(color, edgeAlpha * (0.25 + 0.6 * wNorm));
+      ctx.lineWidth = 0.6 + wNorm;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      // Curved line for visual variety
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2 - 8 * (preSign > 0 ? 1 : -1);
+      ctx.quadraticCurveTo(mx, my, x2, y2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
 
   // Releaser glow halos (modulator concentration visualization)
   if (modConcentrations && modNames) {
@@ -308,10 +346,13 @@ function drawBrain3D(
     let r = isReadout ? 2.5 : 1.6;
     if (isHover) r = 5;
 
-    if (isActive) {
-      ctx.shadowBlur = 8;
+    const pulse = recentPulses.get(i) ?? 0;
+    if (isActive || pulse > 0) {
+      const glow = Math.max(0.8, pulse);
+      ctx.shadowBlur = 6 + 12 * pulse;
       ctx.shadowColor = "#5ec77a";
-      ctx.fillStyle = hexAlpha("#5ec77a", 0.95 * depthFade);
+      ctx.fillStyle = hexAlpha("#5ec77a", 0.9 * glow * depthFade);
+      r = (isReadout ? 2.8 : 2.0) + 2.5 * pulse;
     } else if (isReadout) {
       ctx.shadowBlur = 0;
       ctx.fillStyle = hexAlpha("#a5b4fc", 0.7 * depthFade);
@@ -682,6 +723,9 @@ export function CelegansDashboard() {
   const [currentT, setCurrentT] = useState(0);
   const [width, setWidth] = useState(1024);
   const [hoverNeuron, setHoverNeuron] = useState<number | null>(null);
+  const [edges, setEdges] = useState<BrainEdges | null>(null);
+  const [showEdges, setShowEdges] = useState(true);
+  const [edgeAlpha, setEdgeAlpha] = useState(0.6);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -691,6 +735,17 @@ export function CelegansDashboard() {
   const fsmCanvasRef = useRef<HTMLCanvasElement>(null);
   const evCanvasRef = useRef<HTMLCanvasElement>(null);
   const evLegendRef = useRef<HTMLCanvasElement>(null);
+
+  // Load brain edges once
+  useEffect(() => {
+    fetch("/data/brain-edges.json")
+      .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+      .then((d: BrainEdges) => setEdges(d))
+      .catch(() => setEdges(null));
+  }, []);
+
+  // Track neuron pulse decay (for spike animation). Pulses decay by dt.
+  const pulseRef = useRef<Map<number, number>>(new Map());
 
   const traceRef = useRef<Trace | null>(null);
   const pausedRef = useRef(paused);
@@ -859,6 +914,17 @@ export function CelegansDashboard() {
               }
             }
           }
+          // Pulse bookkeeping: decay existing pulses, inject new ones
+          // for neurons that just became active.
+          const pulses = pulseRef.current;
+          for (const [k, v] of pulses) {
+            const nv = v - dt * 2.5;  // ~0.4s pulse decay
+            if (nv <= 0) pulses.delete(k);
+            else pulses.set(k, nv);
+          }
+          for (const idx of activeIdxs) {
+            if (!pulses.has(idx)) pulses.set(idx, 1.0);
+          }
           // Modulator concentrations at current time
           let modAt: number[] | null = null;
           if (tr.modulator_concentrations && tr.modulator_concentrations.length) {
@@ -872,11 +938,14 @@ export function CelegansDashboard() {
             tr.neuron_names ?? [],
             derived.bounds,
             activeIdxs,
+            pulses,
             hoverRef.current,
             derived.readoutSet,
             modAt,
             tr.modulator_names ?? null,
             derived.nameToIdx,
+            showEdges ? edges : null,
+            edgeAlpha,
           );
         } else if (ctx) {
           const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
@@ -942,7 +1011,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha]);
 
   // Hover on brain → find nearest neuron
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -1073,7 +1142,29 @@ export function CelegansDashboard() {
           </div>
         </div>
         <div>
-          <PanelLabel>brain · 300 neurons at 3D coords · modulator releasers glow</PanelLabel>
+          <div className="flex items-baseline justify-between gap-2">
+            <PanelLabel>brain · 300 neurons · synapses on active</PanelLabel>
+            <div className="flex items-center gap-2 text-[0.65rem] text-muted-foreground">
+              <label className="inline-flex items-center gap-1 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showEdges}
+                  onChange={(e) => setShowEdges(e.target.checked)}
+                  className="accent-primary"
+                />
+                edges
+              </label>
+              {showEdges && (
+                <input
+                  type="range" min="0.1" max="1" step="0.05"
+                  value={edgeAlpha}
+                  onChange={(e) => setEdgeAlpha(+e.target.value)}
+                  className="accent-primary w-12"
+                  title="edge opacity"
+                />
+              )}
+            </div>
+          </div>
           <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas
               ref={brainCanvasRef}
