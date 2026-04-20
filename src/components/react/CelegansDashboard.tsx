@@ -589,12 +589,17 @@ function drawEventProbs(
   ctx.fillText("1.0", labelW - 20, 12);
   ctx.fillText("0.5", labelW - 20, h * 0.5 + 3);
   ctx.fillText("0", labelW - 14, h - 6);
+  // Threshold label
+  ctx.fillStyle = "rgba(250, 204, 21, 0.9)";
+  ctx.font = "9px system-ui, sans-serif";
+  ctx.fillText("fire threshold", labelW + 4, h * 0.5 - 2);
 
-  // Lines
+  // Lines + rising-edge detection markers
   for (const ev of eventNames) {
     const arr = probs[ev];
     if (!arr || arr.length === 0) continue;
     const color = EVENT_COLORS[ev] ?? "#94a3b8";
+    // Line
     ctx.strokeStyle = color;
     ctx.lineWidth = 1.4;
     ctx.beginPath();
@@ -605,6 +610,17 @@ function drawEventProbs(
       else ctx.lineTo(x, y);
     }
     ctx.stroke();
+    // Markers at threshold-crossing upswings (event "fired")
+    ctx.fillStyle = color;
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i - 1] < 0.5 && arr[i] >= 0.5) {
+        const x = labelW + (i / arr.length) * plotW;
+        const y = h - 6 - arr[i] * (h - 16);
+        ctx.beginPath();
+        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
   }
 
   const cursorX = labelW + currentFrac * plotW;
