@@ -452,10 +452,10 @@ function drawBrain3D(
 
   // Synapse edges — only draw edges touching currently-active neurons
   // (otherwise 400 edges would clutter). Active neurons' outgoing edges
-  // fade by weight + by edge alpha (user-controlled).
+  // fade by weight + by edge alpha (user-controlled). A travelling pulse
+  // (bright dot along the curve) visualises the signal propagating from
+  // pre to post — pulse progress = (time_since_spike) / TRAVEL_S.
   if (edges && edgeAlpha > 0.01 && activeSet.size > 0) {
-    // Build idx mapping from edges.names to our `names` array
-    // (should be identical order since both derived from connectome.npz)
     ctx.save();
     ctx.lineCap = "round";
     for (const [pre, post, weight, preSign] of edges.edges) {
@@ -467,15 +467,33 @@ function drawBrain3D(
       const { sx: x2, sy: y2 } = projectNeuron(pPost, bounds, w, h, rotRad);
       const wNorm = Math.min(1, weight / 30);
       const color = preSign > 0 ? "#10b981" : preSign < 0 ? "#ef4444" : "#94a3b8";
-      ctx.strokeStyle = hexAlpha(color, edgeAlpha * (0.25 + 0.6 * wNorm));
-      ctx.lineWidth = 0.6 + wNorm;
+      // Pulse recency — use the pre's pulse decay value as a proxy for
+      // "just fired", so bright edges correlate with fresh spikes.
+      const pulse = recentPulses.get(pre) ?? 0;
+      const brightness = 0.25 + 0.6 * wNorm + 0.3 * pulse;
+      ctx.strokeStyle = hexAlpha(color, edgeAlpha * Math.min(1, brightness));
+      ctx.lineWidth = 0.6 + wNorm + 0.8 * pulse;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
-      // Curved line for visual variety
       const mx = (x1 + x2) / 2;
       const my = (y1 + y2) / 2 - 8 * (preSign > 0 ? 1 : -1);
       ctx.quadraticCurveTo(mx, my, x2, y2);
       ctx.stroke();
+      // Travelling pulse dot along the quadratic curve.
+      // progress = 1 - pulse (pulse=1 at spike, 0 at end of decay)
+      if (pulse > 0.05) {
+        const tp = 1 - pulse;  // 0..1 along curve
+        // Quadratic Bezier at param tp: (1-tp)^2 * P0 + 2(1-tp)tp * P1 + tp^2 * P2
+        const bx = (1 - tp) * (1 - tp) * x1 + 2 * (1 - tp) * tp * mx + tp * tp * x2;
+        const by = (1 - tp) * (1 - tp) * y1 + 2 * (1 - tp) * tp * my + tp * tp * y2;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = color;
+        ctx.fillStyle = hexAlpha(color, Math.min(1, 0.9 * pulse));
+        ctx.beginPath();
+        ctx.arc(bx, by, 1.2 + 1.2 * pulse, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
     }
     ctx.restore();
   }
