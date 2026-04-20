@@ -1825,23 +1825,52 @@ export function CelegansDashboard() {
         </div>
       </div>
 
-      {/* FSM state legend */}
-      <div className="flex flex-wrap gap-3 text-[0.7rem] text-muted-foreground px-1">
-        <span className="font-medium text-foreground">states:</span>
-        {Object.entries(STATE_COLORS).map(([name, col]) => (
-          <span key={name} className="inline-flex items-center gap-1">
-            <span className="inline-block w-3 h-3 rounded" style={{ backgroundColor: col }} />
-            {name}
+      {/* Legends row */}
+      <div className="rounded-lg border bg-card/30 p-2.5 space-y-2">
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted-foreground">
+          <span className="font-semibold text-foreground w-16">states:</span>
+          {Object.entries(STATE_COLORS).map(([name, col]) => (
+            <span key={name} className="inline-flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded" style={{ backgroundColor: col }} />
+              {name}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted-foreground">
+          <span className="font-semibold text-foreground w-16">modulators:</span>
+          {Object.entries(MODULATOR_COLORS).map(([name, col]) => (
+            <span
+              key={name}
+              className="inline-flex items-center gap-1 cursor-help"
+              title={`releasers: ${(RELEASERS[name] ?? []).join(", ")}`}
+              onMouseEnter={() => setHoverModulator(name)}
+              onMouseLeave={() => setHoverModulator(null)}
+            >
+              <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: col }} />
+              {name}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted-foreground">
+          <span className="font-semibold text-foreground w-16">events:</span>
+          {Object.entries(EVENT_COLORS).map(([name, col]) => (
+            <span key={name} className="inline-flex items-center gap-1">
+              <span className="inline-block w-3 h-2 rounded" style={{ backgroundColor: col }} />
+              {name.replace(/_/g, " ")}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted-foreground pt-1 border-t border-border/50">
+          <span className="ml-auto">
+            ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play ·
+            <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ±1s ·
+            <kbd className="mx-1 px-1 rounded border text-[0.6rem]">, .</kbd> ±frame ·
+            <kbd className="mx-1 px-1 rounded border text-[0.6rem]">R</kbd> restart ·
+            <kbd className="mx-1 px-1 rounded border text-[0.6rem]">1–5</kbd> scenarios ·
+            <kbd className="mx-1 px-1 rounded border text-[0.6rem]">F</kbd> fps ·
+            <kbd className="mx-1 px-1 rounded border text-[0.6rem]">shift-drag</kbd> rotate brain
           </span>
-        ))}
-        <span className="ml-auto text-[0.65rem]">
-          ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ±1s ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">, .</kbd> ±frame ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">R</kbd> restart ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">1–5</kbd> scenarios ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">F</kbd> fps
-        </span>
+        </div>
       </div>
 
       {loadErr && (
