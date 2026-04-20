@@ -2162,11 +2162,12 @@ export function CelegansDashboard() {
         </div>
         <button
           onClick={() => setPaused((v) => !v)}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          className="rounded-md border px-2 sm:px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           aria-label={paused ? "Play simulation" : "Pause simulation"}
           aria-pressed={!paused}
         >
-          {paused ? "▶ Play" : "⏸ Pause"}
+          <span className="sm:hidden">{paused ? "▶" : "⏸"}</span>
+          <span className="hidden sm:inline">{paused ? "▶ Play" : "⏸ Pause"}</span>
         </button>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <span>speed</span>
@@ -2181,10 +2182,10 @@ export function CelegansDashboard() {
         </label>
         <button
           onClick={exportPNG}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          className="rounded-md border px-2 sm:px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           title="Download PNG snapshot of current state"
           aria-label="Download PNG snapshot of all panels at current time"
-        >📷 snapshot</button>
+        ><span className="sm:hidden">📷</span><span className="hidden sm:inline">📷 snapshot</span></button>
         <button
           onClick={() => {
             const url = new URL(window.location.href);
@@ -2197,13 +2198,13 @@ export function CelegansDashboard() {
           className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           title="Copy a link to this exact moment"
           aria-label="Copy shareable link to current scenario and time"
-        >{copiedLink ? "✓ copied" : "🔗 link"}</button>
+        ><span className="sm:hidden">{copiedLink ? "✓" : "🔗"}</span><span className="hidden sm:inline">{copiedLink ? "✓ copied" : "🔗 link"}</span></button>
         <button
           onClick={exportCSV}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          className="rounded-md border px-2 sm:px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           aria-label="Download scenario trace as CSV"
           title="Export trace (state, event probs, modulators) as CSV"
-        >⇩ csv</button>
+        ><span className="sm:hidden">⇩</span><span className="hidden sm:inline">⇩ csv</span></button>
         <button
           onClick={() => {
             setLockedNeuron(null);
@@ -2215,17 +2216,17 @@ export function CelegansDashboard() {
             setEdgeAlpha(0.6);
             setArenaZoomMm(20);
           }}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          className="rounded-md border px-2 sm:px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           aria-label="Reset brain view and filters to defaults"
           title="Clear locks, filters, rotation, zoom"
-        >↺ reset</button>
+        ><span className="sm:hidden">↺</span><span className="hidden sm:inline">↺ reset</span></button>
         <button
           onClick={() => setShowHelp((v) => !v)}
-          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+          className="rounded-md border px-2 sm:px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
           aria-label="Show help overlay"
           title="Help / shortcuts (?)"
           aria-expanded={showHelp}
-        >? help</button>
+        ><span className="sm:hidden">?</span><span className="hidden sm:inline">? help</span></button>
         <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
           <span className="tabular-nums font-mono">
             t = {currentT.toFixed(1)} / {meta?.duration_s?.toFixed(0) ?? "–"} s
