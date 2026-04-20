@@ -385,6 +385,40 @@ function drawWormBody(
   ctx.arc(head.x, head.y, 3, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
+
+  // Velocity arrow: from head in direction of recent head motion (trail → head)
+  if (trail && trail.length >= 2) {
+    const prev = trail[trail.length - 2];
+    const dx = head.x - prev.x;
+    const dy = head.y - prev.y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len > 1.5) {
+      const nx = dx / len;
+      const ny = dy / len;
+      const arrowLen = Math.min(18, len * 3);
+      const ax = head.x + nx * arrowLen;
+      const ay = head.y + ny * arrowLen;
+      ctx.save();
+      ctx.strokeStyle = hexAlpha("#1a2a4a", 0.7);
+      ctx.fillStyle = hexAlpha("#1a2a4a", 0.7);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(head.x, head.y);
+      ctx.lineTo(ax, ay);
+      ctx.stroke();
+      // Arrowhead
+      const perpX = -ny;
+      const perpY = nx;
+      const tipSize = 4;
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ax - nx * tipSize + perpX * tipSize * 0.6, ay - ny * tipSize + perpY * tipSize * 0.6);
+      ctx.lineTo(ax - nx * tipSize - perpX * tipSize * 0.6, ay - ny * tipSize - perpY * tipSize * 0.6);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+  }
 }
 
 function drawSpikeRaster(
