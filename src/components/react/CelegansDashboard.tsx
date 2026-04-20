@@ -70,12 +70,50 @@ type Trace = {
 
 // ---------- Constants -------------------------------------------------
 
-const SCENARIOS: Record<Scenario, { label: string; desc: string }> = {
-  spontaneous:   { label: "Spontaneous",   desc: "No stimulus — baseline." },
-  touch:         { label: "Head touch",    desc: "ALM/AVM mechanoreceptor drive at t=5s (Chalfie 1981)." },
-  osmotic_shock: { label: "Osmotic shock", desc: "ASH polymodal avoidance drive at t=5s (Hart 1995)." },
-  food:          { label: "Food",          desc: "ASI/ASJ/ADF feeding-state tonic from t=2s (Flavell 2013)." },
-  chemotaxis:    { label: "Chemotaxis",    desc: "2D agar + food patch. ASE/AWC/AWA driven by real gradient (Pierce-Shimomura 1999)." },
+const SCENARIOS: Record<Scenario, { label: string; desc: string; watch: string[] }> = {
+  spontaneous: {
+    label: "Spontaneous",
+    desc: "No stimulus — baseline behavioural distribution.",
+    watch: [
+      "Mix of FORWARD / REVERSE / QUIESCENT in the FSM timeline",
+      "PDF-1 modulator tonically elevated (arousal)",
+    ],
+  },
+  touch: {
+    label: "Head touch",
+    desc: "ALM/AVM mechanoreceptor drive at t=5s (Chalfie 1981).",
+    watch: [
+      "Spike at ALM/AVM followed by REVERSE state within ~1s",
+      "AVA/AVE command neurons light up",
+    ],
+  },
+  osmotic_shock: {
+    label: "Osmotic shock",
+    desc: "ASH polymodal avoidance drive at t=5s (Hart 1995).",
+    watch: [
+      "ASH activates → AIB + AVA cascade visible in brain edges",
+      "FLP-11 concentration surges (RIS glows purple in brain)",
+      "OMEGA / PIROUETTE states appear after reversal",
+    ],
+  },
+  food: {
+    label: "Food",
+    desc: "ASI/ASJ/ADF feeding-state tonic from t=2s (Flavell 2013).",
+    watch: [
+      "NSM 5-HT concentration climbs (emerald glow on NSM L/R)",
+      "Pharyngeal neurons (M1-M5) activate",
+      "QUIESCENT state dominates — dwelling on food",
+    ],
+  },
+  chemotaxis: {
+    label: "Chemotaxis",
+    desc: "2D agar + food patch. ASE/AWC/AWA driven by real gradient (Pierce-Shimomura 1999).",
+    watch: [
+      "Worm trail in arena — does it navigate toward the food patch?",
+      "ASE/AWC firing fluctuates with dC/dt as worm moves",
+      "Chemotaxis index (CI) in header: positive = toward food",
+    ],
+  },
 };
 
 const STATE_COLORS: Record<string, string> = {
@@ -962,23 +1000,48 @@ export function CelegansDashboard() {
     const handler = (e: KeyboardEvent) => {
       const tgt = e.target as HTMLElement;
       if (tgt && (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA")) return;
+      const tr = traceRef.current;
       if (e.code === "Space") {
         e.preventDefault();
         setPaused((v) => !v);
       } else if (e.code === "ArrowLeft") {
         e.preventDefault();
-        const tr = traceRef.current;
         if (tr) {
           currentTRef.current = Math.max(0, currentTRef.current - 1);
           setCurrentT(currentTRef.current);
         }
       } else if (e.code === "ArrowRight") {
         e.preventDefault();
-        const tr = traceRef.current;
         if (tr) {
           currentTRef.current = Math.min(tr.meta.duration_s, currentTRef.current + 1);
           setCurrentT(currentTRef.current);
         }
+      } else if (e.code === "Comma") {
+        // frame back
+        if (tr) {
+          const dt = tr.meta.brain_sync_ms / 1000;
+          currentTRef.current = Math.max(0, currentTRef.current - dt);
+          setCurrentT(currentTRef.current);
+          setPaused(true);
+        }
+      } else if (e.code === "Period") {
+        if (tr) {
+          const dt = tr.meta.brain_sync_ms / 1000;
+          currentTRef.current = Math.min(tr.meta.duration_s, currentTRef.current + dt);
+          setCurrentT(currentTRef.current);
+          setPaused(true);
+        }
+      } else if (e.code === "KeyR") {
+        // restart
+        if (tr) {
+          currentTRef.current = 0;
+          setCurrentT(0);
+        }
+      } else if (e.code === "Digit1" || e.code === "Digit2" ||
+                 e.code === "Digit3" || e.code === "Digit4" || e.code === "Digit5") {
+        const idx = parseInt(e.code.replace("Digit", "")) - 1;
+        const keys = Object.keys(SCENARIOS) as Scenario[];
+        if (keys[idx]) setScenario(keys[idx]);
       }
     };
     window.addEventListener("keydown", handler);
@@ -1486,9 +1549,20 @@ export function CelegansDashboard() {
         </div>
       </div>
 
-      {/* Scenario description */}
-      <div className="text-xs text-muted-foreground px-1">
-        {SCENARIOS[scenario].desc}
+      {/* Scenario description + "watch for" hints */}
+      <div className="rounded-lg bg-card/40 border px-3 py-2 space-y-1">
+        <div className="text-xs text-muted-foreground">
+          {SCENARIOS[scenario].desc}
+        </div>
+        <div className="flex flex-wrap gap-2 text-[0.65rem]">
+          <span className="text-muted-foreground font-medium">watch for:</span>
+          {SCENARIOS[scenario].watch.map((w, i) => (
+            <span key={i} className="inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 bg-background/40">
+              <span className="w-1 h-1 rounded-full bg-primary/60" />
+              {w}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Live stats readout */}
@@ -1707,8 +1781,11 @@ export function CelegansDashboard() {
           </span>
         ))}
         <span className="ml-auto text-[0.65rem]">
-          ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play/pause ·
-          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ± 1 s
+          ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play ·
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ±1s ·
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">, .</kbd> ±frame ·
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">R</kbd> restart ·
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">1–5</kbd> scenarios
         </span>
       </div>
 
