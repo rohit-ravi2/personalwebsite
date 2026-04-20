@@ -40,6 +40,7 @@ from neural_classifier_bank import ClassifierBank, spikes_to_calcium  # noqa: E4
 from behavioral_fsm import BehavioralFSM, State, STATE_CPG  # noqa: E402
 from sensory_injection import stimulate  # noqa: E402
 from modulation_layer import ModulationLayer, TABLES as MOD_TABLES  # noqa: E402
+from environment import Environment, ChemoGradient  # noqa: E402
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -96,7 +97,8 @@ class ClosedLoopEnv:
     def __init__(self, seed: int = 0, enable_modulation: bool = True,
                  ablate: list[str] | None = None,
                  modulator_tables_path=None,
-                 use_per_edge_glu_signs: bool = False):
+                 use_per_edge_glu_signs: bool = False,
+                 environment: Environment | None = None):
         """ClosedLoopEnv.
 
         seed: used for BOTH np.random AND Brian2 internal RNG
@@ -137,6 +139,9 @@ class ClosedLoopEnv:
         self.ablated: list[str] = []
         if ablate:
             self.ablated = self.brain.ablate(ablate)
+
+        # T1e — optional 2D environment (chemical gradient + food patch)
+        self.environment = environment
 
         # Per-neuron affine distribution calibration (v1.5 fix):
         # maps Brian2 synthetic calcium moments onto the Atanas ΔF/F
@@ -296,6 +301,19 @@ class ClosedLoopEnv:
         headings = np.arctan2(dys, dxs)
         curv = np.mean(np.abs(np.diff(headings)))
         self._inject_proprio(curv)
+
+        # 9) T1e — environment coupling (if present)
+        if self.environment is not None:
+            # Head position — first segment's CoM, in MuJoCo sim-m units.
+            # MuJoCo body scaled so 1 sim-m ≈ 1 real mm. Interpret
+            # environment in real-meter units: head_xy_real_m = positions[0] × 1e-3.
+            head_x_real = float(positions[0][0]) * 1e-3
+            head_y_real = float(positions[0][1]) * 1e-3
+            t_env_s = self.brain.time_ms() / 1000
+            self.environment.update_head_position(
+                head_x_real, head_y_real, t_env_s
+            )
+            self.environment.inject_into_brain(self.brain)
 
     def run(self, duration_s: float, stim_schedule: list[tuple] = ()):
         """Run the closed loop for duration_s seconds. stim_schedule is

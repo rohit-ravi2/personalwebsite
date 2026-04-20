@@ -364,6 +364,29 @@ class LIFBrain:
             self._ablation_op_attached = True
         return hit
 
+    def set_sensory_rate(self, neuron: str, rate_hz: float,
+                         weight_mv: float = 8.0) -> None:
+        """Update the rate of a persistent Poisson input to a neuron.
+        Used by the Environment for continuously-updated sensory drive
+        without Brian2 recompile. First call creates the PoissonGroup
+        + Synapses; subsequent calls only update the rate attribute."""
+        if not hasattr(self, "_sensory_groups"):
+            self._sensory_groups: dict = {}
+        if neuron not in self.idx:
+            return
+        if neuron not in self._sensory_groups:
+            pg = PoissonGroup(1, rates=np.array([rate_hz]) * Hz)
+            syn = Synapses(
+                pg, self.neurons,
+                on_pre=f"v_post += {weight_mv}*mV",
+            )
+            syn.connect(i=0, j=self.idx[neuron])
+            self._sensory_groups[neuron] = (pg, syn)
+            self.net.add(pg, syn)
+        else:
+            pg, _ = self._sensory_groups[neuron]
+            pg.rates = np.array([rate_hz]) * Hz
+
     def inject_poisson(self, neuron: str, rate_hz: float,
                        weight_mv: float = 15.0) -> None:
         """Add a Poisson stimulus onto a named neuron. Non-destructive —
