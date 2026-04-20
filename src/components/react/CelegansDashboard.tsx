@@ -134,6 +134,24 @@ function hexAlpha(hex: string, alpha: number): string {
   return hex + a.toString(16).padStart(2, "0");
 }
 
+function parseHex(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [
+    parseInt(h.slice(0, 2), 16),
+    parseInt(h.slice(2, 4), 16),
+    parseInt(h.slice(4, 6), 16),
+  ];
+}
+
+function mixColors(a: string, b: string, t: number): string {
+  const [r1, g1, b1] = parseHex(a);
+  const [r2, g2, b2] = parseHex(b);
+  const r = Math.round(r1 * (1 - t) + r2 * t);
+  const g = Math.round(g1 * (1 - t) + g2 * t);
+  const bl = Math.round(b1 * (1 - t) + b2 * t);
+  return `#${[r, g, bl].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+}
+
 function segmentWidth(i: number, total: number): number {
   const t = i / Math.max(1, total - 1);
   return 3 + 9 * Math.sin(Math.PI * t);
@@ -208,6 +226,7 @@ function drawWormBody(
   w: number, h: number,
   segs: Array<{ x: number; y: number }>,
   state: string,
+  trail: Array<{ x: number; y: number }> | null,
 ) {
   // Warm cream gradient background
   const bg = ctx.createRadialGradient(w / 2, h / 2, 20, w / 2, h / 2, Math.max(w, h) * 0.8);
@@ -225,14 +244,50 @@ function drawWormBody(
   }
 
   const stateColor = STATE_COLORS[state] ?? "#2f5233";
-  // Glow
+
+  // Draw trail (ghosts) of previous head positions
+  if (trail && trail.length > 1) {
+    ctx.save();
+    for (let i = 0; i < trail.length - 1; i++) {
+      const a = trail[i];
+      const b = trail[i + 1];
+      const alpha = (i / trail.length) * 0.35;
+      ctx.strokeStyle = hexAlpha(stateColor, alpha);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Glow body
   ctx.save();
   ctx.shadowBlur = 16;
   ctx.shadowColor = hexAlpha(stateColor, 0.5);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
+
+  // Compute per-segment curvature for color gradient
+  const curvatures: number[] = new Array(segs.length).fill(0);
+  for (let i = 1; i < segs.length - 1; i++) {
+    const a = segs[i - 1], b = segs[i], c = segs[i + 1];
+    const dx1 = b.x - a.x, dy1 = b.y - a.y;
+    const dx2 = c.x - b.x, dy2 = c.y - b.y;
+    // Cross-product z-component as curvature proxy
+    curvatures[i] = dx1 * dy2 - dy1 * dx2;
+  }
+  // Normalise
+  const maxCurv = Math.max(1, Math.max(...curvatures.map(Math.abs)));
+
   for (let i = 0; i < segs.length - 1; i++) {
-    ctx.strokeStyle = i === 0 ? "#1a2a4a" : stateColor;
+    // Blend base state color with a curvature-derived accent
+    const c = curvatures[i] / maxCurv;
+    const accent = c > 0 ? "#f59e0b" : "#8b5cf6";  // ventral = amber, dorsal = violet
+    const mix = Math.abs(c);
+    const col = mixColors(stateColor, accent, mix * 0.45);
+    ctx.strokeStyle = i === 0 ? "#1a2a4a" : col;
     ctx.lineWidth = segmentWidth(i, segs.length);
     ctx.beginPath();
     ctx.moveTo(segs[i].x, segs[i].y);
@@ -942,7 +997,20 @@ export function CelegansDashboard() {
             const segs = frame.positions.map(([x, y]) => ({
               x: ox + x * pxPerSimM, y: oy + y * pxPerSimM,
             }));
-            drawWormBody(ctx, bodyW, PANEL_H, segs, frame.state);
+            // Build head trail from previous frames
+            const trailFramesBack = 20;
+            const trail: Array<{ x: number; y: number }> = [];
+            for (let k = trailFramesBack; k >= 1; k -= 2) {
+              const pi = idx - k;
+              if (pi < 0) continue;
+              const p0 = tr.frames[pi].positions[0];
+              trail.push({
+                x: ox + p0[0] * pxPerSimM,
+                y: oy + p0[1] * pxPerSimM,
+              });
+            }
+            trail.push({ x: segs[0].x, y: segs[0].y });
+            drawWormBody(ctx, bodyW, PANEL_H, segs, frame.state, trail);
           }
         } else if (ctx) {
           ctx.fillStyle = "#f9f0d6";
