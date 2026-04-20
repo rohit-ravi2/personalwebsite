@@ -40,7 +40,7 @@ import numpy as np
 
 # Brian2 imports at module scope so the namespace picks up units.
 from brian2 import (
-    NeuronGroup, Synapses, PoissonGroup, SpikeMonitor, Network,
+    NeuronGroup, Synapses, PoissonGroup, PoissonInput, SpikeMonitor, Network,
     defaultclock, ms, mV, nS, pF, Hz, second,
     prefs, seed as brian2_seed,
 )
@@ -281,6 +281,12 @@ class LIFBrain:
         # compose correctly.
         self.ablation_current_pA = np.zeros(self.N, dtype=np.float32)
 
+        # T1d — closed-loop proprioceptive drive. Create a single
+        # PoissonGroup at init; rates are updated via Python assignment
+        # in each sync step (no Synapses recompile). This replaces the
+        # v1 open-loop behaviour that disabled body→brain feedback.
+        self._setup_proprioception()
+
         # Summary for eyeballing
         self.summary = dict(
             N=self.N,
@@ -292,6 +298,38 @@ class LIFBrain:
         )
 
     # ------------------------------------------------------------
+
+    def _setup_proprioception(self):
+        """Create a persistent PoissonGroup + Synapses for body→brain
+        proprioceptive feedback. Rates are mutable at runtime (no
+        recompile). Target neurons are the canonical worm proprioceptors
+        (PDE, PDA, DVA; Li 2006)."""
+        proprio_names = ["PDEL", "PDER", "PDA", "DVA"]
+        self.proprio_idx = [self.idx[n] for n in proprio_names if n in self.idx]
+        if not self.proprio_idx:
+            self.proprio_group = None
+            return
+        n_prop = len(self.proprio_idx)
+        # Initial rates = 0; updated via set_proprioception()
+        self.proprio_group = PoissonGroup(n_prop, rates=np.zeros(n_prop) * Hz)
+        self.proprio_syn = Synapses(
+            self.proprio_group, self.neurons,
+            on_pre="v_post += 4*mV",  # per-spike depol — modest
+        )
+        for i, j in enumerate(self.proprio_idx):
+            self.proprio_syn.connect(i=i, j=j)
+        self.net.add(self.proprio_group, self.proprio_syn)
+
+    def set_proprioception(self, body_curvature_mag: float) -> None:
+        """Update proprioceptive rates from current body curvature.
+        Called each sync from ClosedLoopEnv. Rate scales linearly with
+        curvature magnitude, capped at 150 Hz (approximates saturation
+        of stretch-receptor response)."""
+        if self.proprio_group is None:
+            return
+        rate_hz = float(min(150.0, max(0.0, 400.0 * body_curvature_mag)))
+        n = len(self.proprio_idx)
+        self.proprio_group.rates = np.full(n, rate_hz) * Hz
 
     def ablate(self, names: list[str], current_pA: float = -1000.0) -> list[str]:
         """Silence specific neurons by injecting strong persistent

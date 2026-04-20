@@ -199,11 +199,11 @@ class ClosedLoopEnv:
         return counts[self.readout_idx]
 
     def _inject_proprio(self, body_curv_mag: float):
-        """DISABLED in v1 — adding new Poisson Synapses every sync step
-        causes Brian2 to recompile the network each call (O(N_syncs²)
-        slowdown). V2 will use PoissonInput with a shared rate variable.
-        For v1 the loop is brain → body but not body → brain."""
-        pass
+        """T1d — closed-loop proprioceptive feedback.
+        Updates the persistent PoissonGroup's rate attribute (runtime
+        parameter change, no Synapses creation, no Brian2 recompile).
+        Rates are bounded 0–150 Hz per stretch-receptor saturation."""
+        self.brain.set_proprioception(body_curv_mag)
 
     def stimulate_sensory(self, preset: str, intensity: float = 1.0):
         injected = stimulate(self.brain, preset, intensity=intensity)
