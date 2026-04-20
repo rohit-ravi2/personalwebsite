@@ -1122,6 +1122,60 @@ export function CelegansDashboard() {
 
   const ci = trace?.environment?.chemotaxis_index?.CI;
 
+  // Live stats derived at currentT
+  const liveStats = useMemo(() => {
+    if (!trace || !brainDerived) return null;
+    const t = currentT;
+    // Active neurons (raster events in last 100 ms)
+    const activeNames = new Set<string>();
+    if (trace.raster) {
+      for (const e of trace.raster) {
+        if (e.t > t - 0.1 && e.t <= t) {
+          for (const rIdx of e.n) {
+            const nm = trace.meta.readout_neurons[rIdx];
+            if (nm) activeNames.add(nm);
+          }
+        }
+      }
+    }
+    // Modulator current values + top-3
+    let topMods: Array<[string, number]> = [];
+    let totalMod = 0;
+    if (trace.modulator_concentrations && trace.modulator_names) {
+      const nT = trace.modulator_concentrations.length;
+      const ti = Math.min(nT - 1, Math.floor((t / trace.meta.duration_s) * nT));
+      const row = trace.modulator_concentrations[ti];
+      topMods = trace.modulator_names.map((n, i): [string, number] => [n, row[i]]);
+      totalMod = topMods.reduce((a, [, v]) => a + v, 0);
+      topMods.sort((a, b) => b[1] - a[1]);
+      topMods = topMods.slice(0, 3);
+    }
+    // Current state + duration
+    const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
+    const nSync = trace.fsm_states.length;
+    const stateIdx = Math.min(nSync - 1, Math.floor((t / trace.meta.duration_s) * nSync));
+    const currState = stateNames[trace.fsm_states[stateIdx]] ?? "?";
+    // State dwell time so far
+    let runStart = stateIdx;
+    while (runStart > 0 && trace.fsm_states[runStart - 1] === trace.fsm_states[stateIdx]) runStart--;
+    const dwellS = (stateIdx - runStart) * (trace.meta.brain_sync_ms / 1000);
+    // Events recently crossing 0.5 threshold
+    let recentEvents = 0;
+    const eventsNames = trace.meta.events_tracked ?? [];
+    for (const ev of eventsNames) {
+      const arr = trace.event_probs[ev];
+      if (!arr) continue;
+      const tiE = Math.min(arr.length - 1, Math.floor((t / trace.meta.duration_s) * arr.length));
+      const tiWin = Math.max(0, tiE - 5);
+      let crossed = false;
+      for (let i = tiWin; i <= tiE; i++) {
+        if (arr[i] > 0.5) { crossed = true; break; }
+      }
+      if (crossed) recentEvents++;
+    }
+    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents };
+  }, [trace, currentT, brainDerived]);
+
   return (
     <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
       {/* Header bar */}
@@ -1184,6 +1238,26 @@ export function CelegansDashboard() {
       <div className="text-xs text-muted-foreground px-1">
         {SCENARIOS[scenario].desc}
       </div>
+
+      {/* Live stats readout */}
+      {liveStats && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.65rem]">
+          <StatCard label="active neurons" value={`${liveStats.activeCount}/18`} />
+          <StatCard
+            label="dominant modulator"
+            value={liveStats.topMods[0]?.[0] ?? "—"}
+            sub={liveStats.topMods[0] ? `C = ${liveStats.topMods[0][1].toFixed(1)}` : ""}
+            accent={liveStats.topMods[0] ? MODULATOR_COLORS[liveStats.topMods[0][0]] : undefined}
+          />
+          <StatCard
+            label="state dwell"
+            value={`${liveStats.dwellS.toFixed(1)}s`}
+            sub={liveStats.currState}
+            accent={STATE_COLORS[liveStats.currState]}
+          />
+          <StatCard label="events firing" value={`${liveStats.recentEvents}`} sub="of 8 canonical" />
+        </div>
+      )}
 
       {/* Scrubbable timeline */}
       <div
@@ -1385,6 +1459,26 @@ function PanelLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-1.5 text-[0.7rem] uppercase tracking-wider text-muted-foreground font-medium">
       {children}
+    </div>
+  );
+}
+
+function StatCard({ label, value, sub, accent }: {
+  label: string; value: string; sub?: string; accent?: string;
+}) {
+  return (
+    <div className="rounded-lg border bg-card/40 px-3 py-1.5">
+      <div className="text-[0.6rem] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="flex items-baseline gap-1.5 mt-0.5">
+        {accent && (
+          <span
+            className="inline-block w-2 h-2 rounded-full shrink-0"
+            style={{ backgroundColor: accent }}
+          />
+        )}
+        <span className="font-semibold text-foreground text-sm tabular-nums">{value}</span>
+        {sub && <span className="text-muted-foreground text-[0.65rem]">{sub}</span>}
+      </div>
     </div>
   );
 }
