@@ -834,6 +834,7 @@ function drawEnvironment(
   w: number, h: number,
   env: Trace["environment"] | undefined,
   currentTS: number,
+  viewScaleMm: number = 20,
 ) {
   const bg = ctx.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, "#0f1429");
@@ -852,7 +853,7 @@ function drawEnvironment(
     return;
   }
 
-  const worldMm = 20;
+  const worldMm = viewScaleMm;
   const pxPerMm = Math.min(w, h) / worldMm;
   const cx = w / 2;
   const cy = h / 2;
@@ -949,6 +950,7 @@ export function CelegansDashboard() {
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ x: number; rot: number } | null>(null);
   const [brainViewMode, setBrainViewMode] = useState<"3d" | "raster">("3d");
+  const [arenaZoomMm, setArenaZoomMm] = useState(20);  // world extent in arena view
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1248,7 +1250,7 @@ export function CelegansDashboard() {
       // Environment canvas
       if (envCanvasRef.current) {
         const ctx = setupCanvasDPR(envCanvasRef.current, envW, PANEL_H);
-        if (ctx) drawEnvironment(ctx, envW, PANEL_H, tr?.environment, t);
+        if (ctx) drawEnvironment(ctx, envW, PANEL_H, tr?.environment, t, arenaZoomMm);
       }
 
       // Modulator strip
@@ -1296,7 +1298,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
@@ -1717,9 +1719,27 @@ export function CelegansDashboard() {
           </div>
         </div>
         <div>
-          <PanelLabel>
-            {trace?.environment ? "arena · 2D agar + food + worm trail" : "arena (inactive)"}
-          </PanelLabel>
+          <div className="flex items-baseline justify-between gap-2">
+            <PanelLabel>
+              {trace?.environment ? "arena · 2D agar + food + trail" : "arena (inactive)"}
+            </PanelLabel>
+            {trace?.environment && (
+              <div className="flex items-center gap-1.5 text-[0.6rem] text-muted-foreground">
+                <span>zoom</span>
+                <button
+                  onClick={() => setArenaZoomMm(Math.max(5, arenaZoomMm - 5))}
+                  className="rounded border px-1.5 py-0 hover:bg-accent"
+                  title="Zoom in"
+                >−</button>
+                <span className="font-mono tabular-nums">{arenaZoomMm}mm</span>
+                <button
+                  onClick={() => setArenaZoomMm(Math.min(40, arenaZoomMm + 5))}
+                  className="rounded border px-1.5 py-0 hover:bg-accent"
+                  title="Zoom out"
+                >+</button>
+              </div>
+            )}
+          </div>
           <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas ref={envCanvasRef} className="block w-full" />
           </div>
