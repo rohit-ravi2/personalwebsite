@@ -705,12 +705,18 @@ function drawBrain3D(
 
   if (hoverDrawn) {
     ctx.font = "12px system-ui, sans-serif";
-    const lbl = (hoverLabel as any).name;
+    const name = (hoverLabel as any).name;
+    const nt = ntByIdx?.[hoverIdx ?? -1] ?? "";
+    const ntShort = nt.replace(/\s*\([^)]+\)/, "").replace(/unc-17,.*/, "ACh");
+    const lbl = name + (ntShort ? ` · ${ntShort}` : "");
     const mw = ctx.measureText(lbl).width;
     const lx = (hoverLabel as any).sx + 8;
     const ly = (hoverLabel as any).sy - 10;
     ctx.fillStyle = "rgba(15, 20, 41, 0.92)";
+    ctx.strokeStyle = "rgba(165, 180, 252, 0.4)";
+    ctx.lineWidth = 1;
     ctx.fillRect(lx - 3, ly - 11, mw + 8, 16);
+    ctx.strokeRect(lx - 3, ly - 11, mw + 8, 16);
     ctx.fillStyle = "#f2ead3";
     ctx.fillText(lbl, lx + 1, ly + 1);
   }
