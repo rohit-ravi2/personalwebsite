@@ -42,7 +42,7 @@ import numpy as np
 from brian2 import (
     NeuronGroup, Synapses, PoissonGroup, SpikeMonitor, Network,
     defaultclock, ms, mV, nS, pF, Hz, second,
-    prefs,
+    prefs, seed as brian2_seed,
 )
 
 # Silence Brian2's cython cache noise; we want deterministic output.
@@ -154,6 +154,14 @@ class LIFBrain:
         """
         if sign_overrides is None:
             sign_overrides = DEFAULT_SIGN_OVERRIDES
+
+        # Deterministic Brian2 RNG. np.random.seed() doesn't lock
+        # Brian2's internal noise generator — need brian2.seed()
+        # explicitly. Without this, identical np.random seeds produce
+        # different simulation traces due to membrane-noise drift.
+        # (v3.3 reproducibility audit fix.)
+        if hasattr(self, "_brian2_seed"):
+            brian2_seed(self._brian2_seed)
         d = np.load(ARTIFACT, allow_pickle=True)
         self.names: list[str] = [str(n) for n in d["names"]]
         self.N = len(self.names)

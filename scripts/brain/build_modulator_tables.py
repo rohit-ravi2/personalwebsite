@@ -52,7 +52,14 @@ CELEGANS = Path("/home/rohit/Desktop/C-Elegans")
 CENGEN_MEAN = CELEGANS / "data" / "expression" / "cengen" / "derived" / "expression_neuron_mean.csv"
 GENE_ASSOC = CELEGANS / "data" / "wormbase_release_WS297" / "associations" / "c_elegans.PRJNA13758.WS297.gene_association.wb"
 CONN_NPZ = Path(__file__).resolve().parent / "artifacts" / "connectome.npz"
-OUT = Path(__file__).resolve().parent / "artifacts" / "modulator_tables.npz"
+import sys as _sys
+# --exclude / --no-exclude CLI switch lets us emit either the v3.1
+# pharyngeal-excluded tables (default) or the v3.0 all-targets tables.
+# Output filename encodes the choice so ensemble audits can load both.
+_no_exclude_mode = "--no-exclude" in _sys.argv
+_suffix = "_v30" if _no_exclude_mode else ""
+OUT = (Path(__file__).resolve().parent / "artifacts"
+       / f"modulator_tables{_suffix}.npz")
 OUT_META = OUT.with_suffix(".json")
 
 
@@ -347,8 +354,9 @@ def main() -> None:
 
         # Apply per-modulator target exclusion mask if specified (v3.1:
         # 5HT excludes pharyngeal neurons since they're anatomically
-        # isolated from NSM-derived central 5HT).
-        exclude_set = spec.get("target_exclude", set())
+        # isolated from NSM-derived central 5HT). CLI --no-exclude
+        # suppresses this to reproduce v3.0 target weights.
+        exclude_set = set() if _no_exclude_mode else spec.get("target_exclude", set())
         if exclude_set:
             excluded_count = 0
             for i, name in enumerate(conn_names):

@@ -94,16 +94,43 @@ class ClosedLoopEnv:
     """Closed-loop brain-body simulation."""
 
     def __init__(self, seed: int = 0, enable_modulation: bool = True,
-                 ablate: list[str] | None = None):
+                 ablate: list[str] | None = None,
+                 modulator_tables_path=None,
+                 use_per_edge_glu_signs: bool = False):
+        """ClosedLoopEnv.
+
+        seed: used for BOTH np.random AND Brian2 internal RNG
+              (via LIFBrain._brian2_seed). Reproducibility is now
+              deterministic across re-runs with same seed.
+        modulator_tables_path: override for which modulator tables
+              file to load (lets us compare v3.0 no-exclusion vs v3.1
+              pharyngeal-excluded).
+        use_per_edge_glu_signs: v3.2 per-edge glutamate receptor signs
+              from CeNGEN (vs v3.0/v3.1 per-neuron NT-based signs).
+        """
         np.random.seed(seed)
-        self.brain = LIFBrain()
+        # Pass Brian2 seed into LIFBrain via instance attribute before init.
+        # LIFBrain reads self._brian2_seed in its constructor.
+        import types
+        self._cfg_seed = seed
+
+        # Create LIFBrain with the deterministic seed
+        brain_instance = LIFBrain.__new__(LIFBrain)
+        brain_instance._brian2_seed = seed
+        LIFBrain.__init__(brain_instance,
+                          use_per_edge_glu_signs=use_per_edge_glu_signs)
+        self.brain = brain_instance
+
         self.bank = ClassifierBank()
         self.fsm = BehavioralFSM(State.FORWARD)
 
         # v3 slow neuromodulation layer (Phase 3d-2)
         self.modulation: ModulationLayer | None = None
-        if enable_modulation and MOD_TABLES.exists():
-            self.modulation = ModulationLayer(self.brain.names)
+        mod_path = modulator_tables_path or MOD_TABLES
+        if enable_modulation and Path(mod_path).exists():
+            self.modulation = ModulationLayer(
+                self.brain.names, tables_path=mod_path
+            )
             self.modulation.attach_to_brain(self.brain)
 
         # Optional in-silico ablation (Phase 3d-3 perturbation studies)
