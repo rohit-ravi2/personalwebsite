@@ -66,7 +66,7 @@ Architecture mirrors the Shiu et al. 2024 fly-brain pattern: sensory input → L
 
 <CelegansDashboard client:only="react" />
 
-The left panel is the 20-segment MuJoCo body driven by whichever state the FSM currently occupies (FORWARD / REVERSE / OMEGA / PIROUETTE / QUIESCENT). The right panel is the live spike raster for the 18 motor/command neurons that are NeuroPAL-identified in all 10 Atanas worms — the cross-worm-validated readout set.
+The dashboard runs five pre-rendered scenarios (spontaneous / head-touch / osmotic-shock / food / chemotaxis) with a synchronised 20-segment MuJoCo body, 300-neuron 3D brain view, 9-modulator concentration strip, FSM behavioural timeline with event-classifier carets, and a live arena for the chemotaxis scenario. Interactive hooks: click a neuron to lock its 1-hop connectivity + firing-rate history; hover a modulator row or circuit badge to highlight its neurons; scrub the timeline or use the per-scenario "jump to moment" buttons to seek to biologically-relevant windows (reversal onset, FLP-11 surge, dwelling). Keyboard: space/arrows/1–5/?/R. Press `?` inside the dashboard for the full guide.
 
 Four scenarios are pre-rendered so the closed-loop simulation runs offline (a live Brian2 + MuJoCo loop in the browser would need MuJoCo-wasm + Brian2Cuda-wasm, not there yet):
 
