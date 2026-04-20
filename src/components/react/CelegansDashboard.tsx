@@ -1034,6 +1034,9 @@ export function CelegansDashboard() {
   // NT-type filter — empty set means "show all"
   const [ntFilter, setNtFilter] = useState<Set<string>>(new Set());
 
+  // Hovered circuit (for cross-panel highlight of its members)
+  const [hoverCircuit, setHoverCircuit] = useState<string | null>(null);
+
   // Precompute bounds + name->index map ONCE per trace load
   const brainDerived = useMemo(() => {
     if (!trace?.neuron_positions || !trace?.neuron_names) return null;
@@ -1288,15 +1291,23 @@ export function CelegansDashboard() {
             const ti = Math.min(nT - 1, Math.floor((t / tr.meta.duration_s) * nT));
             modAt = tr.modulator_concentrations[ti];
           }
-          // Highlighted releasers: if user is hovering a modulator row,
-          // show its releaser neurons with gold halo.
+          // Highlighted neurons: releasers of hovered modulator,
+          // or members of hovered circuit.
           let highlighted: Set<number> | null = null;
-          if (hoverModulator && derived) {
-            const rs = RELEASERS[hoverModulator] ?? [];
+          if ((hoverModulator || hoverCircuit) && derived) {
             highlighted = new Set<number>();
-            for (const rn of rs) {
-              const idx = derived.nameToIdx.get(rn);
-              if (idx !== undefined) highlighted.add(idx);
+            if (hoverModulator) {
+              const rs = RELEASERS[hoverModulator] ?? [];
+              for (const rn of rs) {
+                const idx = derived.nameToIdx.get(rn);
+                if (idx !== undefined) highlighted.add(idx);
+              }
+            }
+            if (hoverCircuit && CIRCUITS[hoverCircuit]) {
+              for (const nm of CIRCUITS[hoverCircuit].members) {
+                const idx = derived.nameToIdx.get(nm);
+                if (idx !== undefined) highlighted.add(idx);
+              }
             }
           }
           drawBrain3D(
@@ -1382,7 +1393,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
@@ -1821,10 +1832,13 @@ export function CelegansDashboard() {
                 <span
                   key={c.name}
                   title={c.desc}
-                  className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5"
+                  onMouseEnter={() => setHoverCircuit(c.name)}
+                  onMouseLeave={() => setHoverCircuit(null)}
+                  className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 cursor-pointer transition-transform hover:scale-105"
                   style={{
-                    backgroundColor: hexAlpha(c.color, 0.10),
-                    borderColor: hexAlpha(c.color, 0.5),
+                    backgroundColor: hexAlpha(c.color, hoverCircuit === c.name ? 0.25 : 0.10),
+                    borderColor: c.color,
+                    borderWidth: hoverCircuit === c.name ? "1.5px" : "1px",
                     color: "var(--foreground)",
                   }}
                 >
