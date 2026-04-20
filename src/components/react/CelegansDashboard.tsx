@@ -1502,6 +1502,27 @@ export function CelegansDashboard() {
 
   return (
     <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
+      {/* Hero intro */}
+      <div className="rounded-xl border bg-gradient-to-br from-card via-card/80 to-card/60 p-4 mb-1">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 text-[0.65rem] uppercase tracking-wider font-semibold">
+            <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
+            v3 brain · Tier 1 body · live simulator
+          </span>
+          <span className="text-[0.6rem] text-muted-foreground ml-auto">
+            300 neurons · 9 modulators · 5 states · 8 events · 4 published phenotypes
+          </span>
+        </div>
+        <div className="mt-1.5 font-medium text-foreground">
+          Closed-loop <em>C. elegans</em> digital twin.
+        </div>
+        <div className="text-xs text-muted-foreground mt-0.5">
+          Sensory input → 300-neuron connectome-constrained brain → 9-modulator
+          peptide/monoamine layer → 5-state behavioural FSM → 20-segment MuJoCo body.
+          All panels synchronised; click neurons, scrub time, hover modulators.
+        </div>
+      </div>
+
       {/* Header bar */}
       <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card px-3 py-2.5 shadow-sm">
         <div className="inline-flex flex-wrap rounded-lg border bg-muted/40 p-0.5 gap-0.5 text-xs">
