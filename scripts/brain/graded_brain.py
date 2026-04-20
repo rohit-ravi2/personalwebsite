@@ -71,7 +71,34 @@ PARAMS = dict(
     W_graded_I=5.0 * pA,  # strong enough to drive but not saturate
     g_gap=0.12 * nS,
     noise_sigma=4.0 * mV,
+    # T1b — voltage-gated L-type Ca channel dynamics for plateau
+    # behaviour in command interneurons. Simplified Hodgkin-Huxley-
+    # style activation variable, egl-19-like. Reversal potential
+    # E_Ca = +50 mV; τ_Ca_decay ~ 200 ms (Ca removal). Parameters
+    # from Wicks-Roehrig-Rankin 1996 / Izquierdo & Beer 2013.
+    g_Ca_max=2.0 * nS,       # per-neuron L-type conductance (plateau mag)
+    v_Ca_half=-25 * mV,       # activation midpoint
+    k_Ca=5 * mV,              # activation slope
+    E_Ca=50 * mV,             # reversal
+    tau_Ca_decay=200 * ms,    # [Ca]i removal time constant
 )
+
+# Neurons with plateau-capable Ca channel composition. Set derived
+# from the worm literature (Lockery 2009 review; Mellem 2008; Faumont
+# 2013 AVA voltage imaging; Gordus 2015). These ~14 neurons are the
+# command interneurons and a few thermosensory/proprioceptive neurons
+# where sustained plateaus drive behaviour. All other neurons have
+# g_Ca = 0 in the model — they remain in pure graded regime.
+PLATEAU_NEURONS = [
+    "AVAL", "AVAR",     # reversal command — major plateau sustainment
+    "AVEL", "AVER",     # reversal command
+    "AVDL", "AVDR",     # reversal command
+    "AVBL", "AVBR",     # forward command
+    "PVCL", "PVCR",     # forward termination
+    "AIYL", "AIYR",     # thermo/forward integrator
+    "RIS",              # sleep-active plateau
+    "DVA",              # proprioceptive integrator
+]
 
 
 class GradedBrain:
@@ -107,15 +134,19 @@ class GradedBrain:
 
         W_gap = d["W_gap"].astype(np.float32)
 
-        # Build Brian2 graded network
+        # Build Brian2 graded network with per-neuron Ca channel.
+        # has_Ca selects which neurons get plateau-generating L-type Ca
+        # current. Non-plateau neurons have g_Ca_local = 0 → Ca terms
+        # are zeroed out.
         ns = {**PARAMS}
-        # Equations: graded σ(V) output + integration of synaptic input.
-        # Separate summed variables for excitatory and inhibitory drive
-        # (Brian2 requires distinct target variables per Synapses group).
         eqs = """
-        dv/dt = (v_rest - v)/tau + (I_syn_exc + I_syn_inh + I_gap + I_ext)/C_mem
+        dv/dt = (v_rest - v)/tau
+                + (I_syn_exc + I_syn_inh + I_gap + I_ext + I_Ca)/C_mem
                 + noise_sigma * xi / sqrt(tau) : volt
         sigma = 1 / (1 + exp(-(v - v_half)/k_half)) : 1
+        m_Ca = 1 / (1 + exp(-(v - v_Ca_half)/k_Ca)) : 1
+        I_Ca = g_Ca_local * m_Ca * (E_Ca - v) : amp
+        g_Ca_local : siemens
         I_syn_exc : amp
         I_syn_inh : amp
         I_gap : amp
@@ -127,6 +158,15 @@ class GradedBrain:
             namespace=ns,
         )
         self.neurons.v = PARAMS["v_rest"]
+
+        # T1b: assign L-type Ca conductance to plateau neurons only
+        has_ca = np.array(
+            [1.0 if n in PLATEAU_NEURONS else 0.0 for n in self.names],
+            dtype=np.float32,
+        )
+        # Set per-neuron via array assignment. g_Ca_local has units siemens.
+        g_Ca_values = has_ca * float(PARAMS["g_Ca_max"] / nS) * 1e-9  # in S
+        self.neurons.g_Ca_local_ = g_Ca_values
 
         exc_pre, exc_post = np.where(W_chem > 0)
         inh_pre, inh_post = np.where(W_chem < 0)
