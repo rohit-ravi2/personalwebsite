@@ -1751,6 +1751,26 @@ export function CelegansDashboard() {
     dragStartRef.current = null;
   };
 
+  // Touch: two-finger drag rotates the brain (mobile equivalent of shift-drag)
+  const onBrainTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 2) {
+      const avg = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      setIsDragging(true);
+      dragStartRef.current = { x: avg, rot: brainRot };
+    }
+  };
+  const onBrainTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 2 && dragStartRef.current) {
+      const avg = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const dx = avg - dragStartRef.current.x;
+      setBrainRot(dragStartRef.current.rot + dx * 0.005);
+    }
+  };
+  const onBrainTouchEnd = () => {
+    setIsDragging(false);
+    dragStartRef.current = null;
+  };
+
   const onBrainClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (e.shiftKey) return;  // shift-click is for drag, don't also lock
     const tr = traceRef.current;
@@ -2585,6 +2605,10 @@ export function CelegansDashboard() {
               onMouseDown={onBrainMouseDown}
               onMouseUp={onBrainMouseUp}
               onClick={onBrainClick}
+              onTouchStart={onBrainTouchStart}
+              onTouchMove={onBrainTouchMove}
+              onTouchEnd={onBrainTouchEnd}
+              onTouchCancel={onBrainTouchEnd}
               role="img"
               aria-label={`Brain view: ${brainViewMode === "3d" ? "300 neurons in 3D with active neurons highlighted in green" : "Spike raster of 18 readout neurons over time"}. Click neurons to lock, shift-drag to rotate.`}
             />
