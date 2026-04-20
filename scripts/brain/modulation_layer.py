@@ -197,8 +197,10 @@ class ModulationLayer:
                 np.add.at(counts, new_i, 1.0)
 
             I_mod_pA = self.step(counts)
-            # Assign to Brian2 neurons.I_ext (amps)
-            brain.neurons.I_ext_ = I_mod_pA * 1e-12  # pA → A
+            # Compose with any persistent ablation current, then assign
+            # to Brian2 neurons.I_ext (amps).
+            I_total = I_mod_pA + brain.ablation_current_pA
+            brain.neurons.I_ext_ = I_total * 1e-12  # pA → A
 
             # Occasional diagnostic snapshot
             t_now_s = float(brain.net.t / ms / 1000)
@@ -207,6 +209,9 @@ class ModulationLayer:
         # Save a reference so Python doesn't garbage-collect the closure
         self._op = _update_modulation
         brain.net.add(_update_modulation)
+        # Flag on the brain so LIFBrain.ablate() knows modulation is
+        # already assigning I_ext (prevents double-assignment).
+        brain._modulation_attached = True
 
     # --------------------------------------------------------------
 

@@ -245,6 +245,12 @@ class LIFBrain:
 
         self._stim_cache: list = []  # keep Python refs alive
 
+        # Per-neuron persistent current (pA). Used by ablate() to
+        # hyperpolarise specific neurons out of the firing regime.
+        # Read by ModulationLayer when assigning I_ext so the two
+        # compose correctly.
+        self.ablation_current_pA = np.zeros(self.N, dtype=np.float32)
+
         # Summary for eyeballing
         self.summary = dict(
             N=self.N,
@@ -255,6 +261,39 @@ class LIFBrain:
         )
 
     # ------------------------------------------------------------
+
+    def ablate(self, names: list[str], current_pA: float = -1000.0) -> list[str]:
+        """Silence specific neurons by injecting strong persistent
+        hyperpolarising current. Analog of laser or genetic ablation.
+
+        Args:
+            names: neuron names to ablate.
+            current_pA: hyperpolarising current magnitude. -1000 pA
+                        keeps V ≈ -165 mV (well below threshold -50 mV)
+                        so ablated neurons never spike.
+
+        Returns list of actually-ablated neuron names (intersection with
+        our 300-neuron set).
+        """
+        hit = []
+        for n in names:
+            if n in self.idx:
+                self.ablation_current_pA[self.idx[n]] = current_pA
+                hit.append(n)
+        # If no modulation layer is attached, we still need to push
+        # ablation currents into I_ext. Use a network_operation here.
+        if not hasattr(self, "_ablation_op_attached"):
+            from brian2 import network_operation, ms
+            @network_operation(dt=50*ms)
+            def _push_ablation():
+                # Only if modulation isn't already driving I_ext
+                if getattr(self, "_modulation_attached", False):
+                    return
+                self.neurons.I_ext_ = self.ablation_current_pA * 1e-12
+            self._ablation_op = _push_ablation
+            self.net.add(_push_ablation)
+            self._ablation_op_attached = True
+        return hit
 
     def inject_poisson(self, neuron: str, rate_hz: float,
                        weight_mv: float = 15.0) -> None:

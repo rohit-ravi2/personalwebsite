@@ -93,7 +93,8 @@ def cpg_ctrl(nu: int, t: float, params: dict) -> np.ndarray:
 class ClosedLoopEnv:
     """Closed-loop brain-body simulation."""
 
-    def __init__(self, seed: int = 0, enable_modulation: bool = True):
+    def __init__(self, seed: int = 0, enable_modulation: bool = True,
+                 ablate: list[str] | None = None):
         np.random.seed(seed)
         self.brain = LIFBrain()
         self.bank = ClassifierBank()
@@ -104,6 +105,11 @@ class ClosedLoopEnv:
         if enable_modulation and MOD_TABLES.exists():
             self.modulation = ModulationLayer(self.brain.names)
             self.modulation.attach_to_brain(self.brain)
+
+        # Optional in-silico ablation (Phase 3d-3 perturbation studies)
+        self.ablated: list[str] = []
+        if ablate:
+            self.ablated = self.brain.ablate(ablate)
 
         # Per-neuron affine distribution calibration (v1.5 fix):
         # maps Brian2 synthetic calcium moments onto the Atanas ΔF/F
