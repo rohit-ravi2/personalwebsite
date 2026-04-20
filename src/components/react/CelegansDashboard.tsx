@@ -2534,23 +2534,42 @@ export function CelegansDashboard() {
                   {lockedMeta.outgoing.length > 0 && (
                     <div className="pt-1 border-t border-[#1e293b]">
                       <div className="text-[#64748b] mb-0.5">top outgoing →</div>
-                      {lockedMeta.outgoing.slice(0, 5).map(([n, w]) => (
-                        <div key={n} className="pl-2 flex justify-between">
-                          <span>{n}</span>
-                          <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
-                        </div>
-                      ))}
+                      {lockedMeta.outgoing.slice(0, 5).map(([n, w]) => {
+                        const active = liveStats ? liveStats.topMods !== null : false;
+                        const readoutIdx = trace?.meta.readout_neurons.indexOf(n) ?? -1;
+                        const firing = readoutIdx >= 0 && trace?.raster.some(
+                          (e) => e.t > currentT - 0.1 && e.t <= currentT && e.n.includes(readoutIdx)
+                        );
+                        return (
+                          <div key={n} className="pl-2 flex justify-between items-center">
+                            <span className="flex items-center gap-1">
+                              {firing && <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#5ec77a] animate-pulse" title="firing now" />}
+                              {n}
+                            </span>
+                            <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   {lockedMeta.incoming.length > 0 && (
                     <div className="pt-1 border-t border-[#1e293b]">
                       <div className="text-[#64748b] mb-0.5">top incoming ←</div>
-                      {lockedMeta.incoming.slice(0, 5).map(([n, w]) => (
-                        <div key={n} className="pl-2 flex justify-between">
-                          <span>{n}</span>
-                          <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
-                        </div>
-                      ))}
+                      {lockedMeta.incoming.slice(0, 5).map(([n, w]) => {
+                        const readoutIdx = trace?.meta.readout_neurons.indexOf(n) ?? -1;
+                        const firing = readoutIdx >= 0 && trace?.raster.some(
+                          (e) => e.t > currentT - 0.1 && e.t <= currentT && e.n.includes(readoutIdx)
+                        );
+                        return (
+                          <div key={n} className="pl-2 flex justify-between items-center">
+                            <span className="flex items-center gap-1">
+                              {firing && <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#5ec77a] animate-pulse" title="firing now" />}
+                              {n}
+                            </span>
+                            <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   {lockedRateHist && (
