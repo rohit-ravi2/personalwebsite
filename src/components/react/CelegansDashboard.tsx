@@ -1572,6 +1572,18 @@ export function CelegansDashboard() {
         setShowEdges((v) => !v);
       } else if (e.code === "KeyV") {
         setBrainViewMode((v) => (v === "3d" ? "raster" : "3d"));
+      } else if (e.code === "BracketLeft" || e.code === "BracketRight") {
+        // Cycle locked neuron through the 18-readout set
+        if (!tr) return;
+        const readout = tr.meta.readout_neurons;
+        const lockedName = lockedNeuron !== null ? tr.neuron_names?.[lockedNeuron] : null;
+        const curR = lockedName ? readout.indexOf(lockedName) : -1;
+        const dir = e.code === "BracketRight" ? 1 : -1;
+        const next = ((curR < 0 ? 0 : curR) + dir + readout.length) % readout.length;
+        const nextName = readout[next];
+        const derived = brainDerived;
+        const gIdx = derived?.nameToIdx.get(nextName);
+        if (gIdx !== undefined) setLockedNeuron(gIdx);
       } else if (e.code === "Slash" && e.shiftKey) {
         // Shift+/ → "?"
         setShowHelp((v) => !v);
@@ -1587,7 +1599,7 @@ export function CelegansDashboard() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
+  }, [brainDerived, lockedNeuron]);
 
   // Fetch trace
   useEffect(() => {
@@ -3249,6 +3261,7 @@ export function CelegansDashboard() {
                   <span><kbd className="px-1 rounded border">F</kbd> fps</span>
                   <span><kbd className="px-1 rounded border">E</kbd> edges</span>
                   <span><kbd className="px-1 rounded border">V</kbd> view</span>
+                  <span><kbd className="px-1 rounded border">[ ]</kbd> next neuron</span>
                   <span><kbd className="px-1 rounded border">?</kbd> this help</span>
                   <span><kbd className="px-1 rounded border">Esc</kbd> close</span>
                 </div>
