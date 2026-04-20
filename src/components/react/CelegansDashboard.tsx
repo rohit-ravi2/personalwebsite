@@ -394,6 +394,7 @@ function drawSpikeRaster(
   readoutNames: string[],
   durationS: number,
   currentFrac: number,
+  neuronMeta: NeuronMeta[] | null,
 ) {
   const bg = ctx.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, "#0f1429"); bg.addColorStop(1, "#0a0e1a");
@@ -413,12 +414,25 @@ function drawSpikeRaster(
     ctx.fillText(readoutNames[i], 4, 8 + i * rowH + rowH * 0.7);
   }
 
-  // Spike dots
-  ctx.fillStyle = "#5ec77a";
+  // Per-neuron NT color lookup
+  const rowColor = readoutNames.map((nm) => {
+    if (!neuronMeta) return "#5ec77a";
+    const m = neuronMeta.find((mm) => mm.name === nm);
+    const nt = m?.nt ?? "";
+    if (nt.includes("Acetylcholine") || nt.startsWith("ACh")) return "#38bdf8";
+    if (nt.includes("Glutamate")) return "#a3e635";
+    if (nt.startsWith("GABA")) return "#f87171";
+    if (nt.includes("Dopamine") || nt.includes("Serotonin") ||
+        nt.includes("Octopamine") || nt.includes("Tyramine")) return "#c084fc";
+    return "#5ec77a";
+  });
+
+  // Spike dots, NT-colored
   for (const e of raster) {
     const x = labelW + (e.t / durationS) * plotW;
     for (const ni of e.n) {
       if (ni >= 0 && ni < nNeurons) {
+        ctx.fillStyle = rowColor[ni];
         ctx.fillRect(x, 6 + ni * rowH + 1, 2, Math.max(2, rowH - 2));
       }
     }
@@ -1583,6 +1597,7 @@ export function CelegansDashboard() {
             ctx, brainW, PANEL_H,
             tr.raster, tr.meta.readout_neurons,
             tr.meta.duration_s, t / tr.meta.duration_s,
+            neuronMeta,
           );
         } else if (ctx && tr && derived) {
           // Active set from raster within last 100ms
@@ -1722,7 +1737,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit, reducedMotion, ntByIdx]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit, reducedMotion, ntByIdx, neuronMeta]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
