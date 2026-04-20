@@ -1592,6 +1592,10 @@ export function CelegansDashboard() {
     return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits, hist };
   }, [trace, currentT, brainDerived]);
 
+  // Transition opacity — fades panels while a new scenario is loading
+  const panelOpacity = loading ? 0.35 : 1;
+  const panelTransition = "opacity 260ms cubic-bezier(0.4, 0, 0.2, 1)";
+
   return (
     <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
       {/* Hero intro */}
@@ -1782,7 +1786,9 @@ export function CelegansDashboard() {
       <div className="grid gap-3" style={{
         gridTemplateColumns: width < 820
           ? "1fr"
-          : "minmax(280px, 30fr) minmax(320px, 44fr) minmax(240px, 26fr)"
+          : "minmax(280px, 30fr) minmax(320px, 44fr) minmax(240px, 26fr)",
+        opacity: panelOpacity,
+        transition: panelTransition,
       }}>
         <div>
           <PanelLabel>body · 20-segment MuJoCo · state-coloured glow</PanelLabel>
@@ -1924,7 +1930,7 @@ export function CelegansDashboard() {
       </div>
 
       {/* Modulator strip with hover-linked releaser highlight */}
-      <div>
+      <div style={{ opacity: panelOpacity, transition: panelTransition }}>
         <PanelLabel>modulators · 9 concentrations × time · hover a row → releaser neurons glow gold</PanelLabel>
         <div className="rounded-lg overflow-hidden border bg-[#0a0e1a] relative">
           <canvas ref={modCanvasRef} className="block w-full" />
@@ -1952,7 +1958,7 @@ export function CelegansDashboard() {
       </div>
 
       {/* FSM timeline + state-diagram inset */}
-      <div>
+      <div style={{ opacity: panelOpacity, transition: panelTransition }}>
         <PanelLabel>behavioural state · FSM transitions over time · ticks = stimuli</PanelLabel>
         <div className="relative rounded-lg overflow-hidden border bg-[#0a0e1a]">
           <canvas ref={fsmCanvasRef} className="block w-full" />
@@ -1961,7 +1967,7 @@ export function CelegansDashboard() {
       </div>
 
       {/* Event probs + legend */}
-      <div>
+      <div style={{ opacity: panelOpacity, transition: panelTransition }}>
         <PanelLabel>event probabilities · 8 canonical behavioural transitions</PanelLabel>
         <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
           <canvas ref={evCanvasRef} className="block w-full" />
