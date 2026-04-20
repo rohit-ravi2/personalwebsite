@@ -1303,6 +1303,62 @@ export function CelegansDashboard() {
     setCurrentT(currentTRef.current);
   };
 
+  const exportPNG = () => {
+    // Composite all canvases into one image + download
+    const refs = [
+      { ref: bodyCanvasRef,  label: "body"   },
+      { ref: brainCanvasRef, label: "brain"  },
+      { ref: envCanvasRef,   label: "arena"  },
+      { ref: modCanvasRef,   label: "mods"   },
+      { ref: fsmCanvasRef,   label: "fsm"    },
+      { ref: evCanvasRef,    label: "events" },
+    ];
+    // Compute total height, pick the widest
+    const rects = refs.map(({ ref }) => ref.current?.getBoundingClientRect());
+    const wMax = Math.max(...rects.map((r) => r?.width ?? 0));
+    const gap = 10;
+    const padding = 20;
+    const panelLabelH = 18;
+    let hTotal = padding * 2;
+    for (const r of rects) hTotal += (r?.height ?? 0) + panelLabelH + gap;
+
+    const out = document.createElement("canvas");
+    const dpr = window.devicePixelRatio || 1;
+    out.width = (wMax + padding * 2) * dpr;
+    out.height = hTotal * dpr;
+    const octx = out.getContext("2d");
+    if (!octx) return;
+    octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    octx.fillStyle = "#0a0e1a";
+    octx.fillRect(0, 0, out.width, out.height);
+    let y = padding;
+    octx.font = "12px system-ui, sans-serif";
+    for (let i = 0; i < refs.length; i++) {
+      const canvas = refs[i].ref.current;
+      const rect = rects[i];
+      if (!canvas || !rect) continue;
+      octx.fillStyle = "rgba(226, 232, 240, 0.85)";
+      octx.fillText(refs[i].label.toUpperCase(), padding, y + 12);
+      y += panelLabelH;
+      octx.drawImage(canvas, padding, y, rect.width, rect.height);
+      y += rect.height + gap;
+    }
+    // Title
+    octx.fillStyle = "#f2ead3";
+    octx.font = "bold 14px system-ui, sans-serif";
+    octx.fillText(
+      `C. elegans simulator — ${scenario} @ t=${currentT.toFixed(1)}s`,
+      padding, 14,
+    );
+    const url = out.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `celegans-${scenario}-t${currentT.toFixed(1)}s.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const meta = trace?.meta;
   const currentFrame = trace
     ? trace.frames[Math.min(
@@ -1402,6 +1458,11 @@ export function CelegansDashboard() {
           />
           <span className="tabular-nums font-mono text-[0.65rem] w-8">{speed.toFixed(2)}×</span>
         </label>
+        <button
+          onClick={exportPNG}
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
+          title="Download PNG snapshot of current state"
+        >📷 snapshot</button>
         <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
           <span className="tabular-nums font-mono">
             t = {currentT.toFixed(1)} / {meta?.duration_s?.toFixed(0) ?? "–"} s
