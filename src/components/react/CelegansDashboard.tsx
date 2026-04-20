@@ -2740,6 +2740,20 @@ export function CelegansDashboard() {
                   )}
                 </>
               )}
+              <button
+                onClick={() => {
+                  const el = brainCanvasRef.current?.parentElement;
+                  if (!el) return;
+                  if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                  } else {
+                    el.requestFullscreen?.().catch(() => {/* ignore */});
+                  }
+                }}
+                className="rounded px-1 text-[0.6rem] hover:bg-accent"
+                title="Toggle fullscreen for brain view"
+                aria-label="Toggle brain-view fullscreen"
+              >⛶</button>
             </div>
           </div>
           {/* NT filter chips (below title row, above canvas) */}
