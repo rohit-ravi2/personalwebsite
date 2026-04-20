@@ -1649,17 +1649,24 @@ export function CelegansDashboard() {
     // Events recently crossing 0.5 threshold
     let recentEvents = 0;
     const eventsNames = trace.meta.events_tracked ?? [];
+    const activeEvents: Array<{ name: string; prob: number }> = [];
     for (const ev of eventsNames) {
       const arr = trace.event_probs[ev];
       if (!arr) continue;
       const tiE = Math.min(arr.length - 1, Math.floor((t / trace.meta.duration_s) * arr.length));
       const tiWin = Math.max(0, tiE - 5);
       let crossed = false;
+      let maxP = 0;
       for (let i = tiWin; i <= tiE; i++) {
-        if (arr[i] > 0.5) { crossed = true; break; }
+        if (arr[i] > 0.5) { crossed = true; }
+        if (arr[i] > maxP) maxP = arr[i];
       }
-      if (crossed) recentEvents++;
+      if (crossed) {
+        recentEvents++;
+        activeEvents.push({ name: ev, prob: maxP });
+      }
     }
+    activeEvents.sort((a, b) => b.prob - a.prob);
     // Rolling history for sparklines — 40 samples over the last 4 s
     const HIST_N = 40;
     const HIST_WINDOW_S = 4;
@@ -1697,7 +1704,7 @@ export function CelegansDashboard() {
       }
       hist.events[k] = ek;
     }
-    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits, hist };
+    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits, hist, activeEvents };
   }, [trace, currentT, brainDerived]);
 
   // Transition opacity — fades panels while a new scenario is loading
@@ -1877,6 +1884,32 @@ export function CelegansDashboard() {
               sparkColor="#f59e0b"
             />
           </div>
+          {/* Active-event badges — which classifier events are firing right now */}
+          {liveStats.activeEvents.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 text-[0.65rem]">
+              <span className="text-muted-foreground font-medium">events firing:</span>
+              {liveStats.activeEvents.map((e) => {
+                const col = EVENT_COLORS[e.name] ?? "#94a3b8";
+                return (
+                  <span
+                    key={e.name}
+                    className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5"
+                    style={{
+                      backgroundColor: hexAlpha(col, 0.12),
+                      borderColor: hexAlpha(col, 0.6),
+                      color: "var(--foreground)",
+                    }}
+                  >
+                    <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: col }} />
+                    <span className="font-semibold">{e.name.replace(/_/g, " ")}</span>
+                    <span className="text-muted-foreground font-mono text-[0.6rem]">
+                      p={e.prob.toFixed(2)}
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+          )}
           {/* Active-circuit badges */}
           {liveStats.activeCircuits.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 text-[0.65rem]">
