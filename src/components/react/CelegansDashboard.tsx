@@ -544,6 +544,7 @@ function drawModulatorStrip(
   concentrations: number[][] | undefined,
   names: string[] | undefined,
   currentFrac: number,
+  hoverRow: string | null,
 ) {
   const bg = ctx.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, "#0f1429");
@@ -559,7 +560,8 @@ function drawModulatorStrip(
   }
 
   const labelW = 68;
-  const plotW = w - labelW - 8;
+  const valueW = 52;
+  const plotW = w - labelW - valueW - 8;
   const numMods = names.length;
   const rowH = (h - 8) / numMods;
 
@@ -571,22 +573,31 @@ function drawModulatorStrip(
     }
   }
 
-  // Draw each modulator row
   const nT = concentrations.length;
+  const tIdx = Math.min(nT - 1, Math.floor(currentFrac * nT));
+
+  // Draw each modulator row
   for (let mi = 0; mi < numMods; mi++) {
     const y0 = 4 + mi * rowH;
     const color = MODULATOR_COLORS[names[mi]] ?? "#94a3b8";
+    const hover = hoverRow === names[mi];
+
+    // Row background for hover highlight
+    if (hover) {
+      ctx.fillStyle = hexAlpha(color, 0.12);
+      ctx.fillRect(0, y0, w, rowH);
+    }
 
     // Label on left
-    ctx.fillStyle = "rgba(226, 232, 240, 0.92)";
-    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillStyle = hover ? "#f2ead3" : "rgba(226, 232, 240, 0.92)";
+    ctx.font = (hover ? "bold " : "") + "11px system-ui, sans-serif";
     ctx.fillText(names[mi], 8, y0 + rowH * 0.7);
 
     // Color swatch
     ctx.fillStyle = color;
     ctx.fillRect(55, y0 + rowH * 0.35, 8, rowH * 0.3);
 
-    // Draw heatmap strip — use ImageData for speed
+    // Heatmap strip
     for (let px = 0; px < plotW; px++) {
       const ti = Math.min(nT - 1, Math.floor((px / plotW) * nT));
       const intensity = Math.min(1, concentrations[ti][mi] / maxByMod[mi]);
@@ -594,6 +605,17 @@ function drawModulatorStrip(
       ctx.fillStyle = hexAlpha(color, intensity * 0.95);
       ctx.fillRect(labelW + px, y0 + 2, 1, rowH - 4);
     }
+
+    // Current concentration value on right
+    const curC = concentrations[tIdx][mi] ?? 0;
+    ctx.fillStyle = hexAlpha(color, 0.85);
+    ctx.font = "10px ui-monospace, monospace";
+    const valStr = curC < 10 ? curC.toFixed(2) : curC.toFixed(1);
+    ctx.fillText(valStr, labelW + plotW + 4, y0 + rowH * 0.7);
+    // Mini bar next to value showing relative level
+    ctx.fillStyle = hexAlpha(color, 0.5);
+    const barH = Math.max(2, (curC / maxByMod[mi]) * (rowH - 4));
+    ctx.fillRect(w - 4, y0 + rowH - 2 - barH, 2, barH);
   }
 
   // Current-time cursor
@@ -1172,7 +1194,7 @@ export function CelegansDashboard() {
         if (ctx) {
           const curFrac = tr ? t / tr.meta.duration_s : 0;
           drawModulatorStrip(ctx, stripsW, MOD_STRIP_H,
-            tr?.modulator_concentrations, tr?.modulator_names, curFrac);
+            tr?.modulator_concentrations, tr?.modulator_names, curFrac, hoverModulator);
         }
       }
 
