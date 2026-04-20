@@ -1596,6 +1596,9 @@ export function CelegansDashboard() {
   const panelOpacity = loading ? 0.35 : 1;
   const panelTransition = "opacity 260ms cubic-bezier(0.4, 0, 0.2, 1)";
 
+  // Scrub timeline preview — what state/time is at hover x
+  const [scrubHover, setScrubHover] = useState<{ x: number; t: number; state: string } | null>(null);
+
   return (
     <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
       {/* Hero intro */}
@@ -1775,11 +1778,53 @@ export function CelegansDashboard() {
           const r = e.currentTarget.getBoundingClientRect();
           scrubTo((e.clientX - r.left) / r.width);
         }}
+        onMouseMove={(e) => {
+          const tr = traceRef.current;
+          if (!tr) return;
+          const r = e.currentTarget.getBoundingClientRect();
+          const frac = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+          const tHover = frac * tr.meta.duration_s;
+          const nSync = tr.fsm_states.length;
+          const sIdx = Math.min(nSync - 1, Math.floor(frac * nSync));
+          const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
+          const st = stateNames[tr.fsm_states[sIdx]] ?? "?";
+          setScrubHover({ x: e.clientX - r.left, t: tHover, state: st });
+        }}
+        onMouseLeave={() => setScrubHover(null)}
       >
         <div
           className="h-full rounded-full bg-primary transition-[width] duration-75"
           style={{ width: `${meta ? (currentT / meta.duration_s) * 100 : 0}%` }}
         />
+        {/* Stim markers on the scrub bar itself */}
+        {trace?.stim_log?.map((s, i) => (
+          <div
+            key={i}
+            className="absolute top-0 h-full w-0.5 bg-amber-400/80 pointer-events-none"
+            style={{ left: `${(s.t / (meta?.duration_s ?? 1)) * 100}%` }}
+            title={`stim t=${s.t.toFixed(1)}s ${s.preset}`}
+          />
+        ))}
+        {/* Hover preview tooltip */}
+        {scrubHover && (
+          <div
+            className="absolute -top-8 pointer-events-none flex flex-col items-center z-10"
+            style={{ left: scrubHover.x, transform: "translateX(-50%)" }}
+          >
+            <div
+              className="rounded bg-[#0f1429]/95 border border-border px-2 py-0.5 shadow-md text-[0.65rem] font-mono whitespace-nowrap"
+            >
+              <span className="text-foreground tabular-nums">{scrubHover.t.toFixed(2)}s</span>
+              <span
+                className="ml-1.5 px-1 rounded text-[0.55rem] font-semibold text-white"
+                style={{ backgroundColor: STATE_COLORS[scrubHover.state] ?? "#6b7280" }}
+              >
+                {scrubHover.state}
+              </span>
+            </div>
+            <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-border" />
+          </div>
+        )}
       </div>
 
       {/* Main panels — CSS Grid for predictable layout */}
