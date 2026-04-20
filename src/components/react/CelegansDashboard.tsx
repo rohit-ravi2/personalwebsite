@@ -1,23 +1,20 @@
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * CelegansDashboard — full-scale interactive simulation viewer.
+ * CelegansDashboard — integrated simulator viewer.
  *
- * Replaces the earlier BrainBody component with a unified dashboard
- * that exposes the complexity of the v3 + Tier 1 model:
- *   • 20-segment body animation (MuJoCo-derived)
- *   • 300-neuron brain view projected from 3D soma coordinates,
- *     colour-coded by recent activity
- *   • 9-modulator concentration strip (volume-transmission layer)
- *   • 5-state FSM timeline
+ * Panels, all time-synchronised:
+ *   • 20-segment body (MuJoCo-derived)
+ *   • 300-neuron brain view at 3D soma coords, recently-active highlighted,
+ *     glow halos on releaser neurons sized by current modulator concentration
+ *   • Arena (2D agar + food + worm trail) when scenario includes T1e env
+ *   • 9-modulator concentration strip
+ *   • FSM state timeline with stimulus markers
  *   • 8-event classifier probability streams
- *   • Environment view (agar plate + food patch + worm trail) when
- *     the scenario includes T1e environment data
- *
- * All panels share a single `currentT` so scrubbing/playback is
- * synchronised. Canvas 2D throughout for 60 fps animation.
  */
+
+// ---------- Types -----------------------------------------------------
 
 type Scenario = "spontaneous" | "touch" | "osmotic_shock" | "food" | "chemotaxis";
 
@@ -35,7 +32,6 @@ type Trace = {
     modulation_enabled?: boolean;
     modulators?: string[];
     sources: Record<string, string>;
-    modulation_final_concentrations?: Record<string, number>;
   };
   frames: Array<{
     t: number;
@@ -46,7 +42,6 @@ type Trace = {
   event_probs: Record<string, number[]>;
   fsm_states: number[];
   stim_log: Array<{ t: number; preset: string; intensity: number; neurons: string[] }>;
-  // T1 dashboard extensions
   neuron_positions?: Array<[number, number, number]>;
   neuron_names?: string[];
   modulator_concentrations?: number[][];
@@ -59,100 +54,157 @@ type Trace = {
   };
 };
 
-const SCENARIOS: Record<Scenario, { label: string; desc: string; tagline: string }> = {
-  spontaneous: {
-    label: "Spontaneous",
-    desc: "No stimulus — baseline behavioural distribution.",
-    tagline: "Idle brain, idle worm.",
-  },
-  touch: {
-    label: "Head touch",
-    desc: "ALM/AVM mechanoreceptor drive at t=5s (Chalfie 1981).",
-    tagline: "Poke → reversal.",
-  },
-  osmotic_shock: {
-    label: "Osmotic shock",
-    desc: "ASH polymodal avoidance drive at t=5s (Hart 1995).",
-    tagline: "Noxious → avoidance cascade.",
-  },
-  food: {
-    label: "Food",
-    desc: "ASI/ASJ/ADF feeding-state tonic drive from t=2s (Flavell 2013).",
-    tagline: "Satiety → dwelling.",
-  },
-  chemotaxis: {
-    label: "Chemotaxis",
-    desc: "2D agar, food patch at (4 mm, 0). ASE/AWC/AWA driven by real concentration field (Pierce-Shimomura 1999).",
-    tagline: "Navigate toward food.",
-  },
+// ---------- Constants -------------------------------------------------
+
+const SCENARIOS: Record<Scenario, { label: string; desc: string }> = {
+  spontaneous:   { label: "Spontaneous",   desc: "No stimulus — baseline." },
+  touch:         { label: "Head touch",    desc: "ALM/AVM mechanoreceptor drive at t=5s (Chalfie 1981)." },
+  osmotic_shock: { label: "Osmotic shock", desc: "ASH polymodal avoidance drive at t=5s (Hart 1995)." },
+  food:          { label: "Food",          desc: "ASI/ASJ/ADF feeding-state tonic from t=2s (Flavell 2013)." },
+  chemotaxis:    { label: "Chemotaxis",    desc: "2D agar + food patch. ASE/AWC/AWA driven by real gradient (Pierce-Shimomura 1999)." },
 };
 
 const STATE_COLORS: Record<string, string> = {
-  FORWARD: "#2f5233",
-  REVERSE: "#b94b4b",
-  OMEGA: "#8b5cf6",
+  FORWARD:   "#2f5233",
+  REVERSE:   "#b94b4b",
+  OMEGA:     "#7c3aed",
   PIROUETTE: "#e76f51",
   QUIESCENT: "#6b7280",
 };
 
 const MODULATOR_COLORS: Record<string, string> = {
-  "FLP-11": "#8b5cf6",  // peptides — purples
-  "FLP-1":  "#a78bfa",
-  "FLP-2":  "#c4b5fd",
-  "NLP-12": "#ddd6fe",
+  "FLP-11": "#a78bfa",
+  "FLP-1":  "#c4b5fd",
+  "FLP-2":  "#ddd6fe",
+  "NLP-12": "#fbcfe8",
   "PDF-1":  "#7c3aed",
-  "5HT":    "#059669",  // monoamines — distinctive
-  "DA":     "#2563eb",
-  "TA":     "#dc2626",
-  "OA":     "#d97706",
+  "5HT":    "#10b981",
+  "DA":     "#3b82f6",
+  "TA":     "#ef4444",
+  "OA":     "#f59e0b",
 };
 
 const EVENT_COLORS: Record<string, string> = {
-  reversal_onset:      "#b94b4b",
-  reversal_offset:     "#dc8686",
-  forward_run_onset:   "#2f5233",
-  forward_run_offset:  "#64884e",
+  reversal_onset:      "#dc2626",
+  reversal_offset:     "#f87171",
+  forward_run_onset:   "#059669",
+  forward_run_offset:  "#6ee7b7",
   omega_onset:         "#8b5cf6",
-  pirouette_entry:     "#e76f51",
-  quiescence_onset:    "#6b7280",
+  pirouette_entry:     "#f97316",
+  quiescence_onset:    "#9ca3af",
   speed_burst_onset:   "#f59e0b",
 };
 
-// --------------------------------------------------------------
-// Drawing helpers
-// --------------------------------------------------------------
+const RELEASERS: Record<string, string[]> = {
+  "FLP-11": ["RIS"],
+  "FLP-1":  ["AVKL", "AVKR"],
+  "FLP-2":  ["AVKL", "AVKR"],
+  "NLP-12": ["DVA"],
+  "PDF-1":  ["AVBL", "AVBR", "ALA", "RIA"],
+  "5HT":    ["NSML", "NSMR", "HSNL", "HSNR", "ADFL", "ADFR"],
+  "DA":     ["PDEL", "PDER", "ADEL", "ADER", "CEPDL", "CEPDR", "CEPVL", "CEPVR"],
+  "TA":     ["RIML", "RIMR"],
+  "OA":     ["RICL", "RICR"],
+};
+
+const PANEL_H = 280;
+const STRIP_BRAIN_H = 130;
+const STRIP_FSM_H   = 36;
+const STRIP_EV_H    = 120;
+const MOD_STRIP_H   = 180;
+
+// ---------- Utilities -------------------------------------------------
+
+function hexAlpha(hex: string, alpha: number): string {
+  const a = Math.max(0, Math.min(255, Math.round(alpha * 255)));
+  return hex + a.toString(16).padStart(2, "0");
+}
 
 function segmentWidth(i: number, total: number): number {
-  const t = i / (total - 1);
+  const t = i / Math.max(1, total - 1);
   return 3 + 9 * Math.sin(Math.PI * t);
 }
 
-function drawWormBody(
-  ctx: CanvasRenderingContext2D,
+// Cache position bounds so we don't min/max per-frame
+type PosBounds = {
+  xMin: number; xMax: number;
+  yMin: number; yMax: number;
+  zMin: number; zMax: number;
+};
+
+function computeBounds(positions: Array<[number, number, number]>): PosBounds {
+  let xMin = Infinity, xMax = -Infinity;
+  let yMin = Infinity, yMax = -Infinity;
+  let zMin = Infinity, zMax = -Infinity;
+  for (const [x, y, z] of positions) {
+    if (x < xMin) xMin = x;
+    if (x > xMax) xMax = x;
+    if (y < yMin) yMin = y;
+    if (y > yMax) yMax = y;
+    if (z < zMin) zMin = z;
+    if (z > zMax) zMax = z;
+  }
+  return { xMin, xMax, yMin, yMax, zMin, zMax };
+}
+
+function projectNeuron(
+  p: [number, number, number],
+  bounds: PosBounds,
   w: number,
   h: number,
+): { sx: number; sy: number; depthT: number } {
+  const yRange = bounds.yMax - bounds.yMin || 1;
+  const zRange = bounds.zMax - bounds.zMin || 1;
+  const xRange = bounds.xMax - bounds.xMin || 1;
+  const sx = ((p[1] - bounds.yMin) / yRange) * w * 0.9 + w * 0.05;
+  const sy = h / 2 - ((p[2] - bounds.zMin) / zRange - 0.5) * h * 0.8;
+  const depthT = (p[0] - bounds.xMin) / xRange;
+  return { sx, sy, depthT };
+}
+
+function setupCanvasDPR(canvas: HTMLCanvasElement, cssW: number, cssH: number): CanvasRenderingContext2D | null {
+  const dpr = window.devicePixelRatio || 1;
+  const wantW = Math.round(cssW * dpr);
+  const wantH = Math.round(cssH * dpr);
+  if (canvas.width !== wantW) canvas.width = wantW;
+  if (canvas.height !== wantH) canvas.height = wantH;
+  canvas.style.width = cssW + "px";
+  canvas.style.height = cssH + "px";
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  return ctx;
+}
+
+// ---------- Drawing ---------------------------------------------------
+
+function drawWormBody(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number,
   segs: Array<{ x: number; y: number }>,
   state: string,
 ) {
-  ctx.clearRect(0, 0, w, h);
-  // Soft radial background
-  const bg = ctx.createRadialGradient(w / 2, h / 2, 40, w / 2, h / 2, Math.max(w, h));
-  bg.addColorStop(0, "rgba(247, 237, 211, 0.95)");
-  bg.addColorStop(1, "rgba(229, 215, 185, 0.92)");
+  // Warm cream gradient background
+  const bg = ctx.createRadialGradient(w / 2, h / 2, 20, w / 2, h / 2, Math.max(w, h) * 0.8);
+  bg.addColorStop(0, "#f9f0d6");
+  bg.addColorStop(1, "#e5d7b9");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
-  // Subtle dotted grid
-  ctx.fillStyle = "rgba(26, 42, 74, 0.10)";
-  for (let x = 16; x < w; x += 32) {
-    for (let y = 16; y < h; y += 32) {
+
+  // Dotted grid
+  ctx.fillStyle = "rgba(26, 42, 74, 0.08)";
+  for (let y = 14; y < h; y += 24) {
+    for (let x = 14; x < w; x += 24) {
       ctx.fillRect(x, y, 1, 1);
     }
   }
-  // Body with outer glow matching state
+
   const stateColor = STATE_COLORS[state] ?? "#2f5233";
+  // Glow
   ctx.save();
-  ctx.shadowBlur = 12;
-  ctx.shadowColor = stateColor + "55";
+  ctx.shadowBlur = 16;
+  ctx.shadowColor = hexAlpha(stateColor, 0.5);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   for (let i = 0; i < segs.length - 1; i++) {
@@ -164,100 +216,72 @@ function drawWormBody(
     ctx.stroke();
   }
   ctx.restore();
-  // Head marker — small cream dot indicating the head tip
+
+  // Head marker
   const head = segs[0];
   ctx.fillStyle = "#f2ead3";
+  ctx.strokeStyle = "#1a2a4a";
+  ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.arc(head.x, head.y, 2.5, 0, Math.PI * 2);
+  ctx.arc(head.x, head.y, 3, 0, Math.PI * 2);
   ctx.fill();
+  ctx.stroke();
 }
-
-// Known releaser neurons per modulator — based on Phase 3d-1 findings.
-// Drawing these with distinctive markers on the brain panel lets viewers
-// see which neurons are sources for each modulator concentration.
-const RELEASERS: Record<string, string[]> = {
-  "FLP-11": ["RIS"],
-  "FLP-1":  ["AVKL", "AVKR"],
-  "FLP-2":  ["AVKL", "AVKR"],
-  "NLP-12": ["DVA"],
-  "PDF-1":  ["AVBL", "AVBR", "AVBR", "ALA", "RIA"],
-  "5HT":    ["NSML", "NSMR", "HSNL", "HSNR", "ADFL", "ADFR"],
-  "DA":     ["PDEL", "PDER", "ADEL", "ADER", "CEPDL", "CEPDR", "CEPVL", "CEPVR"],
-  "TA":     ["RIML", "RIMR"],
-  "OA":     ["RICL", "RICR"],
-};
 
 function drawBrain3D(
   ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
+  w: number, h: number,
   positions: Array<[number, number, number]>,
   names: string[],
+  bounds: PosBounds,
   activeSet: Set<number>,
   hoverIdx: number | null,
   readoutSet: Set<string>,
   modConcentrations: number[] | null,
   modNames: string[] | null,
+  nameToIdx: Map<string, number>,
 ) {
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#0a0e1a";
+  // Dark gradient backdrop
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#0f1429");
+  bg.addColorStop(1, "#0a0e1a");
+  ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
 
-  if (!positions || positions.length === 0) return;
+  if (!positions || positions.length === 0) {
+    ctx.fillStyle = "rgba(210, 220, 240, 0.4)";
+    ctx.font = "12px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Loading brain positions…", w / 2, h / 2);
+    ctx.textAlign = "left";
+    return;
+  }
 
-  // Project 3D (x, y, z) to 2D (sx, sy). Worm coordinates have y as AP
-  // axis (head negative → tail positive) and z as DV axis. We want an
-  // elegant side-on projection: X → screen x (left-right), Y → screen
-  // x (head-tail) flipped, Z → screen y (depth). So use:
-  //   screen_x = (y − y_center) / range_y × w × 0.9 + w/2  (head on the left)
-  //   screen_y = h/2 − (z − z_center) / range_z × h × 0.4
-  const ys = positions.map((p) => p[1]);
-  const zs = positions.map((p) => p[2]);
-  const xs = positions.map((p) => p[0]);
-  const yMin = Math.min(...ys), yMax = Math.max(...ys);
-  const zMin = Math.min(...zs), zMax = Math.max(...zs);
-  const yRange = yMax - yMin || 1;
-  const zRange = zMax - zMin || 1;
-
-  // Subtle body outline cue
-  ctx.strokeStyle = "rgba(80, 90, 120, 0.25)";
+  // Subtle body outline (head→tail axis)
+  ctx.strokeStyle = "rgba(100, 116, 139, 0.2)";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  const cy = h / 2;
-  ctx.moveTo(w * 0.05, cy);
-  ctx.lineTo(w * 0.95, cy);
+  ctx.moveTo(w * 0.05, h / 2);
+  ctx.lineTo(w * 0.95, h / 2);
   ctx.stroke();
 
-  // Releaser "glow" halos — for each modulator with elevated concentration,
-  // render a soft colored glow around its releaser neurons. Gives visual
-  // feedback of the volume-transmission layer. Only render if we have
-  // modulator telemetry.
-  const nameToIdx = new Map<string, number>();
-  names.forEach((nm, i) => nameToIdx.set(nm, i));
-  const maxConc = 8.0;  // normalisation — matches concentration_cap
+  // Releaser glow halos (modulator concentration visualization)
   if (modConcentrations && modNames) {
     for (let mi = 0; mi < modNames.length; mi++) {
+      const conc = modConcentrations[mi] ?? 0;
+      if (conc <= 0.3) continue;
       const mod = modNames[mi];
-      const conc = modConcentrations[mi];
-      if (conc <= 0.2) continue;
       const color = MODULATOR_COLORS[mod] ?? "#94a3b8";
-      const intensity = Math.min(1.0, conc / maxConc);
+      const intensity = Math.min(1, conc / 8);
       const releasers = RELEASERS[mod] ?? [];
       for (const rn of releasers) {
         const idx = nameToIdx.get(rn);
         if (idx === undefined) continue;
-        const [x, y, z] = positions[idx];
-        const ys = positions.map((p) => p[1]);
-        const zs = positions.map((p) => p[2]);
-        const yMin = Math.min(...ys), yMax = Math.max(...ys);
-        const zMin = Math.min(...zs), zMax = Math.max(...zs);
-        const sx = ((y - yMin) / (yMax - yMin || 1)) * w * 0.9 + w * 0.05;
-        const sy = cy - ((z - zMin) / (zMax - zMin || 1) - 0.5) * h * 0.75;
-        const r = 4 + 18 * intensity;
-        const alpha = 0.08 + 0.5 * intensity;
+        const { sx, sy } = projectNeuron(positions[idx], bounds, w, h);
+        const r = 5 + 18 * intensity;
         const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
-        grad.addColorStop(0, color + Math.round(alpha * 255).toString(16).padStart(2, "0"));
-        grad.addColorStop(1, color + "00");
+        grad.addColorStop(0, hexAlpha(color, 0.55 * intensity));
+        grad.addColorStop(1, hexAlpha(color, 0));
         ctx.fillStyle = grad;
         ctx.beginPath();
         ctx.arc(sx, sy, r, 0, Math.PI * 2);
@@ -266,112 +290,135 @@ function drawBrain3D(
     }
   }
 
-  // Depth-sorted draw (x = left-right, used for depth shading)
-  const idxSorted = [...Array(positions.length).keys()].sort(
-    (a, b) => positions[a][0] - positions[b][0]
-  );
+  // Depth-sorted draw order (back → front)
+  const order: number[] = [];
+  for (let i = 0; i < positions.length; i++) order.push(i);
+  order.sort((a, b) => positions[a][0] - positions[b][0]);
 
-  for (const i of idxSorted) {
-    const [x, y, z] = positions[i];
-    const sx = ((y - yMin) / yRange) * w * 0.9 + w * 0.05;
-    const sy = cy - ((z - zMin) / zRange - 0.5) * h * 0.75;
-    // Depth factor from x (LR) — some neurons occluded by others
-    const depthT = (x - Math.min(...xs)) / (Math.max(...xs) - Math.min(...xs) + 0.001);
-    const depthFade = 0.55 + 0.45 * depthT;
+  const hoverLabel: { sx: number; sy: number; name: string } | null = { sx: 0, sy: 0, name: "" } as any;
+  let hoverDrawn = false;
+
+  for (const i of order) {
+    const { sx, sy, depthT } = projectNeuron(positions[i], bounds, w, h);
+    const depthFade = 0.5 + 0.5 * depthT;
     const isActive = activeSet.has(i);
     const isReadout = readoutSet.has(names[i] ?? "");
     const isHover = hoverIdx === i;
-    let r = isReadout ? 2.8 : 1.8;
-    if (isHover) r = 4.5;
-    let fillColor: string;
+
+    let r = isReadout ? 2.5 : 1.6;
+    if (isHover) r = 5;
+
     if (isActive) {
-      fillColor = `rgba(94, 199, 122, ${0.95 * depthFade})`;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = "#5ec77a";
+      ctx.fillStyle = hexAlpha("#5ec77a", 0.95 * depthFade);
     } else if (isReadout) {
-      fillColor = `rgba(160, 180, 220, ${0.7 * depthFade})`;
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = hexAlpha("#a5b4fc", 0.7 * depthFade);
     } else {
-      fillColor = `rgba(110, 120, 150, ${0.55 * depthFade})`;
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = hexAlpha("#64748b", 0.55 * depthFade);
     }
-    ctx.fillStyle = fillColor;
     ctx.beginPath();
     ctx.arc(sx, sy, r, 0, Math.PI * 2);
     ctx.fill();
+
     if (isHover) {
+      ctx.shadowBlur = 0;
       ctx.strokeStyle = "#f2ead3";
       ctx.lineWidth = 1.5;
       ctx.stroke();
-      // Label
-      ctx.fillStyle = "#f2ead3";
-      ctx.font = "11px system-ui, sans-serif";
-      ctx.fillText(names[i] ?? "?", sx + 8, sy - 8);
+      (hoverLabel as any).sx = sx;
+      (hoverLabel as any).sy = sy;
+      (hoverLabel as any).name = names[i] ?? "?";
+      hoverDrawn = true;
     }
   }
+  ctx.shadowBlur = 0;
 
-  // Legend
-  ctx.fillStyle = "rgba(210, 220, 240, 0.6)";
+  if (hoverDrawn) {
+    ctx.font = "12px system-ui, sans-serif";
+    const lbl = (hoverLabel as any).name;
+    const mw = ctx.measureText(lbl).width;
+    const lx = (hoverLabel as any).sx + 8;
+    const ly = (hoverLabel as any).sy - 10;
+    ctx.fillStyle = "rgba(15, 20, 41, 0.92)";
+    ctx.fillRect(lx - 3, ly - 11, mw + 8, 16);
+    ctx.fillStyle = "#f2ead3";
+    ctx.fillText(lbl, lx + 1, ly + 1);
+  }
+
+  // Axis labels
+  ctx.fillStyle = "rgba(148, 163, 184, 0.75)";
   ctx.font = "10px system-ui, sans-serif";
-  ctx.fillText("head", w * 0.04, h - 8);
+  ctx.fillText("head", w * 0.045, h - 8);
   ctx.textAlign = "right";
-  ctx.fillText("tail", w * 0.96, h - 8);
+  ctx.fillText("tail", w * 0.955, h - 8);
   ctx.textAlign = "left";
 }
 
 function drawModulatorStrip(
   ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
+  w: number, h: number,
   concentrations: number[][] | undefined,
   names: string[] | undefined,
   currentFrac: number,
 ) {
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#0a0e1a";
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#0f1429");
+  bg.addColorStop(1, "#0a0e1a");
+  ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
 
   if (!concentrations || !names || concentrations.length === 0) {
-    ctx.fillStyle = "rgba(210, 220, 240, 0.5)";
+    ctx.fillStyle = "rgba(148, 163, 184, 0.5)";
     ctx.font = "11px system-ui, sans-serif";
-    ctx.fillText("No modulator telemetry in this scenario.", 12, h / 2);
+    ctx.fillText("No modulator telemetry in this scenario.", 14, h / 2);
     return;
   }
 
-  const labelW = 52;
-  const plotW = w - labelW - 4;
+  const labelW = 68;
+  const plotW = w - labelW - 8;
   const numMods = names.length;
-  const rowH = h / numMods;
+  const rowH = (h - 8) / numMods;
 
-  // Per-modulator max for normalisation
-  const maxByMod = names.map((_, mi) => {
-    let m = 0;
-    for (const row of concentrations) {
-      if (row[mi] > m) m = row[mi];
+  // Per-modulator max
+  const maxByMod = new Array(numMods).fill(1e-6);
+  for (const row of concentrations) {
+    for (let mi = 0; mi < numMods; mi++) {
+      if (row[mi] > maxByMod[mi]) maxByMod[mi] = row[mi];
     }
-    return Math.max(m, 1e-6);
-  });
+  }
 
+  // Draw each modulator row
+  const nT = concentrations.length;
   for (let mi = 0; mi < numMods; mi++) {
-    const y0 = mi * rowH;
+    const y0 = 4 + mi * rowH;
     const color = MODULATOR_COLORS[names[mi]] ?? "#94a3b8";
-    // Label
-    ctx.fillStyle = "rgba(210, 220, 240, 0.85)";
-    ctx.font = "10px system-ui, sans-serif";
-    ctx.fillText(names[mi], 4, y0 + rowH * 0.65);
 
-    // Render time-series as intensity-shaded bars
-    const nT = concentrations.length;
-    const stride = Math.max(1, Math.floor(nT / plotW));
-    for (let t = 0; t < nT; t += stride) {
-      const intensity = concentrations[t][mi] / maxByMod[mi];
-      const x = labelW + (t / nT) * plotW;
-      const bw = Math.max(1, (stride / nT) * plotW);
-      ctx.fillStyle = color + Math.round(intensity * 220).toString(16).padStart(2, "0");
-      ctx.fillRect(x, y0 + 2, bw, rowH - 4);
+    // Label on left
+    ctx.fillStyle = "rgba(226, 232, 240, 0.92)";
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillText(names[mi], 8, y0 + rowH * 0.7);
+
+    // Color swatch
+    ctx.fillStyle = color;
+    ctx.fillRect(55, y0 + rowH * 0.35, 8, rowH * 0.3);
+
+    // Draw heatmap strip — use ImageData for speed
+    for (let px = 0; px < plotW; px++) {
+      const ti = Math.min(nT - 1, Math.floor((px / plotW) * nT));
+      const intensity = Math.min(1, concentrations[ti][mi] / maxByMod[mi]);
+      if (intensity < 0.04) continue;
+      ctx.fillStyle = hexAlpha(color, intensity * 0.95);
+      ctx.fillRect(labelW + px, y0 + 2, 1, rowH - 4);
     }
   }
 
   // Current-time cursor
   const cursorX = labelW + currentFrac * plotW;
   ctx.strokeStyle = "#f2ead3";
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.moveTo(cursorX, 0);
   ctx.lineTo(cursorX, h);
@@ -380,38 +427,35 @@ function drawModulatorStrip(
 
 function drawFsmTimeline(
   ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
+  w: number, h: number,
   states: number[],
   currentFrac: number,
 ) {
-  ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#0a0e1a";
   ctx.fillRect(0, 0, w, h);
 
   const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
-  const labelW = 52;
-  const plotW = w - labelW - 4;
+  const labelW = 68;
+  const plotW = w - labelW - 8;
   const nT = states.length;
   if (nT === 0) return;
 
-  ctx.fillStyle = "rgba(210, 220, 240, 0.85)";
-  ctx.font = "10px system-ui, sans-serif";
-  ctx.fillText("state", 4, h * 0.65);
+  ctx.fillStyle = "rgba(226, 232, 240, 0.92)";
+  ctx.font = "11px system-ui, sans-serif";
+  ctx.fillText("state", 8, h * 0.65);
 
   const bw = plotW / nT;
   for (let t = 0; t < nT; t++) {
     const s = states[t];
-    const name = stateNames[s];
-    const color = STATE_COLORS[name] ?? "#9ca3af";
+    const name = stateNames[s] ?? "";
+    const color = STATE_COLORS[name] ?? "#6b7280";
     ctx.fillStyle = color;
-    ctx.fillRect(labelW + t * bw, 6, bw + 0.5, h - 12);
+    ctx.fillRect(labelW + t * bw, 4, Math.max(0.8, bw + 0.5), h - 8);
   }
 
-  // Current-time cursor
   const cursorX = labelW + currentFrac * plotW;
   ctx.strokeStyle = "#f2ead3";
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.moveTo(cursorX, 0);
   ctx.lineTo(cursorX, h);
@@ -424,49 +468,63 @@ function drawStimMarkers(
   stims: Trace["stim_log"], durationS: number,
 ) {
   ctx.save();
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.7)";
-  ctx.fillStyle = "rgba(245, 158, 11, 0.9)";
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.8)";
+  ctx.fillStyle = "#fef3c7";
   ctx.lineWidth = 1;
   ctx.font = "9px system-ui, sans-serif";
   ctx.setLineDash([2, 3]);
   for (const s of stims) {
     const frac = s.t / durationS;
-    const x = labelW + frac * (w - labelW - 4);
+    const x = labelW + frac * (w - labelW - 8);
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, h);
     ctx.stroke();
-    ctx.fillText(s.preset, x + 2, 10);
   }
-  ctx.restore();
   ctx.setLineDash([]);
+  ctx.restore();
 }
 
 function drawEventProbs(
   ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
+  w: number, h: number,
   probs: Record<string, number[]>,
   eventNames: string[] | undefined,
   currentFrac: number,
 ) {
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#0a0e1a";
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#0f1429");
+  bg.addColorStop(1, "#0a0e1a");
+  ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
+
   if (!eventNames || eventNames.length === 0) return;
+  const labelW = 68;
+  const plotW = w - labelW - 8;
 
-  const labelW = 52;
-  const plotW = w - labelW - 4;
-
-  // Grid + 0.5 threshold
-  ctx.strokeStyle = "rgba(210, 220, 240, 0.12)";
+  // Grid
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.15)";
   ctx.lineWidth = 1;
-  ctx.setLineDash([3, 4]);
+  ctx.beginPath();
+  ctx.moveTo(labelW, h - 4);
+  ctx.lineTo(w - 4, h - 4);
+  ctx.stroke();
+  ctx.setLineDash([3, 3]);
   ctx.beginPath();
   ctx.moveTo(labelW, h * 0.5);
-  ctx.lineTo(w, h * 0.5);
+  ctx.lineTo(w - 4, h * 0.5);
   ctx.stroke();
   ctx.setLineDash([]);
+
+  // Axis labels
+  ctx.fillStyle = "rgba(226, 232, 240, 0.92)";
+  ctx.font = "11px system-ui, sans-serif";
+  ctx.fillText("events", 8, h * 0.55);
+  ctx.font = "9px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(148, 163, 184, 0.7)";
+  ctx.fillText("1.0", labelW - 20, 12);
+  ctx.fillText("0.5", labelW - 20, h * 0.5 + 3);
+  ctx.fillText("0", labelW - 14, h - 6);
 
   // Lines
   for (const ev of eventNames) {
@@ -474,118 +532,150 @@ function drawEventProbs(
     if (!arr || arr.length === 0) continue;
     const color = EVENT_COLORS[ev] ?? "#94a3b8";
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.3;
+    ctx.lineWidth = 1.4;
     ctx.beginPath();
     for (let i = 0; i < arr.length; i++) {
       const x = labelW + (i / arr.length) * plotW;
-      const y = h - arr[i] * (h - 4) - 2;
+      const y = h - 6 - arr[i] * (h - 16);
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
     ctx.stroke();
   }
 
-  // Label
-  ctx.fillStyle = "rgba(210, 220, 240, 0.85)";
-  ctx.font = "10px system-ui, sans-serif";
-  ctx.fillText("events", 4, h * 0.55);
-  ctx.fillText("1", labelW - 14, 10);
-  ctx.fillText("0", labelW - 14, h - 4);
-
-  // Cursor
   const cursorX = labelW + currentFrac * plotW;
   ctx.strokeStyle = "#f2ead3";
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.moveTo(cursorX, 0);
   ctx.lineTo(cursorX, h);
   ctx.stroke();
 }
 
-function drawEnvironment(
+function drawEventLegend(
   ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
-  env: NonNullable<Trace["environment"]> | undefined,
-  currentTS: number,
+  w: number, h: number,
+  events: string[] | undefined,
 ) {
-  ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#0a0e1a";
   ctx.fillRect(0, 0, w, h);
+  if (!events) return;
+  ctx.font = "10px system-ui, sans-serif";
+  const colW = Math.min(150, w / events.length);
+  events.forEach((ev, i) => {
+    const x = 12 + i * colW;
+    const y = h / 2;
+    ctx.fillStyle = EVENT_COLORS[ev] ?? "#94a3b8";
+    ctx.fillRect(x, y - 4, 10, 3);
+    ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
+    ctx.fillText(ev.replace(/_/g, " "), x + 14, y + 3);
+  });
+}
+
+function drawEnvironment(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number,
+  env: Trace["environment"] | undefined,
+  currentTS: number,
+) {
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#0f1429");
+  bg.addColorStop(1, "#0a0e1a");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
   if (!env) {
-    ctx.fillStyle = "rgba(210, 220, 240, 0.5)";
+    ctx.fillStyle = "rgba(148, 163, 184, 0.5)";
     ctx.font = "11px system-ui, sans-serif";
-    ctx.fillText("No environment in this scenario.", 12, h / 2);
+    ctx.textAlign = "center";
+    ctx.fillText("Arena inactive for this scenario.", w / 2, h / 2 - 6);
+    ctx.font = "10px system-ui, sans-serif";
+    ctx.fillText("Select Chemotaxis to see the 2D agar.", w / 2, h / 2 + 10);
+    ctx.textAlign = "left";
     return;
   }
 
-  // Work out a 20 mm square world centred on the midpoint between
-  // worm start and food.
   const worldMm = 20;
   const pxPerMm = Math.min(w, h) / worldMm;
   const cx = w / 2;
   const cy = h / 2;
 
-  // Render concentration field as a dim radial glow around food
+  // Grid
+  ctx.strokeStyle = "rgba(100, 116, 139, 0.12)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += pxPerMm) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
+  for (let y = 0; y <= h; y += pxPerMm) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
+  ctx.stroke();
+
+  // Food patch radial gradient
   const foodSX = cx + env.food_xy_mm[0] * pxPerMm;
   const foodSY = cy - env.food_xy_mm[1] * pxPerMm;
   const radialR = env.sigma_mm * pxPerMm * 2.5;
   const grad = ctx.createRadialGradient(foodSX, foodSY, 0, foodSX, foodSY, radialR);
-  grad.addColorStop(0, "rgba(245, 158, 11, 0.45)");
-  grad.addColorStop(0.5, "rgba(245, 158, 11, 0.12)");
+  grad.addColorStop(0, "rgba(245, 158, 11, 0.55)");
+  grad.addColorStop(0.5, "rgba(245, 158, 11, 0.15)");
   grad.addColorStop(1, "rgba(245, 158, 11, 0.00)");
   ctx.fillStyle = grad;
   ctx.beginPath();
   ctx.arc(foodSX, foodSY, radialR, 0, Math.PI * 2);
   ctx.fill();
 
-  // Food patch marker
+  // Food marker
   ctx.fillStyle = "#f59e0b";
   ctx.beginPath();
   ctx.arc(foodSX, foodSY, 5, 0, Math.PI * 2);
   ctx.fill();
 
-  // Worm trail up to currentT
-  ctx.strokeStyle = "rgba(94, 199, 122, 0.6)";
-  ctx.lineWidth = 1.5;
+  // Trail up to currentT
+  ctx.strokeStyle = "rgba(94, 199, 122, 0.65)";
+  ctx.lineWidth = 1.8;
   ctx.beginPath();
   let first = true;
-  let lastX = foodSX, lastY = foodSY;
+  let lastSX = foodSX, lastSY = foodSY;
   for (const p of env.trail) {
-    if (p.t > currentTS + 0.1) break;
+    if (p.t > currentTS + 0.15) break;
     const sx = cx + p.x * pxPerMm;
     const sy = cy - p.y * pxPerMm;
-    if (first) {
-      ctx.moveTo(sx, sy);
-      first = false;
-    } else {
-      ctx.lineTo(sx, sy);
-    }
-    lastX = sx;
-    lastY = sy;
+    if (first) { ctx.moveTo(sx, sy); first = false; }
+    else { ctx.lineTo(sx, sy); }
+    lastSX = sx; lastSY = sy;
   }
   ctx.stroke();
 
-  // Current worm head
+  // Worm head
+  ctx.shadowBlur = 8;
+  ctx.shadowColor = "#5ec77a";
   ctx.fillStyle = "#5ec77a";
   ctx.beginPath();
-  ctx.arc(lastX, lastY, 3.5, 0, Math.PI * 2);
+  ctx.arc(lastSX, lastSY, 4, 0, Math.PI * 2);
   ctx.fill();
+  ctx.shadowBlur = 0;
 
   // Labels
-  ctx.fillStyle = "rgba(210, 220, 240, 0.8)";
+  ctx.fillStyle = "rgba(226, 232, 240, 0.9)";
   ctx.font = "10px system-ui, sans-serif";
-  ctx.fillText("food patch", foodSX + 8, foodSY - 6);
-  ctx.fillText("worm", lastX + 8, lastY - 4);
+  ctx.fillText("food", foodSX + 8, foodSY - 6);
+  ctx.fillText("worm", lastSX + 8, lastSY - 4);
+
+  // Scale bar
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.7)";
+  ctx.fillStyle = "rgba(148, 163, 184, 0.9)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(10, h - 12);
+  ctx.lineTo(10 + pxPerMm * 2, h - 12);
+  ctx.stroke();
+  ctx.font = "9px system-ui, sans-serif";
+  ctx.fillText("2 mm", 10, h - 18);
 }
 
-// --------------------------------------------------------------
-// Main component
-// --------------------------------------------------------------
+// ---------- Main component --------------------------------------------
 
 export function CelegansDashboard() {
-  const [scenario, setScenario] = useState<Scenario>("spontaneous");
+  const [scenario, setScenario] = useState<Scenario>("osmotic_shock");
   const [trace, setTrace] = useState<Trace | null>(null);
+  const [loading, setLoading] = useState(true);
   const [loadErr, setLoadErr] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
   const [speed, setSpeed] = useState(1.0);
@@ -600,6 +690,7 @@ export function CelegansDashboard() {
   const modCanvasRef = useRef<HTMLCanvasElement>(null);
   const fsmCanvasRef = useRef<HTMLCanvasElement>(null);
   const evCanvasRef = useRef<HTMLCanvasElement>(null);
+  const evLegendRef = useRef<HTMLCanvasElement>(null);
 
   const traceRef = useRef<Trace | null>(null);
   const pausedRef = useRef(paused);
@@ -612,10 +703,21 @@ export function CelegansDashboard() {
   currentTRef.current = currentT;
   hoverRef.current = hoverNeuron;
 
+  // Precompute bounds + name->index map ONCE per trace load
+  const brainDerived = useMemo(() => {
+    if (!trace?.neuron_positions || !trace?.neuron_names) return null;
+    const bounds = computeBounds(trace.neuron_positions);
+    const nameToIdx = new Map<string, number>();
+    trace.neuron_names.forEach((nm, i) => nameToIdx.set(nm, i));
+    const readoutSet = new Set(trace.meta.readout_neurons);
+    return { bounds, nameToIdx, readoutSet };
+  }, [trace]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.target && (e.target as HTMLElement).tagName === "INPUT") return;
+      const tgt = e.target as HTMLElement;
+      if (tgt && (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA")) return;
       if (e.code === "Space") {
         e.preventDefault();
         setPaused((v) => !v);
@@ -642,24 +744,37 @@ export function CelegansDashboard() {
   // Fetch trace
   useEffect(() => {
     let cancel = false;
-    setTrace(null);
+    setLoading(true);
     setLoadErr(null);
     setCurrentT(0);
+    currentTRef.current = 0;
     fetch(`/data/wormbody-brain-${scenario}.json`)
       .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
-      .then((d: Trace) => { if (!cancel) setTrace(d); })
-      .catch((e) => { if (!cancel) setLoadErr(String(e)); });
+      .then((d: Trace) => {
+        if (cancel) return;
+        setTrace(d);
+        setLoading(false);
+      })
+      .catch((e) => {
+        if (cancel) return;
+        setLoadErr(String(e));
+        setLoading(false);
+      });
     return () => { cancel = true; };
   }, [scenario]);
 
-  // Responsive width
+  // Responsive width (one observer on the container)
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
     const ro = new ResizeObserver((entries) => {
-      for (const e of entries) setWidth(Math.max(320, Math.round(e.contentRect.width)));
+      for (const e of entries) {
+        const w = Math.max(320, Math.round(e.contentRect.width));
+        setWidth(w);
+      }
     });
     ro.observe(el);
+    setWidth(Math.max(320, el.clientWidth));
     return () => ro.disconnect();
   }, []);
 
@@ -671,175 +786,181 @@ export function CelegansDashboard() {
       const dt = Math.min(0.1, (now - last) / 1000);
       last = now;
       const tr = traceRef.current;
+      const derived = brainDerived;
 
       if (tr && !pausedRef.current) {
         currentTRef.current = (currentTRef.current + dt * speedRef.current) % tr.meta.duration_s;
         setCurrentT(currentTRef.current);
       }
-
       const t = currentTRef.current;
 
-      // Dimensions — the panels stack on narrow screens, grid on wide.
-      const narrow = width < 760;
-      const bodyW = narrow ? width : Math.round(width * 0.38);
-      const brainW = narrow ? width : Math.round(width * 0.36);
-      const envW = narrow ? width : width - bodyW - brainW - 16;
-      const panelH = 260;
-      const stripH = 110;
+      // Layout: stacked if narrow, 3-column grid if wide
+      const narrow = width < 820;
+      const colGap = 10;
+      let bodyW, brainW, envW;
+      if (narrow) {
+        bodyW = brainW = envW = width;
+      } else {
+        bodyW = Math.round(width * 0.30);
+        brainW = Math.round(width * 0.44);
+        envW = width - bodyW - brainW - colGap * 2;
+      }
+      const stripsW = width;
 
-      // --- Body canvas
-      if (bodyCanvasRef.current && tr) {
-        const c = bodyCanvasRef.current;
-        if (c.width !== bodyW) c.width = bodyW;
-        if (c.height !== panelH) c.height = panelH;
-        const ctx = c.getContext("2d");
-        if (ctx) {
+      // Body canvas
+      if (bodyCanvasRef.current) {
+        const ctx = setupCanvasDPR(bodyCanvasRef.current, bodyW, PANEL_H);
+        if (ctx && tr) {
           const idx = Math.min(
             tr.frames.length - 1,
             Math.floor((t / tr.meta.duration_s) * tr.frames.length)
           );
           const frame = tr.frames[idx];
-          const pxPerSimM = Math.min(bodyW, panelH) * 0.5;
-          let cx = 0, cy = 0;
-          for (const [x, y] of frame.positions) { cx += x; cy += y; }
-          cx /= frame.positions.length;
-          cy /= frame.positions.length;
-          const ox = bodyW / 2 - cx * pxPerSimM;
-          const oy = panelH / 2 - cy * pxPerSimM;
-          const segs = frame.positions.map(([x, y]) => ({
-            x: ox + x * pxPerSimM, y: oy + y * pxPerSimM,
-          }));
-          drawWormBody(ctx, bodyW, panelH, segs, frame.state);
+          if (frame) {
+            const pxPerSimM = Math.min(bodyW, PANEL_H) * 0.5;
+            let cx = 0, cy = 0;
+            for (const [x, y] of frame.positions) { cx += x; cy += y; }
+            cx /= frame.positions.length;
+            cy /= frame.positions.length;
+            const ox = bodyW / 2 - cx * pxPerSimM;
+            const oy = PANEL_H / 2 - cy * pxPerSimM;
+            const segs = frame.positions.map(([x, y]) => ({
+              x: ox + x * pxPerSimM, y: oy + y * pxPerSimM,
+            }));
+            drawWormBody(ctx, bodyW, PANEL_H, segs, frame.state);
+          }
+        } else if (ctx) {
+          ctx.fillStyle = "#f9f0d6";
+          ctx.fillRect(0, 0, bodyW, PANEL_H);
+          ctx.fillStyle = "#6b5e3d";
+          ctx.font = "12px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(loading ? "Loading…" : (loadErr ?? ""), bodyW / 2, PANEL_H / 2);
+          ctx.textAlign = "left";
         }
       }
 
-      // --- Brain canvas
-      if (brainCanvasRef.current && tr) {
-        const c = brainCanvasRef.current;
-        if (c.width !== brainW) c.width = brainW;
-        if (c.height !== panelH) c.height = panelH;
-        const ctx = c.getContext("2d");
-        if (ctx) {
-          // Which neurons are active RIGHT NOW: raster entries within
-          // last 100 ms window
-          const activeSet = new Set<number>();
+      // Brain canvas
+      if (brainCanvasRef.current) {
+        const ctx = setupCanvasDPR(brainCanvasRef.current, brainW, PANEL_H);
+        if (ctx && tr && derived) {
+          // Active set from raster within last 100ms
+          const activeIdxs = new Set<number>();
           if (tr.raster) {
             for (const e of tr.raster) {
               if (e.t > t - 0.1 && e.t <= t) {
-                for (const n of e.n) activeSet.add(n);
+                for (const rIdx of e.n) {
+                  const nm = tr.meta.readout_neurons[rIdx];
+                  if (nm) {
+                    const full = derived.nameToIdx.get(nm);
+                    if (full !== undefined) activeIdxs.add(full);
+                  }
+                }
               }
             }
           }
-          // Map raster indices (0..18) to full 300-neuron indices via
-          // readout_neurons + neuron_names. readout indices are positions
-          // in readout_neurons; we need their index in neuron_names.
-          const activeFullSet = new Set<number>();
-          if (tr.neuron_names && tr.meta.readout_neurons) {
-            const nameToIdx = new Map<string, number>();
-            tr.neuron_names.forEach((nm, i) => nameToIdx.set(nm, i));
-            for (const ri of activeSet) {
-              const nm = tr.meta.readout_neurons[ri];
-              const full = nameToIdx.get(nm ?? "");
-              if (full !== undefined) activeFullSet.add(full);
-            }
-          }
-          const readoutSet = new Set(tr.meta.readout_neurons);
-          // Current modulator concentrations (interpolated to currentT)
+          // Modulator concentrations at current time
           let modAt: number[] | null = null;
-          if (tr.modulator_concentrations && tr.modulator_concentrations.length > 0) {
+          if (tr.modulator_concentrations && tr.modulator_concentrations.length) {
             const nT = tr.modulator_concentrations.length;
             const ti = Math.min(nT - 1, Math.floor((t / tr.meta.duration_s) * nT));
             modAt = tr.modulator_concentrations[ti];
           }
           drawBrain3D(
-            ctx, brainW, panelH,
+            ctx, brainW, PANEL_H,
             tr.neuron_positions ?? [],
             tr.neuron_names ?? [],
-            activeFullSet,
+            derived.bounds,
+            activeIdxs,
             hoverRef.current,
-            readoutSet,
+            derived.readoutSet,
             modAt,
             tr.modulator_names ?? null,
+            derived.nameToIdx,
           );
+        } else if (ctx) {
+          const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
+          bg.addColorStop(0, "#0f1429"); bg.addColorStop(1, "#0a0e1a");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, brainW, PANEL_H);
+          ctx.fillStyle = "rgba(148, 163, 184, 0.5)";
+          ctx.font = "12px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(loading ? "Loading brain…" : "Brain positions not in this trace.", brainW / 2, PANEL_H / 2);
+          ctx.textAlign = "left";
         }
       }
 
-      // --- Environment canvas
-      if (envCanvasRef.current && tr) {
-        const c = envCanvasRef.current;
-        if (c.width !== envW) c.width = envW;
-        if (c.height !== panelH) c.height = panelH;
-        const ctx = c.getContext("2d");
-        if (ctx) drawEnvironment(ctx, envW, panelH, tr.environment, t);
+      // Environment canvas
+      if (envCanvasRef.current) {
+        const ctx = setupCanvasDPR(envCanvasRef.current, envW, PANEL_H);
+        if (ctx) drawEnvironment(ctx, envW, PANEL_H, tr?.environment, t);
       }
 
-      // --- Strips (full width, stacked)
-      const stripsW = width;
-      const curFrac = tr ? t / tr.meta.duration_s : 0;
-
-      if (modCanvasRef.current && tr) {
-        const c = modCanvasRef.current;
-        if (c.width !== stripsW) c.width = stripsW;
-        if (c.height !== stripH) c.height = stripH;
-        const ctx = c.getContext("2d");
-        if (ctx) drawModulatorStrip(
-          ctx, stripsW, stripH,
-          tr.modulator_concentrations, tr.modulator_names, curFrac,
-        );
-      }
-
-      if (fsmCanvasRef.current && tr) {
-        const c = fsmCanvasRef.current;
-        if (c.width !== stripsW) c.width = stripsW;
-        if (c.height !== 32) c.height = 32;
-        const ctx = c.getContext("2d");
+      // Modulator strip
+      if (modCanvasRef.current) {
+        const ctx = setupCanvasDPR(modCanvasRef.current, stripsW, MOD_STRIP_H);
         if (ctx) {
-          drawFsmTimeline(ctx, stripsW, 32, tr.fsm_states, curFrac);
-          if (tr.stim_log) drawStimMarkers(ctx, stripsW, 32, 52, tr.stim_log, tr.meta.duration_s);
+          const curFrac = tr ? t / tr.meta.duration_s : 0;
+          drawModulatorStrip(ctx, stripsW, MOD_STRIP_H,
+            tr?.modulator_concentrations, tr?.modulator_names, curFrac);
         }
       }
 
-      if (evCanvasRef.current && tr) {
-        const c = evCanvasRef.current;
-        if (c.width !== stripsW) c.width = stripsW;
-        if (c.height !== 110) c.height = 110;
-        const ctx = c.getContext("2d");
-        if (ctx) drawEventProbs(
-          ctx, stripsW, 110, tr.event_probs, tr.meta.events_tracked, curFrac,
-        );
+      // FSM timeline
+      if (fsmCanvasRef.current) {
+        const ctx = setupCanvasDPR(fsmCanvasRef.current, stripsW, STRIP_FSM_H);
+        if (ctx && tr) {
+          const curFrac = t / tr.meta.duration_s;
+          drawFsmTimeline(ctx, stripsW, STRIP_FSM_H, tr.fsm_states, curFrac);
+          if (tr.stim_log) drawStimMarkers(ctx, stripsW, STRIP_FSM_H, 68, tr.stim_log, tr.meta.duration_s);
+        } else if (ctx) {
+          ctx.fillStyle = "#0a0e1a";
+          ctx.fillRect(0, 0, stripsW, STRIP_FSM_H);
+        }
+      }
+
+      // Event probs
+      if (evCanvasRef.current) {
+        const ctx = setupCanvasDPR(evCanvasRef.current, stripsW, STRIP_EV_H);
+        if (ctx && tr) {
+          const curFrac = t / tr.meta.duration_s;
+          drawEventProbs(ctx, stripsW, STRIP_EV_H, tr.event_probs, tr.meta.events_tracked, curFrac);
+        } else if (ctx) {
+          ctx.fillStyle = "#0a0e1a";
+          ctx.fillRect(0, 0, stripsW, STRIP_EV_H);
+        }
+      }
+
+      // Event legend
+      if (evLegendRef.current) {
+        const ctx = setupCanvasDPR(evLegendRef.current, stripsW, 28);
+        if (ctx) drawEventLegend(ctx, stripsW, 28, tr?.meta.events_tracked);
       }
 
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width]);
+  }, [width, loading, loadErr, brainDerived]);
 
-  // Hover on brain canvas → find nearest neuron
+  // Hover on brain → find nearest neuron
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
-    if (!tr || !tr.neuron_positions) return;
+    const derived = brainDerived;
+    if (!tr || !tr.neuron_positions || !derived) return;
     const canvas = brainCanvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const mx = ((e.clientX - rect.left) / rect.width) * canvas.width;
-    const my = ((e.clientY - rect.top) / rect.height) * canvas.height;
-    const ys = tr.neuron_positions.map((p) => p[1]);
-    const zs = tr.neuron_positions.map((p) => p[2]);
-    const yMin = Math.min(...ys), yMax = Math.max(...ys);
-    const zMin = Math.min(...zs), zMax = Math.max(...zs);
-    const yRange = yMax - yMin || 1;
-    const zRange = zMax - zMin || 1;
-    const w = canvas.width, h = canvas.height;
-    const cy = h / 2;
-    let best = -1;
-    let bestD = Infinity;
-    tr.neuron_positions.forEach((p, i) => {
-      const sx = ((p[1] - yMin) / yRange) * w * 0.9 + w * 0.05;
-      const sy = cy - ((p[2] - zMin) / zRange - 0.5) * h * 0.75;
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const cssW = rect.width, cssH = rect.height;
+    let best = -1, bestD = 400;
+    for (let i = 0; i < tr.neuron_positions.length; i++) {
+      const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, cssW, cssH);
       const d = (sx - mx) ** 2 + (sy - my) ** 2;
-      if (d < bestD && d < 400) { bestD = d; best = i; }
-    });
+      if (d < bestD) { bestD = d; best = i; }
+    }
     setHoverNeuron(best >= 0 ? best : null);
   };
 
@@ -860,11 +981,13 @@ export function CelegansDashboard() {
       )]
     : null;
 
+  const ci = trace?.environment?.chemotaxis_index?.CI;
+
   return (
-    <div className="my-6 flex flex-col gap-3 text-sm" ref={wrapRef}>
-      {/* Top bar: scenario + controls */}
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card p-3 shadow-sm">
-        <div className="inline-flex flex-wrap rounded-lg border bg-muted/40 p-0.5 text-xs w-fit gap-0.5">
+    <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
+      {/* Header bar */}
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card px-3 py-2.5 shadow-sm">
+        <div className="inline-flex flex-wrap rounded-lg border bg-muted/40 p-0.5 gap-0.5 text-xs">
           {(Object.keys(SCENARIOS) as Scenario[]).map((s) => (
             <button
               key={s}
@@ -872,84 +995,86 @@ export function CelegansDashboard() {
               className={`rounded-md px-3 py-1.5 font-medium transition-all ${
                 scenario === s
                   ? "bg-primary text-primary-foreground shadow-sm"
-                  : "hover:bg-accent"
+                  : "hover:bg-accent text-foreground/80"
               }`}
             >
               {SCENARIOS[s].label}
             </button>
           ))}
         </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPaused((v) => !v)}
-            className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
-          >
-            {paused ? "▶ Play" : "⏸ Pause"}
-          </button>
-          <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span>speed</span>
-            <input
-              type="range"
-              min="0.25" max="3" step="0.25"
-              value={speed}
-              onChange={(e) => setSpeed(+e.target.value)}
-              className="accent-primary w-20"
-            />
-            <span className="tabular-nums font-mono text-[0.65rem]">{speed.toFixed(2)}×</span>
-          </label>
-        </div>
-
+        <button
+          onClick={() => setPaused((v) => !v)}
+          className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
+        >
+          {paused ? "▶ Play" : "⏸ Pause"}
+        </button>
+        <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <span>speed</span>
+          <input
+            type="range" min="0.25" max="3" step="0.25"
+            value={speed}
+            onChange={(e) => setSpeed(+e.target.value)}
+            className="accent-primary w-24"
+          />
+          <span className="tabular-nums font-mono text-[0.65rem] w-8">{speed.toFixed(2)}×</span>
+        </label>
         <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
           <span className="tabular-nums font-mono">
-            t = {currentT.toFixed(1)} / {meta?.duration_s?.toFixed(0) ?? "-"}s
+            t = {currentT.toFixed(1)} / {meta?.duration_s?.toFixed(0) ?? "–"} s
           </span>
           {currentFrame && (
-            <span>
-              state: <span
-                className="font-semibold px-1.5 py-0.5 rounded text-white text-[0.65rem]"
+            <span className="inline-flex items-center gap-1">
+              <span
+                className="px-1.5 py-0.5 rounded text-[0.65rem] font-semibold text-white"
                 style={{ backgroundColor: STATE_COLORS[currentFrame.state] ?? "#6b7280" }}
-              >{currentFrame.state}</span>
+              >
+                {currentFrame.state}
+              </span>
+            </span>
+          )}
+          {ci !== undefined && typeof ci === "number" && (
+            <span className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 font-mono text-[0.65rem]">
+              <span className="text-muted-foreground">CI</span>
+              <span className="text-foreground font-semibold">{ci.toFixed(2)}</span>
             </span>
           )}
         </div>
       </div>
 
-      {/* Scenario description + chemotaxis index if present */}
-      <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-2">
-        <span className="font-semibold text-foreground">{SCENARIOS[scenario].tagline}</span>
-        <span className="opacity-70">— {SCENARIOS[scenario].desc}</span>
-        {trace?.environment?.chemotaxis_index?.CI !== undefined && (
-          <span className="ml-auto inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[0.65rem] font-mono">
-            <span className="text-muted-foreground">CI</span>
-            <span className="text-foreground font-semibold">
-              {(trace.environment.chemotaxis_index.CI as number).toFixed(2)}
-            </span>
-          </span>
-        )}
+      {/* Scenario description */}
+      <div className="text-xs text-muted-foreground px-1">
+        {SCENARIOS[scenario].desc}
       </div>
 
-      {/* Keyboard hint */}
-      <div className="text-[0.65rem] text-muted-foreground/70">
-        ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play/pause ·
-        <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ±1 s scrub
+      {/* Scrubbable timeline */}
+      <div
+        className="h-1.5 rounded-full bg-muted cursor-pointer relative group"
+        onClick={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          scrubTo((e.clientX - r.left) / r.width);
+        }}
+      >
+        <div
+          className="h-full rounded-full bg-primary transition-[width] duration-75"
+          style={{ width: `${meta ? (currentT / meta.duration_s) * 100 : 0}%` }}
+        />
       </div>
 
-      {/* Main panel grid */}
-      <div className="flex flex-wrap gap-2">
-        <div className="flex-1 min-w-[300px]">
-          <div className="mb-1 text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-            body · {meta?.num_segments ?? 20}-segment MuJoCo
-          </div>
-          <div className="rounded-lg overflow-hidden border">
+      {/* Main panels — CSS Grid for predictable layout */}
+      <div className="grid gap-3" style={{
+        gridTemplateColumns: width < 820
+          ? "1fr"
+          : "minmax(280px, 30fr) minmax(320px, 44fr) minmax(240px, 26fr)"
+      }}>
+        <div>
+          <PanelLabel>body · 20-segment MuJoCo · state-coloured glow</PanelLabel>
+          <div className="rounded-lg overflow-hidden border bg-[#f9f0d6]">
             <canvas ref={bodyCanvasRef} className="block w-full" />
           </div>
         </div>
-        <div className="flex-1 min-w-[320px]">
-          <div className="mb-1 text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-            brain · 300 neurons @ 3D soma coords · recently-active highlighted
-          </div>
-          <div className="rounded-lg overflow-hidden border">
+        <div>
+          <PanelLabel>brain · 300 neurons at 3D coords · modulator releasers glow</PanelLabel>
+          <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas
               ref={brainCanvasRef}
               className="block w-full cursor-crosshair"
@@ -958,58 +1083,54 @@ export function CelegansDashboard() {
             />
           </div>
         </div>
-        <div className="flex-1 min-w-[220px]">
-          <div className="mb-1 text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-            {trace?.environment ? "arena · food + worm trail" : "arena (inactive)"}
-          </div>
-          <div className="rounded-lg overflow-hidden border">
+        <div>
+          <PanelLabel>
+            {trace?.environment ? "arena · 2D agar + food + worm trail" : "arena (inactive)"}
+          </PanelLabel>
+          <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas ref={envCanvasRef} className="block w-full" />
           </div>
         </div>
       </div>
 
-      {/* Scrub bar (clickable timeline) */}
-      <div
-        className="h-2 rounded-full bg-muted cursor-pointer relative"
-        onClick={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          scrubTo((e.clientX - r.left) / r.width);
-        }}
-      >
-        <div
-          className="h-full rounded-full bg-primary"
-          style={{ width: `${meta ? (currentT / meta.duration_s) * 100 : 0}%` }}
-        />
-      </div>
-
       {/* Modulator strip */}
       <div>
-        <div className="mb-1 text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-          modulators · 9-concentration volume-transmission field
-        </div>
-        <div className="rounded-lg overflow-hidden border">
+        <PanelLabel>modulators · 9 concentrations × time · volume-transmission field</PanelLabel>
+        <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
           <canvas ref={modCanvasRef} className="block w-full" />
         </div>
       </div>
 
       {/* FSM timeline */}
       <div>
-        <div className="mb-1 text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-          behavioural state
-        </div>
-        <div className="rounded-lg overflow-hidden border">
+        <PanelLabel>behavioural state · FSM transitions over time · ticks = stimuli</PanelLabel>
+        <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
           <canvas ref={fsmCanvasRef} className="block w-full" />
         </div>
       </div>
 
-      {/* Event probability plot */}
+      {/* Event probs + legend */}
       <div>
-        <div className="mb-1 text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-          event-classifier probabilities · 8 canonical transitions
-        </div>
-        <div className="rounded-lg overflow-hidden border">
+        <PanelLabel>event probabilities · 8 canonical behavioural transitions</PanelLabel>
+        <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
           <canvas ref={evCanvasRef} className="block w-full" />
+          <canvas ref={evLegendRef} className="block w-full" />
         </div>
+      </div>
+
+      {/* FSM state legend */}
+      <div className="flex flex-wrap gap-3 text-[0.7rem] text-muted-foreground px-1">
+        <span className="font-medium text-foreground">states:</span>
+        {Object.entries(STATE_COLORS).map(([name, col]) => (
+          <span key={name} className="inline-flex items-center gap-1">
+            <span className="inline-block w-3 h-3 rounded" style={{ backgroundColor: col }} />
+            {name}
+          </span>
+        ))}
+        <span className="ml-auto text-[0.65rem]">
+          ⌨ <kbd className="px-1 rounded border text-[0.6rem]">space</kbd> play/pause ·
+          <kbd className="mx-1 px-1 rounded border text-[0.6rem]">← →</kbd> ± 1 s
+        </span>
       </div>
 
       {loadErr && (
@@ -1017,22 +1138,28 @@ export function CelegansDashboard() {
       )}
 
       {/* Attribution fold */}
-      <details className="text-xs text-muted-foreground mt-2 rounded-lg border bg-card/40 p-3">
-        <summary className="cursor-pointer font-medium text-foreground">
+      <details className="text-xs text-muted-foreground mt-2 rounded-xl border bg-card/40 p-4">
+        <summary className="cursor-pointer font-semibold text-foreground">
           Sources, methods &amp; honest calibration notes
         </summary>
         <div className="mt-3 space-y-2 pl-2">
-          <div><strong>Brain:</strong> 300-neuron LIF (Brian2), Cook et al. 2019 hermaphrodite connectome, NT identity from Loer &amp; Rand 2022. Architecture mirrors Shiu et al. 2024 (<em>Nature</em>) <em>Drosophila</em> brain model, adapted to worm.</div>
+          <div><strong>Brain:</strong> 300-neuron LIF in Brian2, Cook et al. 2019 hermaphrodite connectome, NT identity from Loer &amp; Rand 2022. Architecture mirrors Shiu et al. 2024 (<em>Nature</em>) Drosophila brain model, adapted to worm.</div>
           <div><strong>Body:</strong> 20-segment MuJoCo MJCF, Boyle-Berri-Cohen 2012 CPG parameters, resistive-force-theory drag (anisotropy 2.0).</div>
-          <div><strong>Event classifiers:</strong> logistic regression on 18-neuron cross-worm-intersection readout, trained on Atanas et al. 2023 (DANDI 000776) paired calcium+behaviour across 10 worms. Cross-worm generalisation validated (train 1–8, test 9–10).</div>
+          <div><strong>Event classifiers:</strong> logistic regression on 18-neuron cross-worm-intersection readout, trained on Atanas et al. 2023 (DANDI 000776) paired calcium+behavior across 10 worms. Cross-worm generalization validated (train 1-8, test 9-10).</div>
           <div><strong>Integration cadence:</strong> brain-body sync at 50 ms, classifier at 600 ms (Atanas sampling rate). Pattern follows Eon Systems 2026 embodied-fly integration.</div>
-          <div><strong>v3 neuromodulation:</strong> 9 peptidergic + monoaminergic modulators (FLP-11, FLP-1, FLP-2, NLP-12, PDF-1, 5-HT, dopamine, tyramine, octopamine) with releaser + receptor tables extracted from CeNGEN single-cell expression (Taylor et al. 2021). Shown in the strip above.</div>
-          <div><strong>Tier 1 upgrades (opt-in via ClosedLoopEnv):</strong> graded non-spiking dynamics (Kunert-Graf 2014) replacing LIF spiking; L-type Ca plateau channels on 14 command neurons; volume-transmission distance-weighted modulator diffusion (λ 150–700 µm); real closed-loop proprioception; 2D agar environment with chemical gradient for Pierce-Shimomura 1999 chemotaxis validation. Shipped scenarios remain on v3 LIF pending v3.3 recalibration.</div>
-          <div className="pt-1 italic">
-            Perturbation phenotype reproductions are at n=3 seeds × 20 s runs; the AVA/Chalfie result holds at significance but the RIS/Turek signal needs longer runs. Detailed ensemble audit in <code className="text-[0.7rem]">artifacts/ensemble_report.md</code>. Every claim on this page has a measured error bar — no single-seed overclaims.
-          </div>
+          <div><strong>v3 modulation:</strong> 9 peptidergic + monoaminergic concentrations (FLP-11, FLP-1, FLP-2, NLP-12, PDF-1, 5-HT, dopamine, tyramine, octopamine) with releaser + receptor tables from CeNGEN single-cell expression (Taylor et al. 2021).</div>
+          <div><strong>Tier 1 upgrades (opt-in):</strong> graded non-spiking dynamics (Kunert-Graf 2014), L-type Ca plateau channels, volume-transmission distance-weighted modulator diffusion, real closed-loop proprioception, 2D agar environment for Pierce-Shimomura 1999 chemotaxis validation.</div>
+          <div className="pt-1 italic">Current shipped scenarios use v3 LIF brain. Tier 1 graded stack requires v3.4 classifier retraining to reproduce phenotypes. Honest perturbation numbers with n=3 seed error bars documented in <code className="text-[0.7rem]">artifacts/ensemble_report.md</code>.</div>
         </div>
       </details>
+    </div>
+  );
+}
+
+function PanelLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-1.5 text-[0.7rem] uppercase tracking-wider text-muted-foreground font-medium">
+      {children}
     </div>
   );
 }
