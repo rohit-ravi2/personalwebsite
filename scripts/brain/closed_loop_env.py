@@ -98,7 +98,8 @@ class ClosedLoopEnv:
                  ablate: list[str] | None = None,
                  modulator_tables_path=None,
                  use_per_edge_glu_signs: bool = False,
-                 environment: Environment | None = None):
+                 environment: Environment | None = None,
+                 brain_class: str = "lif"):
         """ClosedLoopEnv.
 
         seed: used for BOTH np.random AND Brian2 internal RNG
@@ -116,11 +117,23 @@ class ClosedLoopEnv:
         import types
         self._cfg_seed = seed
 
-        # Create LIFBrain with the deterministic seed
-        brain_instance = LIFBrain.__new__(LIFBrain)
-        brain_instance._brian2_seed = seed
-        LIFBrain.__init__(brain_instance,
-                          use_per_edge_glu_signs=use_per_edge_glu_signs)
+        # Select brain class: "lif" (default, v3 spiking) or "graded"
+        # (T1a Kunert-Graf worm graded dynamics, the full Tier 1 stack).
+        if brain_class == "graded":
+            from graded_brain import GradedBrain
+            brain_instance = GradedBrain.__new__(GradedBrain)
+            brain_instance._brian2_seed = seed
+            GradedBrain.__init__(
+                brain_instance,
+                use_per_edge_glu_signs=use_per_edge_glu_signs,
+            )
+        else:
+            brain_instance = LIFBrain.__new__(LIFBrain)
+            brain_instance._brian2_seed = seed
+            LIFBrain.__init__(
+                brain_instance,
+                use_per_edge_glu_signs=use_per_edge_glu_signs,
+            )
         self.brain = brain_instance
 
         self.bank = ClassifierBank()

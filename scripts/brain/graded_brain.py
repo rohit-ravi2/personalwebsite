@@ -222,6 +222,24 @@ class GradedBrain:
             components.append(self.syn_gap)
         self.net = Network(*components)
 
+        # Poll σ threshold-crossings periodically to auto-populate the
+        # _FakeSpikeMonitor (so ClosedLoopEnv can read .spikes like LIFBrain).
+        from brian2 import network_operation
+        self._last_sigma_poll = np.zeros(self.N, dtype=np.float32)
+        self._fake_events_i: list[int] = []
+        self._fake_events_t: list[float] = []
+        @network_operation(dt=10*ms)
+        def _poll_sigma():
+            cur = np.asarray(self.neurons.sigma[:], dtype=np.float32)
+            rising = (cur > 0.5) & (self._last_sigma_poll <= 0.5)
+            t_ms = float(self.net.t / ms)
+            for idx in np.where(rising)[0]:
+                self._fake_events_i.append(int(idx))
+                self._fake_events_t.append(t_ms)
+            self._last_sigma_poll = cur
+        self._poll_op = _poll_sigma
+        self.net.add(_poll_sigma)
+
         # Ablation + proprioception — same as LIF
         self.ablation_current_pA = np.zeros(self.N, dtype=np.float32)
         self._setup_proprioception()
@@ -336,36 +354,24 @@ class GradedBrain:
     # --- SpikeMonitor-compatible shim -------------------------
     # ClosedLoopEnv reads self.spikes.i / self.spikes.t to compute
     # spike counts per sync window. For graded dynamics we synthesize
-    # "events" by detecting σ crossings above threshold.
+    # "events" by detecting σ rising through 0.5 threshold in a
+    # @network_operation (see _poll_sigma in __init__).
     class _FakeSpikeMonitor:
         def __init__(self, graded_brain):
             self.gb = graded_brain
-            self._last_sigma = np.zeros(graded_brain.N, dtype=np.float32)
-            self._events_i: list[int] = []
-            self._events_t: list[float] = []
         @property
         def i(self):
-            return np.array(self._events_i, dtype=int)
+            return np.array(self.gb._fake_events_i, dtype=int)
         @property
         def t(self):
             from brian2 import ms as _ms
-            return np.array(self._events_t, dtype=float) * _ms
-        def poll(self):
-            """Detect σ rising through 0.5 threshold → append events."""
-            cur_sigma = self.gb.output_rates(window_ms=10) / 100.0  # back to [0,1]
-            threshold = 0.5
-            rising = (cur_sigma > threshold) & (self._last_sigma <= threshold)
-            t_now = self.gb.time_ms()
-            for idx in np.where(rising)[0]:
-                self._events_i.append(int(idx))
-                self._events_t.append(t_now)
-            self._last_sigma = cur_sigma
+            return np.array(self.gb._fake_events_t, dtype=float) * _ms
 
     @property
     def spikes(self):
-        if not hasattr(self, "_fake_spikes"):
-            self._fake_spikes = GradedBrain._FakeSpikeMonitor(self)
-        return self._fake_spikes
+        if not hasattr(self, "_fake_spikes_obj"):
+            self._fake_spikes_obj = GradedBrain._FakeSpikeMonitor(self)
+        return self._fake_spikes_obj
 
 
 if __name__ == "__main__":
