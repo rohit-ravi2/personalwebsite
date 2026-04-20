@@ -946,6 +946,10 @@ export function CelegansDashboard() {
   const [lockedNeuron, setLockedNeuron] = useState<number | null>(null);
   const [neuronMeta, setNeuronMeta] = useState<NeuronMeta[] | null>(null);
   const [hoverModulator, setHoverModulator] = useState<string | null>(null);
+  // Cache of state distributions per scenario (computed from JSON on first load)
+  const [scenarioStats, setScenarioStats] = useState<Record<Scenario, {
+    fwd: number; rev: number; omg: number; pir: number; qui: number;
+  }> | null>(null);
   const [brainRot, setBrainRot] = useState(0);           // rotation in radians
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ x: number; rot: number } | null>(null);
@@ -962,6 +966,32 @@ export function CelegansDashboard() {
   const fsmCanvasRef = useRef<HTMLCanvasElement>(null);
   const evCanvasRef = useRef<HTMLCanvasElement>(null);
   const evLegendRef = useRef<HTMLCanvasElement>(null);
+
+  // Fetch state distribution for all scenarios once (for picker sparklines)
+  useEffect(() => {
+    const scenarioKeys: Scenario[] = ["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis"];
+    const stats: Partial<Record<Scenario, any>> = {};
+    let pending = scenarioKeys.length;
+    scenarioKeys.forEach((s) => {
+      fetch(`/data/wormbody-brain-${s}.json`)
+        .then((r) => r.ok ? r.json() : null)
+        .then((d: Trace | null) => {
+          if (d && d.fsm_states) {
+            const total = d.fsm_states.length || 1;
+            const counts = [0, 0, 0, 0, 0, 0];
+            for (const x of d.fsm_states) if (x >= 0 && x <= 5) counts[x]++;
+            stats[s] = {
+              fwd: counts[1] / total, rev: counts[2] / total,
+              omg: counts[3] / total, pir: counts[4] / total,
+              qui: counts[5] / total,
+            };
+          }
+          pending--;
+          if (pending === 0) setScenarioStats(stats as any);
+        })
+        .catch(() => { pending--; if (pending === 0) setScenarioStats(stats as any); });
+    });
+  }, []);
 
   // Load brain edges + neuron metadata once
   useEffect(() => {
@@ -1526,19 +1556,32 @@ export function CelegansDashboard() {
       {/* Header bar */}
       <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card px-3 py-2.5 shadow-sm">
         <div className="inline-flex flex-wrap rounded-lg border bg-muted/40 p-0.5 gap-0.5 text-xs">
-          {(Object.keys(SCENARIOS) as Scenario[]).map((s) => (
-            <button
-              key={s}
-              onClick={() => setScenario(s)}
-              className={`rounded-md px-3 py-1.5 font-medium transition-all ${
-                scenario === s
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "hover:bg-accent text-foreground/80"
-              }`}
-            >
-              {SCENARIOS[s].label}
-            </button>
-          ))}
+          {(Object.keys(SCENARIOS) as Scenario[]).map((s) => {
+            const stats = scenarioStats?.[s];
+            return (
+              <button
+                key={s}
+                onClick={() => setScenario(s)}
+                className={`rounded-md px-3 py-1.5 font-medium transition-all flex items-center gap-1.5 ${
+                  scenario === s
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "hover:bg-accent text-foreground/80"
+                }`}
+              >
+                <span>{SCENARIOS[s].label}</span>
+                {/* State distribution bar */}
+                {stats && (
+                  <span className="inline-flex h-1.5 w-10 rounded overflow-hidden ring-1 ring-border/40 opacity-90" title={`FWD ${(stats.fwd*100).toFixed(0)}% · REV ${(stats.rev*100).toFixed(0)}% · QUI ${(stats.qui*100).toFixed(0)}%`}>
+                    <span className="h-full" style={{ width: `${stats.fwd*100}%`, backgroundColor: STATE_COLORS.FORWARD }} />
+                    <span className="h-full" style={{ width: `${stats.rev*100}%`, backgroundColor: STATE_COLORS.REVERSE }} />
+                    <span className="h-full" style={{ width: `${stats.omg*100}%`, backgroundColor: STATE_COLORS.OMEGA }} />
+                    <span className="h-full" style={{ width: `${stats.pir*100}%`, backgroundColor: STATE_COLORS.PIROUETTE }} />
+                    <span className="h-full" style={{ width: `${stats.qui*100}%`, backgroundColor: STATE_COLORS.QUIESCENT }} />
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
         <button
           onClick={() => setPaused((v) => !v)}
