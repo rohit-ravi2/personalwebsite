@@ -2239,6 +2239,62 @@ export function CelegansDashboard() {
         </div>
       </div>
 
+      {/* Natural-language narrative status */}
+      {liveStats && (
+        <div className="rounded-lg bg-gradient-to-r from-card/60 to-card/20 border px-3 py-2 text-[0.75rem] leading-relaxed">
+          <span className="text-muted-foreground">At </span>
+          <span className="font-mono font-semibold text-foreground">t={currentT.toFixed(1)}s</span>
+          <span className="text-muted-foreground">, the worm is in </span>
+          <span
+            className="font-semibold px-1 rounded text-white"
+            style={{ backgroundColor: STATE_COLORS[liveStats.currState] ?? "#6b7280" }}
+          >
+            {liveStats.currState}
+          </span>
+          <span className="text-muted-foreground"> (dwell </span>
+          <span className="font-mono text-foreground">{liveStats.dwellS.toFixed(1)}s</span>
+          <span className="text-muted-foreground">). </span>
+          {liveStats.activeCount > 0 && (
+            <>
+              <span className="font-mono text-foreground">{liveStats.activeCount}/18</span>
+              <span className="text-muted-foreground"> readout neurons firing</span>
+              {liveStats.activeCircuits.length > 0 && (
+                <>
+                  <span className="text-muted-foreground">; </span>
+                  {liveStats.activeCircuits.slice(0, 2).map((c, i) => (
+                    <React.Fragment key={c.name}>
+                      {i > 0 && <span className="text-muted-foreground"> and </span>}
+                      <span
+                        className="font-semibold"
+                        style={{ color: c.color }}
+                      >
+                        {c.name}
+                      </span>
+                      <span className="text-muted-foreground"> circuit ({Math.round(c.frac * 100)}%)</span>
+                    </React.Fragment>
+                  ))}
+                </>
+              )}
+              <span className="text-muted-foreground">. </span>
+            </>
+          )}
+          {liveStats.topMods[0] && liveStats.topMods[0][1] > 0.2 && (
+            <>
+              <span className="text-muted-foreground">Dominant modulator </span>
+              <span
+                className="font-semibold"
+                style={{ color: MODULATOR_COLORS[liveStats.topMods[0][0]] ?? "#94a3b8" }}
+              >
+                {liveStats.topMods[0][0]}
+              </span>
+              <span className="text-muted-foreground"> (C=</span>
+              <span className="font-mono">{liveStats.topMods[0][1].toFixed(1)}</span>
+              <span className="text-muted-foreground">).</span>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Live stats readout */}
       {liveStats && (
         <div className="space-y-2">
