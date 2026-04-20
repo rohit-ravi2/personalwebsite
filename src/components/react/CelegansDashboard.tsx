@@ -23,6 +23,15 @@ type BrainEdges = {
   edges: Array<[number, number, number, number]>; // [pre, post, weight, pre_sign]
 };
 
+type NeuronMeta = {
+  name: string;
+  nt: string;
+  class: string;
+  sign: number;
+  outgoing: Array<[string, number]>;
+  incoming: Array<[string, number]>;
+};
+
 type Trace = {
   scenario: string;
   meta: {
@@ -726,6 +735,8 @@ export function CelegansDashboard() {
   const [edges, setEdges] = useState<BrainEdges | null>(null);
   const [showEdges, setShowEdges] = useState(true);
   const [edgeAlpha, setEdgeAlpha] = useState(0.6);
+  const [lockedNeuron, setLockedNeuron] = useState<number | null>(null);
+  const [neuronMeta, setNeuronMeta] = useState<NeuronMeta[] | null>(null);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -736,12 +747,16 @@ export function CelegansDashboard() {
   const evCanvasRef = useRef<HTMLCanvasElement>(null);
   const evLegendRef = useRef<HTMLCanvasElement>(null);
 
-  // Load brain edges once
+  // Load brain edges + neuron metadata once
   useEffect(() => {
     fetch("/data/brain-edges.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
       .then((d: BrainEdges) => setEdges(d))
       .catch(() => setEdges(null));
+    fetch("/data/neuron-meta.json")
+      .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+      .then((d: NeuronMeta[]) => setNeuronMeta(d))
+      .catch(() => setNeuronMeta(null));
   }, []);
 
   // Track neuron pulse decay (for spike animation). Pulses decay by dt.
@@ -1035,6 +1050,33 @@ export function CelegansDashboard() {
 
   const onBrainLeave = () => setHoverNeuron(null);
 
+  const onBrainClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const tr = traceRef.current;
+    const derived = brainDerived;
+    if (!tr || !tr.neuron_positions || !derived) return;
+    const canvas = brainCanvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    let best = -1, bestD = 400;
+    for (let i = 0; i < tr.neuron_positions.length; i++) {
+      const { sx, sy } = projectNeuron(tr.neuron_positions[i], derived.bounds, rect.width, rect.height);
+      const d = (sx - mx) ** 2 + (sy - my) ** 2;
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    if (best >= 0) {
+      // Toggle lock: click same neuron unlocks
+      setLockedNeuron((prev) => (prev === best ? null : best));
+    }
+  };
+
+  const lockedMeta = useMemo(() => {
+    if (lockedNeuron === null || !trace?.neuron_names || !neuronMeta) return null;
+    const nm = trace.neuron_names[lockedNeuron];
+    return neuronMeta.find((m) => m.name === nm) ?? null;
+  }, [lockedNeuron, trace, neuronMeta]);
+
   const scrubTo = (frac: number) => {
     const tr = traceRef.current;
     if (!tr) return;
@@ -1165,13 +1207,57 @@ export function CelegansDashboard() {
               )}
             </div>
           </div>
-          <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
+          <div className="relative rounded-lg overflow-hidden border bg-[#0a0e1a]">
             <canvas
               ref={brainCanvasRef}
               className="block w-full cursor-crosshair"
               onMouseMove={onBrainMove}
               onMouseLeave={onBrainLeave}
+              onClick={onBrainClick}
             />
+            {lockedMeta && (
+              <div className="absolute top-2 right-2 w-60 rounded-lg bg-[#0f1429]/95 border border-[#a5b4fc]/40 p-3 shadow-lg text-[0.7rem] text-[#e2e8f0]">
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className="text-base font-semibold text-[#a5b4fc]">{lockedMeta.name}</span>
+                  <button
+                    onClick={() => setLockedNeuron(null)}
+                    className="text-[#64748b] hover:text-[#e2e8f0] text-[0.65rem]"
+                    title="Unlock"
+                  >✕</button>
+                </div>
+                <div className="space-y-1 leading-relaxed">
+                  <div><span className="text-[#64748b]">class:</span> {lockedMeta.class}</div>
+                  <div><span className="text-[#64748b]">NT:</span> {lockedMeta.nt}</div>
+                  <div><span className="text-[#64748b]">sign:</span>
+                    <span className={`ml-1 font-mono ${lockedMeta.sign > 0 ? "text-[#10b981]" : lockedMeta.sign < 0 ? "text-[#ef4444]" : "text-[#94a3b8]"}`}>
+                      {lockedMeta.sign > 0 ? "+1 exc" : lockedMeta.sign < 0 ? "−1 inh" : "0 mod"}
+                    </span>
+                  </div>
+                  {lockedMeta.outgoing.length > 0 && (
+                    <div className="pt-1 border-t border-[#1e293b]">
+                      <div className="text-[#64748b] mb-0.5">top outgoing →</div>
+                      {lockedMeta.outgoing.slice(0, 5).map(([n, w]) => (
+                        <div key={n} className="pl-2 flex justify-between">
+                          <span>{n}</span>
+                          <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {lockedMeta.incoming.length > 0 && (
+                    <div className="pt-1 border-t border-[#1e293b]">
+                      <div className="text-[#64748b] mb-0.5">top incoming ←</div>
+                      {lockedMeta.incoming.slice(0, 5).map(([n, w]) => (
+                        <div key={n} className="pl-2 flex justify-between">
+                          <span>{n}</span>
+                          <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div>
