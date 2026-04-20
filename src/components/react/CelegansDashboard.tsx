@@ -2087,7 +2087,7 @@ export function CelegansDashboard() {
       {/* Header bar */}
       <div className="flex flex-wrap items-center gap-3 rounded-xl border bg-card px-3 py-2.5 shadow-sm">
         <div className="inline-flex flex-wrap rounded-lg border bg-muted/40 p-0.5 gap-0.5 text-xs">
-          {(Object.keys(SCENARIOS) as Scenario[]).map((s) => {
+          {(Object.keys(SCENARIOS) as Scenario[]).map((s, sIdx) => {
             const stats = scenarioStats?.[s];
             const timeline = scenarioTimelines?.[s];
             const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
@@ -2100,10 +2100,17 @@ export function CelegansDashboard() {
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "hover:bg-accent text-foreground/80"
                 }`}
-                title={stats ? `FWD ${(stats.fwd*100).toFixed(0)}% · REV ${(stats.rev*100).toFixed(0)}% · OMG ${(stats.omg*100).toFixed(0)}% · PIR ${(stats.pir*100).toFixed(0)}% · QUI ${(stats.qui*100).toFixed(0)}%` : undefined}
-                aria-label={`Select scenario: ${SCENARIOS[s].label}. ${SCENARIOS[s].desc}`}
+                title={stats ? `Press ${sIdx + 1} · FWD ${(stats.fwd*100).toFixed(0)}% · REV ${(stats.rev*100).toFixed(0)}% · OMG ${(stats.omg*100).toFixed(0)}% · PIR ${(stats.pir*100).toFixed(0)}% · QUI ${(stats.qui*100).toFixed(0)}%` : undefined}
+                aria-label={`Select scenario: ${SCENARIOS[s].label}. Keyboard shortcut: ${sIdx + 1}. ${SCENARIOS[s].desc}`}
                 aria-pressed={scenario === s}
               >
+                <kbd
+                  className={`px-1 rounded text-[0.55rem] font-mono font-normal ${
+                    scenario === s
+                      ? "bg-primary-foreground/20 text-primary-foreground/90"
+                      : "bg-muted text-muted-foreground/80"
+                  }`}
+                >{sIdx + 1}</kbd>
                 <span>{SCENARIOS[s].label}</span>
                 {/* Mini FSM timeline — mode-per-bin over the whole scenario */}
                 {timeline && (
