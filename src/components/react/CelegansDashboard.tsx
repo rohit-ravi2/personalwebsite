@@ -425,6 +425,7 @@ function drawBrain3D(
   highlightedReleasers: Set<number> | null,
   rotRad: number,
   dimMask: Set<number> | null,
+  ntByIdx: string[] | null,
 ) {
   // Dark gradient backdrop
   const bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -564,9 +565,19 @@ function drawBrain3D(
       r = 4.5;
     } else if (isActive || pulse > 0) {
       const glow = Math.max(0.8, pulse);
+      // Per-NT spike color: ACh cyan, Glu lime, GABA red, modulatory purple
+      let spikeColor = "#5ec77a";  // default green
+      const nt = ntByIdx?.[i] ?? "";
+      if (nt.includes("Acetylcholine") || nt.startsWith("ACh")) spikeColor = "#38bdf8";
+      else if (nt.includes("Glutamate")) spikeColor = "#a3e635";
+      else if (nt.startsWith("GABA")) spikeColor = "#f87171";
+      else if (
+        nt.includes("Dopamine") || nt.includes("Serotonin") ||
+        nt.includes("Octopamine") || nt.includes("Tyramine")
+      ) spikeColor = "#c084fc";
       ctx.shadowBlur = 6 + 12 * pulse;
-      ctx.shadowColor = "#5ec77a";
-      ctx.fillStyle = hexAlpha("#5ec77a", 0.9 * glow * depthFade);
+      ctx.shadowColor = spikeColor;
+      ctx.fillStyle = hexAlpha(spikeColor, 0.9 * glow * depthFade);
       r = (isReadout ? 2.8 : 2.0) + 2.5 * pulse;
     } else if (isReadout) {
       ctx.shadowBlur = 0;
@@ -1226,6 +1237,14 @@ export function CelegansDashboard() {
     "Unknown": ["Unknown", "unknown"],
   };
 
+  // Build per-index NT lookup once per trace+meta load
+  const ntByIdx = useMemo(() => {
+    if (!trace?.neuron_names || !neuronMeta) return null;
+    const byName = new Map<string, string>();
+    for (const m of neuronMeta) byName.set(m.name, m.nt);
+    return trace.neuron_names.map((nm) => byName.get(nm) ?? "");
+  }, [trace, neuronMeta]);
+
   // Dim mask: indices NOT in active NT filter become dimmed
   const ntDimMask = useMemo(() => {
     if (ntFilter.size === 0 || !trace?.neuron_names || !neuronMeta) return null;
@@ -1498,6 +1517,7 @@ export function CelegansDashboard() {
             highlighted,
             brainRot,
             ntDimMask,
+            ntByIdx,
           );
         } else if (ctx) {
           const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
@@ -1564,7 +1584,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit, reducedMotion]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator, brainRot, brainViewMode, arenaZoomMm, ntDimMask, hoverCircuit, reducedMotion, ntByIdx]);
 
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const tr = traceRef.current;
