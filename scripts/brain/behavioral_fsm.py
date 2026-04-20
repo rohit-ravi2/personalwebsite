@@ -56,21 +56,21 @@ STATE_CPG = {
 # validation: events with higher AUC get lower thresholds (more
 # sensitive trigger). Calibrated to produce transition rates consistent
 # with Atanas statistics (~3 reversals/min, ~1 omega/min).
-# Thresholds calibrated empirically against synthetic-calcium classifier
-# outputs. The classifier bank was trained on Atanas ΔF/F which has
-# different distribution than Brian2-derived synthetic calcium (flagged
-# in Phase 3c planning as the architectural risk). Without retraining,
-# we compensate by raising thresholds so events fire at biologically
-# plausible rates (~2-3 reversals/min, ~1 omega/min).
+# v1.5: thresholds calibrated against observed classifier-output
+# distributions in closed loop (measured over 15 s of varied stim).
+# Per-classifier biases remain even with moment-matching calibration
+# because the joint/correlation structure between neurons differs
+# between Brian2 and Atanas. Per-event threshold set near the 95th
+# percentile of each classifier's observed output distribution.
 TRANSITION_THRESHOLDS = {
-    "reversal_onset":     0.80,
-    "reversal_offset":    0.70,   # asymmetric — offset needs less
-    "forward_run_onset":  0.85,
-    "forward_run_offset": 0.85,
-    "omega_onset":        0.92,
-    "pirouette_entry":    0.97,   # extremely rare under this classifier
-    "quiescence_onset":   0.95,
-    "speed_burst_onset":  0.90,
+    "reversal_onset":     0.99,  # classifier saturates high; need top 1%
+    "reversal_offset":    0.15,  # classifier saturates low; any moderate signal triggers
+    "forward_run_onset":  0.93,
+    "forward_run_offset": 0.95,
+    "omega_onset":        0.55,  # classifier rarely predicts omega
+    "pirouette_entry":    0.85,
+    "quiescence_onset":   0.30,
+    "speed_burst_onset":  0.78,
 }
 
 # Minimum-hold time per state (seconds). Once entered, can't exit

@@ -98,6 +98,20 @@ class ClosedLoopEnv:
         self.bank = ClassifierBank()
         self.fsm = BehavioralFSM(State.FORWARD)
 
+        # Per-neuron affine distribution calibration (v1.5 fix):
+        # maps Brian2 synthetic calcium moments onto the Atanas ΔF/F
+        # moments the classifier was trained on. See calibrate_distribution.py.
+        cal_path = Path(__file__).resolve().parent / "artifacts" / "calibration.npz"
+        if cal_path.exists():
+            cal = np.load(cal_path, allow_pickle=True)
+            self.cal_mu_brain = cal["mu_brain"].astype(np.float32)
+            self.cal_sd_brain = cal["sd_brain"].astype(np.float32)
+            self.cal_mu_atanas = cal["mu_atanas"].astype(np.float32)
+            self.cal_sd_atanas = cal["sd_atanas"].astype(np.float32)
+            self.use_calibration = True
+        else:
+            self.use_calibration = False
+
         # MuJoCo body
         self.model = mujoco.MjModel.from_xml_path(MJCF.as_posix())
         self.data = mujoco.MjData(self.model)
@@ -182,24 +196,27 @@ class ClosedLoopEnv:
             smoothed = (1 - alpha) * prev + alpha * ca_sample
             self.calcium_buffer.append(smoothed)
 
-            # Classifier on the ~last 10 samples only — much faster than
-            # re-running full history.
-            #
-            # Z-score normalisation: the classifier bank was trained on
-            # Atanas ΔF/F (scaled 0–4 relative to cell baseline). Our
-            # synthetic calcium is absolute spike-rate × kernel and has
-            # a different scale. Normalise per-neuron to zero mean, unit
-            # std using the rolling history so the classifier sees
-            # something close to its training distribution.
+            # Apply per-neuron affine calibration to map Brian2 synthetic
+            # calcium moments onto the Atanas ΔF/F distribution the
+            # classifier was trained on (v1.5 distribution fix).
             ca_hist = np.stack(self.calcium_buffer, axis=0)
-            if len(ca_hist) >= 5:
-                mu = ca_hist.mean(axis=0, keepdims=True)
-                sd = ca_hist.std(axis=0, keepdims=True) + 1e-6
-                ca_norm = ((ca_hist - mu) / sd)
-                ca_arr = ca_norm[-10:]
+            if self.use_calibration:
+                # (x - μ_brain)/σ_brain × σ_atanas + μ_atanas, per neuron
+                ca_cal = (ca_hist - self.cal_mu_brain) / self.cal_sd_brain
+                ca_cal = ca_cal * self.cal_sd_atanas + self.cal_mu_atanas
+                # Clip to the observed Atanas ΔF/F range to avoid
+                # extrapolation artefacts
+                ca_cal = np.clip(ca_cal, 0.0, 4.0).astype(np.float32)
             else:
-                ca_arr = ca_hist[-10:]
-            probs = self.bank.predict_from_calcium(ca_arr)
+                # Fallback: local z-score (old v1 behaviour)
+                if len(ca_hist) >= 5:
+                    mu = ca_hist.mean(axis=0, keepdims=True)
+                    sd = ca_hist.std(axis=0, keepdims=True) + 1e-6
+                    ca_cal = (ca_hist - mu) / sd
+                else:
+                    ca_cal = ca_hist
+
+            probs = self.bank.predict_from_calcium(ca_cal[-10:])
             for e in self.bank.events:
                 self.event_probs[e].append(float(probs[e][-1]))
 
