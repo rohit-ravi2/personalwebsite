@@ -2022,10 +2022,16 @@ export function CelegansDashboard() {
       `C. elegans simulator — ${scenario} @ t=${currentT.toFixed(1)}s`,
       padding, 14,
     );
+    // Metadata footer
+    octx.fillStyle = "rgba(226, 232, 240, 0.6)";
+    octx.font = "10px ui-monospace, monospace";
+    const ts = new Date().toISOString().slice(0, 19).replace("T", " ") + " UTC";
+    octx.fillText(`exported ${ts} · rohitravi.com/projects/c-elegans-multimodal`, padding, hTotal - 6);
     const url = out.toDataURL("image/png");
     const link = document.createElement("a");
     link.href = url;
-    link.download = `celegans-${scenario}-t${currentT.toFixed(1)}s.png`;
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    link.download = `celegans-${scenario}-t${currentT.toFixed(1)}s-${stamp}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
