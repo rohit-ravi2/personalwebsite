@@ -171,7 +171,7 @@ const RELEASERS: Record<string, string[]> = {
 
 const PANEL_H = 280;
 const STRIP_BRAIN_H = 130;
-const STRIP_FSM_H   = 36;
+const STRIP_FSM_H   = 48;
 const STRIP_EV_H    = 120;
 const MOD_STRIP_H   = 180;
 
@@ -696,11 +696,34 @@ function drawModulatorStrip(
   ctx.stroke();
 }
 
+function drawTimeTicks(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number, labelW: number,
+  durationS: number, tickEveryS: number,
+) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.35)";
+  ctx.fillStyle = "rgba(148, 163, 184, 0.75)";
+  ctx.lineWidth = 1;
+  ctx.font = "8px ui-monospace, monospace";
+  const plotW = w - labelW - 8;
+  for (let t = 0; t <= durationS; t += tickEveryS) {
+    const x = labelW + (t / durationS) * plotW;
+    ctx.beginPath();
+    ctx.moveTo(x, h - 1);
+    ctx.lineTo(x, h - 4);
+    ctx.stroke();
+    ctx.fillText(`${t}s`, x + 2, h - 6);
+  }
+  ctx.restore();
+}
+
 function drawFsmTimeline(
   ctx: CanvasRenderingContext2D,
   w: number, h: number,
   states: number[],
   currentFrac: number,
+  durationS: number,
 ) {
   ctx.fillStyle = "#0a0e1a";
   ctx.fillRect(0, 0, w, h);
@@ -723,6 +746,10 @@ function drawFsmTimeline(
     ctx.fillStyle = color;
     ctx.fillRect(labelW + t * bw, 4, Math.max(0.8, bw + 0.5), h - 8);
   }
+
+  // Time axis ticks — 5s cadence
+  const tickEvery = durationS > 45 ? 10 : durationS > 15 ? 5 : 2;
+  drawTimeTicks(ctx, w, h, labelW, durationS, tickEvery);
 
   const cursorX = labelW + currentFrac * plotW;
   ctx.strokeStyle = "#f2ead3";
@@ -762,6 +789,7 @@ function drawEventProbs(
   probs: Record<string, number[]>,
   eventNames: string[] | undefined,
   currentFrac: number,
+  durationS: number,
 ) {
   const bg = ctx.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, "#0f1429");
@@ -829,6 +857,21 @@ function drawEventProbs(
       }
     }
   }
+
+  // Time ticks at bottom
+  const tickEvery = durationS > 45 ? 10 : durationS > 15 ? 5 : 2;
+  ctx.save();
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.3)";
+  ctx.fillStyle = "rgba(148, 163, 184, 0.7)";
+  ctx.font = "8px ui-monospace, monospace";
+  for (let t = 0; t <= durationS; t += tickEvery) {
+    const x = labelW + (t / durationS) * plotW;
+    ctx.beginPath();
+    ctx.moveTo(x, h - 6);
+    ctx.lineTo(x, h - 2);
+    ctx.stroke();
+  }
+  ctx.restore();
 
   const cursorX = labelW + currentFrac * plotW;
   ctx.strokeStyle = "#f2ead3";
@@ -1408,7 +1451,7 @@ export function CelegansDashboard() {
         const ctx = setupCanvasDPR(fsmCanvasRef.current, stripsW, STRIP_FSM_H);
         if (ctx && tr) {
           const curFrac = t / tr.meta.duration_s;
-          drawFsmTimeline(ctx, stripsW, STRIP_FSM_H, tr.fsm_states, curFrac);
+          drawFsmTimeline(ctx, stripsW, STRIP_FSM_H, tr.fsm_states, curFrac, tr.meta.duration_s);
           if (tr.stim_log) drawStimMarkers(ctx, stripsW, STRIP_FSM_H, 68, tr.stim_log, tr.meta.duration_s);
         } else if (ctx) {
           ctx.fillStyle = "#0a0e1a";
@@ -1421,7 +1464,7 @@ export function CelegansDashboard() {
         const ctx = setupCanvasDPR(evCanvasRef.current, stripsW, STRIP_EV_H);
         if (ctx && tr) {
           const curFrac = t / tr.meta.duration_s;
-          drawEventProbs(ctx, stripsW, STRIP_EV_H, tr.event_probs, tr.meta.events_tracked, curFrac);
+          drawEventProbs(ctx, stripsW, STRIP_EV_H, tr.event_probs, tr.meta.events_tracked, curFrac, tr.meta.duration_s);
         } else if (ctx) {
           ctx.fillStyle = "#0a0e1a";
           ctx.fillRect(0, 0, stripsW, STRIP_EV_H);
