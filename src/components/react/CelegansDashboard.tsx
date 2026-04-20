@@ -2188,7 +2188,10 @@ export function CelegansDashboard() {
                 <span>{SCENARIOS[s].label}</span>
                 {/* Mini FSM timeline — mode-per-bin over the whole scenario */}
                 {timeline && (
-                  <span className="inline-flex h-2 w-12 rounded overflow-hidden ring-1 ring-border/40 opacity-90">
+                  <span
+                    className="inline-flex h-2 w-12 rounded overflow-hidden ring-1 ring-border/40 transition-opacity"
+                    style={{ opacity: scenario === s ? 1 : 0.6 }}
+                  >
                     {timeline.map((si, i) => (
                       <span
                         key={i}
