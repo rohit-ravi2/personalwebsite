@@ -249,14 +249,16 @@ function drawBrain3D(
   names: string[],
   bounds: PosBounds,
   activeSet: Set<number>,
-  recentPulses: Map<number, number>, // idx → pulse-decay factor [0,1]
+  recentPulses: Map<number, number>,
   hoverIdx: number | null,
+  lockedIdx: number | null,
   readoutSet: Set<string>,
   modConcentrations: number[] | null,
   modNames: string[] | null,
   nameToIdx: Map<string, number>,
   edges: BrainEdges | null,
   edgeAlpha: number,
+  highlightedReleasers: Set<number> | null,
 ) {
   // Dark gradient backdrop
   const bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -356,7 +358,19 @@ function drawBrain3D(
     if (isHover) r = 5;
 
     const pulse = recentPulses.get(i) ?? 0;
-    if (isActive || pulse > 0) {
+    const isHighlight = highlightedReleasers?.has(i) ?? false;
+    const isLocked = lockedIdx === i;
+    if (isLocked) {
+      ctx.shadowBlur = 16;
+      ctx.shadowColor = "#f2ead3";
+      ctx.fillStyle = "#f2ead3";
+      r = 5.5;
+    } else if (isHighlight) {
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "#facc15";
+      ctx.fillStyle = hexAlpha("#facc15", 0.95 * depthFade);
+      r = 4.5;
+    } else if (isActive || pulse > 0) {
       const glow = Math.max(0.8, pulse);
       ctx.shadowBlur = 6 + 12 * pulse;
       ctx.shadowColor = "#5ec77a";
@@ -737,6 +751,7 @@ export function CelegansDashboard() {
   const [edgeAlpha, setEdgeAlpha] = useState(0.6);
   const [lockedNeuron, setLockedNeuron] = useState<number | null>(null);
   const [neuronMeta, setNeuronMeta] = useState<NeuronMeta[] | null>(null);
+  const [hoverModulator, setHoverModulator] = useState<string | null>(null);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const bodyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -947,6 +962,17 @@ export function CelegansDashboard() {
             const ti = Math.min(nT - 1, Math.floor((t / tr.meta.duration_s) * nT));
             modAt = tr.modulator_concentrations[ti];
           }
+          // Highlighted releasers: if user is hovering a modulator row,
+          // show its releaser neurons with gold halo.
+          let highlighted: Set<number> | null = null;
+          if (hoverModulator && derived) {
+            const rs = RELEASERS[hoverModulator] ?? [];
+            highlighted = new Set<number>();
+            for (const rn of rs) {
+              const idx = derived.nameToIdx.get(rn);
+              if (idx !== undefined) highlighted.add(idx);
+            }
+          }
           drawBrain3D(
             ctx, brainW, PANEL_H,
             tr.neuron_positions ?? [],
@@ -955,12 +981,14 @@ export function CelegansDashboard() {
             activeIdxs,
             pulses,
             hoverRef.current,
+            lockedNeuron,
             derived.readoutSet,
             modAt,
             tr.modulator_names ?? null,
             derived.nameToIdx,
             showEdges ? edges : null,
             edgeAlpha,
+            highlighted,
           );
         } else if (ctx) {
           const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
@@ -1026,7 +1054,7 @@ export function CelegansDashboard() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha]);
+  }, [width, loading, loadErr, brainDerived, edges, showEdges, edgeAlpha, lockedNeuron, hoverModulator]);
 
   // Hover on brain → find nearest neuron
   const onBrainMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -1270,11 +1298,31 @@ export function CelegansDashboard() {
         </div>
       </div>
 
-      {/* Modulator strip */}
+      {/* Modulator strip with hover-linked releaser highlight */}
       <div>
-        <PanelLabel>modulators · 9 concentrations × time · volume-transmission field</PanelLabel>
-        <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
+        <PanelLabel>modulators · 9 concentrations × time · hover a row → releaser neurons glow gold</PanelLabel>
+        <div className="rounded-lg overflow-hidden border bg-[#0a0e1a] relative">
           <canvas ref={modCanvasRef} className="block w-full" />
+          {/* Invisible hover zones over each modulator row */}
+          {trace?.modulator_names && (
+            <div className="absolute inset-0 pointer-events-none">
+              {trace.modulator_names.map((n, i) => {
+                const rows = trace.modulator_names!.length;
+                const topPct = ((i * (MOD_STRIP_H - 8) / rows + 4) / MOD_STRIP_H) * 100;
+                const heightPct = ((MOD_STRIP_H - 8) / rows / MOD_STRIP_H) * 100;
+                return (
+                  <div
+                    key={n}
+                    className="absolute left-0 w-full pointer-events-auto cursor-pointer"
+                    style={{ top: `${topPct}%`, height: `${heightPct}%` }}
+                    onMouseEnter={() => setHoverModulator(n)}
+                    onMouseLeave={() => setHoverModulator(null)}
+                    title={`${n} releasers: ${(RELEASERS[n] ?? []).join(", ")}`}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
