@@ -70,13 +70,21 @@ type Trace = {
 
 // ---------- Constants -------------------------------------------------
 
-const SCENARIOS: Record<Scenario, { label: string; desc: string; watch: string[] }> = {
+const SCENARIOS: Record<Scenario, {
+  label: string; desc: string; watch: string[];
+  moments: Array<{ t: number; label: string }>;
+}> = {
   spontaneous: {
     label: "Spontaneous",
     desc: "No stimulus — baseline behavioural distribution.",
     watch: [
       "Mix of FORWARD / REVERSE / QUIESCENT in the FSM timeline",
       "PDF-1 modulator tonically elevated (arousal)",
+    ],
+    moments: [
+      { t: 0, label: "start" },
+      { t: 10, label: "mid" },
+      { t: 25, label: "late" },
     ],
   },
   touch: {
@@ -85,6 +93,12 @@ const SCENARIOS: Record<Scenario, { label: string; desc: string; watch: string[]
     watch: [
       "Spike at ALM/AVM followed by REVERSE state within ~1s",
       "AVA/AVE command neurons light up",
+    ],
+    moments: [
+      { t: 4.5, label: "pre-touch" },
+      { t: 5.0, label: "touch@t=5s" },
+      { t: 5.8, label: "reversal onset" },
+      { t: 8, label: "post-recovery" },
     ],
   },
   osmotic_shock: {
@@ -95,6 +109,12 @@ const SCENARIOS: Record<Scenario, { label: string; desc: string; watch: string[]
       "FLP-11 concentration surges (RIS glows purple in brain)",
       "OMEGA / PIROUETTE states appear after reversal",
     ],
+    moments: [
+      { t: 4.5, label: "pre-shock" },
+      { t: 5.0, label: "ASH fires" },
+      { t: 6.0, label: "reversal + FLP-11 surge" },
+      { t: 8.5, label: "omega entry" },
+    ],
   },
   food: {
     label: "Food",
@@ -104,6 +124,12 @@ const SCENARIOS: Record<Scenario, { label: string; desc: string; watch: string[]
       "Pharyngeal neurons (M1-M5) activate",
       "QUIESCENT state dominates — dwelling on food",
     ],
+    moments: [
+      { t: 0, label: "pre-food" },
+      { t: 2.0, label: "food on" },
+      { t: 10, label: "5-HT elevated" },
+      { t: 25, label: "dwelling" },
+    ],
   },
   chemotaxis: {
     label: "Chemotaxis",
@@ -112,6 +138,12 @@ const SCENARIOS: Record<Scenario, { label: string; desc: string; watch: string[]
       "Worm trail in arena — does it navigate toward the food patch?",
       "ASE/AWC firing fluctuates with dC/dt as worm moves",
       "Chemotaxis index (CI) in header: positive = toward food",
+    ],
+    moments: [
+      { t: 0, label: "start at origin" },
+      { t: 15, label: "early navigation" },
+      { t: 30, label: "mid-run" },
+      { t: 55, label: "final approach" },
     ],
   },
 };
@@ -2174,7 +2206,7 @@ export function CelegansDashboard() {
         </div>
       </div>
 
-      {/* Scenario description + "watch for" hints */}
+      {/* Scenario description + "watch for" hints + jump-to-moment buttons */}
       <div className="rounded-lg bg-card/40 border px-3 py-2 space-y-1">
         <div className="text-xs text-muted-foreground">
           {SCENARIOS[scenario].desc}
@@ -2186,6 +2218,23 @@ export function CelegansDashboard() {
               <span className="w-1 h-1 rounded-full bg-primary/60" />
               {w}
             </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-1.5 text-[0.65rem] pt-0.5">
+          <span className="text-muted-foreground font-medium">jump to:</span>
+          {SCENARIOS[scenario].moments.map((m) => (
+            <button
+              key={m.label}
+              onClick={() => {
+                currentTRef.current = m.t;
+                setCurrentT(m.t);
+                setPaused(true);
+              }}
+              className="rounded-md border px-2 py-0.5 hover:bg-accent hover:border-primary transition-colors font-mono focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+              title={`Jump to t=${m.t.toFixed(1)}s and pause`}
+            >
+              {m.t.toFixed(1)}s · {m.label}
+            </button>
           ))}
         </div>
       </div>
