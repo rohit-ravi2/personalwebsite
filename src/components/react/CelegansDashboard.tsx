@@ -2101,8 +2101,8 @@ export function CelegansDashboard() {
   const panelOpacity = loading ? 0.35 : 1;
   const panelTransition = "opacity 260ms cubic-bezier(0.4, 0, 0.2, 1)";
 
-  // Scrub timeline preview — what state/time is at hover x
-  const [scrubHover, setScrubHover] = useState<{ x: number; t: number; state: string } | null>(null);
+  // Scrub timeline preview — what state/time + active counts at hover x
+  const [scrubHover, setScrubHover] = useState<{ x: number; t: number; state: string; active: number; events: number } | null>(null);
 
   // Neuron search
   const [searchQ, setSearchQ] = useState("");
@@ -2497,7 +2497,25 @@ export function CelegansDashboard() {
           const sIdx = Math.min(nSync - 1, Math.floor(frac * nSync));
           const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
           const st = stateNames[tr.fsm_states[sIdx]] ?? "?";
-          setScrubHover({ x: e.clientX - r.left, t: tHover, state: st });
+          // Count active neurons in ±100 ms window at tHover
+          let active = 0;
+          if (tr.raster) {
+            const seen = new Set<number>();
+            for (const ev of tr.raster) {
+              if (ev.t > tHover - 0.1 && ev.t <= tHover) {
+                for (const ni of ev.n) if (!seen.has(ni)) { seen.add(ni); active++; }
+              }
+            }
+          }
+          // Event firings at tHover
+          let events = 0;
+          for (const ev of (tr.meta.events_tracked ?? [])) {
+            const arr = tr.event_probs[ev];
+            if (!arr) continue;
+            const ei = Math.min(arr.length - 1, Math.floor(frac * arr.length));
+            if (arr[ei] > 0.5) events++;
+          }
+          setScrubHover({ x: e.clientX - r.left, t: tHover, state: st, active, events });
         }}
         onMouseLeave={() => setScrubHover(null)}
       >
@@ -2520,19 +2538,25 @@ export function CelegansDashboard() {
         {/* Hover preview tooltip */}
         {scrubHover && (
           <div
-            className="absolute -top-8 pointer-events-none flex flex-col items-center z-10"
+            className="absolute -top-9 pointer-events-none flex flex-col items-center z-10"
             style={{ left: scrubHover.x, transform: "translateX(-50%)" }}
           >
             <div
-              className="rounded bg-[#0f1429]/95 border border-border px-2 py-0.5 shadow-md text-[0.65rem] font-mono whitespace-nowrap"
+              className="rounded bg-[#0f1429]/95 border border-border px-2 py-0.5 shadow-md text-[0.65rem] font-mono whitespace-nowrap flex items-center gap-1.5"
             >
               <span className="text-foreground tabular-nums">{scrubHover.t.toFixed(2)}s</span>
               <span
-                className="ml-1.5 px-1 rounded text-[0.55rem] font-semibold text-white"
+                className="px-1 rounded text-[0.55rem] font-semibold text-white"
                 style={{ backgroundColor: STATE_COLORS[scrubHover.state] ?? "#6b7280" }}
               >
                 {scrubHover.state}
               </span>
+              {scrubHover.active > 0 && (
+                <span className="text-[#5ec77a] text-[0.55rem]">● {scrubHover.active}</span>
+              )}
+              {scrubHover.events > 0 && (
+                <span className="text-[#f59e0b] text-[0.55rem]">⚡{scrubHover.events}</span>
+              )}
             </div>
             <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-border" />
           </div>
