@@ -2691,6 +2691,11 @@ export function CelegansDashboard() {
                       })}
                     </div>
                   )}
+                  {/* Ego-network mini diagram */}
+                  <div className="pt-1 border-t border-[#1e293b]">
+                    <div className="text-[#64748b] mb-0.5">ego network</div>
+                    <EgoNetwork meta={lockedMeta} />
+                  </div>
                   {lockedRateHist && (
                     <div className="pt-1 border-t border-[#1e293b]">
                       <div className="text-[#64748b] mb-0.5 flex justify-between items-center">
@@ -3036,6 +3041,70 @@ function FsmDiagramInset({ currentState }: { currentState: string }) {
         ))}
       </svg>
     </div>
+  );
+}
+
+function EgoNetwork({ meta }: { meta: NeuronMeta }) {
+  const outN = meta.outgoing.slice(0, 5);
+  const inN = meta.incoming.slice(0, 5);
+  const nOut = outN.length;
+  const nIn = inN.length;
+  const W = 220, H = 110;
+  const cx = W / 2, cy = H / 2;
+  const ringR = 42;
+  const outMax = Math.max(1, ...outN.map(([, w]) => w));
+  const inMax = Math.max(1, ...inN.map(([, w]) => w));
+  // Outgoing on right hemisphere (angles -π/2 to π/2), incoming on left
+  const outPts = outN.map(([n, w], i) => {
+    const angle = -Math.PI / 2 + (i + 1) / (nOut + 1) * Math.PI;
+    return { name: n, w, x: cx + ringR * Math.cos(angle), y: cy + ringR * Math.sin(angle) };
+  });
+  const inPts = inN.map(([n, w], i) => {
+    const angle = Math.PI / 2 + (i + 1) / (nIn + 1) * Math.PI;
+    return { name: n, w, x: cx + ringR * Math.cos(angle), y: cy + ringR * Math.sin(angle) };
+  });
+  const sign = meta.sign;
+  const coreColor = sign > 0 ? "#10b981" : sign < 0 ? "#ef4444" : "#a5b4fc";
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" aria-hidden="true">
+      {/* Outgoing edges */}
+      {outPts.map((p) => (
+        <line
+          key={`o-${p.name}`}
+          x1={cx} y1={cy} x2={p.x} y2={p.y}
+          stroke="#10b981"
+          strokeOpacity={0.25 + 0.65 * (p.w / outMax)}
+          strokeWidth={0.5 + 1.2 * (p.w / outMax)}
+        />
+      ))}
+      {/* Incoming edges */}
+      {inPts.map((p) => (
+        <line
+          key={`i-${p.name}`}
+          x1={p.x} y1={p.y} x2={cx} y2={cy}
+          stroke="#a5b4fc"
+          strokeOpacity={0.25 + 0.65 * (p.w / inMax)}
+          strokeWidth={0.5 + 1.2 * (p.w / inMax)}
+        />
+      ))}
+      {/* Partner nodes */}
+      {[...outPts, ...inPts].map((p, i) => (
+        <g key={`n-${p.name}-${i}`}>
+          <circle cx={p.x} cy={p.y} r={3} fill="#64748b" />
+          <text x={p.x} y={p.y - 5} textAnchor="middle" fontSize="7" fill="#cbd5e1">
+            {p.name}
+          </text>
+        </g>
+      ))}
+      {/* Center (locked) */}
+      <circle cx={cx} cy={cy} r={6} fill={coreColor} />
+      <text x={cx} y={cy + 16} textAnchor="middle" fontSize="7.5" fill="#e2e8f0" fontWeight="bold">
+        {meta.name}
+      </text>
+      {/* Hemisphere labels */}
+      <text x={2} y={H - 4} fontSize="6.5" fill="#64748b">← in</text>
+      <text x={W - 16} y={H - 4} fontSize="6.5" fill="#64748b">out →</text>
+    </svg>
   );
 }
 
