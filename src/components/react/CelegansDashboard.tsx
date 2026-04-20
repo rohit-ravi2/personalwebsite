@@ -455,11 +455,17 @@ function drawBrain3D(
   // fade by weight + by edge alpha (user-controlled). A travelling pulse
   // (bright dot along the curve) visualises the signal propagating from
   // pre to post — pulse progress = (time_since_spike) / TRAVEL_S.
-  if (edges && edgeAlpha > 0.01 && activeSet.size > 0) {
+  if (edges && edgeAlpha > 0.01 && (activeSet.size > 0 || lockedIdx !== null)) {
     ctx.save();
     ctx.lineCap = "round";
     for (const [pre, post, weight, preSign] of edges.edges) {
-      if (!activeSet.has(pre)) continue;
+      // If a neuron is locked, show only its incoming + outgoing edges.
+      // Otherwise, show edges from currently-active neurons.
+      if (lockedIdx !== null) {
+        if (pre !== lockedIdx && post !== lockedIdx) continue;
+      } else {
+        if (!activeSet.has(pre)) continue;
+      }
       const pPre = positions[pre];
       const pPost = positions[post];
       if (!pPre || !pPost) continue;
@@ -470,9 +476,10 @@ function drawBrain3D(
       // Pulse recency — use the pre's pulse decay value as a proxy for
       // "just fired", so bright edges correlate with fresh spikes.
       const pulse = recentPulses.get(pre) ?? 0;
-      const brightness = 0.25 + 0.6 * wNorm + 0.3 * pulse;
+      const isLockedEdge = lockedIdx !== null;
+      const brightness = (isLockedEdge ? 0.5 : 0.25) + 0.6 * wNorm + 0.3 * pulse;
       ctx.strokeStyle = hexAlpha(color, edgeAlpha * Math.min(1, brightness));
-      ctx.lineWidth = 0.6 + wNorm + 0.8 * pulse;
+      ctx.lineWidth = (isLockedEdge ? 1.0 : 0.6) + wNorm + 0.8 * pulse;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       const mx = (x1 + x2) / 2;
