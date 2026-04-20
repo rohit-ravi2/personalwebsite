@@ -1222,8 +1222,10 @@ export function CelegansDashboard() {
     if (!hash) return;
     const params = new URLSearchParams(hash);
     const s = params.get("scenario") as Scenario | null;
+    let shouldScroll = false;
     if (s && (["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis"] as Scenario[]).includes(s)) {
       setScenario(s);
+      shouldScroll = true;
     }
     const tRaw = params.get("t");
     if (tRaw) {
@@ -1232,7 +1234,14 @@ export function CelegansDashboard() {
         currentTRef.current = tN;
         setCurrentT(tN);
         setPaused(true);
+        shouldScroll = true;
       }
+    }
+    // Scroll dashboard into view after a brief delay (wait for layout)
+    if (shouldScroll) {
+      setTimeout(() => {
+        wrapRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
     }
   }, []);
 
