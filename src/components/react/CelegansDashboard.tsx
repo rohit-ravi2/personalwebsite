@@ -1413,6 +1413,26 @@ export function CelegansDashboard() {
     return neuronMeta.find((m) => m.name === nm) ?? null;
   }, [lockedNeuron, trace, neuronMeta]);
 
+  // Firing-rate history for the locked neuron, if it's a readout neuron.
+  // Bins the raster into 0.5 s buckets and computes spike-count per bin.
+  const lockedRateHist = useMemo(() => {
+    if (lockedNeuron === null || !trace) return null;
+    const nm = trace.neuron_names?.[lockedNeuron];
+    if (!nm) return null;
+    const rIdx = trace.meta.readout_neurons.indexOf(nm);
+    if (rIdx < 0) return null;  // not a readout — no raster data
+    const BIN_S = 0.5;
+    const nBins = Math.max(1, Math.ceil(trace.meta.duration_s / BIN_S));
+    const bins = new Array<number>(nBins).fill(0);
+    for (const e of trace.raster) {
+      if (e.n.includes(rIdx)) {
+        const bi = Math.min(nBins - 1, Math.floor(e.t / BIN_S));
+        bins[bi]++;
+      }
+    }
+    return { bins, binS: BIN_S, maxRate: Math.max(1, ...bins) };
+  }, [lockedNeuron, trace]);
+
   const scrubTo = (frac: number) => {
     const tr = traceRef.current;
     if (!tr) return;
@@ -1939,6 +1959,51 @@ export function CelegansDashboard() {
                           <span className="text-[#64748b] font-mono text-[0.6rem]">{w}</span>
                         </div>
                       ))}
+                    </div>
+                  )}
+                  {lockedRateHist && (
+                    <div className="pt-1 border-t border-[#1e293b]">
+                      <div className="text-[#64748b] mb-0.5 flex justify-between items-center">
+                        <span>firing rate · 0.5 s bins</span>
+                        <span className="font-mono text-[0.6rem]">peak {lockedRateHist.maxRate}</span>
+                      </div>
+                      <div className="relative h-8 bg-[#0a0e1a] rounded mt-0.5 overflow-hidden">
+                        <svg
+                          viewBox="0 0 100 100"
+                          preserveAspectRatio="none"
+                          className="absolute inset-0 w-full h-full"
+                          aria-hidden="true"
+                        >
+                          {lockedRateHist.bins.map((r, i) => {
+                            const x = (i / lockedRateHist.bins.length) * 100;
+                            const w = 100 / lockedRateHist.bins.length;
+                            const h = (r / lockedRateHist.maxRate) * 100;
+                            return (
+                              <rect
+                                key={i}
+                                x={x} y={100 - h}
+                                width={Math.max(0.5, w - 0.3)} height={h}
+                                fill="#5ec77a" opacity="0.85"
+                              />
+                            );
+                          })}
+                          {/* Current-time cursor */}
+                          <line
+                            x1={(currentT / (trace?.meta.duration_s ?? 1)) * 100}
+                            y1={0}
+                            x2={(currentT / (trace?.meta.duration_s ?? 1)) * 100}
+                            y2={100}
+                            stroke="#f2ead3"
+                            strokeWidth="0.6"
+                            vectorEffect="non-scaling-stroke"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                  {!lockedRateHist && (
+                    <div className="pt-1 border-t border-[#1e293b] text-[0.6rem] text-[#64748b] italic">
+                      not in 18-neuron readout — no raster data
                     </div>
                   )}
                 </div>
