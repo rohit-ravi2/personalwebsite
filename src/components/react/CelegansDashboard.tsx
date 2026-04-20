@@ -1786,11 +1786,12 @@ export function CelegansDashboard() {
         </div>
       </div>
 
-      {/* FSM timeline */}
+      {/* FSM timeline + state-diagram inset */}
       <div>
         <PanelLabel>behavioural state · FSM transitions over time · ticks = stimuli</PanelLabel>
-        <div className="rounded-lg overflow-hidden border bg-[#0a0e1a]">
+        <div className="relative rounded-lg overflow-hidden border bg-[#0a0e1a]">
           <canvas ref={fsmCanvasRef} className="block w-full" />
+          <FsmDiagramInset currentState={currentFrame?.state ?? "FORWARD"} />
         </div>
       </div>
 
@@ -1848,6 +1849,60 @@ export function CelegansDashboard() {
           <div className="pt-1 italic">Current shipped scenarios use v3 LIF brain. Tier 1 graded stack requires v3.4 classifier retraining to reproduce phenotypes. Honest perturbation numbers with n=3 seed error bars documented in <code className="text-[0.7rem]">artifacts/ensemble_report.md</code>.</div>
         </div>
       </details>
+    </div>
+  );
+}
+
+// Tiny SVG state-diagram overlay showing 5 FSM states with the current
+// one highlighted. Arrows indicate biologically-relevant transitions.
+function FsmDiagramInset({ currentState }: { currentState: string }) {
+  const states = ["FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
+  // Position on a pentagon for nice spatial layout
+  const nodes = states.map((s, i) => {
+    const angle = (i / states.length) * Math.PI * 2 - Math.PI / 2;
+    return {
+      name: s,
+      x: 50 + 32 * Math.cos(angle),
+      y: 32 + 22 * Math.sin(angle),
+    };
+  });
+  const nameToPt = new Map(nodes.map((n) => [n.name, n]));
+  // Transitions worth drawing
+  const transitions: Array<[string, string]> = [
+    ["FORWARD", "REVERSE"],
+    ["REVERSE", "FORWARD"],
+    ["REVERSE", "OMEGA"],
+    ["OMEGA", "FORWARD"],
+    ["REVERSE", "PIROUETTE"],
+    ["PIROUETTE", "FORWARD"],
+    ["FORWARD", "QUIESCENT"],
+    ["QUIESCENT", "FORWARD"],
+  ];
+  return (
+    <div className="absolute top-0 right-2 w-24 h-16 pointer-events-none">
+      <svg viewBox="0 0 100 64" className="w-full h-full">
+        {transitions.map(([a, b], i) => {
+          const pa = nameToPt.get(a);
+          const pb = nameToPt.get(b);
+          if (!pa || !pb) return null;
+          return (
+            <line key={i}
+              x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y}
+              stroke="rgba(148, 163, 184, 0.4)" strokeWidth={0.4}
+            />
+          );
+        })}
+        {nodes.map((n) => (
+          <g key={n.name}>
+            <circle
+              cx={n.x} cy={n.y}
+              r={currentState === n.name ? 3.5 : 2}
+              fill={STATE_COLORS[n.name] ?? "#6b7280"}
+              opacity={currentState === n.name ? 1 : 0.5}
+            />
+          </g>
+        ))}
+      </svg>
     </div>
   );
 }
