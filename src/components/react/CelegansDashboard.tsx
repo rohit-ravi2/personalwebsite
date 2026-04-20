@@ -2222,15 +2222,31 @@ export function CelegansDashboard() {
             <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
             v3 brain · Tier 1 body · live simulator
           </span>
-          <span className="text-[0.6rem] text-muted-foreground ml-auto">
-            300 neurons · 9 modulators · 5 states · 8 events · 4 published phenotypes
+          <span className="text-[0.6rem] text-muted-foreground ml-auto flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+            {trace ? (
+              <>
+                <span>{trace.neuron_names?.length ?? 300} neurons</span>
+                <span>·</span>
+                <span>{trace.modulator_names?.length ?? 9} modulators</span>
+                <span>·</span>
+                <span>{(trace.meta.states?.length ?? 6) - 1} states</span>
+                <span>·</span>
+                <span>{trace.meta.events_tracked?.length ?? 8} events</span>
+                <span>·</span>
+                <span>{trace.meta.duration_s.toFixed(0)}s scenario</span>
+                <span>·</span>
+                <span>{(1000 / trace.meta.brain_sync_ms).toFixed(0)} Hz sync</span>
+              </>
+            ) : (
+              <>300 neurons · 9 modulators · 5 states · 8 events · 4 published phenotypes</>
+            )}
           </span>
         </div>
         <div className="mt-1.5 font-medium text-foreground">
           Closed-loop <em>C. elegans</em> digital twin.
         </div>
         <div className="text-xs text-muted-foreground mt-0.5">
-          Sensory input → 300-neuron connectome-constrained brain → 9-modulator
+          Sensory input → {trace?.neuron_names?.length ?? 300}-neuron connectome-constrained brain → 9-modulator
           peptide/monoamine layer → 5-state behavioural FSM → 20-segment MuJoCo body.
           All panels synchronised; click neurons, scrub time, hover modulators.
         </div>
