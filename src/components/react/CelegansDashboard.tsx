@@ -2747,7 +2747,7 @@ export function CelegansDashboard() {
         <div>
           <div className="flex items-baseline justify-between gap-2">
             <PanelLabel>brain · {brainViewMode === "3d"
-              ? `${trace?.neuron_names?.length ?? 300} neurons · 3D${liveStats ? ` · ${liveStats.activeCount} firing` : ""}`
+              ? `${trace?.neuron_names?.length ?? 300} neurons · 3D${liveStats ? ` · ${liveStats.activeCount} firing` : ""}${ntFilter.size > 0 ? ` · filter: ${Array.from(ntFilter).join("/")}` : ""}`
               : `spike raster · 18 readout${liveStats ? ` · ${liveStats.activeCount} active` : ""}`}
             </PanelLabel>
             <div className="flex items-center gap-2 text-[0.65rem] text-muted-foreground">
