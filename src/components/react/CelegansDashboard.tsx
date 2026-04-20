@@ -323,6 +323,20 @@ function drawWormBody(
     }
   }
 
+  // Compass rose in corner — dorsal (up) / ventral (down) axes
+  ctx.save();
+  ctx.fillStyle = "rgba(26, 42, 74, 0.42)";
+  ctx.font = "7.5px ui-monospace, monospace";
+  ctx.fillText("D", 8, 14);
+  ctx.fillText("V", 8, h - 10);
+  ctx.strokeStyle = "rgba(26, 42, 74, 0.25)";
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.moveTo(11, 16);
+  ctx.lineTo(11, h - 14);
+  ctx.stroke();
+  ctx.restore();
+
   const stateColor = STATE_COLORS[state] ?? "#2f5233";
 
   // Draw trail (ghosts) of previous head positions
