@@ -1619,6 +1619,23 @@ export function CelegansDashboard() {
   // Scrub timeline preview — what state/time is at hover x
   const [scrubHover, setScrubHover] = useState<{ x: number; t: number; state: string } | null>(null);
 
+  // Neuron search
+  const [searchQ, setSearchQ] = useState("");
+  const searchMatches = useMemo(() => {
+    if (!searchQ.trim() || !trace?.neuron_names) return [];
+    const q = searchQ.trim().toUpperCase();
+    const names = trace.neuron_names;
+    const out: Array<{ name: string; idx: number; meta: NeuronMeta | null }> = [];
+    for (let i = 0; i < names.length && out.length < 8; i++) {
+      const nm = names[i];
+      if (nm.toUpperCase().includes(q)) {
+        const m = neuronMeta?.find((mm) => mm.name === nm) ?? null;
+        out.push({ name: nm, idx: i, meta: m });
+      }
+    }
+    return out;
+  }, [searchQ, trace, neuronMeta]);
+
   return (
     <div className="my-8 flex flex-col gap-4 text-sm" ref={wrapRef}>
       {/* Hero intro */}
@@ -1921,6 +1938,42 @@ export function CelegansDashboard() {
                 className="text-[#a5b4fc] hover:text-[#f2ead3]"
               >reset</button>
             </div>
+            {/* Neuron search */}
+            {brainViewMode === "3d" && (
+              <div className="absolute bottom-2 left-2 w-44">
+                <input
+                  type="text"
+                  value={searchQ}
+                  onChange={(e) => setSearchQ(e.target.value)}
+                  placeholder="search neurons…"
+                  className="w-full rounded-md bg-[#0f1429]/80 border border-[#1e293b] px-2 py-1 text-[0.65rem] text-[#e2e8f0] placeholder-[#64748b] focus:outline-none focus:border-[#a5b4fc]"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && searchMatches[0]) {
+                      setLockedNeuron(searchMatches[0].idx);
+                      setSearchQ("");
+                    } else if (e.key === "Escape") {
+                      setSearchQ("");
+                    }
+                  }}
+                />
+                {searchMatches.length > 0 && (
+                  <div className="mt-1 rounded-md bg-[#0f1429]/95 border border-[#1e293b] overflow-hidden shadow-lg">
+                    {searchMatches.map((m) => (
+                      <button
+                        key={m.name}
+                        onClick={() => { setLockedNeuron(m.idx); setSearchQ(""); }}
+                        className="block w-full text-left px-2 py-1 text-[0.65rem] text-[#e2e8f0] hover:bg-[#1e293b] flex justify-between items-center gap-2"
+                      >
+                        <span className="font-mono font-semibold">{m.name}</span>
+                        <span className="text-[0.55rem] text-[#64748b] truncate">
+                          {m.meta?.nt.replace(/\s*\([^)]+\)/, "") ?? "?"}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             {lockedMeta && (
               <div className="absolute top-2 right-2 w-60 rounded-lg bg-[#0f1429]/95 border border-[#a5b4fc]/40 p-3 shadow-lg text-[0.7rem] text-[#e2e8f0]">
                 <div className="flex items-baseline justify-between mb-1">
