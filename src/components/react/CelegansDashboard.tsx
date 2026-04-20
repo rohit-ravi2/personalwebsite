@@ -2501,6 +2501,33 @@ export function CelegansDashboard() {
           ))}
         </div>
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted-foreground">
+          <span className="font-semibold text-foreground w-16">NT (spike glow):</span>
+          {[
+            { name: "ACh",  col: "#38bdf8" },
+            { name: "Glu",  col: "#a3e635" },
+            { name: "GABA", col: "#f87171" },
+            { name: "Modulatory", col: "#c084fc" },
+          ].map(({ name, col }) => {
+            const active = ntFilter.has(name);
+            return (
+              <button
+                key={name}
+                onClick={() => {
+                  const next = new Set(ntFilter);
+                  if (active) next.delete(name); else next.add(name);
+                  setNtFilter(next);
+                }}
+                className="inline-flex items-center gap-1 cursor-pointer rounded px-0.5 hover:bg-accent/50 transition-colors"
+                style={{ color: active ? "var(--foreground)" : undefined }}
+                title={`Click to ${active ? "remove" : "add"} ${name} filter`}
+              >
+                <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: col, boxShadow: active ? `0 0 4px ${col}` : undefined }} />
+                {name}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.65rem] text-muted-foreground">
           <span className="font-semibold text-foreground w-16">modulators:</span>
           {Object.entries(MODULATOR_COLORS).map(([name, col]) => (
             <span
