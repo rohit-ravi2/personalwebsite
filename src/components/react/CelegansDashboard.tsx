@@ -791,9 +791,23 @@ function drawModulatorStrip(
       const ti = Math.min(nT - 1, Math.floor((px / plotW) * nT));
       const intensity = Math.min(1, concentrations[ti][mi] / maxByMod[mi]);
       if (intensity < 0.04) continue;
-      ctx.fillStyle = hexAlpha(color, intensity * 0.95);
+      ctx.fillStyle = hexAlpha(color, intensity * 0.6);
       ctx.fillRect(labelW + px, y0 + 2, 1, rowH - 4);
     }
+    // Line overlay — concentration trajectory as a bright curve
+    ctx.save();
+    ctx.strokeStyle = hexAlpha(color, 0.9);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let px = 0; px < plotW; px += 1) {
+      const ti = Math.min(nT - 1, Math.floor((px / plotW) * nT));
+      const frac = Math.min(1, concentrations[ti][mi] / maxByMod[mi]);
+      const yy = y0 + rowH - 2 - frac * (rowH - 4);
+      if (px === 0) ctx.moveTo(labelW + px, yy);
+      else ctx.lineTo(labelW + px, yy);
+    }
+    ctx.stroke();
+    ctx.restore();
 
     // Current concentration value on right
     const curC = concentrations[tIdx][mi] ?? 0;
