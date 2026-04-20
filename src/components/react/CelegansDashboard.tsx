@@ -622,6 +622,43 @@ function drawBrain3D(
   ctx.textAlign = "right";
   ctx.fillText("tail", w * 0.955, h - 8);
   ctx.textAlign = "left";
+
+  // Mini edge-color legend in the lower-right
+  if (edges && edgeAlpha > 0.01) {
+    const legX = w - 96;
+    const legY = h - 44;
+    ctx.save();
+    ctx.fillStyle = "rgba(15, 20, 41, 0.72)";
+    ctx.fillRect(legX - 4, legY - 4, 96, 42);
+    ctx.strokeStyle = "rgba(100, 116, 139, 0.3)";
+    ctx.strokeRect(legX - 4, legY - 4, 96, 42);
+    ctx.font = "8px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
+    ctx.fillText("edges:", legX, legY + 4);
+    // Excitatory
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(legX, legY + 14);
+    ctx.lineTo(legX + 16, legY + 14);
+    ctx.stroke();
+    ctx.fillText("exc", legX + 20, legY + 17);
+    // Inhibitory
+    ctx.strokeStyle = "#ef4444";
+    ctx.beginPath();
+    ctx.moveTo(legX, legY + 24);
+    ctx.lineTo(legX + 16, legY + 24);
+    ctx.stroke();
+    ctx.fillText("inh", legX + 20, legY + 27);
+    // Gap/mod
+    ctx.strokeStyle = "#94a3b8";
+    ctx.beginPath();
+    ctx.moveTo(legX + 40, legY + 24);
+    ctx.lineTo(legX + 56, legY + 24);
+    ctx.stroke();
+    ctx.fillText("mod", legX + 60, legY + 27);
+    ctx.restore();
+  }
 }
 
 function drawModulatorStrip(
