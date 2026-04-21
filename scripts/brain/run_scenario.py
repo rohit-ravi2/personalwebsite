@@ -158,9 +158,16 @@ def run_scenario(name: str) -> None:
             grad, initial_head_xy=(0.0, 0.0), aerotaxis=aero,
         )
 
-    env = ClosedLoopEnv(environment=env_obj)
+    # P1 #4 — FSM_MODE env-var switches between classifier-driven and
+    # direct-activity FSM. Defaults to "classifier" to preserve the
+    # shipped v3 behaviour; set FSM_MODE=activity to use the new
+    # direct-from-neurons FSM.
+    import os
+    fsm_mode = os.environ.get("FSM_MODE", "classifier")
+    env = ClosedLoopEnv(environment=env_obj, fsm_mode=fsm_mode)
     env.run(sc["duration_s"], stim_schedule=sc["stim"])
-    out = OUT_DIR / f"wormbody-brain-{name}.json"
+    suffix = "" if fsm_mode == "classifier" else f"-{fsm_mode}"
+    out = OUT_DIR / f"wormbody-brain-{name}{suffix}.json"
     env.export(out, name)
 
     # State distribution summary

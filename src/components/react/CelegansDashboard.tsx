@@ -59,6 +59,9 @@ type Trace = {
     states: string[];
     modulation_enabled?: boolean;
     modulators?: string[];
+    fsm_mode?: "classifier" | "activity";  // P1 #4
+    num_neurons?: number;
+    full_raster_available?: boolean;
     sources: Record<string, string>;
   };
   frames: Array<{
@@ -73,6 +76,16 @@ type Trace = {
   all_neurons?: string[];
   event_probs: Record<string, number[]>;
   fsm_states: number[];
+  /** P1 #4 — present when fsm_mode === "activity" */
+  activity_fsm?: {
+    triggers: Array<{ t: number; state: string; trigger: string }>;
+    role_snapshot: Record<string, {
+      recent_rate_hz: number; baseline_hz: number;
+      baseline_sd: number; z: number;
+      neurons_present: string[]; threshold_z: number;
+    }>;
+    role_neurons: Record<string, string[]>;
+  };
   stim_log: Array<{ t: number; preset: string; intensity: number; neurons: string[] }>;
   neuron_positions?: Array<[number, number, number]>;
   neuron_names?: string[];
@@ -2441,6 +2454,22 @@ export function CelegansDashboard() {
             <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
             v3 brain · Tier 1 body · live simulator
           </span>
+          {trace?.meta.fsm_mode && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.6rem] font-mono"
+              style={{
+                borderColor: trace.meta.fsm_mode === "activity"
+                  ? "#a3e635" : "#64748b",
+                color: trace.meta.fsm_mode === "activity"
+                  ? "#a3e635" : "#94a3b8",
+              }}
+              title={trace.meta.fsm_mode === "activity"
+                ? "FSM transitions driven directly from AVA/AVB/SMDV/RIS firing rates (P1 #4)"
+                : "FSM transitions driven by 8-event Atanas-trained classifier bank (legacy v3 default)"}
+            >
+              FSM: {trace.meta.fsm_mode}
+            </span>
+          )}
           <span className="text-[0.6rem] text-muted-foreground ml-auto flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
             {trace ? (
               <>
@@ -2794,6 +2823,51 @@ export function CelegansDashboard() {
                   </span>
                 </span>
               ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* P1 #4 — Activity-FSM role-z badges. Only present when the
+          trace was produced with fsm_mode='activity'. */}
+      {trace?.activity_fsm && (
+        <div className="rounded-lg bg-card/40 border border-lime-500/40 px-3 py-2">
+          <div className="flex items-baseline justify-between mb-1.5">
+            <span className="text-[0.7rem] font-semibold text-foreground">
+              Activity FSM — role firing vs baseline
+            </span>
+            <span className="text-[0.55rem] text-muted-foreground">
+              reads AVA / AVB / SMDV / RIS / NSM rates directly
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[0.6rem]">
+            {Object.entries(trace.activity_fsm.role_snapshot).map(([role, snap]) => {
+              const above = snap.z >= snap.threshold_z;
+              return (
+                <span
+                  key={role}
+                  className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono"
+                  style={{
+                    backgroundColor: above ? "rgba(163, 230, 53, 0.12)" : "rgba(100, 116, 139, 0.08)",
+                    borderColor: above ? "#a3e635" : "hsl(var(--border))",
+                    color: above ? "#a3e635" : "var(--muted-foreground)",
+                  }}
+                  title={`rate ${snap.recent_rate_hz} Hz vs baseline ${snap.baseline_hz}±${snap.baseline_sd} Hz. Neurons: ${snap.neurons_present.join(", ")}. Fires when z ≥ ${snap.threshold_z}.`}
+                >
+                  <span className="font-semibold">{role.replace(/_/g, " ")}</span>
+                  <span>z={snap.z}</span>
+                  <span className="text-muted-foreground">/ {snap.threshold_z}</span>
+                </span>
+              );
+            })}
+          </div>
+          {trace.activity_fsm.triggers.length > 1 && (
+            <div className="mt-1.5 text-[0.6rem] text-muted-foreground">
+              <span className="font-medium">recent triggers:</span>{" "}
+              {trace.activity_fsm.triggers
+                .slice(-4)
+                .map((tr, i) => `${tr.t.toFixed(2)}s → ${tr.state} (${tr.trigger})`)
+                .join(" · ")}
             </div>
           )}
         </div>

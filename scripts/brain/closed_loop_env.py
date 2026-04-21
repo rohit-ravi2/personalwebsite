@@ -38,6 +38,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lif_brain import LIFBrain  # noqa: E402
 from neural_classifier_bank import ClassifierBank, spikes_to_calcium  # noqa: E402
 from behavioral_fsm import BehavioralFSM, State, STATE_CPG  # noqa: E402
+from activity_fsm import ActivityFSM  # noqa: E402 — P1 #4
 from sensory_injection import stimulate  # noqa: E402
 from modulation_layer import ModulationLayer, TABLES as MOD_TABLES  # noqa: E402
 from environment import Environment, ChemoGradient  # noqa: E402
@@ -99,7 +100,19 @@ class ClosedLoopEnv:
                  modulator_tables_path=None,
                  use_per_edge_glu_signs: bool = False,
                  environment: Environment | None = None,
-                 brain_class: str = "lif"):
+                 brain_class: str = "lif",
+                 fsm_mode: str = "classifier"):
+        """
+        fsm_mode:
+          - 'classifier' (default): 8-event Atanas-trained classifier
+              bank drives FSM transitions (legacy behaviour, still the
+              shipping default until v3.4).
+          - 'activity':  direct-from-neuron-activity FSM reads AVA/AVB/
+              SMDV/RIS etc. firing rates and triggers on z-scored
+              baseline deviations (P1 #4). Decouples FSM from the
+              classifier layer so upgraded brain dynamics (graded, Ca
+              plateau, compartmental) work out of the box.
+        """
         """ClosedLoopEnv.
 
         seed: used for BOTH np.random AND Brian2 internal RNG
@@ -137,7 +150,11 @@ class ClosedLoopEnv:
         self.brain = brain_instance
 
         self.bank = ClassifierBank()
-        self.fsm = BehavioralFSM(State.FORWARD)
+        self.fsm_mode = fsm_mode
+        if fsm_mode == "activity":
+            self.fsm = ActivityFSM(self.brain, initial_state=State.FORWARD)
+        else:
+            self.fsm = BehavioralFSM(State.FORWARD)
 
         # v3 slow neuromodulation layer (Phase 3d-2)
         self.modulation: ModulationLayer | None = None
@@ -291,13 +308,28 @@ class ClosedLoopEnv:
             for e in self.bank.events:
                 self.event_probs[e].append(float(probs[e][-1]))
 
-        # 4) Get latest event probs for FSM
-        latest_probs = {e: (self.event_probs[e][-1]
-                            if self.event_probs[e] else 0.0)
-                        for e in self.bank.events}
-
-        # 5) Update FSM
-        self.fsm.update(t_sync_s, latest_probs)
+        # 4) Update FSM — either via classifier event-probs or directly
+        # from neural activity (P1 #4).
+        if self.fsm_mode == "activity":
+            # Build per-neuron Hz rate from the last ~400 ms (8 sync
+            # windows at 50 ms) of full_spike_buffer.
+            W_SYNCS = 8
+            if len(self.full_spike_buffer) >= 1:
+                recent = self.full_spike_buffer[-W_SYNCS:]
+                total_counts = np.sum(np.stack(recent), axis=0)  # (N,)
+                window_s = len(recent) * (BRAIN_SYNC_MS / 1000.0)
+                rates = {
+                    self.brain.names[i]: float(total_counts[i] / window_s)
+                    for i in range(self.brain.N)
+                }
+            else:
+                rates = {}
+            self.fsm.update(t_sync_s, rates)
+        else:
+            latest_probs = {e: (self.event_probs[e][-1]
+                                if self.event_probs[e] else 0.0)
+                            for e in self.bank.events}
+            self.fsm.update(t_sync_s, latest_probs)
         self.fsm_states.append(self.fsm.state.value)
 
         # 6) Drive body with current CPG params
@@ -407,6 +439,7 @@ class ClosedLoopEnv:
                 "readout_neurons": self.readout_present,
                 "num_neurons": int(self.brain.N),
                 "full_raster_available": True,
+                "fsm_mode": self.fsm_mode,   # "classifier" | "activity" (P1 #4)
                 "events_tracked": self.bank.events,
                 "states": ["FORWARD", "REVERSE", "OMEGA", "PIROUETTE",
                            "QUIESCENT"],
@@ -433,6 +466,24 @@ class ClosedLoopEnv:
             "fsm_states": self.fsm_states,
             "stim_log": self.stim_log,
         }
+
+        # P1 #4 — activity FSM trigger log (which role fired each transition)
+        if self.fsm_mode == "activity" and isinstance(self.fsm, ActivityFSM):
+            payload["activity_fsm"] = {
+                "triggers": [
+                    {"t": round(t, 3), "state": s.name, "trigger": trig}
+                    for t, s, trig in zip(
+                        self.fsm.trace.times,
+                        self.fsm.trace.states,
+                        self.fsm.trace.triggers,
+                    )
+                ],
+                "role_snapshot": self.fsm.debug_snapshot(),
+                "role_neurons": {
+                    r: self.fsm.role_stats[r].present
+                    for r in self.fsm.role_stats
+                },
+            }
 
         # T1 UI — include neuron 3D positions + modulator timeseries
         pos_path = Path(__file__).resolve().parent / "artifacts" / "neuron_positions.npz"
