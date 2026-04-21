@@ -939,7 +939,8 @@ function drawModulatorStrip(
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
 
-  if (!concentrations || !names || concentrations.length === 0) {
+  if (!concentrations || !names
+      || concentrations.length === 0 || names.length === 0) {
     ctx.fillStyle = "rgba(148, 163, 184, 0.5)";
     ctx.font = "11px system-ui, sans-serif";
     ctx.fillText("No modulator telemetry in this scenario.", 14, h / 2);
@@ -955,13 +956,15 @@ function drawModulatorStrip(
   // Per-modulator max
   const maxByMod = new Array(numMods).fill(1e-6);
   for (const row of concentrations) {
+    if (!row) continue;
     for (let mi = 0; mi < numMods; mi++) {
       if (row[mi] > maxByMod[mi]) maxByMod[mi] = row[mi];
     }
   }
 
   const nT = concentrations.length;
-  const tIdx = Math.min(nT - 1, Math.floor(currentFrac * nT));
+  const safeFrac = Number.isFinite(currentFrac) ? Math.max(0, Math.min(1, currentFrac)) : 0;
+  const tIdx = Math.min(nT - 1, Math.max(0, Math.floor(safeFrac * nT)));
 
   // Draw each modulator row
   for (let mi = 0; mi < numMods; mi++) {
@@ -986,8 +989,10 @@ function drawModulatorStrip(
 
     // Heatmap strip
     for (let px = 0; px < plotW; px++) {
-      const ti = Math.min(nT - 1, Math.floor((px / plotW) * nT));
-      const intensity = Math.min(1, concentrations[ti][mi] / maxByMod[mi]);
+      const ti = Math.min(nT - 1, Math.max(0, Math.floor((px / plotW) * nT)));
+      const row = concentrations[ti];
+      if (!row) continue;
+      const intensity = Math.min(1, (row[mi] ?? 0) / maxByMod[mi]);
       if (intensity < 0.04) continue;
       ctx.fillStyle = hexAlpha(color, intensity * 0.6);
       ctx.fillRect(labelW + px, y0 + 2, 1, rowH - 4);
@@ -997,18 +1002,22 @@ function drawModulatorStrip(
     ctx.strokeStyle = hexAlpha(color, 0.9);
     ctx.lineWidth = 1;
     ctx.beginPath();
+    let started = false;
     for (let px = 0; px < plotW; px += 1) {
-      const ti = Math.min(nT - 1, Math.floor((px / plotW) * nT));
-      const frac = Math.min(1, concentrations[ti][mi] / maxByMod[mi]);
+      const ti = Math.min(nT - 1, Math.max(0, Math.floor((px / plotW) * nT)));
+      const row = concentrations[ti];
+      if (!row) continue;
+      const frac = Math.min(1, (row[mi] ?? 0) / maxByMod[mi]);
       const yy = y0 + rowH - 2 - frac * (rowH - 4);
-      if (px === 0) ctx.moveTo(labelW + px, yy);
+      if (!started) { ctx.moveTo(labelW + px, yy); started = true; }
       else ctx.lineTo(labelW + px, yy);
     }
     ctx.stroke();
     ctx.restore();
 
     // Current concentration value on right
-    const curC = concentrations[tIdx][mi] ?? 0;
+    const curRow = concentrations[tIdx];
+    const curC = (curRow && curRow[mi]) ?? 0;
     ctx.fillStyle = hexAlpha(color, 0.85);
     ctx.font = "10px ui-monospace, monospace";
     const valStr = curC < 10 ? curC.toFixed(2) : curC.toFixed(1);
@@ -1869,8 +1878,9 @@ export function CelegansDashboard() {
       const tr = traceRef.current;
       const derived = brainDerived;
 
-      if (tr && !pausedRef.current && !reducedMotion) {
-        currentTRef.current = (currentTRef.current + dt * speedRef.current) % tr.meta.duration_s;
+      if (tr && !pausedRef.current && !reducedMotion && tr.meta.duration_s > 0) {
+        const next = (currentTRef.current + dt * speedRef.current) % tr.meta.duration_s;
+        currentTRef.current = Number.isFinite(next) ? next : 0;
         setCurrentT(currentTRef.current);
       }
       const t = currentTRef.current;
@@ -2470,14 +2480,20 @@ export function CelegansDashboard() {
     // Modulator current values + top-3
     let topMods: Array<[string, number]> = [];
     let totalMod = 0;
-    if (trace.modulator_concentrations && trace.modulator_names) {
+    if (trace.modulator_concentrations
+        && trace.modulator_concentrations.length > 0
+        && trace.modulator_names
+        && trace.modulator_names.length > 0
+        && trace.meta.duration_s > 0) {
       const nT = trace.modulator_concentrations.length;
-      const ti = Math.min(nT - 1, Math.floor((t / trace.meta.duration_s) * nT));
+      const ti = Math.min(nT - 1, Math.max(0, Math.floor((t / trace.meta.duration_s) * nT)));
       const row = trace.modulator_concentrations[ti];
-      topMods = trace.modulator_names.map((n, i): [string, number] => [n, row[i]]);
-      totalMod = topMods.reduce((a, [, v]) => a + v, 0);
-      topMods.sort((a, b) => b[1] - a[1]);
-      topMods = topMods.slice(0, 3);
+      if (row) {
+        topMods = trace.modulator_names.map((n, i): [string, number] => [n, row[i] ?? 0]);
+        totalMod = topMods.reduce((a, [, v]) => a + v, 0);
+        topMods.sort((a, b) => b[1] - a[1]);
+        topMods = topMods.slice(0, 3);
+      }
     }
     // Current state + duration
     const stateNames = ["(none)", "FORWARD", "REVERSE", "OMEGA", "PIROUETTE", "QUIESCENT"];
@@ -2530,11 +2546,15 @@ export function CelegansDashboard() {
         }
       }
       hist.active[k] = ak;
-      if (trace.modulator_concentrations && trace.modulator_names && topMods[0]) {
+      if (trace.modulator_concentrations
+          && trace.modulator_concentrations.length > 0
+          && trace.modulator_names && topMods[0]
+          && trace.meta.duration_s > 0) {
         const nT = trace.modulator_concentrations.length;
-        const tiK = Math.min(nT - 1, Math.floor((tk / trace.meta.duration_s) * nT));
+        const tiK = Math.min(nT - 1, Math.max(0, Math.floor((tk / trace.meta.duration_s) * nT)));
         const mi = trace.modulator_names.indexOf(topMods[0][0]);
-        if (mi >= 0) hist.topMod[k] = trace.modulator_concentrations[tiK][mi];
+        const row = trace.modulator_concentrations[tiK];
+        if (mi >= 0 && row) hist.topMod[k] = row[mi] ?? 0;
       }
       let ek = 0;
       const eventsNames2 = trace.meta.events_tracked ?? [];
