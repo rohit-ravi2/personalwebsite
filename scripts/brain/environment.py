@@ -297,25 +297,24 @@ class Environment:
         concentration + dC/dt, and inject into the brain as Poisson
         spike trains. Called once per sync step after update_head_position.
         """
-        # Tonic rate — proportional to absolute concentration (normalized)
-        tonic_rate = self.tonic_max_rate * min(1.0, max(0.0, self.last_c))
-        # Derivative-coupled rate — ON cells fire on positive dC/dt
-        pos_deriv = max(0.0, self.last_dcdt)
-        neg_deriv = max(0.0, -self.last_dcdt)
-        # Normalise against sigma and peak — a typical dC/dt near the
-        # gradient peak is peak / sigma / move_timescale
-        ref_deriv = (self.gradient.peak / self.gradient.sigma
-                     / max(0.5, self.deriv_window_s))
-        on_rate = self.deriv_max_rate * min(1.0, pos_deriv / ref_deriv)
-        off_rate = self.deriv_max_rate * min(1.0, neg_deriv / ref_deriv)
-
-        # Inject via persistent-rate Poisson (no Brian2 recompile).
-        # ASE and AWA fire on tonic + positive dC/dt (ON cells),
-        # AWC fires on negative dC/dt (OFF cells).
-        for n in self.ATTRACTANT_ON_NEURONS:
-            brain.set_sensory_rate(n, tonic_rate + on_rate, weight_mv=8)
-        for n in self.ATTRACTANT_OFF_NEURONS:
-            brain.set_sensory_rate(n, off_rate, weight_mv=8)
+        # Skip chemotaxis injection when the gradient is a dummy
+        # (aerotaxis-only scenarios set peak=0 / sigma=tiny).
+        has_chemo = self.gradient.peak > 1e-6 and self.gradient.sigma > 1e-4
+        if has_chemo:
+            tonic_rate = self.tonic_max_rate * min(1.0, max(0.0, self.last_c))
+            pos_deriv = max(0.0, self.last_dcdt)
+            neg_deriv = max(0.0, -self.last_dcdt)
+            ref_deriv = (self.gradient.peak / self.gradient.sigma
+                         / max(0.5, self.deriv_window_s))
+            if ref_deriv > 0:
+                on_rate = self.deriv_max_rate * min(1.0, pos_deriv / ref_deriv)
+                off_rate = self.deriv_max_rate * min(1.0, neg_deriv / ref_deriv)
+            else:
+                on_rate = off_rate = 0.0
+            for n in self.ATTRACTANT_ON_NEURONS:
+                brain.set_sensory_rate(n, tonic_rate + on_rate, weight_mv=8)
+            for n in self.ATTRACTANT_OFF_NEURONS:
+                brain.set_sensory_rate(n, off_rate, weight_mv=8)
 
         # P0 #3 — aerotaxis injection, if configured
         if self.aerotaxis is not None:

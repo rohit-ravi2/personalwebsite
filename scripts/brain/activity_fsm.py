@@ -59,20 +59,44 @@ ROLE_NEURONS: dict[str, list[str]] = {
 }
 
 # Per-role z-score thresholds (rate vs baseline). Higher = stricter.
-# These are calibrated against typical LIF baseline of ~2 Hz with
-# sensory drive pushing rates to 30-80 Hz during stimulus.
+# Re-calibrated after T0 smoke-run: v3 LIF brain fires command neurons
+# at ~30 Hz tonic baseline (not the 2 Hz literature value), so the
+# stim-driven *delta* relative to that hot baseline is what matters.
 ROLE_Z_THRESHOLD: dict[str, float] = {
-    "reverse_cmd":   2.0,   # AVA needs to clearly exceed baseline
-    "forward_cmd":   1.5,
-    "omega_cmd":     2.5,
-    "quiescent_cmd": 1.8,
-    "feeding_dwell": 1.5,
+    "reverse_cmd":   3.0,   # AVA needs to clearly exceed baseline
+    "forward_cmd":   2.5,
+    "omega_cmd":     3.0,
+    "quiescent_cmd": 3.0,
+    "feeding_dwell": 3.0,   # T0 fix: was 1.5, fired spuriously from noise
 }
 
-# Baseline-tracking half-lives (seconds). Short baselines drift with
-# recent activity; longer baselines give cleaner z-scores.
-BASELINE_TAU_S = 4.0
-WINDOW_S = 0.4  # rate integration window
+# T0 CAVEAT — v3 LIF brain empirical finding:
+# Profiling the current brain with FSM_MODE=classifier and a touch
+# stim shows that AVA/AVE command neurons DECREASE firing on touch
+# (AVER drops 36 Hz → 28 Hz) rather than producing the literature-
+# canonical reversal burst. The classifier's ΔREV=-0.57±0.37
+# phenotype reproduction runs via a multi-neuron correlation pattern
+# among the 18-readout set, NOT via biologically-correct AVA drive.
+#
+# ActivityFSM reading AVA directly therefore does NOT reproduce the
+# reversal phenotype on the current v3 LIF network. This is a v3
+# brain-calibration issue, not an FSM-architecture issue. Fix paths:
+#   a) retune LIF synaptic weights so ALM → AIB → AVA cascade actually
+#      depolarises AVA (requires brain work, v3.5+)
+#   b) switch to graded dynamics (GradedBrain) where continuous σ(V)
+#      output may propagate more reliably
+#   c) include AIB *and* AVA in the reverse_cmd role pool and require
+#      either to exceed threshold (partial workaround)
+# For now, ActivityFSM ships as opt-in and the default remains the
+# classifier path. See artifacts/activity_fsm_v3lif_audit.md for data.
+
+# Baseline-tracking half-lives (seconds). T0 fix: was 4 s, pushed to
+# 20 s so stim-driven excursions of 2-4 s don't get absorbed into the
+# baseline. Warmup window below prevents early-transient false
+# transitions.
+BASELINE_TAU_S = 20.0
+WARMUP_S = 2.0      # no transitions allowed during initial baseline estimation
+WINDOW_S = 0.4      # rate integration window
 
 # Pirouette detection: reversal followed by omega within this window
 PIROUETTE_LINK_S = 2.0
@@ -162,12 +186,17 @@ class ActivityFSM:
 
         Sample cadence is assumed ≈ 50 ms; alpha is the per-sample
         mix-in fraction for a baseline time constant of BASELINE_TAU_S
-        seconds. A larger alpha would track signal too aggressively
-        and wipe out the z-score we're trying to detect.
+        seconds. During the warmup window use a much faster alpha so
+        the baseline quickly catches up with the actual tonic rate
+        (v3 LIF's ~30 Hz) from the 2 Hz prior — otherwise τ=20 s
+        convergence would not kick in until ~40 s.
         """
         DT_S = 0.05
         import math
-        alpha = 1 - math.exp(-DT_S / BASELINE_TAU_S)
+        if t < WARMUP_S:
+            alpha = 1 - math.exp(-DT_S / 0.5)   # τ=0.5 s for fast warmup
+        else:
+            alpha = 1 - math.exp(-DT_S / BASELINE_TAU_S)
         for role, stats in self.role_stats.items():
             rate = self._mean_rate(rates, stats.present)
             # EMA mean
@@ -190,6 +219,13 @@ class ActivityFSM:
     def update(self, t: float, rates: dict[str, float]) -> State:
         """Advance FSM. `rates` = {neuron_name: Hz}."""
         self._update_baselines(t, rates)
+
+        # T0 fix: warmup window — let the baseline EMA converge before
+        # allowing any transitions, otherwise the first few samples
+        # (while EMA still sits at the 2 Hz prior against an actual
+        # 30 Hz tonic) produce huge artefactual z-scores.
+        if t < WARMUP_S:
+            return self.state
 
         def z_of(role: str) -> float:
             return self.role_stats[role].z(self._recent_role_rate(role))
