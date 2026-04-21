@@ -193,7 +193,8 @@ class ClosedLoopEnv:
         self._steps_per_ca = int(round(self._dt_ca / (BRAIN_SYNC_MS / 1000)))
 
         # Rolling buffers
-        self.spike_counts_buffer: list[np.ndarray] = []  # one entry per sync
+        self.spike_counts_buffer: list[np.ndarray] = []  # one entry per sync (readout only)
+        self.full_spike_buffer: list[np.ndarray] = []    # one entry per sync (all N) — P0 #1
         self.calcium_buffer: list[np.ndarray] = []       # one entry per ca sample
         self.event_probs: dict[str, list[float]] = {
             e: [] for e in self.bank.events
@@ -208,7 +209,13 @@ class ClosedLoopEnv:
         self._prev_spike_len = 0
 
     def _read_spike_rates(self) -> np.ndarray:
-        """Return (N_readout,) spike counts in the last BRAIN_SYNC_MS."""
+        """Return (N_readout,) spike counts in the last BRAIN_SYNC_MS.
+
+        Side effect: also appends the full-network (N,) count to
+        self.full_spike_buffer so export() can publish the complete
+        raster (P0 #1). The classifier + FSM still consume the readout
+        subset only, to preserve trained behaviour.
+        """
         all_t = self.brain.spikes.t[:]
         all_i = self.brain.spikes.i[:]
         new = slice(self._prev_spike_len, len(all_t))
@@ -217,6 +224,9 @@ class ClosedLoopEnv:
         counts = np.zeros(self.brain.N, dtype=np.float32)
         if len(recent_i) > 0:
             np.add.at(counts, recent_i, 1)
+        # Retain the full-network vector for export; return the 18-subset
+        # for classifier/FSM consumers.
+        self.full_spike_buffer.append(counts.astype(np.uint8))
         return counts[self.readout_idx]
 
     def _inject_proprio(self, body_curv_mag: float):
@@ -367,13 +377,24 @@ class ClosedLoopEnv:
             ]
 
         # Compress brain spike raster: for each sync bucket, record
-        # which readout neurons fired
+        # which readout neurons fired. Kept for backwards-compatible
+        # loaders that only understand the 18-readout raster.
         spike_raster = []
         for i, counts in enumerate(self.spike_counts_buffer):
             t_s = (i + 1) * BRAIN_SYNC_MS / 1000
             active = [j for j, c in enumerate(counts) if c > 0]
             if active:
                 spike_raster.append({"t": round(t_s, 3), "n": active})
+
+        # Full-network raster (all N neurons) — P0 #1. Indices refer
+        # to `neuron_names` below; the 18-neuron validated readout set
+        # is tagged separately so the UI can highlight it.
+        full_raster = []
+        for i, counts in enumerate(self.full_spike_buffer):
+            t_s = (i + 1) * BRAIN_SYNC_MS / 1000
+            active = [int(j) for j, c in enumerate(counts) if c > 0]
+            if active:
+                full_raster.append({"t": round(t_s, 3), "n": active})
 
         payload = {
             "scenario": scenario_name,
@@ -384,6 +405,8 @@ class ClosedLoopEnv:
                 "num_frames": len(self.body_frames),
                 "duration_s": len(self.body_frames) * BRAIN_SYNC_MS / 1000,
                 "readout_neurons": self.readout_present,
+                "num_neurons": int(self.brain.N),
+                "full_raster_available": True,
                 "events_tracked": self.bank.events,
                 "states": ["FORWARD", "REVERSE", "OMEGA", "PIROUETTE",
                            "QUIESCENT"],
@@ -400,6 +423,9 @@ class ClosedLoopEnv:
             },
             "frames": self.body_frames,
             "raster": spike_raster,
+            "full_raster": full_raster,
+            "validated_readout_set": list(self.readout_present),
+            "all_neurons": list(self.brain.names),
             "event_probs": {
                 e: [round(v, 3) for v in self.event_probs[e]]
                 for e in self.bank.events

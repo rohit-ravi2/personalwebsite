@@ -53,6 +53,10 @@ type Trace = {
     state: string;
   }>;
   raster: Array<{ t: number; n: number[] }>;
+  /** P0 #1 — full-network raster, indices refer to all_neurons (or neuron_names). */
+  full_raster?: Array<{ t: number; n: number[] }>;
+  validated_readout_set?: string[];
+  all_neurons?: string[];
   event_probs: Record<string, number[]>;
   fsm_states: number[];
   stim_log: Array<{ t: number; preset: string; intensity: number; neurons: string[] }>;
@@ -1737,9 +1741,18 @@ export function CelegansDashboard() {
             lockedRIdx >= 0 ? lockedRIdx : null,
           );
         } else if (ctx && tr && derived) {
-          // Active set from raster within last 100ms
+          // Active set from raster within last 100 ms. Prefer the full-
+          // network raster (P0 #1) — indices there already refer to
+          // the full neuron list. Fall back to the 18-readout raster
+          // for older JSON exports.
           const activeIdxs = new Set<number>();
-          if (tr.raster) {
+          if (tr.full_raster && tr.full_raster.length > 0) {
+            for (const e of tr.full_raster) {
+              if (e.t > t - 0.1 && e.t <= t) {
+                for (const fIdx of e.n) activeIdxs.add(fIdx);
+              }
+            }
+          } else if (tr.raster) {
             for (const e of tr.raster) {
               if (e.t > t - 0.1 && e.t <= t) {
                 for (const rIdx of e.n) {
@@ -2125,9 +2138,12 @@ export function CelegansDashboard() {
   const liveStats = useMemo(() => {
     if (!trace || !brainDerived) return null;
     const t = currentT;
-    // Active neurons (raster events in last 400 ms — wider for circuit detection)
-    const activeNames = new Set<string>();
-    const activeWideNames = new Set<string>();
+    // Active neurons (raster events in last 400 ms — wider for circuit
+    // detection). Prefer the full raster (P0 #1) for the 'wide' set so
+    // non-readout circuit members like RIS/PVC get counted.
+    const activeNames = new Set<string>();     // of 18 readout, last 100 ms
+    const activeAllNames = new Set<string>();  // of 300, last 100 ms
+    const activeWideNames = new Set<string>(); // of 300, last 400 ms
     if (trace.raster) {
       for (const e of trace.raster) {
         if (e.t > t - 0.1 && e.t <= t) {
@@ -2136,6 +2152,27 @@ export function CelegansDashboard() {
             if (nm) activeNames.add(nm);
           }
         }
+      }
+    }
+    const fullNames = trace.all_neurons ?? trace.neuron_names;
+    if (trace.full_raster && fullNames) {
+      for (const e of trace.full_raster) {
+        if (e.t > t - 0.1 && e.t <= t) {
+          for (const fIdx of e.n) {
+            const nm = fullNames[fIdx];
+            if (nm) activeAllNames.add(nm);
+          }
+        }
+        if (e.t > t - 0.4 && e.t <= t) {
+          for (const fIdx of e.n) {
+            const nm = fullNames[fIdx];
+            if (nm) activeWideNames.add(nm);
+          }
+        }
+      }
+    } else if (trace.raster) {
+      // Fallback: readout-only wide window
+      for (const e of trace.raster) {
         if (e.t > t - 0.4 && e.t <= t) {
           for (const rIdx of e.n) {
             const nm = trace.meta.readout_neurons[rIdx];
@@ -2231,7 +2268,12 @@ export function CelegansDashboard() {
       }
       hist.events[k] = ek;
     }
-    return { activeCount: activeNames.size, topMods, totalMod, currState, dwellS, recentEvents, activeCircuits, hist, activeEvents };
+    return {
+      activeCount: activeNames.size,
+      activeAllCount: activeAllNames.size,
+      topMods, totalMod, currState, dwellS, recentEvents,
+      activeCircuits, hist, activeEvents,
+    };
   }, [trace, currentT, brainDerived]);
 
   // Transition opacity — fades panels while a new scenario is loading
@@ -2542,8 +2584,13 @@ export function CelegansDashboard() {
         <div className="space-y-2">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.65rem]">
             <StatCard
-              label="active neurons"
-              value={`${liveStats.activeCount}/18`}
+              label={trace?.full_raster ? "active neurons" : "active readouts"}
+              value={trace?.full_raster
+                ? `${liveStats.activeAllCount}/${trace.all_neurons?.length ?? trace.neuron_names?.length ?? 300}`
+                : `${liveStats.activeCount}/18`}
+              sub={trace?.full_raster
+                ? `incl. ${liveStats.activeCount}/18 validated`
+                : undefined}
               spark={liveStats.hist.active}
               sparkColor="#5ec77a"
             />
@@ -2747,7 +2794,7 @@ export function CelegansDashboard() {
         <div>
           <div className="flex items-baseline justify-between gap-2">
             <PanelLabel>brain · {brainViewMode === "3d"
-              ? `${trace?.neuron_names?.length ?? 300} neurons · 3D${liveStats ? ` · ${liveStats.activeCount} firing` : ""}${ntFilter.size > 0 ? ` · filter: ${Array.from(ntFilter).join("/")}` : ""}`
+              ? `${trace?.neuron_names?.length ?? 300} neurons · 3D${liveStats ? ` · ${trace?.full_raster ? liveStats.activeAllCount : liveStats.activeCount} firing` : ""}${ntFilter.size > 0 ? ` · filter: ${Array.from(ntFilter).join("/")}` : ""}`
               : `spike raster · 18 readout${liveStats ? ` · ${liveStats.activeCount} active` : ""}`}
             </PanelLabel>
             <div className="flex items-center gap-2 text-[0.65rem] text-muted-foreground">
