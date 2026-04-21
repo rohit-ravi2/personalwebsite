@@ -32,6 +32,20 @@ type NeuronMeta = {
   incoming: Array<[string, number]>;
 };
 
+/** P0 #2 — CeNGEN panel: per-neuron gene expression subset. */
+type CengenPanel = {
+  _meta: {
+    description: string;
+    groups: string[];
+    genes_by_group: Record<string, string[]>;
+    gene_max_tpm: Record<string, number>;
+    total_neurons: number;
+    total_panel_genes: number;
+  };
+  /** neuron name → gene → TPM (sparse: only genes > 0.05 TPM kept) */
+  expression: Record<string, Record<string, number>>;
+};
+
 type Trace = {
   scenario: string;
   meta: {
@@ -1347,6 +1361,15 @@ export function CelegansDashboard() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [copiedCite, setCopiedCite] = useState(false);
+  const [cengenPanel, setCengenPanel] = useState<CengenPanel | null>(null);
+
+  // Load CeNGEN panel (P0 #2) once
+  useEffect(() => {
+    fetch("/data/cengen-panel.json")
+      .then((r) => (r.ok ? r.json() : Promise.reject(`HTTP ${r.status}`)))
+      .then((d: CengenPanel) => setCengenPanel(d))
+      .catch(() => setCengenPanel(null));
+  }, []);
 
   // Read scenario + time from URL hash (#scenario=touch&t=5.2) on first mount
   const didInitFromUrl = useRef(false);
@@ -2953,7 +2976,7 @@ export function CelegansDashboard() {
               </div>
             )}
             {lockedMeta && (
-              <div className="absolute top-2 right-2 w-60 rounded-lg bg-[#0f1429]/95 border border-[#a5b4fc]/40 p-3 shadow-lg text-[0.7rem] text-[#e2e8f0]">
+              <div className="absolute top-2 right-2 w-64 max-h-[95%] overflow-y-auto rounded-lg bg-[#0f1429]/95 border border-[#a5b4fc]/40 p-3 shadow-lg text-[0.7rem] text-[#e2e8f0]">
                 <div className="flex items-baseline justify-between mb-1">
                   <span className="text-base font-semibold text-[#a5b4fc]">{lockedMeta.name}</span>
                   <button
@@ -3016,6 +3039,16 @@ export function CelegansDashboard() {
                     <div className="text-[#64748b] mb-0.5">ego network</div>
                     <EgoNetwork meta={lockedMeta} />
                   </div>
+                  {/* CeNGEN gene-expression ring — P0 #2 */}
+                  {cengenPanel && (
+                    <div className="pt-1 border-t border-[#1e293b]">
+                      <div className="text-[#64748b] mb-0.5 flex justify-between items-baseline">
+                        <span>CeNGEN expression</span>
+                        <span className="font-mono text-[0.55rem]">Taylor 2021</span>
+                      </div>
+                      <CengenRing panel={cengenPanel} neuronName={lockedMeta.name} />
+                    </div>
+                  )}
                   {lockedRateHist && (
                     <div className="pt-1 border-t border-[#1e293b]">
                       <div className="text-[#64748b] mb-0.5 flex justify-between items-center">
@@ -3412,6 +3445,140 @@ function FsmDiagramInset({ currentState }: { currentState: string }) {
         ))}
       </svg>
     </div>
+  );
+}
+
+/**
+ * P0 #2 — Polar bar chart of CeNGEN expression for the locked neuron.
+ * Each group (NT marker, channels, receptors, peptides, etc.) occupies
+ * an angular wedge; individual genes within the group are radial bars.
+ * Bar height is log(TPM + 1) normalised to the gene's cross-neuron max
+ * so rarely-expressed genes still show rather than vanishing under
+ * high-TPM neighbours.
+ */
+function CengenRing({ panel, neuronName }: {
+  panel: CengenPanel; neuronName: string;
+}) {
+  const row = panel.expression[neuronName];
+  if (!row) {
+    return (
+      <div className="text-[0.6rem] text-[#64748b] italic py-1">
+        no CeNGEN data for {neuronName} (ventral-cord motor neurons were
+        not individually profiled in the Taylor 2021 release)
+      </div>
+    );
+  }
+  const W = 220, H = 160;
+  const cx = W / 2, cy = H / 2 + 6;
+  const rInner = 16, rOuter = 64;
+
+  // Flatten panel genes into angular positions, keeping group ordering
+  type Slot = { gene: string; group: string; angle: number };
+  const slots: Slot[] = [];
+  const groupColors: Record<string, string> = {
+    "NT marker":    "#10b981",
+    "Voltage Ca":   "#f59e0b",
+    "Voltage K":    "#38bdf8",
+    "Voltage Na":   "#6366f1",
+    "AChR":         "#0ea5e9",
+    "GluR/GluCl":   "#a3e635",
+    "GABAR":        "#f87171",
+    "Peptide rx":   "#c084fc",
+    "Monoamine rx": "#ec4899",
+    "Peptide gene": "#a78bfa",
+    "Sensory GCY":  "#fbbf24",
+    "CNG":          "#fde047",
+    "TRP":          "#fb923c",
+    "DEG/ENaC":     "#64748b",
+    "Innexin":      "#94a3b8",
+    "Insulin/FOXO": "#14b8a6",
+  };
+  const groups = panel._meta.groups;
+  // Compute total gene count for angular normalisation
+  let total = 0;
+  for (const g of groups) total += panel._meta.genes_by_group[g]?.length ?? 0;
+  let slotIdx = 0;
+  const groupArcs: Array<{ name: string; startAngle: number; endAngle: number; color: string }> = [];
+  for (const g of groups) {
+    const genes = panel._meta.genes_by_group[g] ?? [];
+    const startAngle = (slotIdx / total) * Math.PI * 2 - Math.PI / 2;
+    for (const gene of genes) {
+      const angle = (slotIdx / total) * Math.PI * 2 - Math.PI / 2;
+      slots.push({ gene, group: g, angle });
+      slotIdx++;
+    }
+    const endAngle = (slotIdx / total) * Math.PI * 2 - Math.PI / 2;
+    groupArcs.push({ name: g, startAngle, endAngle, color: groupColors[g] ?? "#94a3b8" });
+  }
+
+  const maxMap = panel._meta.gene_max_tpm;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
+      {/* Group arc backgrounds */}
+      {groupArcs.map((g) => {
+        if (g.endAngle === g.startAngle) return null;
+        const r = rOuter + 5;
+        const x1 = cx + r * Math.cos(g.startAngle);
+        const y1 = cy + r * Math.sin(g.startAngle);
+        const x2 = cx + r * Math.cos(g.endAngle);
+        const y2 = cy + r * Math.sin(g.endAngle);
+        const large = g.endAngle - g.startAngle > Math.PI ? 1 : 0;
+        return (
+          <path
+            key={`g-${g.name}`}
+            d={`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`}
+            stroke={g.color} strokeWidth={2} fill="none" opacity={0.7}
+          />
+        );
+      })}
+      {/* Inner circle */}
+      <circle cx={cx} cy={cy} r={rInner} fill="#0f1429" stroke="rgba(100,116,139,0.4)" />
+      <text x={cx} y={cy + 3} textAnchor="middle" fontSize="8.5" fill="#e2e8f0" fontWeight="bold">
+        {neuronName}
+      </text>
+      {/* Bars */}
+      {slots.map((s) => {
+        const tpm = row[s.gene] ?? 0;
+        const maxT = maxMap[s.gene] ?? 1;
+        const norm = tpm > 0 ? Math.log(tpm + 1) / Math.log(maxT + 1) : 0;
+        const r0 = rInner + 1;
+        const r1 = r0 + norm * (rOuter - rInner - 2);
+        const x1 = cx + r0 * Math.cos(s.angle);
+        const y1 = cy + r0 * Math.sin(s.angle);
+        const x2 = cx + r1 * Math.cos(s.angle);
+        const y2 = cy + r1 * Math.sin(s.angle);
+        const color = groupColors[s.group] ?? "#94a3b8";
+        return (
+          <g key={`bar-${s.gene}`}>
+            <line
+              x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke={color} strokeWidth={1.1}
+              opacity={tpm > 0 ? 0.9 : 0.15}
+            />
+            <title>{`${s.gene} (${s.group}): ${tpm.toFixed(2)} TPM`}</title>
+          </g>
+        );
+      })}
+      {/* Group labels — positioned at mid-arc, only for groups with ≥2 genes */}
+      {groupArcs.map((g) => {
+        const n = panel._meta.genes_by_group[g.name]?.length ?? 0;
+        if (n < 2) return null;
+        const mid = (g.startAngle + g.endAngle) / 2;
+        const lx = cx + (rOuter + 12) * Math.cos(mid);
+        const ly = cy + (rOuter + 12) * Math.sin(mid);
+        return (
+          <text
+            key={`lbl-${g.name}`}
+            x={lx} y={ly}
+            textAnchor={Math.cos(mid) > 0.2 ? "start" : Math.cos(mid) < -0.2 ? "end" : "middle"}
+            fontSize="6.5" fill={g.color}
+            dominantBaseline="middle"
+          >
+            {g.name}
+          </text>
+        );
+      })}
+    </svg>
   );
 }
 
