@@ -16,7 +16,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 // ---------- Types -----------------------------------------------------
 
-type Scenario = "spontaneous" | "touch" | "osmotic_shock" | "food" | "chemotaxis";
+type Scenario = "spontaneous" | "touch" | "osmotic_shock" | "food" | "chemotaxis" | "aerotaxis";
 
 type BrainEdges = {
   names: string[];
@@ -83,6 +83,16 @@ type Trace = {
     sigma_mm: number;
     trail: Array<{ t: number; x: number; y: number }>;
     chemotaxis_index: Record<string, number | [number, number]>;
+    /** P0 #3 — optional aerotaxis telemetry */
+    aerotaxis?: {
+      trail: Array<{
+        t: number; o2_frac: number; co2_frac: number;
+        do2_dt: number; dco2_dt: number; preferred_o2: number;
+      }>;
+      preferred_o2: number;
+      neurons: { high_o2: string[]; bag_o2_off_co2_on: string[] };
+      sources: Record<string, string>;
+    };
   };
 };
 
@@ -169,6 +179,23 @@ const SCENARIOS: Record<Scenario, {
       { t: 55, label: "final approach" },
     ],
     lit: "Pierce-Shimomura, Morse & Lockery 1999 — klinotaxis navigation via biased random walk. Chalasani 2007 — AWC OFF-cell dynamics.",
+  },
+  aerotaxis: {
+    label: "Aerotaxis",
+    desc: "Linear O₂ gradient (7%→21%). URX/AQR/PQR drive avoidance of high-O₂ zones. Wild-type prefers ~12% O₂.",
+    watch: [
+      "URX/AQR/PQR (high-O₂ ON-cells) fire on the 21% side",
+      "BAG (low-O₂ OFF-cell) fires when worm enters low-O₂ region",
+      "Trail preferentially stays in the ~12% O₂ band",
+      "Above-threshold high-O₂ drive triggers REVERSE via RMG→AVA",
+    ],
+    moments: [
+      { t: 0, label: "start in middle" },
+      { t: 15, label: "first O₂ excursion" },
+      { t: 30, label: "adaptation phase" },
+      { t: 55, label: "preferred-band seeking" },
+    ],
+    lit: "Gray 2004 — aerotaxis discovered. Cheung 2005 — GCY-35 O₂ sensing. Zimmer 2009 — URX/BAG complementary. Hallem & Sternberg 2008 — BAG CO₂ sensing. Laurent 2015 — URX adaptation ~5 s.",
   },
 };
 
@@ -1204,21 +1231,79 @@ function drawEnvironment(
   for (let y = 0; y <= h; y += pxPerMm) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
   ctx.stroke();
 
-  // Food patch radial gradient
+  // P0 #3 — O2 gradient overlay (drawn under food patch)
+  const aero = env.aerotaxis;
+  if (aero) {
+    // 7% O2 (left) → 21% O2 (right). Red = high-O2 aversive,
+    // green = preferred band, blue = low-O2 slightly aversive.
+    const worldXMinMm = -worldMm / 2;
+    const worldXMaxMm = worldMm / 2;
+    const O2_MIN = 0.07, O2_MAX = 0.21;
+    const pref = aero.preferred_o2;
+    const slabW = 4;  // pixel granularity
+    for (let px = 0; px < w; px += slabW) {
+      const xMm = worldXMinMm + (px / w) * (worldXMaxMm - worldXMinMm);
+      const tt = (xMm + 10) / 20;        // linearly interpolate along [-10, 10] mm
+      const o2 = O2_MIN + Math.max(0, Math.min(1, tt)) * (O2_MAX - O2_MIN);
+      const dev = o2 - pref;
+      let r: number, g: number, b: number;
+      if (dev > 0) {
+        const t = Math.min(1, dev / (O2_MAX - pref));
+        r = Math.round(200 * t + 40);
+        g = Math.round(40 + 80 * (1 - t));
+        b = 40;
+      } else {
+        const t = Math.min(1, -dev / (pref - O2_MIN));
+        r = 40;
+        g = Math.round(40 + 80 * (1 - t));
+        b = Math.round(180 * t + 40);
+      }
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.28)`;
+      ctx.fillRect(px, 0, slabW, h);
+    }
+    // Preferred-O2 band line
+    const prefT = (pref - O2_MIN) / (O2_MAX - O2_MIN);
+    const prefXMm = worldXMinMm + prefT * (worldXMaxMm - worldXMinMm);
+    // NB: we mapped the world x-axis to [worldXMinMm, worldXMaxMm] across px [0, w]
+    const prefPX = ((prefXMm - worldXMinMm) / (worldXMaxMm - worldXMinMm)) * w;
+    ctx.strokeStyle = "rgba(94, 199, 122, 0.7)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(prefPX, 0);
+    ctx.lineTo(prefPX, h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "rgba(94, 199, 122, 0.85)";
+    ctx.font = "9px ui-monospace, monospace";
+    ctx.fillText(`${Math.round(pref * 100)}% O₂ pref`, prefPX + 4, 14);
+    // Endpoint labels
+    ctx.fillStyle = "rgba(226, 232, 240, 0.8)";
+    ctx.fillText("7% O₂", 4, h - 4);
+    ctx.textAlign = "right";
+    ctx.fillText("21% O₂", w - 4, h - 4);
+    ctx.textAlign = "left";
+  }
+
+  // Food patch radial gradient (skipped when no food field — aerotaxis default)
+  const hasFood = env.sigma_mm > 0.5 && !aero;
   const foodSX = cx + env.food_xy_mm[0] * pxPerMm;
   const foodSY = cy - env.food_xy_mm[1] * pxPerMm;
   const radialR = env.sigma_mm * pxPerMm * 2.5;
-  const grad = ctx.createRadialGradient(foodSX, foodSY, 0, foodSX, foodSY, radialR);
-  grad.addColorStop(0, "rgba(245, 158, 11, 0.55)");
-  grad.addColorStop(0.5, "rgba(245, 158, 11, 0.15)");
-  grad.addColorStop(1, "rgba(245, 158, 11, 0.00)");
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(foodSX, foodSY, radialR, 0, Math.PI * 2);
-  ctx.fill();
+  if (hasFood) {
+    const grad = ctx.createRadialGradient(foodSX, foodSY, 0, foodSX, foodSY, radialR);
+    grad.addColorStop(0, "rgba(245, 158, 11, 0.55)");
+    grad.addColorStop(0.5, "rgba(245, 158, 11, 0.15)");
+    grad.addColorStop(1, "rgba(245, 158, 11, 0.00)");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(foodSX, foodSY, radialR, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   // Concentration contour rings — iso-lines at C = 0.75, 0.50, 0.25 of peak.
   // For a Gaussian with σ, C/Cmax = exp(-d²/(2σ²)) → d = σ*sqrt(-2*ln(frac))
+  if (hasFood) {
   ctx.save();
   ctx.strokeStyle = "rgba(251, 191, 36, 0.4)";
   ctx.setLineDash([3, 4]);
@@ -1235,12 +1320,15 @@ function drawEnvironment(
   }
   ctx.setLineDash([]);
   ctx.restore();
+  }
 
-  // Food marker
-  ctx.fillStyle = "#f59e0b";
-  ctx.beginPath();
-  ctx.arc(foodSX, foodSY, 5, 0, Math.PI * 2);
-  ctx.fill();
+  // Food marker (only when food present)
+  if (hasFood) {
+    ctx.fillStyle = "#f59e0b";
+    ctx.beginPath();
+    ctx.arc(foodSX, foodSY, 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   // Trail up to currentT
   ctx.strokeStyle = "rgba(94, 199, 122, 0.65)";
@@ -1291,7 +1379,7 @@ function drawEnvironment(
   // Labels
   ctx.fillStyle = "rgba(226, 232, 240, 0.9)";
   ctx.font = "10px system-ui, sans-serif";
-  ctx.fillText("food", foodSX + 8, foodSY - 6);
+  if (hasFood) ctx.fillText("food", foodSX + 8, foodSY - 6);
   ctx.fillText("worm", lastSX + 8, lastSY - 4);
 
   // Compute current distance to food + local concentration (Gaussian model)
@@ -1303,7 +1391,9 @@ function drawEnvironment(
   const dx = wormX - env.food_xy_mm[0];
   const dy = wormY - env.food_xy_mm[1];
   const distMm = Math.sqrt(dx * dx + dy * dy);
-  const cRel = Math.exp(-(distMm * distMm) / (2 * env.sigma_mm * env.sigma_mm));
+  const cRel = hasFood
+    ? Math.exp(-(distMm * distMm) / (2 * env.sigma_mm * env.sigma_mm))
+    : 0;
 
   // Telemetry box in top-right of arena
   ctx.save();
@@ -1313,8 +1403,21 @@ function drawEnvironment(
   ctx.strokeRect(w - 108, 4, 104, 34);
   ctx.fillStyle = "rgba(226, 232, 240, 0.95)";
   ctx.font = "9px ui-monospace, monospace";
-  ctx.fillText(`d(food) = ${distMm.toFixed(2)} mm`, w - 102, 17);
-  ctx.fillText(`C(worm) = ${(cRel * 100).toFixed(1)}%`, w - 102, 30);
+  if (hasFood) {
+    ctx.fillText(`d(food) = ${distMm.toFixed(2)} mm`, w - 102, 17);
+    ctx.fillText(`C(worm) = ${(cRel * 100).toFixed(1)}%`, w - 102, 30);
+  } else if (aero && aero.trail && aero.trail.length > 0) {
+    // P0 #3 — show live O2 / dO2/dt at current time
+    const tFrac = currentTS;
+    let sample = aero.trail[aero.trail.length - 1];
+    for (const s of aero.trail) {
+      if (s.t > tFrac + 0.15) break;
+      sample = s;
+    }
+    ctx.fillText(`O₂ = ${(sample.o2_frac * 100).toFixed(1)}%`, w - 102, 17);
+    const sign = sample.do2_dt >= 0 ? "+" : "";
+    ctx.fillText(`dO₂/dt = ${sign}${(sample.do2_dt * 100).toFixed(2)}%/s`, w - 102, 30);
+  }
   ctx.restore();
 
   // Scale bar
@@ -1381,7 +1484,7 @@ export function CelegansDashboard() {
     const params = new URLSearchParams(hash);
     const s = params.get("scenario") as Scenario | null;
     let shouldScroll = false;
-    if (s && (["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis"] as Scenario[]).includes(s)) {
+    if (s && (["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis", "aerotaxis"] as Scenario[]).includes(s)) {
       setScenario(s);
       shouldScroll = true;
     }
@@ -1426,7 +1529,7 @@ export function CelegansDashboard() {
   // Fetch state distribution for all scenarios once (for picker sparklines)
   const [scenarioTimelines, setScenarioTimelines] = useState<Record<Scenario, number[]> | null>(null);
   useEffect(() => {
-    const scenarioKeys: Scenario[] = ["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis"];
+    const scenarioKeys: Scenario[] = ["spontaneous", "touch", "osmotic_shock", "food", "chemotaxis", "aerotaxis"];
     const stats: Partial<Record<Scenario, any>> = {};
     const timelines: Partial<Record<Scenario, number[]>> = {};
     let pending = scenarioKeys.length;
@@ -1618,7 +1721,8 @@ export function CelegansDashboard() {
         setShowHelp(false);
         setLockedNeuron(null);
       } else if (e.code === "Digit1" || e.code === "Digit2" ||
-                 e.code === "Digit3" || e.code === "Digit4" || e.code === "Digit5") {
+                 e.code === "Digit3" || e.code === "Digit4" ||
+                 e.code === "Digit5" || e.code === "Digit6") {
         const idx = parseInt(e.code.replace("Digit", "")) - 1;
         const keys = Object.keys(SCENARIOS) as Scenario[];
         if (keys[idx]) setScenario(keys[idx]);

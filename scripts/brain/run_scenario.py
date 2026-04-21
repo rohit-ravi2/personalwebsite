@@ -71,6 +71,30 @@ SCENARIOS = {
             "sigma_m": 3e-3,
         },
     },
+    # P0 #3 — aerotaxis (O2 avoidance)
+    "aerotaxis": {
+        "duration_s": 60.0,
+        "stim": [],
+        "description": "Aerotaxis: linear O2 gradient (7% at x=−10 mm to "
+                       "21% at x=+10 mm). URX/AQR/PQR fire at high O2, "
+                       "BAG at low O2 and on CO2 rise. Wild-type worms "
+                       "prefer ~12% O2 and navigate away from high-O2 "
+                       "zones (Gray 2004, Zimmer 2009).",
+        "environment": {
+            # Reuse the chemotaxis fields as dummies (no food patch needed)
+            "food_xy_m": (0.0, 0.0),
+            "peak_conc": 0.0,
+            "sigma_m": 1e-3,
+            "aerotaxis": {
+                "kind": "linear_o2",
+                "o2_min": 0.07,
+                "o2_max": 0.21,
+                "x_min_m": -10e-3,
+                "x_max_m":  10e-3,
+                "preferred_o2": 0.12,
+            },
+        },
+    },
 }
 
 
@@ -86,14 +110,53 @@ def run_scenario(name: str) -> None:
     # T1e — optionally attach a chemical-gradient environment
     env_obj = None
     if sc.get("environment"):
-        from environment import Environment, ChemoGradient  # noqa
+        from environment import (
+            Environment, ChemoGradient,
+            LinearGasField, RadialGasField, AerotaxisSensory,
+        )  # noqa
         e_cfg = sc["environment"]
         grad = ChemoGradient(
             food_xy=e_cfg["food_xy_m"],
             peak_conc=e_cfg["peak_conc"],
             sigma_m=e_cfg["sigma_m"],
         )
-        env_obj = Environment(grad, initial_head_xy=(0.0, 0.0))
+        # P0 #3 — optional aerotaxis overlay
+        aero = None
+        if e_cfg.get("aerotaxis"):
+            a = e_cfg["aerotaxis"]
+            if a.get("kind") == "linear_o2":
+                o2_field = LinearGasField(
+                    min_frac=a.get("o2_min", 0.07),
+                    max_frac=a.get("o2_max", 0.21),
+                    x_min_m=a.get("x_min_m", -10e-3),
+                    x_max_m=a.get("x_max_m", 10e-3),
+                )
+            elif a.get("kind") == "radial_o2":
+                o2_field = RadialGasField(
+                    center_xy=a.get("center_xy_m", (0.0, 0.0)),
+                    baseline_frac=a.get("o2_baseline", 0.21),
+                    peak_frac=a.get("o2_peak", 0.07),
+                    sigma_m=a.get("sigma_m", 5e-3),
+                )
+            else:
+                o2_field = None
+            # CO2 field — optional radial (worm-colony emission)
+            co2_field = None
+            if a.get("co2"):
+                c = a["co2"]
+                co2_field = RadialGasField(
+                    center_xy=c.get("center_xy_m", (0.0, 0.0)),
+                    baseline_frac=c.get("co2_baseline", 0.0004),
+                    peak_frac=c.get("co2_peak", 0.02),
+                    sigma_m=c.get("sigma_m", 3e-3),
+                )
+            aero = AerotaxisSensory(
+                o2_field=o2_field, co2_field=co2_field,
+                preferred_o2_frac=a.get("preferred_o2", 0.12),
+            )
+        env_obj = Environment(
+            grad, initial_head_xy=(0.0, 0.0), aerotaxis=aero,
+        )
 
     env = ClosedLoopEnv(environment=env_obj)
     env.run(sc["duration_s"], stim_schedule=sc["stim"])

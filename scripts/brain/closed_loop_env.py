@@ -456,6 +456,22 @@ class ClosedLoopEnv:
                 "trail": self.environment_trail,
                 "chemotaxis_index": self.environment.chemotaxis_index(),
             }
+            # P0 #3 — aerotaxis telemetry (O2/CO2 at worm head over time)
+            if (getattr(self.environment, "aerotaxis", None) is not None
+                    and self.environment.aero_trail):
+                payload["environment"]["aerotaxis"] = {
+                    "trail": self.environment.aero_trail,
+                    "preferred_o2": self.environment.aerotaxis.pref_o2,
+                    "neurons": {
+                        "high_o2": self.environment.aerotaxis.HIGH_O2_NEURONS,
+                        "bag_o2_off_co2_on": self.environment.aerotaxis.BAG_NEURONS,
+                    },
+                    "sources": {
+                        "URX/AQR/PQR via GCY-35/36": "Gray 2004, Cheung 2005, Zimmer 2009",
+                        "BAG via GCY-9 CO2": "Hallem & Sternberg 2008",
+                        "URX adaptation": "Laurent 2015 (~5 s time constant)",
+                    },
+                }
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(payload, separators=(",", ":")))
         kb = out_path.stat().st_size / 1024
