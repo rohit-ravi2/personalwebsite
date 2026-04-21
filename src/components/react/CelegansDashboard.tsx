@@ -60,6 +60,7 @@ type Trace = {
     modulation_enabled?: boolean;
     modulators?: string[];
     fsm_mode?: "classifier" | "activity";  // P1 #4
+    sensory_mode?: "injection" | "transduction";  // P1 #8
     num_neurons?: number;
     full_raster_available?: boolean;
     sources: Record<string, string>;
@@ -85,6 +86,12 @@ type Trace = {
       neurons_present: string[]; threshold_z: number;
     }>;
     role_neurons: Record<string, string[]>;
+  };
+  /** P1 #8 — present when sensory_mode === "transduction" */
+  transduction?: {
+    trail: Array<Record<string, number>>;   // per-sync {t, <cascade_name>: rate_hz}
+    cascades: Array<{ name: string; neurons: string[]; max_rate_hz: number }>;
+    sources: Record<string, string>;
   };
   stim_log: Array<{ t: number; preset: string; intensity: number; neurons: string[] }>;
   neuron_positions?: Array<[number, number, number]>;
@@ -2601,6 +2608,22 @@ export function CelegansDashboard() {
               FSM: {trace.meta.fsm_mode}
             </span>
           )}
+          {trace?.meta.sensory_mode && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.6rem] font-mono"
+              style={{
+                borderColor: trace.meta.sensory_mode === "transduction"
+                  ? "#22d3ee" : "#64748b",
+                color: trace.meta.sensory_mode === "transduction"
+                  ? "#22d3ee" : "#94a3b8",
+              }}
+              title={trace.meta.sensory_mode === "transduction"
+                ? "Stimuli pass through ASE/AWC/ASH/AFD/ALM transduction cascade ODEs before reaching neurons (P1 #8)"
+                : "Stimuli inject direct Poisson spike trains (legacy v1 path)"}
+            >
+              sensory: {trace.meta.sensory_mode}
+            </span>
+          )}
           <span className="text-[0.6rem] text-muted-foreground ml-auto flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
             {trace ? (
               <>
@@ -2956,6 +2979,51 @@ export function CelegansDashboard() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* P1 #8 — Transduction cascade telemetry. Shows live cascade
+          output rates when sensory_mode='transduction'. */}
+      {trace?.transduction && (
+        <div className="rounded-lg bg-card/40 border border-cyan-500/40 px-3 py-2">
+          <div className="flex items-baseline justify-between mb-1.5">
+            <span className="text-[0.7rem] font-semibold text-foreground">
+              Sensory transduction — cascade output rates
+            </span>
+            <span className="text-[0.55rem] text-muted-foreground">
+              stim → receptor → 2nd-messenger → channel → Poisson
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[0.6rem]">
+            {(() => {
+              const trail = trace.transduction.trail;
+              if (!trail || trail.length === 0) return null;
+              // Find nearest entry to currentT
+              const dur = trace.meta.duration_s;
+              const idx = Math.min(trail.length - 1,
+                Math.floor((currentT / dur) * trail.length));
+              const sample = trail[idx];
+              return trace.transduction.cascades.map((c) => {
+                const rate = (sample?.[c.name] ?? 0) as number;
+                const frac = Math.min(1, rate / Math.max(1, c.max_rate_hz));
+                return (
+                  <span
+                    key={c.name}
+                    className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono"
+                    style={{
+                      backgroundColor: `rgba(34, 211, 238, ${0.08 + 0.2 * frac})`,
+                      borderColor: frac > 0.15 ? "#22d3ee" : "hsl(var(--border))",
+                      color: frac > 0.15 ? "#22d3ee" : "var(--muted-foreground)",
+                    }}
+                    title={`${c.neurons.join("/")}  ·  max ${c.max_rate_hz} Hz`}
+                  >
+                    <span className="font-semibold">{c.name}</span>
+                    <span>{rate.toFixed(1)} Hz</span>
+                  </span>
+                );
+              });
+            })()}
+          </div>
         </div>
       )}
 

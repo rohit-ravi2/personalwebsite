@@ -40,6 +40,7 @@ from neural_classifier_bank import ClassifierBank, spikes_to_calcium  # noqa: E4
 from behavioral_fsm import BehavioralFSM, State, STATE_CPG  # noqa: E402
 from activity_fsm import ActivityFSM  # noqa: E402 — P1 #4
 from sensory_injection import stimulate  # noqa: E402
+from sensory_transduction import TransductionSensory  # noqa: E402 — P1 #8
 from modulation_layer import ModulationLayer, TABLES as MOD_TABLES  # noqa: E402
 from environment import Environment, ChemoGradient  # noqa: E402
 
@@ -101,7 +102,8 @@ class ClosedLoopEnv:
                  use_per_edge_glu_signs: bool = False,
                  environment: Environment | None = None,
                  brain_class: str = "lif",
-                 fsm_mode: str = "classifier"):
+                 fsm_mode: str = "classifier",
+                 sensory_mode: str = "injection"):
         """
         fsm_mode:
           - 'classifier' (default): 8-event Atanas-trained classifier
@@ -112,6 +114,15 @@ class ClosedLoopEnv:
               baseline deviations (P1 #4). Decouples FSM from the
               classifier layer so upgraded brain dynamics (graded, Ca
               plateau, compartmental) work out of the box.
+        sensory_mode:
+          - 'injection' (default): sensory presets fire direct Poisson
+              spike trains into target neurons (legacy v1 path).
+          - 'transduction': stimulus events drive biologically-grounded
+              transduction cascades (ASE GCY-22/cGMP/TAX-4; AWC ODR-10/
+              Gα_i; ASH OSM-9/OCR-2/TRPA-1; AFD GCY-8/18/23; ALM
+              MEC-4/MEC-10) that run their own ODEs and feed neurons
+              via Poisson rates. Replaces the zero-delay step-function
+              stimuli with realistic onset kinetics + adaptation.
         """
         """ClosedLoopEnv.
 
@@ -155,6 +166,16 @@ class ClosedLoopEnv:
             self.fsm = ActivityFSM(self.brain, initial_state=State.FORWARD)
         else:
             self.fsm = BehavioralFSM(State.FORWARD)
+
+        # P1 #8 — optional sensory-transduction cascade hub
+        self.sensory_mode = sensory_mode
+        self.transduction: TransductionSensory | None = None
+        if sensory_mode == "transduction":
+            self.transduction = TransductionSensory()
+            # Active-stimulus deadlines — {modality: expire_t_s}. When
+            # t > deadline, that modality's stimulus drops back to 0.
+            self._stim_deadlines: dict[str, float] = {}
+            self.transduction_trail: list[dict] = []
 
         # v3 slow neuromodulation layer (Phase 3d-2)
         self.modulation: ModulationLayer | None = None
@@ -253,17 +274,72 @@ class ClosedLoopEnv:
         Rates are bounded 0–150 Hz per stretch-receptor saturation."""
         self.brain.set_proprioception(body_curv_mag)
 
+    # P1 #8 — map legacy preset names to transduction cascade modalities.
+    # Each entry is (modality, stim_value, duration_s). When
+    # sensory_mode='transduction' the preset's duration holds the
+    # cascade input high, then releases.
+    _PRESET_TO_CASCADE: dict[str, tuple[str, float, float]] = {
+        "touch_anterior":    ("touch_anterior", 1.0, 0.2),
+        "touch_posterior":   ("touch_posterior", 1.0, 0.2),
+        "touch_nose_harsh":  ("aversive", 1.0, 0.3),
+        "osmotic_shock":     ("aversive", 1.0, 0.5),
+        "salt_attractant":   ("salt", 1.0, 3.0),
+        "bitter_repellent":  ("aversive", 0.9, 0.6),
+        "food_signal":       ("salt", 0.4, 25.0),   # tonic low-level drive
+        "odor_attractant_awc": ("odor", 1.0, 3.0),
+        "warm_stimulus":     ("temp", 25.0, 10.0),
+        "cool_stimulus":     ("temp", 15.0, 10.0),
+    }
+
     def stimulate_sensory(self, preset: str, intensity: float = 1.0):
-        injected = stimulate(self.brain, preset, intensity=intensity)
-        self.stim_log.append({
-            "t": self.brain.time_ms() / 1000,
-            "preset": preset, "intensity": intensity,
-            "neurons": injected,
-        })
+        t_now_s = self.brain.time_ms() / 1000
+        # Record in stim_log either way for UI reproducibility
+        log_entry = {
+            "t": t_now_s, "preset": preset, "intensity": intensity,
+            "neurons": [],
+        }
+        if self.sensory_mode == "transduction" and self.transduction is not None:
+            mapping = self._PRESET_TO_CASCADE.get(preset)
+            if mapping is None:
+                # Unknown preset — fall back to direct injection
+                injected = stimulate(self.brain, preset, intensity=intensity)
+                log_entry["neurons"] = injected
+            else:
+                modality, base_value, duration_s = mapping
+                # Value scales with intensity (except temperatures
+                # which are absolute °C)
+                value = (base_value * intensity
+                         if modality != "temp" else base_value)
+                self.transduction.set_stimulus(modality, value)
+                self._stim_deadlines[modality] = t_now_s + duration_s
+                log_entry["cascade"] = {
+                    "modality": modality,
+                    "value": value,
+                    "duration_s": duration_s,
+                }
+        else:
+            injected = stimulate(self.brain, preset, intensity=intensity)
+            log_entry["neurons"] = injected
+        self.stim_log.append(log_entry)
 
     def step_sync(self):
         """Advance brain + body by one BRAIN_SYNC_MS step."""
         t_sync_s = self.brain.time_ms() / 1000
+
+        # P1 #8 — advance transduction cascades + clear expired stim
+        if self.transduction is not None:
+            for modality, deadline in list(self._stim_deadlines.items()):
+                if t_sync_s >= deadline:
+                    self.transduction.set_stimulus(modality, 0.0)
+                    del self._stim_deadlines[modality]
+            dt_s = BRAIN_SYNC_MS / 1000.0
+            self.transduction.update(dt_s)
+            self.transduction.inject_into_brain(self.brain)
+            self.transduction_trail.append({
+                "t": round(t_sync_s, 3),
+                **{c.name: round(c.last_rate_hz, 1)
+                   for c in self.transduction.cascades},
+            })
 
         # 1) Advance brain
         self.brain.run(BRAIN_SYNC_MS)
@@ -440,6 +516,7 @@ class ClosedLoopEnv:
                 "num_neurons": int(self.brain.N),
                 "full_raster_available": True,
                 "fsm_mode": self.fsm_mode,   # "classifier" | "activity" (P1 #4)
+                "sensory_mode": self.sensory_mode,  # "injection" | "transduction" (P1 #8)
                 "events_tracked": self.bank.events,
                 "states": ["FORWARD", "REVERSE", "OMEGA", "PIROUETTE",
                            "QUIESCENT"],
@@ -466,6 +543,27 @@ class ClosedLoopEnv:
             "fsm_states": self.fsm_states,
             "stim_log": self.stim_log,
         }
+
+        # P1 #8 — transduction cascade telemetry, when active
+        if self.transduction is not None:
+            payload["transduction"] = {
+                "trail": self.transduction_trail,
+                "cascades": [
+                    {
+                        "name": c.name,
+                        "neurons": list(c.neurons),
+                        "max_rate_hz": getattr(c, "MAX_RATE_HZ", 0.0),
+                    }
+                    for c in self.transduction.cascades
+                ],
+                "sources": {
+                    "ASE (GCY-22/cGMP/TAX-4)": "Bargmann 1993, Thiele 2009",
+                    "AWC (ODR-10/Gα_i/cGMP drop)": "Chalasani 2007, Zaslaver 2015",
+                    "ASH (OSM-9/OCR-2 + TRPA-1)": "Colbert 1997, Kahn-Kirby 2004",
+                    "AFD (GCY-8/18/23)": "Komatsu 1996, Clark 2006",
+                    "ALM/AVM (MEC-4/10 DEG/ENaC)": "O'Hagan 2005, Chalfie & Sulston 1981",
+                },
+            }
 
         # P1 #4 — activity FSM trigger log (which role fired each transition)
         if self.fsm_mode == "activity" and isinstance(self.fsm, ActivityFSM):
