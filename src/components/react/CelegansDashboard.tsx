@@ -596,6 +596,7 @@ function drawBrain3D(
   rotRad: number,
   dimMask: Set<number> | null,
   ntByIdx: string[] | null,
+  hoverModulator: string | null,  // P1 #6 — drives diffusion-field overlay
 ) {
   // Dark gradient backdrop
   const bg = ctx.createLinearGradient(0, 0, 0, h);
@@ -676,19 +677,79 @@ function drawBrain3D(
     ctx.restore();
   }
 
-  // Releaser glow halos (modulator concentration visualization)
+  // Releaser glow halos + molecular diffusion field (P1 #6).
+  // If the user is hovering a modulator row, render the FULL spatial
+  // concentration field for that modulator — exp(-dist/λ) falloff from
+  // each releaser, summed, drawn as a heatmap. Otherwise fall back to
+  // per-releaser glow halos so the display isn't overwhelmed when
+  // multiple modulators are co-active.
+  const DIFFUSION_LAMBDA: Record<string, number> = {
+    // Peptides: longer diffusion (400-700 µm in biology)
+    "FLP-11": 60, "FLP-1": 55, "FLP-2": 50, "NLP-12": 45, "PDF-1": 70,
+    // Monoamines: shorter (150-250 µm)
+    "5HT": 28, "DA": 25, "TA": 22, "OA": 30,
+  };
+  const FIELD_STEP = 8;  // px granularity for the field sampling
   if (modConcentrations && modNames) {
+    // Build per-modulator releaser screen positions once
+    const relScreenByMod: Record<string, Array<{ sx: number; sy: number }>> = {};
+    for (const mod of modNames) {
+      const releasers = RELEASERS[mod] ?? [];
+      const list: Array<{ sx: number; sy: number }> = [];
+      for (const rn of releasers) {
+        const idx = nameToIdx.get(rn);
+        if (idx === undefined) continue;
+        list.push(projectNeuron(positions[idx], bounds, w, h, rotRad));
+      }
+      relScreenByMod[mod] = list;
+    }
+
+    // If hovering a modulator row, render the full diffusion field
+    // for that one modulator only (avoids visual clutter).
+    const fm = hoverModulator && modNames.includes(hoverModulator)
+      ? hoverModulator : null;
+    if (fm) {
+      const color = MODULATOR_COLORS[fm] ?? "#94a3b8";
+      const rgb = parseHex(color);
+      const lambdaPx = DIFFUSION_LAMBDA[fm] ?? 40;
+      const modIdx = modNames.indexOf(fm);
+      const globalConc = modConcentrations[modIdx] ?? 0;
+      const globalScale = Math.min(1, globalConc / 6);
+      const rels = relScreenByMod[fm] ?? [];
+      if (rels.length > 0) {
+        ctx.save();
+        for (let py = 0; py < h; py += FIELD_STEP) {
+          for (let px = 0; px < w; px += FIELD_STEP) {
+            // Sum of exp(-d/λ) falloffs from each releaser
+            let val = 0;
+            for (const r of rels) {
+              const dx = px - r.sx;
+              const dy = py - r.sy;
+              const d = Math.sqrt(dx * dx + dy * dy);
+              val += Math.exp(-d / lambdaPx);
+            }
+            val = Math.min(1, val * globalScale * 0.9);
+            if (val < 0.02) continue;
+            ctx.fillStyle =
+              `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${val * 0.4})`;
+            ctx.fillRect(px, py, FIELD_STEP + 1, FIELD_STEP + 1);
+          }
+        }
+        ctx.restore();
+      }
+    }
+
+    // Traditional halos when no modulator is focused (or alongside
+    // the field — the field saturates near releasers and fades out
+    // quickly, so halos still add point-location emphasis).
     for (let mi = 0; mi < modNames.length; mi++) {
       const conc = modConcentrations[mi] ?? 0;
       if (conc <= 0.3) continue;
       const mod = modNames[mi];
       const color = MODULATOR_COLORS[mod] ?? "#94a3b8";
       const intensity = Math.min(1, conc / 8);
-      const releasers = RELEASERS[mod] ?? [];
-      for (const rn of releasers) {
-        const idx = nameToIdx.get(rn);
-        if (idx === undefined) continue;
-        const { sx, sy } = projectNeuron(positions[idx], bounds, w, h, rotRad);
+      const releasers = relScreenByMod[mod] ?? [];
+      for (const { sx, sy } of releasers) {
         const r = 5 + 18 * intensity;
         const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
         grad.addColorStop(0, hexAlpha(color, 0.55 * intensity));
@@ -1961,6 +2022,7 @@ export function CelegansDashboard() {
             brainRot,
             ntDimMask,
             ntByIdx,
+            hoverModulator,
           );
         } else if (ctx) {
           const bg = ctx.createLinearGradient(0, 0, 0, PANEL_H);
@@ -2132,25 +2194,94 @@ export function CelegansDashboard() {
     return neuronMeta.find((m) => m.name === nm) ?? null;
   }, [lockedNeuron, trace, neuronMeta]);
 
-  // Firing-rate history for the locked neuron, if it's a readout neuron.
-  // Bins the raster into 0.5 s buckets and computes spike-count per bin.
+  // Firing-rate history for the locked neuron. Prefers the full
+  // raster when available (P0 #1) so any of the 300 neurons can
+  // be inspected; falls back to the 18-readout raster otherwise.
   const lockedRateHist = useMemo(() => {
     if (lockedNeuron === null || !trace) return null;
     const nm = trace.neuron_names?.[lockedNeuron];
     if (!nm) return null;
-    const rIdx = trace.meta.readout_neurons.indexOf(nm);
-    if (rIdx < 0) return null;  // not a readout — no raster data
     const BIN_S = 0.5;
     const nBins = Math.max(1, Math.ceil(trace.meta.duration_s / BIN_S));
     const bins = new Array<number>(nBins).fill(0);
-    for (const e of trace.raster) {
-      if (e.n.includes(rIdx)) {
-        const bi = Math.min(nBins - 1, Math.floor(e.t / BIN_S));
-        bins[bi]++;
+    let dataSource: "full" | "readout" | "none" = "none";
+    const fullNames = trace.all_neurons ?? trace.neuron_names;
+    if (trace.full_raster && fullNames) {
+      const fIdx = fullNames.indexOf(nm);
+      if (fIdx >= 0) {
+        dataSource = "full";
+        for (const e of trace.full_raster) {
+          if (e.n.includes(fIdx)) {
+            const bi = Math.min(nBins - 1, Math.floor(e.t / BIN_S));
+            bins[bi]++;
+          }
+        }
       }
     }
-    return { bins, binS: BIN_S, maxRate: Math.max(1, ...bins) };
+    if (dataSource === "none") {
+      const rIdx = trace.meta.readout_neurons.indexOf(nm);
+      if (rIdx < 0) return null;
+      dataSource = "readout";
+      for (const e of trace.raster) {
+        if (e.n.includes(rIdx)) {
+          const bi = Math.min(nBins - 1, Math.floor(e.t / BIN_S));
+          bins[bi]++;
+        }
+      }
+    }
+    return { bins, binS: BIN_S, maxRate: Math.max(1, ...bins), dataSource };
   }, [lockedNeuron, trace]);
+
+  // P1 #6 — Synthetic calcium trace for the locked neuron.
+  // Double-exponential GCaMP7f kernel (τ_rise=0.1 s, τ_decay=0.5 s)
+  // convolved with the spike train, sampled at 100 ms resolution.
+  const lockedCaTrace = useMemo(() => {
+    if (!lockedRateHist || lockedNeuron === null || !trace) return null;
+    const nm = trace.neuron_names?.[lockedNeuron];
+    if (!nm) return null;
+    const DT = 0.1;  // 100 ms bins for Ca
+    const nT = Math.max(1, Math.ceil(trace.meta.duration_s / DT));
+    const spike = new Array<number>(nT).fill(0);
+    // Build the finest-resolution spike vector
+    const fullNames = trace.all_neurons ?? trace.neuron_names;
+    if (trace.full_raster && fullNames) {
+      const fIdx = fullNames.indexOf(nm);
+      if (fIdx >= 0) {
+        for (const e of trace.full_raster) {
+          if (e.n.includes(fIdx)) {
+            const bi = Math.min(nT - 1, Math.floor(e.t / DT));
+            spike[bi] += 1;
+          }
+        }
+      }
+    } else {
+      const rIdx = trace.meta.readout_neurons.indexOf(nm);
+      if (rIdx < 0) return null;
+      for (const e of trace.raster) {
+        if (e.n.includes(rIdx)) {
+          const bi = Math.min(nT - 1, Math.floor(e.t / DT));
+          spike[bi] += 1;
+        }
+      }
+    }
+    // Double-exponential GCaMP kernel
+    const TAU_RISE = 0.1, TAU_DECAY = 0.5, KLEN = Math.ceil(3 * TAU_DECAY / DT);
+    const kernel: number[] = [];
+    for (let i = 0; i < KLEN; i++) {
+      const t = i * DT;
+      kernel.push((1 - Math.exp(-t / TAU_RISE)) * Math.exp(-t / TAU_DECAY));
+    }
+    const kmax = Math.max(...kernel) || 1;
+    for (let i = 0; i < KLEN; i++) kernel[i] /= kmax;
+    const ca = new Array<number>(nT).fill(0);
+    for (let i = 0; i < nT; i++) {
+      if (spike[i] <= 0) continue;
+      for (let k = 0; k < KLEN && i + k < nT; k++) {
+        ca[i + k] += spike[i] * kernel[k];
+      }
+    }
+    return { ca, dt: DT, maxCa: Math.max(1e-3, ...ca) };
+  }, [lockedRateHist, lockedNeuron, trace]);
 
   const scrubTo = (frac: number) => {
     const tr = traceRef.current;
@@ -3267,9 +3398,59 @@ export function CelegansDashboard() {
                       </div>
                     </div>
                   )}
+                  {lockedCaTrace && (
+                    <div className="pt-1 border-t border-[#1e293b]">
+                      <div className="text-[#64748b] mb-0.5 flex justify-between items-center">
+                        <span>synthetic Ca²⁺ · GCaMP7f</span>
+                        <span className="font-mono text-[0.55rem]">τ_r 0.1s · τ_d 0.5s</span>
+                      </div>
+                      <div className="relative h-10 bg-[#0a0e1a] rounded mt-0.5 overflow-hidden">
+                        <svg
+                          viewBox="0 0 100 100"
+                          preserveAspectRatio="none"
+                          className="absolute inset-0 w-full h-full"
+                          aria-hidden="true"
+                        >
+                          <defs>
+                            <linearGradient id="ca-grad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.85" />
+                              <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                            </linearGradient>
+                          </defs>
+                          {(() => {
+                            const pts = lockedCaTrace.ca.map((v, i) => {
+                              const x = (i / (lockedCaTrace.ca.length - 1)) * 100;
+                              const y = 100 - (v / lockedCaTrace.maxCa) * 95;
+                              return `${x.toFixed(1)},${y.toFixed(1)}`;
+                            });
+                            return (
+                              <>
+                                <path d={`M 0,100 L ${pts.join(" L ")} L 100,100 Z`} fill="url(#ca-grad)" />
+                                <path d={`M ${pts.join(" L ")}`} fill="none" stroke="#22d3ee" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+                              </>
+                            );
+                          })()}
+                          <line
+                            x1={(currentT / (trace?.meta.duration_s ?? 1)) * 100}
+                            y1={0}
+                            x2={(currentT / (trace?.meta.duration_s ?? 1)) * 100}
+                            y2={100}
+                            stroke="#f2ead3"
+                            strokeWidth="0.6"
+                            vectorEffect="non-scaling-stroke"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
                   {!lockedRateHist && (
                     <div className="pt-1 border-t border-[#1e293b] text-[0.6rem] text-[#64748b] italic">
-                      not in 18-neuron readout — no raster data
+                      no raster data for this neuron (outside full-raster export)
+                    </div>
+                  )}
+                  {lockedRateHist?.dataSource === "readout" && (
+                    <div className="pt-1 text-[0.55rem] text-[#64748b] italic">
+                      18-readout source (regenerate with full raster for 300-wide)
                     </div>
                   )}
                 </div>
