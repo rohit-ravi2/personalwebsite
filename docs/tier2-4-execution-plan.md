@@ -8,22 +8,45 @@ baselines + ratified thresholds). This file describes the **execution
 sequence** with concrete file paths, entry/exit criteria, and
 compute budgets.
 
-## Sequencing decision (2026-04-21)
+**2026-04-25 update — partially superseded.** Phase 3 (originally
+"T4-3 synaptic calibration, the T0 fix") is no longer accurate.
+T0 was resolved at the architectural level by per-edge sign
+convention, not weight calibration; the operative cascade is
+ALM/AVM → PVC → AVD/AVE → AVA (not ALM→AIB→AVA). Phase 3 has
+been rewritten to reflect the actual resolution path and the
+follow-on questions it surfaced. Sequencing and compute budgets
+in §0 are also revised. Phases 1, 2, 4, 5, 6 are unchanged in
+intent (they describe sub-systems that the T0 resolution does not
+affect: T2-#4 sensory cascades, T4-2 plateau dynamics, T4-1 motor
+coupling, T4-4/T4-5 modulator overlays, T4-6 trajectory
+correlation). Canonical T0 record:
+`docs/t0_resolution_report.md`.
+
+## Sequencing decision (revised 2026-04-25)
 
 Original T4 plan (drafted pre-Phase-0) put T4-4 CeNGEN-conductance
-mid-sequence and merged T2-#4 into T4-3. User agreed to the
-counter-sequence after push-back: low-compute-first subject to T4-3
-being foundational. The agreed order is:
+mid-sequence and merged T2-#4 into T4-3. The April 21 sequencing
+treated T4-3 as foundational and budgeted it at 3-4 weeks of focused
+synaptic weight calibration. **That framing is now obsolete.** T0
+turned out to be a sign-convention default issue, not a weight-
+calibration issue, and was resolved by flipping a constructor flag
+(`use_per_edge_glu_signs=True`). The revised order is:
 
-0. **Phase 0** — baseline measurement + audit infra (1 week, ~12 hrs compute)
-1. **Phase 1** — independent low-compute prep (2-3 weeks, ~4 hrs compute)
-2. **Phase 2** — compartmental integration + plateau calibration (2-3 weeks)
-3. **Phase 3** — T4-3 synaptic calibration, the T0 fix (3-4 weeks, highest per-phase compute)
-4. **Phase 4** — T4-1 motor coupling validation (2 weeks)
+0. **Phase 0** — baseline measurement + audit infra (1 week, ~12 hrs compute) — COMPLETE
+1. **Phase 1** — independent low-compute prep (2-3 weeks, ~4 hrs compute) — partially done
+2. **Phase 2** — compartmental integration + plateau calibration (2-3 weeks) — independent of T0
+3. **Phase 3** — T0 resolution + follow-on calibration (cascade fix landed 2026-04-25; PVC/AVB and FSM recalibration follow-ons pending, ~3-6 weeks)
+4. **Phase 4** — T4-1 motor coupling validation (2 weeks) — independent of T0
 5. **Phase 5** — T4-4 CeNGEN + T4-5 INS overlays (3 weeks)
 6. **Phase 6** — T4-6 trajectory correlation capstone (2 weeks)
 
-Total: 14-17 weeks at observed velocity.
+Total: still ~14-17 weeks at observed velocity, but Phase 3's
+character has shifted. Earlier framing assumed Phase 3 would be
+3-4 weeks of intensive weight tuning with the highest per-phase
+compute budget. Actual Phase 3 (the per-edge sign convention work)
+was a single sweep + diagnostic block; Phase 3's remaining time is
+in PVC/AVB literature investigation and FSM/classifier
+recalibration, neither of which is compute-heavy.
 
 ## Compute budget (ratified against 3.06× wall/sim ratio)
 
@@ -132,51 +155,162 @@ per-neuron firing rates to pre-refactor. Expected: non-plateau neurons
 - Rate-drift check: non-plateau neurons' firing rates ≤ 15% drift
   across all 6 scenarios at single seed.
 
-## Phase 3 — T4-3 synaptic calibration
+## Phase 3 — T0 resolution + follow-on calibration
 
-**Goal:** tune W_syn such that ALM→AIB→AVA cascade produces
-ΔAVA ≥ +15 Hz on touch_anterior stim.
+**2026-04-25 update — this phase has been substantially restructured.**
 
-### Step 1: localise the break
+The original Phase 3 framing ("tune W_syn such that ALM→AIB→AVA
+cascade produces ΔAVA ≥ +15 Hz on touch_anterior stim") was wrong
+about which cascade was operative AND about what fix category was
+needed. Both points were established in the 2026-04-25 T0 diagnostic
+block. The original step-by-step plan (cascade-diagnostic localization,
+Nelder-Mead weight optimization, ActivityFSM validation, cross-scenario
+preservation) is preserved at the bottom of this section as a
+historical record but is no longer the active plan.
 
-Before tuning weights, determine which edge in the cascade is failing.
-New script `scripts/brain/phase3_cascade_diagnostic.py`:
-- Direct ALM current injection → measure ALM, AIB, AVA
-- Direct AIB current injection → measure AVA (bypasses ALM)
-- Direct AVA current injection → measure RIM, AVD, AVE
-- Compare each link's transmission efficacy.
+Canonical record of what actually happened: `docs/t0_resolution_report.md`.
 
-Based on Phase 0 touch-scenario rates: ALM→AIB looks weak (AIB
-shows ~flat response). AIB→AVA unknown until diagnostic runs.
+### What was actually done (2026-04-25, COMPLETE)
 
-### Step 2: constrained optimization
+The cascade-firing question was resolved at the architectural level
+by flipping the simulator's glutamate sign convention from per-
+presynaptic-neuron NT-sign (Glu = −1 with hand-picked overrides) to
+per-edge CeNGEN-derived postsynaptic-receptor signs:
 
-Free parameters:
-- `W_syn` (global chemical weight scale)
-- Per-class multipliers: sensory→interneuron, interneuron→command
-- Inhibitory gain on AVA specifically (currently masks cascade)
+- Constructor flag `use_per_edge_glu_signs=True` on LIFBrain (already
+  in codebase, off by default).
+- Switching this flag flips ~518 chemical edges (14% of total) where
+  glutamate sources target iGluR-dominant postsynaptic neurons.
+- Under per-edge mode, the operative touch cascade
+  (ALM/AVM → PVC → AVD/AVE → AVA, with PVC as the load-bearing
+  first-stage relay) fires at +60 Hz on touch with seed-to-seed
+  variance under 1.5 Hz across n=10.
 
-Fixed constraints:
-- Preserve Phase 0's current GNCA-derived relative weight structure
-  (weights from `connectome.npz:W_chem_raw`).
-- Don't break spontaneous AVA rate (keep < 10 Hz at rest).
+Two suspects were falsified along the way:
+- Voltage regime (no-op for LIF dynamics under coordinate translation;
+  voltage fix kept in place for biological documentation).
+- Gap-junction conductance (increasing g_gap monotonically silenced
+  the network via noise averaging).
 
-Optimizer: Nelder-Mead over 3-5 free scalars, fitness = weighted sum
-of (AVA_peri_hz target, spontaneous_AVA_hz target, AVA_peri_minus_pre
-target). Expect ~100-300 evaluations × 30s per eval × 3.06 ratio ≈
-2.5-8 hrs.
+Goal achievement vs original Phase 3 exit criteria:
+- Original: AVAL peri ≥ 20 Hz AND Δ ≥ +15 Hz on ≥ 8/10 seeds.
+- Achieved: AVAL peri = 97 Hz, Δ = +60.3 Hz on 10/10 seeds.
 
-### Step 3: ActivityFSM validation
+### Follow-on questions (Phase 3 remaining work, 2026-04-25 → ongoing)
 
-With tuned weights, run `FSM_MODE=activity` touch audit at n=10 × 60s.
-Exit: ΔREV ≤ −0.40, all 10 seeds negative, 95% CI excludes zero.
+The architectural fix surfaced new questions that were not in the
+original Phase 3 scope. These are the active work items:
 
-### Step 4: cross-scenario preservation
+**3a — PVC/AVB handling under per-edge mode** (~1-2 weeks).
+Under per-edge, PVC fires Δ +60-70 Hz and AVB fires Δ +51-57 Hz on
+touch. Canonical biology has anterior touch suppressing forward
+locomotion. Two interpretations open:
 
-Same calibration must not break:
-- Spontaneous AVA rate (< 10 Hz)
-- Osmotic AVA response (should still fire)
-- Food AVB tonic drive preserved
+- **A) CeNGEN expression-vs-function mismatch.** PVC has iGluR
+  receptors per CeNGEN but the ALM/AVM synapses onto PVC may be
+  functionally GluCl-mediated. If true, per-edge needs targeted
+  overrides.
+- **B) Canonical biology more nuanced than textbook.** PVC excitation
+  on anterior touch may be defensible. If true, the per-edge prediction
+  stands.
+
+Resolution path: literature dive on PVC functional sign biology;
+possibly a per-edge override sweep to test (A).
+
+**3b — FSM/classifier recalibration under per-edge dynamics**
+(~2-4 weeks engineering). The 18-readout classifier bank was trained
+on default-mode firing distributions. Under per-edge, AVA's dynamic
+range tripled and the AVA-ablation effect shifts FSM channels (dREV
+→ dPIR; dPIR mean −0.117, 9/10 negative seeds). Three sub-questions:
+
+1. Does AVA-ablation under correct cascade produce the Chalfie
+   phenotype through dPIR (preserved under per-edge), or would
+   recalibrated thresholds re-route the signal to dREV?
+2. Is the existing 18-readout architecture fundamentally
+   incompatible with per-edge dynamics, requiring a wider redesign?
+3. Bank retraining (deferred during overnight v2 Track B as
+   LOGISTICAL_FAILURE) is the technical prerequisite — pooled-target
+   data prep, retrain against per-edge-mode synthetic calcium, swap
+   bank path in `ClosedLoopEnv`.
+
+**3c — Network-stability scan under per-edge for non-touch scenarios**
+(~1 week). Per-edge changes ~14% of chemical edges; touch scenario
+validates one regime. Need to verify osmotic_shock, food, chemotaxis,
+aerotaxis, spontaneous don't destabilize.
+
+**3d — Per-edge re-runs of audited phenotypes** (~2 weeks compute).
+RIS molecular audit, three-mode taxonomy classifications, Mode 3
+modulator results all conducted under default mode. Need re-running
+to determine which findings transfer.
+
+**3e — Production sign-mode decision.** Per-edge as default, opt-in,
+or hybrid (curated per-edge override list). Depends on 3a and 3b
+outcomes.
+
+### Exit criteria (Phase 3 follow-on)
+
+- 3a: PVC/AVB interpretation adjudicated; per-edge override list
+  defined OR per-edge accepted as biological prediction.
+- 3b: AVA-ablation phenotype recovered through some FSM channel
+  with similar statistical robustness to default-mode dREV.
+- 3c: All 6 scenarios run cleanly under chosen sign mode.
+- 3d: Audit findings under per-edge documented; supersessions
+  noted.
+- 3e: Production sign-mode set; default flag updated; docs
+  reflect new default.
+
+### Compute budget revision
+
+Original Phase 3 estimate: 3-4 weeks at highest per-phase compute
+(2.5-8 hrs of Nelder-Mead optimization).
+
+Revised: ~3-6 weeks total wall, but compute is much lower.
+- 3a: literature time + possibly 1-2 hours per override-test sweep.
+- 3b: classifier bank retraining is the only compute-significant
+  item (~few hours per retraining iteration).
+- 3c: ~3-6 hours total for the 6-scenario sweep at n=10.
+- 3d: ~3-6 hours per audit re-run; total depends on which audits
+  need re-running.
+- 3e: no compute, decision-only.
+
+---
+
+### Historical: original Phase 3 plan (preserved as record)
+
+The original April 21 Phase 3 plan, preserved here verbatim. Active
+plan is above; this is for understanding what was previously believed
+and how it changed.
+
+> **Goal:** tune W_syn such that ALM→AIB→AVA cascade produces
+> ΔAVA ≥ +15 Hz on touch_anterior stim.
+>
+> **Step 1: localise the break**
+> Before tuning weights, determine which edge in the cascade is
+> failing. New script `scripts/brain/phase3_cascade_diagnostic.py`:
+> direct ALM current injection → measure ALM, AIB, AVA; direct AIB
+> current injection → measure AVA (bypasses ALM); direct AVA current
+> injection → measure RIM, AVD, AVE; compare each link's transmission
+> efficacy. Based on Phase 0 touch-scenario rates: ALM→AIB looks weak
+> (AIB shows ~flat response). AIB→AVA unknown until diagnostic runs.
+>
+> **Step 2: constrained optimization** — Nelder-Mead over 3-5 free
+> scalars (W_syn, per-class multipliers for sensory→interneuron and
+> interneuron→command, inhibitory gain on AVA), fitness = weighted
+> sum of AVA target rates, ~100-300 evaluations × 30s × 3.06×
+> ratio ≈ 2.5-8 hrs.
+>
+> **Step 3: ActivityFSM validation** — n=10 × 60s, exit ΔREV ≤ −0.40.
+>
+> **Step 4: cross-scenario preservation** — don't break spontaneous
+> AVA rate, osmotic AVA response, food AVB tonic drive.
+
+This plan was wrong in two ways: (1) the ALM→AIB→AVA cascade does
+not exist in this connectome (AIB has zero chemical edges to AVD
+and ALM has no chemical edges to AIB), and (2) the cascade failure
+under default sign convention was a sign-assignment problem, not a
+weight problem. The cascade-diagnostic script was never run; the
+Nelder-Mead optimization was never run; both became unnecessary
+once the sign-convention diagnosis was established.
 
 ## Phase 4 — T4-1 motor coupling validation
 
@@ -255,6 +389,15 @@ a distribution, not a threshold.
 
 ## Changelog
 
+- 2026-04-25: Phase 3 substantially restructured to reflect T0
+  resolution. Original Phase 3 framing (T4-3 synaptic weight
+  calibration as the operative T0 fix; ALM→AIB→AVA cascade)
+  preserved as historical record at the bottom of the Phase 3
+  section but no longer the active plan. Sequencing decision and
+  compute budget revised — Phase 3 character has shifted from
+  weight tuning to PVC/AVB resolution + FSM recalibration.
+  Phases 1, 2, 4, 5, 6 unchanged. Header note added at top of
+  document. Canonical T0 record: `docs/t0_resolution_report.md`.
 - 2026-04-21: document created at Phase 0 completion. Phase 0 measured
   3.06× wall/sim ratio, 2/15 plateau pass, swap-jitter σ=4.75ms
   (within tolerance). Tier 2/4 thresholds ratified.

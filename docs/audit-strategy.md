@@ -4,6 +4,17 @@
 *Supersedes the implicit "behavioral phenotype audit = success metric"
 assumption used in v3.0 through v3.3 audits.*
 
+**2026-04-25 update:** the three-layer framework and the three readout
+failure modes (Mode 1/2/3) below remain valid — they are sign-mode-
+independent methodological constructs. The specific AVA/touch entries
+(Mode 3 conditional, "post-T4-3" framing) are superseded; T4-3 weight
+calibration is no longer the operative fix. The cascade firing was
+resolved at the architectural level by per-edge sign convention
+(`use_per_edge_glu_signs=True`), and the operative cascade in this
+connectome is ALM/AVM → PVC → AVD/AVE → AVA, not the long-assumed
+ALM→AIB→AVA. See `docs/t0_resolution_report.md` for the canonical
+record. Per-ablation routing table updated below.
+
 ## The problem Phase 0 revealed
 
 The project had implicitly assumed behavioral phenotype reproduction
@@ -69,15 +80,22 @@ biology.
 
 - **Exemplar candidate:** AVA (not in readout; AVE/AVER are in readout
   and receive RIS inhibition + downstream motor-neuron drive). T0
-  already established the cascade doesn't actually fire on touch —
-  the apparent phenotype runs through classifier pattern instead. So
-  "readout-real" for AVA is conditional: IF the cascade worked, the
-  signal would be real. Currently it's still mediated via distributed
-  pattern.
-- **Likely other instances:** unknown until T4-3 synaptic calibration
-  actually makes the cascade work. Possibly AVB, PVC for the forward
-  circuit. Probably ASI, ASH, ASK for sensory-driven behaviors if
-  their cascades work.
+  established that under default sign convention the cascade doesn't
+  actually fire on touch — the apparent phenotype runs through
+  classifier pattern via Mode 3 tonic-shift. **2026-04-25 update:**
+  per-edge sign mode resolves the cascade firing at the architectural
+  level (ALM/AVM → PVC → AVD/AVE → AVA fires at +60 Hz on touch);
+  AVA-ablation effect persists in dPIR channel under per-edge (mean
+  −0.117, 9/10 negative seeds) but the FSM/classifier was
+  calibrated to read it through dREV under default-mode dynamics.
+  AVA is now genuinely Mode 3 (cascade-real) under per-edge sign
+  mode, conditional on resolving the FSM/classifier recalibration
+  question. See `docs/t0_resolution_report.md`.
+- **Likely other instances:** under per-edge mode the operative
+  cascade flips for additional command neurons (AVD, AVE, AVB, PVC
+  all fire UP on touch; PVC and AVB excitation is biologically
+  questionable — open question). Sensory-driven behaviors (ASI,
+  ASH, ASK) need re-evaluation under per-edge before classification.
 
 ## Three audit layers
 
@@ -115,15 +133,20 @@ wall ratio × inter-process contention). At n=10 × 1 ablation: ~2.5 hrs.
 
 **Applies only to:**
 - **Unambiguously:** nothing in the current 18-neuron readout regime
-  produces clean behavioral tests. Every ablation falls into Mode 1,
-  2, or conditional-Mode-3.
-- **Conditionally:** AVA/touch (post-T4-3). Once the ALM→AIB→AVA
-  cascade actually fires, ActivityFSM reading AVA directly should
-  detect the phenotype. Pre-T4-3, AVA/touch is still useful as a
-  falsification test: does the classifier-pattern mediated signal
-  survive n=10 × 60s rigor?
-- **Not useful pre-T4-3:** RIS, NSM, RIM, AVB, PDE, FLP-1, FLP-2,
-  NLP-12, PDF-1 (all Mode 1 or Mode 2).
+  under default sign convention produces clean behavioral tests.
+  Every ablation falls into Mode 1, 2, or conditional-Mode-3.
+- **Conditionally (under per-edge sign mode, post-2026-04-25):**
+  AVA/touch. The operative cascade ALM/AVM → PVC → AVD/AVE → AVA
+  fires under per-edge mode; AVA ablation produces a measurable
+  behavioral effect, but on dPIR rather than dREV under the
+  current FSM/classifier calibration (which was trained against
+  default-mode firing distributions). Whether this counts as a
+  clean behavioral test depends on resolving the FSM recalibration
+  question. See `docs/t0_resolution_report.md` §6.3.
+- **Not useful under default sign mode:** RIS, NSM, RIM, AVB, PDE,
+  FLP-1, FLP-2, NLP-12, PDF-1 (all Mode 1 or Mode 2). Re-running
+  these under per-edge mode is an open follow-on item; some may
+  shift category once the cascade dynamics are correct.
 
 ### Layer C — Trajectory correlation (readout-agnostic)
 
@@ -149,7 +172,7 @@ outputs. Scales linearly with neuron count and event instances.
 | RIM | Mode 1 (RIM not in readout; targets diverse) | likely null | **Molecular** |
 | PDE | Mode 1 | likely null | **Molecular** |
 | AVB | Mode 1 (forward partners PVC/RIB not in readout) | likely null | **Molecular** or **Trajectory** |
-| AVA | Mode 3 conditional | behavioral signal via pattern currently; real cascade post-T4-3 | **Behavioral** (post-T4-3) + **Trajectory** |
+| AVA | Mode 3 — cascade real under per-edge mode (2026-04-25) | dPIR signature preserved (−0.117, 9/10 neg seeds) under per-edge; dREV channel calibrated against default-mode dynamics | **Behavioral** (under per-edge, conditional on FSM recalibration) + **Trajectory** |
 | FLP-11 target-gene KO | — | molecular pathway dissection | **Molecular** only |
 | Sensory cell ablations (ASH, ASE, AWC…) | Mode 3 conditional | depends on downstream cascade | **Molecular** (cascade verification) + **Behavioral** if cascade works |
 
@@ -228,6 +251,16 @@ mechanisms, and directly testable with selective knockouts.
 
 ## Changelog
 
+- 2026-04-25: AVA-specific entries updated for T0 resolution.
+  The three-layer framework and three readout failure modes are
+  unchanged (sign-mode-independent methodological constructs).
+  AVA/touch entries that referenced "post-T4-3" weight calibration
+  as the operative fix are superseded — the cascade was resolved
+  at the architectural level by per-edge sign convention. Operative
+  cascade corrected from ALM→AIB→AVA to ALM/AVM → PVC → AVD/AVE
+  → AVA (PVC is the load-bearing first-stage relay). AVA is now
+  Mode 3 cascade-real under per-edge sign mode, conditional on
+  FSM/classifier recalibration. See `docs/t0_resolution_report.md`.
 - 2026-04-21: document created at Phase 0 close-out based on RIS
   molecular audit + partial NSM phenotype audit findings. Audit
   strategy formally revised away from "behavioral phenotype = success."
