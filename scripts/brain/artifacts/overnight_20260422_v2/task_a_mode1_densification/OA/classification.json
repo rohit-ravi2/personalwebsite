@@ -1,0 +1,31 @@
+{
+  "modulator": "OA",
+  "max_conc_control": 0.412,
+  "max_conc_ko": 0.0,
+  "ctrl_state_mean": {
+    "FORWARD": 0.027333333333333338,
+    "REVERSE": 0.7631666666666668,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.087,
+    "QUIESCENT": 0.10583333333333333
+  },
+  "abl_state_mean": {
+    "FORWARD": 0.028666666666666667,
+    "REVERSE": 0.7473333333333334,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.07683333333333334,
+    "QUIESCENT": 0.1305
+  },
+  "ko_state_mean": {
+    "FORWARD": 0.026000000000000002,
+    "REVERSE": 0.7949999999999999,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.087,
+    "QUIESCENT": 0.07533333333333334
+  },
+  "d_rev_abl": -0.016,
+  "d_qui_abl": 0.025,
+  "status": "PASS_MODE_1",
+  "reason": "|\u0394REV|=0.016 and |\u0394QUI|=0.025 both < 0.05",
+  "n_seeds_per_cond": 5
+}

@@ -1,0 +1,15 @@
+{
+  "n_iterations": 100,
+  "warmup_ms": 264.7,
+  "mean_ms": 102.63,
+  "median_ms": 102.13,
+  "std_ms": 4.75,
+  "min_ms": 92.94,
+  "max_ms": 119.19,
+  "p5_ms": 96.39,
+  "p95_ms": 110.26,
+  "cv_pct": 4.63,
+  "total_wall_s": 10.53,
+  "jitter_tolerance_ms": 15.0,
+  "exceeds_tolerance": false
+}

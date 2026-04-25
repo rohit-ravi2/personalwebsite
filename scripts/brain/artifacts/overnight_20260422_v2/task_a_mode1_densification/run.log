@@ -1,0 +1,66 @@
+Track A: 4 modulators × 3 conditions × 5 seeds = 60 runs × 60.0s
+  [1/60] FLP-1  CONTROL         seed=42 | QUI=0.06 REV=0.85 | 181s | ETA 178 min
+  [2/60] FLP-1  CONTROL         seed=43 | QUI=0.08 REV=0.89 | 181s | ETA 175 min
+  [3/60] FLP-1  CONTROL         seed=44 | QUI=0.08 REV=0.89 | 183s | ETA 174 min
+  [4/60] FLP-1  CONTROL         seed=45 | QUI=0.00 REV=0.96 | 186s | ETA 174 min
+  [5/60] FLP-1  CONTROL         seed=46 | QUI=0.06 REV=0.85 | 179s | ETA 164 min
+  [6/60] FLP-1  RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 180s | ETA 162 min
+  [7/60] FLP-1  RELEASER_ABLATE seed=43 | QUI=0.08 REV=0.89 | 179s | ETA 158 min
+  [8/60] FLP-1  RELEASER_ABLATE seed=44 | QUI=0.08 REV=0.83 | 179s | ETA 155 min
+  [9/60] FLP-1  RELEASER_ABLATE seed=45 | QUI=0.00 REV=0.97 | 181s | ETA 154 min
+  [10/60] FLP-1  RELEASER_ABLATE seed=46 | QUI=0.08 REV=0.89 | 179s | ETA 150 min
+  [11/60] FLP-1  PEPTIDE_KO      seed=42 | QUI=0.06 REV=0.85 | 180s | ETA 147 min
+  [12/60] FLP-1  PEPTIDE_KO      seed=43 | QUI=0.08 REV=0.89 | 179s | ETA 143 min
+  [13/60] FLP-1  PEPTIDE_KO      seed=44 | QUI=0.08 REV=0.89 | 179s | ETA 140 min
+  [14/60] FLP-1  PEPTIDE_KO      seed=45 | QUI=0.00 REV=0.96 | 179s | ETA 137 min
+  [15/60] FLP-1  PEPTIDE_KO      seed=46 | QUI=0.06 REV=0.85 | 179s | ETA 134 min
+  → FLP-1: PASS_MODE_1
+  [16/60] NLP-12 CONTROL         seed=42 | QUI=0.06 REV=0.79 | 180s | ETA 132 min
+  [17/60] NLP-12 CONTROL         seed=43 | QUI=0.08 REV=0.89 | 179s | ETA 128 min
+  [18/60] NLP-12 CONTROL         seed=44 | QUI=0.08 REV=0.89 | 179s | ETA 125 min
+  [19/60] NLP-12 CONTROL         seed=45 | QUI=0.00 REV=0.96 | 179s | ETA 122 min
+  [20/60] NLP-12 CONTROL         seed=46 | QUI=0.06 REV=0.85 | 179s | ETA 119 min
+  [21/60] NLP-12 RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 179s | ETA 117 min
+  [22/60] NLP-12 RELEASER_ABLATE seed=43 | QUI=0.08 REV=0.89 | 179s | ETA 114 min
+  [23/60] NLP-12 RELEASER_ABLATE seed=44 | QUI=0.12 REV=0.85 | 180s | ETA 111 min
+  [24/60] NLP-12 RELEASER_ABLATE seed=45 | QUI=0.00 REV=0.97 | 179s | ETA 108 min
+  [25/60] NLP-12 RELEASER_ABLATE seed=46 | QUI=0.08 REV=0.89 | 180s | ETA 105 min
+  [26/60] NLP-12 PEPTIDE_KO      seed=42 | QUI=0.06 REV=0.79 | 180s | ETA 102 min
+  [27/60] NLP-12 PEPTIDE_KO      seed=43 | QUI=0.08 REV=0.89 | 180s | ETA 99 min
+  [28/60] NLP-12 PEPTIDE_KO      seed=44 | QUI=0.12 REV=0.85 | 179s | ETA 96 min
+  [29/60] NLP-12 PEPTIDE_KO      seed=45 | QUI=0.00 REV=0.96 | 179s | ETA 92 min
+  [30/60] NLP-12 PEPTIDE_KO      seed=46 | QUI=0.13 REV=0.78 | 179s | ETA 89 min
+  → NLP-12: PASS_MODE_1
+  [31/60] TA     CONTROL         seed=42 | QUI=0.12 REV=0.79 | 181s | ETA 88 min
+  [32/60] TA     CONTROL         seed=43 | QUI=0.10 REV=0.64 | 181s | ETA 85 min
+  [33/60] TA     CONTROL         seed=44 | QUI=0.12 REV=0.70 | 181s | ETA 81 min
+  [34/60] TA     CONTROL         seed=45 | QUI=0.12 REV=0.78 | 181s | ETA 78 min
+  [35/60] TA     CONTROL         seed=46 | QUI=0.06 REV=0.91 | 181s | ETA 75 min
+  [36/60] TA     RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 182s | ETA 73 min
+  [37/60] TA     RELEASER_ABLATE seed=43 | QUI=0.22 REV=0.63 | 182s | ETA 70 min
+  [38/60] TA     RELEASER_ABLATE seed=44 | QUI=0.09 REV=0.74 | 182s | ETA 67 min
+  [39/60] TA     RELEASER_ABLATE seed=45 | QUI=0.00 REV=0.91 | 181s | ETA 63 min
+  [40/60] TA     RELEASER_ABLATE seed=46 | QUI=0.22 REV=0.75 | 182s | ETA 61 min
+  [41/60] TA     PEPTIDE_KO      seed=42 | QUI=0.07 REV=0.84 | 181s | ETA 57 min
+  [42/60] TA     PEPTIDE_KO      seed=43 | QUI=0.10 REV=0.75 | 181s | ETA 54 min
+  [43/60] TA     PEPTIDE_KO      seed=44 | QUI=0.08 REV=0.80 | 180s | ETA 51 min
+  [44/60] TA     PEPTIDE_KO      seed=45 | QUI=0.00 REV=0.91 | 182s | ETA 48 min
+  [45/60] TA     PEPTIDE_KO      seed=46 | QUI=0.10 REV=0.87 | 181s | ETA 45 min
+  → TA: PASS_MODE_1
+  [46/60] OA     CONTROL         seed=42 | QUI=0.12 REV=0.79 | 181s | ETA 42 min
+  [47/60] OA     CONTROL         seed=43 | QUI=0.10 REV=0.64 | 182s | ETA 39 min
+  [48/60] OA     CONTROL         seed=44 | QUI=0.12 REV=0.70 | 181s | ETA 36 min
+  [49/60] OA     CONTROL         seed=45 | QUI=0.12 REV=0.78 | 180s | ETA 33 min
+  [50/60] OA     CONTROL         seed=46 | QUI=0.06 REV=0.91 | 181s | ETA 30 min
+  [51/60] OA     RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 181s | ETA 27 min
+  [52/60] OA     RELEASER_ABLATE seed=43 | QUI=0.22 REV=0.58 | 182s | ETA 24 min
+  [53/60] OA     RELEASER_ABLATE seed=44 | QUI=0.09 REV=0.74 | 182s | ETA 21 min
+  [54/60] OA     RELEASER_ABLATE seed=45 | QUI=0.23 REV=0.67 | 182s | ETA 18 min
+  [55/60] OA     RELEASER_ABLATE seed=46 | QUI=0.04 REV=0.92 | 182s | ETA 15 min
+  [56/60] OA     PEPTIDE_KO      seed=42 | QUI=0.12 REV=0.79 | 181s | ETA 12 min
+  [57/60] OA     PEPTIDE_KO      seed=43 | QUI=0.10 REV=0.64 | 182s | ETA 9 min
+  [58/60] OA     PEPTIDE_KO      seed=44 | QUI=0.09 REV=0.74 | 181s | ETA 6 min
+  [59/60] OA     PEPTIDE_KO      seed=45 | QUI=0.00 REV=0.91 | 180s | ETA 3 min
+  [60/60] OA     PEPTIDE_KO      seed=46 | QUI=0.06 REV=0.91 | 180s | ETA 0 min
+  → OA: PASS_MODE_1
+Wrote /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/overnight_20260422_v2/task_a_mode1_densification/summary.md

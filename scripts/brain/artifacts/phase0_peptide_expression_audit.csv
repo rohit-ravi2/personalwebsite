@@ -1,0 +1,38 @@
+peptide,category,synthesis_gene,resolved,max_tpm,n_expressing,n_strongly_expressing,top_expressing,predicted_mode,rationale,phenotype_strength,reference
+FLP-11,existing_modulator,flp-11,True,985.2,1,1,RIS,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+FLP-1,existing_modulator,flp-1,True,1285.39,1,1,AVK,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+FLP-2,existing_modulator,flp-2,True,47.04,2,1,AIA;RID,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+NLP-12,existing_modulator,nlp-12,True,308.52,1,1,DVA,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+PDF-1,existing_modulator,pdf-1,True,361.74,17,11,RID;AIY;AVB;PVT;SDQ,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+5HT,existing_modulator,tph-1,True,2.87,0,0,,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+DA,existing_modulator,cat-2,True,2.4,0,0,,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+TA,existing_modulator,tdc-1,True,15.24,1,0,RIM,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+OA,existing_modulator,tbh-1,True,2.79,0,0,,(existing — see Phase 0 for measured),,Strong (literature),already in simulator
+NLP-22,quiescence,nlp-22,True,0.04,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Strong,Nelson et al. 2013 — RIA-NLP-22 drives sleep quiescence
+NLP-27,quiescence,nlp-27,True,0.03,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Weak,
+NLP-37,quiescence,nlp-37,False,0.0,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Weak,
+NLP-50,quiescence,nlp-50,True,145.05,20,11,PVM;AIY;AIM;RIP;PVT,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Weak,
+FLP-13,quiescence,flp-13,True,128.09,4,2,I5;ALA;MI;M3,Mode 2 predicted (readout-trivial),"Releaser neurons ['M3L', 'M3R'] in 18-neuron readout; ablation would directly zero readout inputs.",Strong,Nath et al. 2016 — ALA-FLP-13 sleep pathway
+FLP-24,quiescence,flp-24,True,271.72,5,1,ALA;RIG;HSN;DVC;DVA,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Moderate,
+INS-22,quiescence,ins-22,True,2.88,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Weak,Possibly hypothetical DAF-16 regulator
+FLP-1,locomotion,flp-1,True,1285.39,1,1,AVK,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Strong,Bhattacharya et al. 2014 — AVK-FLP-1 locomotion
+FLP-18,locomotion,flp-18,True,111.23,3,1,RIG;AVA;VA12,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Strong,"Cohen et al. 2009, Rogers et al. 2003"
+FLP-21,locomotion,flp-21,True,33.1,4,1,RMG;PVW;M2;RMH,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Strong,"de Bono & Bargmann 1998, NPR-1 aggregation"
+NLP-12,locomotion,nlp-12,True,308.52,1,1,DVA,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Strong,"Hu et al. 2011, Janssen 2008"
+NLP-15,locomotion,nlp-15,True,22.26,12,1,AIY;AVA;RMF;PVN;DVA,Mode 2 predicted (readout-trivial),"Releaser neurons ['AVEL', 'AVER', 'AIBL'] in 18-neuron readout; ablation would directly zero readout inputs.",Weak,
+NLP-14,feeding,nlp-14,True,41.61,3,1,AVF;AVH;RID,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Weak,
+NLP-24,feeding,nlp-24,True,0.03,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Weak,
+NLP-40,feeding,nlp-40,True,165.0,6,2,PVT;DVB;AIB;ASK;RIF,Mode 2 predicted (readout-trivial),Releaser neurons ['AIBL'] in 18-neuron readout; ablation would directly zero readout inputs.,Strong,Wang et al. 2013 — defecation motor program
+INS-1,feeding,ins-1,True,3.41,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Moderate,Pierce et al. 2001
+INS-6,feeding,ins-6,True,50.22,2,2,ASJ;ASI,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Moderate,Cornils et al. 2011
+INS-7,feeding,ins-7,True,0.18,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Moderate,"Chen et al. 2013, Tomioka 2006"
+INS-17,feeding,ins-17,True,40.07,2,1,AIZ;RID,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Weak,Pierce et al. 2001 class A
+INS-18,feeding,ins-18,True,15.1,6,0,AIA;M1;PHA;PHB;AWA,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Weak,Pierce et al. 2001 class A
+DAF-28,feeding,daf-28,True,14.95,3,0,ASI;ASJ;ADF,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Strong,Li et al. 2003
+NLP-3,sensory,nlp-3,True,15.65,4,0,I3;I1;I2;AWB,Mode 2 predicted (readout-trivial),Releaser neurons ['I3'] in 18-neuron readout; ablation would directly zero readout inputs.,Weak,
+NLP-9,sensory,nlp-9,True,13.63,3,0,AIZ;VA12;PDB,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",Moderate,Jin et al. 2016 — aversive learning
+NLP-29,sensory,nlp-29,True,0.03,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Moderate,Pujol et al. 2008 — antimicrobial + neural
+FLP-33,sensory,flp-33,False,0.0,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,Weak,
+nssp-29,artifact_check,nssp-29,False,0.0,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,None,Research review: possibly artifact
+Y51H7C.3,artifact_check,Y51H7C.3,False,0.0,0,0,,N/A (not expressed),Synthesis gene not above threshold; no releaser to audit.,None,Research review: possibly artifact
+R04A9.1,artifact_check,R04A9.1,True,7.96,1,0,RIB,Mode 1 predicted (readout-blind),"Releaser not in readout, only 0/1 targets in readout; behavioral null expected.",None,Research review: possibly artifact

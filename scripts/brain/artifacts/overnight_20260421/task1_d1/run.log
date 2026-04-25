@@ -1,0 +1,60 @@
+Task D1: 9 modulators × 2 conditions × 3 seeds = 54 runs × 60.0s
+Modulators: ['FLP-11', 'FLP-1', 'FLP-2', 'NLP-12', 'PDF-1', '5HT', 'DA', 'TA', 'OA']
+Saving traces to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/overnight_20260421/task1_d1
+
+  [1/54] FLP-11   CONTROL         seed=42 | QUI=0.06 REV=0.85 | 188s wall [control] | ETA 166 min
+  [2/54] FLP-11   CONTROL         seed=43 | QUI=0.08 REV=0.89 | 188s wall [control] | ETA 163 min
+  [3/54] FLP-11   CONTROL         seed=44 | QUI=0.08 REV=0.89 | 188s wall [control] | ETA 160 min
+  [4/54] FLP-11   RELEASER_ABLATE seed=42 | QUI=0.03 REV=0.93 | 188s wall [ablated ['RIS']] | ETA 157 min
+  [5/54] FLP-11   RELEASER_ABLATE seed=43 | QUI=0.08 REV=0.83 | 190s wall [ablated ['RIS']] | ETA 155 min
+  [6/54] FLP-11   RELEASER_ABLATE seed=44 | QUI=0.08 REV=0.83 | 189s wall [ablated ['RIS']] | ETA 151 min
+  [7/54] FLP-1    CONTROL         seed=42 | QUI=0.06 REV=0.79 | 187s wall [control] | ETA 147 min
+  [8/54] FLP-1    CONTROL         seed=43 | QUI=0.08 REV=0.89 | 188s wall [control] | ETA 144 min
+  [9/54] FLP-1    CONTROL         seed=44 | QUI=0.08 REV=0.89 | 183s wall [control] | ETA 137 min
+  [10/54] FLP-1    RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 183s wall [ablated ['AVKL', 'AVKR']] | ETA 134 min
+  [11/54] FLP-1    RELEASER_ABLATE seed=43 | QUI=0.08 REV=0.89 | 184s wall [ablated ['AVKL', 'AVKR']] | ETA 132 min
+  [12/54] FLP-1    RELEASER_ABLATE seed=44 | QUI=0.08 REV=0.83 | 182s wall [ablated ['AVKL', 'AVKR']] | ETA 128 min
+  [13/54] FLP-2    CONTROL         seed=42 | QUI=0.06 REV=0.79 | 182s wall [control] | ETA 124 min
+  [14/54] FLP-2    CONTROL         seed=43 | QUI=0.08 REV=0.89 | 181s wall [control] | ETA 121 min
+  [15/54] FLP-2    CONTROL         seed=44 | QUI=0.08 REV=0.89 | 181s wall [control] | ETA 117 min
+  [16/54] FLP-2    RELEASER_ABLATE seed=42 | QUI=0.44 REV=0.32 | 180s wall [ablated ['AIAL', 'AIAR', 'RID']] | ETA 114 min
+  [17/54] FLP-2    RELEASER_ABLATE seed=43 | QUI=0.39 REV=0.35 | 180s wall [ablated ['AIAL', 'AIAR', 'RID']] | ETA 111 min
+  [18/54] FLP-2    RELEASER_ABLATE seed=44 | QUI=0.66 REV=0.12 | 179s wall [ablated ['AIAL', 'AIAR', 'RID']] | ETA 107 min
+  [19/54] NLP-12   CONTROL         seed=42 | QUI=0.06 REV=0.79 | 176s wall [control] | ETA 103 min
+  [20/54] NLP-12   CONTROL         seed=43 | QUI=0.08 REV=0.89 | 176s wall [control] | ETA 100 min
+  [21/54] NLP-12   CONTROL         seed=44 | QUI=0.08 REV=0.89 | 176s wall [control] | ETA 97 min
+  [22/54] NLP-12   RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 177s wall [ablated ['DVA']] | ETA 95 min
+  [23/54] NLP-12   RELEASER_ABLATE seed=43 | QUI=0.08 REV=0.89 | 177s wall [ablated ['DVA']] | ETA 91 min
+  [24/54] NLP-12   RELEASER_ABLATE seed=44 | QUI=0.12 REV=0.85 | 177s wall [ablated ['DVA']] | ETA 88 min
+  [25/54] PDF-1    CONTROL         seed=42 | QUI=0.12 REV=0.79 | 181s wall [control] | ETA 87 min
+  [26/54] PDF-1    CONTROL         seed=43 | QUI=0.10 REV=0.64 | 180s wall [control] | ETA 84 min
+  [27/54] PDF-1    CONTROL         seed=44 | QUI=0.12 REV=0.70 | 180s wall [control] | ETA 81 min
+  [28/54] PDF-1    RELEASER_ABLATE seed=42 | QUI=0.38 REV=0.41 | 180s wall [ablated ['AVBL', 'AVBR']] | ETA 78 min
+  [29/54] PDF-1    RELEASER_ABLATE seed=43 | QUI=0.34 REV=0.57 | 180s wall [ablated ['AVBL', 'AVBR']] | ETA 75 min
+  [30/54] PDF-1    RELEASER_ABLATE seed=44 | QUI=0.31 REV=0.62 | 181s wall [ablated ['AVBL', 'AVBR']] | ETA 72 min
+  [31/54] 5HT      CONTROL         seed=42 | QUI=0.12 REV=0.79 | 180s wall [control] | ETA 69 min
+  [32/54] 5HT      CONTROL         seed=43 | QUI=0.10 REV=0.64 | 180s wall [control] | ETA 66 min
+  [33/54] 5HT      CONTROL         seed=44 | QUI=0.12 REV=0.70 | 180s wall [control] | ETA 63 min
+  [34/54] 5HT      RELEASER_ABLATE seed=42 | QUI=0.44 REV=0.19 | 180s wall [ablated ['NSML', 'NSMR', 'HSNL', 'HSNR', 'ADFL', 'ADFR']] | ETA 60 min
+  [35/54] 5HT      RELEASER_ABLATE seed=43 | QUI=0.78 REV=0.07 | 181s wall [ablated ['NSML', 'NSMR', 'HSNL', 'HSNR', 'ADFL', 'ADFR']] | ETA 57 min
+  [36/54] 5HT      RELEASER_ABLATE seed=44 | QUI=0.69 REV=0.03 | 180s wall [ablated ['NSML', 'NSMR', 'HSNL', 'HSNR', 'ADFL', 'ADFR']] | ETA 54 min
+  [37/54] DA       CONTROL         seed=42 | QUI=0.12 REV=0.79 | 180s wall [control] | ETA 51 min
+  [38/54] DA       CONTROL         seed=43 | QUI=0.10 REV=0.64 | 181s wall [control] | ETA 48 min
+  [39/54] DA       CONTROL         seed=44 | QUI=0.12 REV=0.70 | 180s wall [control] | ETA 45 min
+  [40/54] DA       RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 180s wall [ablated ['PDEL', 'PDER', 'ADEL', 'ADER', 'CEPDL', 'CEPDR', 'CEPVL', 'CEPVR']] | ETA 42 min
+  [41/54] DA       RELEASER_ABLATE seed=43 | QUI=0.22 REV=0.52 | 180s wall [ablated ['PDEL', 'PDER', 'ADEL', 'ADER', 'CEPDL', 'CEPDR', 'CEPVL', 'CEPVR']] | ETA 39 min
+  [42/54] DA       RELEASER_ABLATE seed=44 | QUI=0.53 REV=0.28 | 181s wall [ablated ['PDEL', 'PDER', 'ADEL', 'ADER', 'CEPDL', 'CEPDR', 'CEPVL', 'CEPVR']] | ETA 36 min
+  [43/54] TA       CONTROL         seed=42 | QUI=0.12 REV=0.79 | 179s wall [control] | ETA 33 min
+  [44/54] TA       CONTROL         seed=43 | QUI=0.10 REV=0.64 | 180s wall [control] | ETA 30 min
+  [45/54] TA       CONTROL         seed=44 | QUI=0.12 REV=0.70 | 180s wall [control] | ETA 27 min
+  [46/54] TA       RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 182s wall [ablated ['RIML', 'RIMR']] | ETA 24 min
+  [47/54] TA       RELEASER_ABLATE seed=43 | QUI=0.22 REV=0.63 | 181s wall [ablated ['RIML', 'RIMR']] | ETA 21 min
+  [48/54] TA       RELEASER_ABLATE seed=44 | QUI=0.09 REV=0.74 | 182s wall [ablated ['RIML', 'RIMR']] | ETA 18 min
+  [49/54] OA       CONTROL         seed=42 | QUI=0.12 REV=0.79 | 180s wall [control] | ETA 15 min
+  [50/54] OA       CONTROL         seed=43 | QUI=0.10 REV=0.64 | 181s wall [control] | ETA 12 min
+  [51/54] OA       CONTROL         seed=44 | QUI=0.12 REV=0.70 | 180s wall [control] | ETA 9 min
+  [52/54] OA       RELEASER_ABLATE seed=42 | QUI=0.07 REV=0.84 | 181s wall [ablated ['RICL', 'RICR']] | ETA 6 min
+  [53/54] OA       RELEASER_ABLATE seed=43 | QUI=0.22 REV=0.58 | 182s wall [ablated ['RICL', 'RICR']] | ETA 3 min
+  [54/54] OA       RELEASER_ABLATE seed=44 | QUI=0.09 REV=0.74 | 181s wall [ablated ['RICL', 'RICR']] | ETA 0 min
+
+Total: 163.2 min. Traces in /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/overnight_20260421/task1_d1

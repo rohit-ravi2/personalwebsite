@@ -1,0 +1,27 @@
+[
+  {
+    "cascade": "ASE",
+    "status": "pending_reference",
+    "reason": "references/thiele_2009_ase/trace.npz not found"
+  },
+  {
+    "cascade": "AWC",
+    "status": "pending_reference",
+    "reason": "references/chalasani_2007_awc/trace.npz not found"
+  },
+  {
+    "cascade": "ASH",
+    "status": "pending_reference",
+    "reason": "references/hilliard_2005_ash/trace.npz not found"
+  },
+  {
+    "cascade": "AFD",
+    "status": "pending_reference",
+    "reason": "references/clark_2006_afd/trace.npz not found"
+  },
+  {
+    "cascade": "ALM",
+    "status": "pending_reference",
+    "reason": "references/ohagan_2005_alm/trace.npz not found"
+  }
+]

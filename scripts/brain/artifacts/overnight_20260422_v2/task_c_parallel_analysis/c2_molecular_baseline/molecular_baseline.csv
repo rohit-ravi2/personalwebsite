@@ -1,0 +1,10 @@
+modulator,status,n_seeds_analyzed,peak_conc_mean,peak_conc_std,time_to_peak_s_mean,reason
+5HT,MECHANISM_OPERATING,3,2.955,0.12,55.82,peak 2.95 > threshold 1.0
+DA,MECHANISM_OPERATING,3,2.193,0.046,47.38,peak 2.19 > threshold 1.0
+FLP-1,MECHANISM_INERT,3,0.127,0.045,14.78,peak 0.13 < threshold 1.0
+FLP-11,MECHANISM_OPERATING,3,10.0,0.0,11.97,peak 10.00 > threshold 1.0
+FLP-2,MECHANISM_OPERATING,3,20.0,0.0,10.07,peak 20.00 > threshold 1.0
+NLP-12,MECHANISM_OPERATING,3,10.0,0.0,25.23,peak 10.00 > threshold 1.0
+OA,MECHANISM_INERT,3,0.362,0.037,51.42,peak 0.36 < threshold 1.0
+PDF-1,MECHANISM_OPERATING,3,40.261,0.139,59.35,peak 40.26 > threshold 1.0
+TA,MECHANISM_OPERATING,3,9.618,0.121,55.68,peak 9.62 > threshold 1.0

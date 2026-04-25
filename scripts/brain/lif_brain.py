@@ -11,6 +11,19 @@ brain model (`philshiu/Drosophila_brain_model`), adapted for worm:
     spike. Sign from NT identity (Loer & Rand 2022). This is the
     Shiu pattern, with the NT-sign lookup known ahead of time instead
     of inferred from EM (Eckstein 2024) as in fly.
+
+    SIGN-CONVENTION DEFAULT (read carefully — easy to misread):
+    The default constructor uses PER-NEURON presynaptic NT-sign
+    (Glu = -1, GABA = -1, ACh = +1, etc.) with ~26 hand-picked
+    overrides for sensory + interneuron Glu sources where iGluR is
+    known to dominate (DEFAULT_SIGN_OVERRIDES below).
+    The connectome artifact ALSO contains W_chem_per_edge — a
+    postsynaptic-receptor-derived signed matrix (CeNGEN iGluR/GluCl
+    expression ratio per target neuron) — but it is NOT loaded by
+    default. To use it, pass use_per_edge_glu_signs=True. This
+    flips ~518 chemical edges (14% of 3707 total) for Glu sources
+    targeting iGluR-dominant neurons. See ClosedLoopEnv kwarg of
+    the same name.
   - Gap junctions: continuous summed current `g_gap × w × (v_pre − v_post)`.
     Shiu's model did not include gap junctions; we add them because
     they are quantitatively important in worm (command-interneuron
@@ -51,12 +64,18 @@ prefs.codegen.target = "numpy"
 
 ARTIFACT = Path(__file__).resolve().parent / "artifacts" / "connectome.npz"
 
-# Kunert-Graf 2014 LIF parameters (worm, not fly).
+# Worm-realistic voltage regime per Mellem et al. 2008 (PMID 18587393):
+# AVA rest at -20 to -30 mV; action potentials reach ~0 mV peak from
+# that rest. Previous (-65/-50/-70) was a mammalian-cortical template,
+# off by ~40 mV. Rest-to-threshold gap (15 mV) and reset-below-rest
+# (5 mV) are preserved, so noise + synaptic gain transfer cleanly under
+# this rescaling. Earlier comment here mis-attributed the values to
+# Kunert-Graf 2014 — those were not Kunert-Graf's numbers.
 LIF_PARAMS = dict(
     tau     = 10 * ms,     # membrane time constant
-    v_rest  = -65 * mV,
-    v_thr   = -50 * mV,
-    v_reset = -70 * mV,
+    v_rest  = -25 * mV,    # was -65 (mammalian template)
+    v_thr   = -10 * mV,    # was -50; preserves 15 mV gap to rest
+    v_reset = -30 * mV,    # was -70; preserves 5 mV below rest
     t_ref   = 2 * ms,
 )
 
@@ -338,8 +357,9 @@ class LIFBrain:
         Args:
             names: neuron names to ablate.
             current_pA: hyperpolarising current magnitude. -1000 pA
-                        keeps V ≈ -165 mV (well below threshold -50 mV)
-                        so ablated neurons never spike.
+                        keeps V ≈ -125 mV (well below threshold -10 mV
+                        under the Mellem 2008 voltage regime) so ablated
+                        neurons never spike.
 
         Returns list of actually-ablated neuron names (intersection with
         our 300-neuron set).

@@ -1,0 +1,20 @@
+Track F — HH AVA calibration, grid over g_ca, g_k, g_leak, tau_h
+  [10/180] best so far: amp=4.72, dur=0.0, ret=0.0, cost=2.764
+  [20/180] best so far: amp=5.39, dur=0.0, ret=0.0, cost=2.731
+  [30/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [40/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [50/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [60/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [70/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [80/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [90/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [100/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [110/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [120/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [130/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [140/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [150/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [160/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [170/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+  [180/180] best so far: amp=10.55, dur=1.4, ret=5.5, cost=2.466
+Wrote /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/overnight_20260422_v2/speculative/track_f/calibration_report.md

@@ -1,0 +1,6 @@
+neuron_class,flp11_target,flp13_target,flp11_receptors,flp13_receptors,in_readout
+AIM,False,True,,dmsr-2=0.86,False
+M1,True,True,dmsr-1=0.75,dmsr-1=0.75,False
+PVW,True,True,dmsr-1=0.76,dmsr-1=0.76,False
+RIG,True,True,dmsr-1=0.59,dmsr-1=0.59,False
+VA12,True,True,npr-1=0.66;dmsr-1=0.76,dmsr-1=0.76,False

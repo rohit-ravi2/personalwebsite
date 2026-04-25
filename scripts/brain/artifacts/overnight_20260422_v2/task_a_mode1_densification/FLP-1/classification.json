@@ -1,0 +1,31 @@
+{
+  "modulator": "FLP-1",
+  "max_conc_control": 0.189,
+  "max_conc_ko": 0.0,
+  "ctrl_state_mean": {
+    "FORWARD": 0.0195,
+    "REVERSE": 0.8863333333333333,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.020166666666666666,
+    "QUIESCENT": 0.05733333333333333
+  },
+  "abl_state_mean": {
+    "FORWARD": 0.018333333333333333,
+    "REVERSE": 0.8815000000000002,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.020166666666666666,
+    "QUIESCENT": 0.06333333333333334
+  },
+  "ko_state_mean": {
+    "FORWARD": 0.019333333333333334,
+    "REVERSE": 0.8866666666666667,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.02,
+    "QUIESCENT": 0.05733333333333333
+  },
+  "d_rev_abl": -0.005,
+  "d_qui_abl": 0.006,
+  "status": "PASS_MODE_1",
+  "reason": "|\u0394REV|=0.005 and |\u0394QUI|=0.006 both < 0.05",
+  "n_seeds_per_cond": 5
+}

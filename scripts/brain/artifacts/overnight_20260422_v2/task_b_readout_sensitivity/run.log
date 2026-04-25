@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/overnight_v2_track_b.py", line 36, in <module>
+    from neural_classifier_bank import (
+ImportError: cannot import name 'EVENT_TO_KIND' from 'neural_classifier_bank' (/mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/neural_classifier_bank.py)

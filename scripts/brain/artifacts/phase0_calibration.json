@@ -1,0 +1,26 @@
+{
+  "ablation": "AVA / touch",
+  "seed": 42,
+  "duration_s": 60.0,
+  "wall_s_control": 183.8722424507141,
+  "wall_s_ablated": 183.66354846954346,
+  "wall_s_total": 367.5357916355133,
+  "sim_s_total": 120.0,
+  "ratio_wall_per_sim": 3.0627982636292774,
+  "control_state_props": {
+    "FORWARD": 0.028333333333333332,
+    "REVERSE": 0.785,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.05,
+    "QUIESCENT": 0.12
+  },
+  "ablated_state_props": {
+    "FORWARD": 0.028333333333333332,
+    "REVERSE": 0.11416666666666667,
+    "OMEGA": 0.016666666666666666,
+    "PIROUETTE": 0.10083333333333333,
+    "QUIESCENT": 0.74
+  },
+  "delta_REVERSE": -0.6708333333333334,
+  "brain_class": "lif"
+}

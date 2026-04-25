@@ -1,0 +1,170 @@
+{
+  "target_neuron": "AVAL",
+  "scaffold_params": {
+    "g_ca_ns": 2.5,
+    "v_ca_half_mv": -30.0,
+    "g_axial_ns": 1.5,
+    "v_rest_mv": -65.0,
+    "tau_s_ms": 12,
+    "tau_d_ms": 25
+  },
+  "mellem_2008": {
+    "v_rest_mv": -25.0,
+    "plateau_amplitude_mv": 20.0,
+    "plateau_duration_ms": 600,
+    "note": "Whole-cell patch on soma. Plateau eliminated in Na+-free. Paper is Nat Neurosci (PMC2697921)."
+  },
+  "probe_1_analytical_iv": [
+    {
+      "v_d_mv": -60,
+      "m_inf": 0.0067,
+      "i_ca_pa": 1.84
+    },
+    {
+      "v_d_mv": -50,
+      "m_inf": 0.0344,
+      "i_ca_pa": 8.61
+    },
+    {
+      "v_d_mv": -40,
+      "m_inf": 0.1589,
+      "i_ca_pa": 35.75
+    },
+    {
+      "v_d_mv": -30,
+      "m_inf": 0.5,
+      "i_ca_pa": 100.0
+    },
+    {
+      "v_d_mv": -20,
+      "m_inf": 0.8411,
+      "i_ca_pa": 147.2
+    },
+    {
+      "v_d_mv": -10,
+      "m_inf": 0.9656,
+      "i_ca_pa": 144.83
+    },
+    {
+      "v_d_mv": 0,
+      "m_inf": 0.9933,
+      "i_ca_pa": 124.16
+    }
+  ],
+  "probe_2_somatic_50pa": {
+    "inject_pa": 50.0,
+    "v_rest_override_mv": null,
+    "g_ax_override_ns": null,
+    "v_s_during_peak": -54.918585262542365,
+    "v_s_during_ss": -54.93545171538569,
+    "v_d_during_peak": -60.20870831286724,
+    "v_d_during_ss": -60.243810654965756,
+    "m_inf_during_peak": 0.006465523893250237,
+    "m_inf_during_ss": 0.006428102020601503,
+    "i_ca_during_peak_pa": 1.7813925921027227,
+    "h_at_inject_end": 0.9935742066484201,
+    "v_d_post_release_peak": -60.208221078335725,
+    "v_d_at_100ms_post": -64.67832947009678
+  },
+  "probe_3_somatic_500pa": {
+    "inject_pa": 500.0,
+    "v_rest_override_mv": null,
+    "g_ax_override_ns": null,
+    "v_s_during_peak": 41.2362618621972,
+    "v_s_during_ss": 41.10422572692557,
+    "v_d_during_peak": 3.832278131068063,
+    "v_d_during_ss": 1.9356283727107877,
+    "m_inf_during_peak": 0.9964551667313405,
+    "m_inf_during_ss": 0.9951195286960338,
+    "i_ca_during_peak_pa": 150.41727438424604,
+    "h_at_inject_end": 0.5434486838056074,
+    "v_d_post_release_peak": 0.8715713874487889,
+    "v_d_at_100ms_post": -63.84529767907131
+  },
+  "probe_4_clamp_scan": [
+    {
+      "v_d_clamp_mv": -60,
+      "m_inf_ss": 0.0066928509242848554,
+      "h_ss": 0.9912801800227624,
+      "i_ca_ss_pa": 1.8405340041783351
+    },
+    {
+      "v_d_clamp_mv": -50,
+      "m_inf_ss": 0.03444519566621116,
+      "h_ss": 0.9560623471765229,
+      "i_ca_ss_pa": 8.611298916552787
+    },
+    {
+      "v_d_clamp_mv": -40,
+      "m_inf_ss": 0.15886910488091513,
+      "h_ss": 0.8152797691522278,
+      "i_ca_ss_pa": 35.7455485982059
+    },
+    {
+      "v_d_clamp_mv": -35,
+      "m_inf_ss": 0.3029407160345926,
+      "h_ss": 0.682179917020556,
+      "i_ca_ss_pa": 64.37490215735092
+    },
+    {
+      "v_d_clamp_mv": -30,
+      "m_inf_ss": 0.5,
+      "h_ss": 0.5408093794012283,
+      "i_ca_ss_pa": 100.0
+    },
+    {
+      "v_d_clamp_mv": -25,
+      "m_inf_ss": 0.6970592839654072,
+      "h_ss": 0.43489287652418634,
+      "i_ca_ss_pa": 130.6986157435139
+    },
+    {
+      "v_d_clamp_mv": -20,
+      "m_inf_ss": 0.8411308951190845,
+      "h_ss": 0.37435636142193107,
+      "i_ca_ss_pa": 147.19790664583982
+    },
+    {
+      "v_d_clamp_mv": -10,
+      "m_inf_ss": 0.9655548043337885,
+      "h_ss": 0.3310811216865575,
+      "i_ca_ss_pa": 144.83322065006837
+    }
+  ],
+  "probe_5_mellem_rest": {
+    "inject_pa": 50.0,
+    "v_rest_override_mv": -25.0,
+    "g_ax_override_ns": null,
+    "v_s_during_peak": -10.684343049653338,
+    "v_s_during_ss": -11.137918841392962,
+    "v_d_during_peak": -3.692141582427909,
+    "v_d_during_ss": -6.329625729168152,
+    "m_inf_during_peak": 0.9876861831956841,
+    "m_inf_during_ss": 0.9810049386127184,
+    "i_ca_during_peak_pa": 138.89564239293347,
+    "h_at_inject_end": 0.29984636138668214,
+    "v_d_post_release_peak": -6.705683922167129,
+    "v_d_at_100ms_post": -12.507206572402485
+  },
+  "probe_6_strong_axial": {
+    "inject_pa": 50.0,
+    "v_rest_override_mv": null,
+    "g_ax_override_ns": 10.0,
+    "v_s_during_peak": -56.060029817423505,
+    "v_s_during_ss": -56.08394839010673,
+    "v_d_during_peak": -57.32696129905947,
+    "v_d_during_ss": -57.35408752469646,
+    "m_inf_during_peak": 0.010410311973725597,
+    "m_inf_during_ss": 0.01036388998653337,
+    "i_ca_during_peak_pa": 2.7932678757879565,
+    "h_at_inject_end": 0.9909799199900916,
+    "v_d_post_release_peak": -57.32660143351482,
+    "v_d_at_100ms_post": -64.80178704899267
+  },
+  "diagnosis": {
+    "gating_equations_work": false,
+    "rest_override_sufficient": true,
+    "strong_somatic_works": true,
+    "stronger_axial_works": false
+  }
+}

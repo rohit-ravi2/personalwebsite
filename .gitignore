@@ -34,3 +34,7 @@ yarn-error.log*
 data/external/
 # Per-worm Atanas artifacts — 15 MB of regeneratable .npz from raw DANDI
 scripts/brain/artifacts/atanas_worm_*.npz
+# Phase 0 audit logs (regeneratable from the audit scripts)
+scripts/brain/artifacts/phase0_*.log
+# Phase 0 scenario traces — per-run NPZ bundles, regeneratable from audit
+scripts/brain/artifacts/phase0_scenario_traces/

@@ -31,7 +31,7 @@ from pathlib import Path
 
 import mujoco
 import numpy as np
-from brian2 import ms, Hz
+from brian2 import ms, Hz, nS
 
 warnings.filterwarnings("ignore")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -103,7 +103,8 @@ class ClosedLoopEnv:
                  environment: Environment | None = None,
                  brain_class: str = "lif",
                  fsm_mode: str = "classifier",
-                 sensory_mode: str = "injection"):
+                 sensory_mode: str = "injection",
+                 g_gap_ns: float | None = None):
         """
         fsm_mode:
           - 'classifier' (default): 8-event Atanas-trained classifier
@@ -134,6 +135,14 @@ class ClosedLoopEnv:
               pharyngeal-excluded).
         use_per_edge_glu_signs: v3.2 per-edge glutamate receptor signs
               from CeNGEN (vs v3.0/v3.1 per-neuron NT-based signs).
+              **DEFAULT IS FALSE.** Default is per-neuron NT-sign
+              with hand-picked overrides; W_chem_per_edge is
+              precomputed in connectome.npz but unused unless this
+              flag is True. ~518 chemical edges (14% of total)
+              flip exc<->inh between the two modes. See lif_brain.py
+              header for full discussion.
+        g_gap_ns: override gap-junction conductance in nS (default
+              from LIF G_GAP_DEFAULT = 0.1).
         """
         np.random.seed(seed)
         # Pass Brian2 seed into LIFBrain via instance attribute before init.
@@ -154,10 +163,10 @@ class ClosedLoopEnv:
         else:
             brain_instance = LIFBrain.__new__(LIFBrain)
             brain_instance._brian2_seed = seed
-            LIFBrain.__init__(
-                brain_instance,
-                use_per_edge_glu_signs=use_per_edge_glu_signs,
-            )
+            lif_kwargs = dict(use_per_edge_glu_signs=use_per_edge_glu_signs)
+            if g_gap_ns is not None:
+                lif_kwargs["g_gap"] = g_gap_ns * nS
+            LIFBrain.__init__(brain_instance, **lif_kwargs)
         self.brain = brain_instance
 
         self.bank = ClassifierBank()

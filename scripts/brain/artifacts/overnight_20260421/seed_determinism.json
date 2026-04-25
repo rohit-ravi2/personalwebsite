@@ -1,0 +1,14 @@
+{
+  "identical": true,
+  "run1": {
+    "fsm_hash": "4ae1fa8cd0a67bceab2c64730546e562",
+    "fsb_hash": "43e229b2b63fb99624fd77a90f0712f3",
+    "n_fsm_states": 100
+  },
+  "run2": {
+    "fsm_hash": "4ae1fa8cd0a67bceab2c64730546e562",
+    "fsb_hash": "43e229b2b63fb99624fd77a90f0712f3",
+    "n_fsm_states": 100
+  },
+  "wall_s": 27.56
+}
