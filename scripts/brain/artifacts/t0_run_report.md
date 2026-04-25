@@ -149,3 +149,128 @@ New JSONs written to `public/data/`:
 - wormbody-brain-touch-activity.json (886 KB) — demo only
 
 All include P0 #1 full_raster + validated_readout_set metadata.
+
+---
+
+## T0 Resolution Update — 2026-04-25
+
+This postscript supersedes the framing in the original April 21
+report above. The original content is preserved as a historical
+record of what was understood at that point. For the canonical
+record of how T0 was resolved, see `docs/t0_resolution_report.md`.
+
+### What the original framing got wrong
+
+The April 21 report framed the T0 cascade-failure as a synaptic
+weight calibration problem, with the proposed fix being a 1-2 week
+focused tuning of W_syn so ALM → AIB → AVA produces an AVA burst
+(see "Next steps" #5 above). Two things in that framing are now
+known to be wrong:
+
+1. **Wrong cascade.** ALM and AVM have zero direct chemical
+   synapses to AIB in this connectome (Cook 2019 hermaphrodite +
+   Loer & Rand 2022 NT identity). AIB also has zero chemical edges
+   to AVD. The "ALM → AIB → AVA" pathway never existed in the
+   simulator's wiring; it was a textbook description that didn't
+   match what the connectome encodes. AIB is in the chemotaxis
+   pirouette circuit, not the touch reversal circuit.
+
+2. **Wrong fix category.** The cascade failure was not a synaptic
+   weight calibration problem. It was a sign-assignment problem.
+   The simulator's default glutamate-sign convention treated
+   glutamate edges to iGluR-dominant postsynaptic neurons (AVA,
+   AVD, AVE, PVC) as inhibitory because the per-presynaptic-neuron
+   sign field defaults to −1 for Glu. The connectome already
+   contained a precomputed alternative (`W_chem_per_edge`) using
+   CeNGEN-derived postsynaptic-receptor signs, but it was
+   off-by-default behind a constructor flag.
+
+### What the actual cascade is
+
+The operative touch-reversal cascade in this connectome is:
+
+> **ALM/AVM → PVC → AVD/AVE → AVA**
+
+PVC is the load-bearing first-stage relay. ALM/AVM glutamate
+inputs to PVC sign as inhibitory under default convention (PVC
+drops on touch, removing its dominant cholinergic excitation of
+AVD, which is why AVD also drops on touch — the original
+"command interneurons decreased" finding above). Under per-edge
+sign convention (PVC iGluR-dominant per CeNGEN, ratio 9.6×), the
+same glutamate edges sign excitatory and PVC fires UP on touch.
+PVC then drives AVD/AVE cholinergically (~5× more drive to AVD
+than direct ALM/AVM glutamate to AVD); AVD/AVE drive AVA
+cholinergically; recurrent positive-feedback within the command
+pair amplifies all command neurons to ~97 Hz coherently.
+
+### What today's diagnostic block established
+
+- **Voltage regime is not the bottleneck** (FALSIFIED). Patching
+  v_rest from −65 to −25 mV per Mellem 2008 was a coordinate
+  translation; LIF dynamics unchanged because rest-to-threshold
+  gap was preserved. Voltage fix kept in place for biological
+  documentation.
+- **Gap conductance is not the bottleneck** (FALSIFIED).
+  Increasing g_gap monotonically silenced the network because
+  gap junctions average noise across 2188 coupled cells.
+- **Per-edge sign mode resolves the cascade firing**
+  (CONFIRMED). Under `use_per_edge_glu_signs=True`, AVDL/R fire
+  Δ +60 Hz on touch, AVAL/R Δ +60 Hz, AVEL/R Δ +47 Hz, n=10 with
+  seed-to-seed variance under 1.5 Hz.
+- **The original ΔREV reproduction was a sign-convention
+  artifact** (CONFIRMED). Under per-edge mode the ΔREV regresses
+  to +0.04 (2/10 negative seeds). The Chalfie 1985 direction was
+  being reproduced via Mode 3 tonic-shift on AVA's broken-sign
+  baseline rate, not via cascade firing.
+- **Behavioral effect persists in dPIR channel** (NEW FINDING).
+  Under per-edge mode, AVA-ablation produces a clean dPIR effect
+  (mean −0.117, 9/10 negative seeds). The simulator's circuit-
+  level response to AVA loss is preserved; the FSM/classifier
+  was calibrated to read it through dREV under default-mode
+  dynamics.
+
+### What this means for "Next steps" in the original report
+
+Items 5 and 6 of the original report's "Next steps" are now
+revised:
+
+- **Item 5 (synaptic weight calibration as ActivityFSM unblock)
+  — obsolete in its original form.** The cascade fires at +60 Hz
+  under per-edge mode without weight tuning. Specific weights
+  (notably ALM/AVM → PVC) may still need fine-tuning if PVC
+  over-activation under per-edge is judged a real bug; that's a
+  different, narrower question.
+- **Item 6 (T1a graded brain alternative) — possibly still
+  relevant.** The same sign-convention question may exist in the
+  graded brain. Per-edge sign mode is glutamate-receptor-specific
+  and applies to LIF directly; whether GradedBrain has analogous
+  per-edge handling needs separate verification.
+
+### What's open after the resolution
+
+1. **PVC/AVB over-activation under per-edge mode.** PVC fires
+   Δ +60-70 Hz and AVB fires Δ +51-57 Hz on touch — biologically
+   questionable since canonical biology has anterior touch
+   suppressing forward locomotion. Two interpretations remain
+   open: (A) CeNGEN expression-vs-function mismatch at specific
+   synapses, or (B) canonical biology more nuanced than textbook.
+   Neither yet falsified.
+2. **FSM/classifier recalibration question.** Refined by dPIR
+   finding: not just "retrain to recover dREV" but characterize
+   what behavioral signature AVA-ablation produces under correct
+   cascade dynamics, and which FSM channels best reflect the
+   circuit-level Chalfie phenotype.
+3. **RIS silencing under per-edge.** RIS goes from 21.8 Hz tonic
+   (default) to 0.8 Hz (per-edge) — a network-equilibrium effect,
+   not a direct sign flip. RIS molecular audit findings from
+   earlier in the project don't transfer to per-edge mode without
+   re-running.
+
+### File references
+
+Full details, sweep CSVs, verification scripts:
+- `docs/t0_resolution_report.md` (canonical record of resolution)
+- `docs/current-state-summary.md` (updated state summary)
+- `scripts/brain/artifacts/phase0_postvolt_*.csv` (sweep data)
+- `scripts/brain/phase0_postvolt_compare.py` (comparison harness)
+- `scripts/brain/phase0_avd_drive_decomp.py` (drive decomposition)

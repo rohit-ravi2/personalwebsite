@@ -198,6 +198,32 @@ thing that makes the methodological paper writeable — other people's
 simulators almost certainly have the same gap but weren't structured
 to expose it.
 
+## T0 resolution — the sign convention behind the gap (2026-04-25)
+
+Four days of diagnostic work resolved the T0 cascade question at the
+architectural level rather than through synaptic weight calibration.
+The actual mechanism turned out to be the simulator's default
+glutamate sign convention: per-presynaptic-neuron NT-sign treats
+glutamate edges to iGluR-dominant postsynaptic cells as inhibitory,
+which silently breaks the touch reversal cascade. The connectome
+already contained a precomputed alternative (CeNGEN-derived
+postsynaptic-receptor signs in `W_chem_per_edge`); switching to it
+via the constructor flag `use_per_edge_glu_signs=True` makes the
+operative cascade fire at +60 Hz on touch — and the operative
+cascade turns out to be ALM/AVM → PVC → AVD/AVE → AVA, not the
+ALM → AIB → AVA pathway the project had been planning to calibrate
+(AIB has zero chemical edges to AVD in this connectome). The April
+21 phenotype reproduction was a sign-convention artifact on the
+dREV channel; the AVA-ablation behavioral effect persists under
+per-edge but in dPIR (mean −0.117, 9/10 negative seeds), suggesting
+the FSM/classifier was calibrated to read circuit responses through
+a channel whose meaning shifts with the sign convention. PVC over-
+activation under per-edge mode is an open question — CeNGEN
+expression may diverge from functional dominance at specific
+synapses. Full record: `docs/t0_resolution_report.md`. Two
+suspects (voltage regime, gap conductance) were cleanly falsified
+along the way.
+
 ## Where the project sits now
 
 It is no longer exploratory notebooks. It is a connectome-constrained,

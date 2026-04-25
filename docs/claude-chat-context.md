@@ -8,7 +8,9 @@ context, so Rohit can discuss ideas without re-explaining the setup.
 materially (new phenotype validated, brain recalibrated, new paper
 angle), update this file and re-upload.
 
-Current as of **2026-04-21**, post-T0 validation run.
+Current as of **2026-04-25**, post-T0 resolution work block.
+(Previous version: 2026-04-21, post-T0 validation run — superseded
+by today's diagnostic findings; see §5 for what changed.)
 
 ---
 
@@ -55,7 +57,31 @@ Four layers, each with a 'legacy' and an 'upgraded' path:
 - **Scaffold for v4**: 15-neuron compartmental pool (soma+dendrite
   + L-type Ca + slow h-inactivation) in `compartmental_neurons.py`.
   Compiles in Brian2; plateau parameters not yet calibrated against
-  Gao & Hobert 2020 voltage-clamp.
+  Mellem 2008 (PMID 18587393) voltage-clamp data. (Earlier docs
+  cited "Gao & Hobert 2020"; that citation does not exist —
+  Mellem 2008 is the correct anchor for AVA voltage data.)
+- **Sign-convention mode** (constructor flag
+  `use_per_edge_glu_signs`): two glutamate sign-assignment modes
+  exist in the codebase.
+  - **Default** (`False`, current production): per-presynaptic-
+    neuron NT sign (Glu = −1) with ~26 hand-picked overrides for
+    sensory + interneuron Glu sources where iGluR is known to
+    dominate (DEFAULT_SIGN_OVERRIDES in `lif_brain.py`).
+  - **Per-edge** (`True`): postsynaptic-receptor-derived signs
+    from CeNGEN iGluR/GluCl expression ratios. The connectome
+    artifact contains a precomputed `W_chem_per_edge` matrix
+    (CeNGEN-derived). Switching to this mode flips ~518 chemical
+    edges (14% of total) for Glu sources targeting iGluR-dominant
+    neurons.
+  - **Current default is per-neuron mode pending PVC/AVB handling
+    resolution.** See §5 for what's open.
+- **Voltage regime** (in place since 2026-04-25): LIF parameters
+  patched to v_rest=−25 mV, v_thr=−10 mV, v_reset=−30 mV per
+  Mellem 2008. Preserves the 15 mV rest-to-threshold gap so LIF
+  dynamics are coordinate-translated unchanged. Patch is a no-op
+  for current LIF dynamics; kept for biological documentation
+  and for future SK/BK + compartmental work that depends on
+  absolute voltages.
 
 ### Sensory
 - **Default**: `sensory_injection.py` — direct Poisson spike trains
@@ -78,6 +104,20 @@ Four layers, each with a 'legacy' and an 'upgraded' path:
   SMDV/RIV for omega, RIS for quiescence, NSM for feeding dwell)
   and triggers on z-scored deviation from a 20 s EMA baseline,
   with 2 s warmup window. Selected via `fsm_mode="activity"`.
+- **Readout-set capability** (data-derived, not yet exercised):
+  the strict 18-neuron cross-worm intersection that defines the
+  current readout was a methodology choice from the Atanas data
+  pre-processing, not a data limitation. AVA is in 100% of Atanas
+  worms (10/10), AVD in 100%, AIZ in 90%; the strict intersection
+  filter excluded canonical command interneurons that ARE
+  identifiable in the data. Readout expansion to include AVA/AVD
+  is now clearly possible from existing data. Deferred until per-
+  edge / FSM recalibration questions resolve.
+- **Calibration regime caveat**: the 18-readout classifier bank
+  was trained against firing patterns from default-mode
+  (per-neuron sign) dynamics. Under per-edge mode, AVA's dynamic
+  range tripled and the AVA-ablation effect shifts FSM channels
+  (dREV → dPIR; see §5). Recalibration is an open question.
 
 ### Body
 - **Default**: `wormbody.xml` — 20 segments, 19 hinge actuators,
@@ -109,74 +149,260 @@ Built in React + Astro + Tailwind. Lives at
 
 ## 4 · What's validated (honest)
 
-**AVA ablation abolishes reversal under touch.** ΔREV = −0.57 ± 0.37
-across 3 seeds, all three correctly negative. Clears 2·SEM bar.
-Genuine Chalfie 1985 reproduction. **BUT** — see §5 below.
+**AVA ablation abolishes reversal under touch — under default sign
+convention only.** Original April 21 finding: ΔREV = −0.57 ± 0.37
+across 3 seeds, all three negative; later refined to ΔREV = −0.49
+± 0.10 at n=10 × 60s, 10/10 negative seeds. **However:** today's
+T0 resolution work (2026-04-25, see §5) established that this
+phenotype passes via a Mode 3 tonic-shift mechanism on a broken
+sign convention, not via circuit cascade dynamics.
 
-**RIS / Turek 2016 quiescence pathway.** ΔQUI = −0.24 ± 0.33
-across 3 seeds (2/3 negative). Directionally consistent but not
-statistically robust at 20 s runs.
+Under per-edge sign convention (with cascade firing correctly),
+ΔREV regresses to +0.04 (2/10 negative seeds) — but the AVA-
+ablation behavioral effect persists in a different FSM channel
+(dPIR, mean −0.117, 9/10 negative). The Chalfie 1985 phenotype's
+behavioral expression in this simulator is currently channel-
+dependent in a way the original audit did not anticipate.
+Recalibration of the FSM/classifier under per-edge dynamics is
+an open question.
+
+**RIS / Turek 2016 quiescence pathway.** Original finding under
+default sign convention: ΔQUI = −0.24 ± 0.33 across 3 seeds
+(2/3 negative). Directionally consistent but not statistically
+robust at 20 s runs. **Note:** RIS is silenced under per-edge
+mode (0.8 Hz tonic vs 21.8 Hz under default) — the default-mode
+finding does not transfer. The April 21 RIS molecular audit
+(FLP-11 release fires correctly, peptidergic targets show ~22%
+disinhibition) was also conducted under default mode and needs
+re-running under per-edge before any conclusions about RIS
+mechanism in this simulator.
+
+**Three-mode readout failure-mode taxonomy** (validated across 9
+v3 modulators in overnight v1 + v2 runs): Mode 1 readout-blind ×5
+(FLP-11, FLP-1, NLP-12, OA, TA), Mode 2 readout-trivial ×2 (5HT,
+DA), Mode 3 readout-cascade ×2 (FLP-2, PDF-1). The taxonomy as
+a methodological framework is sign-mode-independent. The
+specific Mode classifications were established under default
+sign convention and may shift under per-edge.
+
+**GABA + peptide release mechanism (structurally clean).** GABA
+uniformly signed −1 across all 26 GABA-releasing neurons via the
+per-presynaptic-neuron sign field; per-edge mechanism is
+glutamate-specific by design (CeNGEN iGluR/GluCl ratios are
+glutamate-receptor-specific). 135 GABA edges are byte-identical
+across both sign modes. Peptide release is pure linear rate-
+coupling (release = releaser_weights @ spike_counts, capped at
+10). Both verified by direct measurement on 2026-04-25.
 
 Pipeline works end-to-end: stim → brain → classifier → FSM → body →
 MuJoCo → state distribution → dashboard JSON.
 
-## 5 · What the Tier-0 validation run revealed (2026-04-21)
+## 5 · T0 resolution (2026-04-25, supersedes April 21 framing)
 
-**Critical finding:** profiling v3 LIF with touch stim showed
-AVA/AVE *decrease* firing on touch (AVER drops 36→28 Hz) rather
-than producing the expected reversal burst. ALM/AVM sensory cells
-fire cleanly (1.7 → 78 Hz). Top ΔHz responders are head motor
-neurons (SIB/RIV/SMD), not command interneurons.
+**Status:** the T0 cascade-failure question is resolved at the
+architectural level. The original April 21 framing — that the
+v3 LIF brain failed to propagate touch through ALM → AIB → AVA
+and that synaptic weight calibration was the prerequisite fix —
+is now obsolete. Both the cascade description and the fix
+category were wrong.
 
-**Interpretation:** the AVA/Chalfie phenotype reproduction runs
-through the CLASSIFIER's trained multi-neuron correlation pattern,
-not through biologically-correct AVA command cascade. My
-ActivityFSM reading AVA directly therefore fails to trigger
-reversals (touch-activity scenario: QUIESCENT=91%).
+Full diagnostic record: `docs/t0_resolution_report.md`.
+Original April 21 framing preserved as historical record at
+`scripts/brain/artifacts/t0_run_report.md` (with dated
+postscript referencing this resolution).
 
-**This is a publishable methodological finding.** For the paper
-methods section: *"Connectome-constrained LIF simulators that pass
-classifier-based phenotype reproductions may do so via distributed
-pattern recognition rather than command-neuron cascades. Directly
-reading command-neuron activity can serve as a falsification test
-for whether the simulator has captured circuit-level dynamics vs.
-only readout-level statistics."*
+### What was wrong with the April 21 framing
 
-Full T0 report: `scripts/brain/artifacts/t0_run_report.md`.
+1. **Wrong cascade.** AIB has zero chemical edges to AVD in
+   this connectome (Cook 2019 + Loer & Rand 2022). ALM/AVM also
+   have zero direct chemical edges to AIB. The "ALM → AIB → AVA"
+   pathway never existed in the simulator's wiring. AIB is in
+   the chemotaxis pirouette circuit, not the touch reversal
+   circuit.
 
-## 6 · Roadmap (prioritised)
+2. **Wrong fix category.** The cascade failure was not a
+   synaptic weight calibration problem. It was a sign-assignment
+   problem. The simulator's default per-presynaptic-neuron sign
+   convention treated glutamate edges to iGluR-dominant cells
+   as inhibitory.
 
-### Tier 2 — unblock ActivityFSM + complete scaffolds (~2 mo)
-1. **Synaptic weight calibration** so ALM→AIB→AVA cascade actually
-   depolarises AVA (target: AVA baseline 2-5 Hz, during-touch ≥20 Hz).
-2. **Compartmental integration**: `LIFBrain.replace_neurons_with_
-   compartmental([...])` that substitutes the 15 compartmental
-   models, re-wires synapses to soma compartment. Calibrate against
-   Gao & Hobert 2020.
-3. **Muscle driver**: new `muscle_driver.py` reads motor-neuron
+### What the operative cascade actually is
+
+> **ALM/AVM → PVC → AVD/AVE → AVA**
+
+PVC is the load-bearing first-stage relay. ALM/AVM glutamate
+inputs to PVC sign as inhibitory under default convention (PVC
+drops on touch, removing its dominant cholinergic excitation of
+AVD — that's the original "command interneurons decreased" finding
+from April 21). Under per-edge sign convention (PVC iGluR-
+dominant per CeNGEN, ratio 9.6×), the same edges sign excitatory
+and PVC fires UP on touch. PVC then drives AVD/AVE
+cholinergically (~5× more drive to AVD than direct ALM/AVM
+glutamate to AVD); AVD/AVE drive AVA cholinergically; recurrent
+positive-feedback within the command pair amplifies all command
+neurons to ~97 Hz coherently.
+
+### What today's diagnostic block established
+
+Three falsifications and one architectural fix:
+
+- **Voltage regime is not the bottleneck** (FALSIFIED).
+  Patching v_rest from −65 to −25 mV per Mellem 2008 was a
+  coordinate translation; LIF dynamics unchanged. Voltage fix
+  kept in place for biological documentation.
+- **Gap conductance is not the bottleneck** (FALSIFIED).
+  Increasing g_gap monotonically silenced the network because
+  gap junctions average noise across coupled cells.
+- **AIB-cascade premise was wrong** (FALSIFIED at the connectome
+  level). Read the wiring before continuing to calibrate it.
+- **Per-edge sign mode resolves the cascade firing**
+  (CONFIRMED). Under `use_per_edge_glu_signs=True`, AVDL/R fire
+  Δ +60 Hz on touch, AVAL/R Δ +60 Hz, AVEL/R Δ +47 Hz, n=10
+  with seed-to-seed variance under 1.5 Hz.
+
+### What the resolution implies for the original phenotype claim
+
+The simulator did reproduce the *direction* of Chalfie 1985
+under default mode (AVA ablation → reduced reversal). It did so
+through a Mode 3 tonic-shift mechanism on the broken sign
+convention's elevated AVA baseline, not through circuit cascade
+firing. Under per-edge mode (correct cascade), the AVA-ablation
+effect on dREV regresses to null but persists on dPIR (mean
+−0.117, 9/10 negative seeds).
+
+The reproduction was technically valid as a statistical result
+under default mode. It was mechanistically misleading as a
+biology claim. Statistical robustness (10/10 seeds at n=10) is
+not the same as mechanistic validity.
+
+### What's open after the resolution
+
+1. **PVC/AVB over-activation under per-edge mode.** PVC fires
+   Δ +60-70 Hz and AVB fires Δ +51-57 Hz on touch. Canonical
+   biology has anterior touch suppressing forward locomotion —
+   biologically questionable. Two interpretations remain open:
+   (A) CeNGEN expression-vs-function mismatch (PVC has iGluR
+   receptors but the ALM synapse onto PVC may be functionally
+   GluCl-mediated), or (B) canonical biology more nuanced than
+   textbook (PVC excitation on anterior touch may be defensible).
+   Neither is yet falsified.
+2. **FSM/classifier recalibration question.** Refined by dPIR
+   finding: the question is not just "retrain to recover dREV"
+   but characterize what behavioral signature AVA-ablation
+   produces under correct cascade dynamics, and which FSM
+   channels best reflect the circuit-level Chalfie phenotype.
+3. **RIS silencing under per-edge.** RIS goes from 21.8 Hz tonic
+   (default) to 0.8 Hz (per-edge) — a network-equilibrium
+   effect, not a direct sign flip. RIS molecular audit findings
+   from earlier in the project don't transfer to per-edge mode
+   without re-running.
+
+### What the T0 resolution does NOT settle
+
+- Whether per-edge becomes production default or stays opt-in
+  (depends on resolving PVC/AVB and FSM recalibration).
+- Plateau dynamics (still requires SK/BK + compartmental work;
+  per-edge sign mode doesn't address this).
+- Membrane time constant τ (10 ms in simulator vs 50-200 ms in
+  worm computational models).
+
+## 6 · Roadmap (prioritised — substantial reordering 2026-04-25)
+
+The 2026-04-21 roadmap put synaptic weight calibration as the
+load-bearing first step (Tier 2 #1) on the assumption that the
+ALM → AIB → AVA cascade was an undercalibrated wire. T0
+resolution (§5) established that the cascade was a sign-
+convention problem, not a weight problem, and the operative
+cascade isn't even through AIB. The roadmap below reflects the
+post-resolution priorities.
+
+### Block 1 — Resolve T0 follow-on questions (~3-6 weeks)
+
+These are the open questions surfaced by per-edge mode validation.
+They sit between the T0 resolution and any production decision
+about per-edge as default.
+
+1. **PVC/AVB handling under per-edge mode.** Investigate whether
+   PVC's iGluR-dominant CeNGEN expression accurately predicts
+   functional dominance at the ALM/AVM synapses, or whether
+   per-edge needs targeted overrides. Literature dive +
+   possibly per-edge override sweep. Two interpretations open
+   (CeNGEN expression-vs-function mismatch, or canonical biology
+   more nuanced) — neither yet falsified.
+2. **FSM/classifier recalibration under per-edge dynamics.**
+   Three sub-questions: (a) does AVA-ablation under correct
+   cascade produce the Chalfie phenotype through dPIR? (b)
+   would recalibrated thresholds re-route the signal to dREV?
+   (c) is the existing 18-readout architecture fundamentally
+   incompatible with per-edge dynamics? Bank retraining is the
+   technical prerequisite (deferred during overnight v2 Track B
+   as LOGISTICAL_FAILURE).
+3. **Network-stability scan under per-edge mode** for non-touch
+   scenarios (osmotic_shock, food, chemotaxis, aerotaxis,
+   spontaneous). Per-edge changes ~14% of chemical edges; touch
+   scenario validates one regime, others may differ.
+4. **RIS silencing investigation.** Why does RIS go from 21.8 Hz
+   to 0.8 Hz under per-edge? Network-equilibrium consequence of
+   broader sign changes, not a direct sign flip on RIS itself.
+   Affects RIS molecular audit transferability.
+5. **Per-edge re-runs of audited phenotypes.** RIS molecular
+   audit, three-mode taxonomy, Mode 3 modulator results all
+   conducted under default mode. Need re-running to determine
+   which findings transfer.
+
+### Block 2 — Production decision + scaffold completion (~1-2 mo)
+
+6. **Production sign-mode decision.** Per-edge as default, opt-
+   in, or hybrid (curated per-edge override list). Depends on
+   Block 1 #1 and #2 outcomes.
+7. **Compartmental integration**: `LIFBrain.replace_neurons_
+   with_compartmental([...])` substituting the 15 compartmental
+   models. Calibrate plateau dynamics against Mellem 2008.
+   Independent of T0 resolution; plateau dynamics are a separate
+   active-conductance question that per-edge sign mode does not
+   address.
+8. **Muscle driver**: new `muscle_driver.py` reads motor-neuron
    rates, applies innervation matrix, writes to v2 actuators.
    Replace position actuators with real `<muscle>` on
    `<tendon><spatial>`.
-4. **Sensory transduction calibration** against Chalasani 2007 AWC,
-   Suzuki 2008 ASE, Hilliard 2005 ASH traces.
+9. **Sensory transduction calibration** against published ΔF/F
+   traces (Chalasani 2007 AWC, Suzuki 2008 ASE, Hilliard 2005
+   ASH). Independent of T0.
 
-### Tier 3 — validation + publication-grade claims (~3 mo)
-5. **Ensemble audit with corrected brain** (n≥5 seeds × 60 s × 6
-   ablations × 3 configs). Does ActivityFSM now reproduce
-   AVA/Chalfie? Does RIS/Turek clear 2·SEM?
-6. **Aerotaxis phenotype** validation. Does the sim navigate toward
-   preferred O2 (12%)?
-7. **Parameter uncertainty quantification**: 200-point Latin-
-   hypercube sample over ~50 dominant parameters, propagate to
-   phenotype statements.
+### Block 3 — Validation + publication-grade claims (~2-3 mo)
 
-### Tier 4 — the unique-in-field stuff (~6 mo)
-8. **CeNGEN-conductance coupling**: scale per-neuron ion-channel
-   conductance by CeNGEN TPM. Closes the connectomics-
-   transcriptomics loop architecturally, not just statistically.
-9. **WebGPU-compiled brain** for live in-browser sim (10 kHz on a
-   4060 Ti is plausible).
-10. **Pheromone / multi-worm** environment.
+10. **Ensemble audit with corrected brain** under chosen sign
+    mode and recalibrated FSM. Does AVA-ablation reproduce
+    Chalfie cleanly through some FSM channel? Does RIS/Turek
+    clear 2·SEM under per-edge?
+11. **Aerotaxis phenotype** validation. Does the sim navigate
+    toward preferred O2 (12%)?
+12. **Parameter uncertainty quantification**: 200-point Latin-
+    hypercube sample over dominant parameters, propagate to
+    phenotype statements.
+
+### Block 4 — Unique-in-field architectural work (~6 mo)
+
+13. **CeNGEN-conductance coupling**: scale per-neuron ion-
+    channel conductance by CeNGEN TPM. Closes the connectomics-
+    transcriptomics loop architecturally.
+14. **Readout-set expansion** if Block 1 #2 indicates the
+    18-neuron readout is a bottleneck. AVA/AVD are in 100% of
+    Atanas worms — the strict cross-worm intersection that
+    produced the 18-set was a methodology choice, not a data
+    limitation.
+15. **WebGPU-compiled brain** for live in-browser sim (10 kHz
+    on a 4060 Ti is plausible).
+16. **Pheromone / multi-worm** environment.
+
+### Items now lower priority (originally Tier 2 #1)
+
+- **Synaptic weight calibration as ActivityFSM unblock** — the
+  original framing is obsolete. Cascade fires at +60 Hz under
+  per-edge without weight tuning. Specific weights (notably
+  ALM/AVM → PVC) may still need fine-tuning if PVC over-
+  activation under per-edge is judged a real bug; that's a
+  narrower question covered by Block 1 #1.
 
 ## 7 · Tech stack + constraints
 
@@ -212,10 +438,10 @@ track. GNCA architecture for connectome-constrained synaptic
 prediction. Could include the T0 falsification-test methodology
 (§5) as a secondary contribution.
 
-**Potential paper 3 (if Tier 2 lands):** the first *C. elegans*
-simulator with validated ActivityFSM + transduction cascades +
-compartmental dynamics + CeNGEN-conductance coupling. Single-
-author accessible.
+**Potential paper 3 (if Block 2 + Block 3 of §6 roadmap land):**
+the first *C. elegans* simulator with validated ActivityFSM +
+transduction cascades + compartmental dynamics + CeNGEN-
+conductance coupling. Single-author accessible.
 
 ## 9 · Who I am (for context in chats)
 
@@ -277,11 +503,18 @@ Vedantic non-dualism.
 >   technical work, but avoid ideological overlays in straight
 >   scientific discussion.
 >
-> When asked about the simulator state, cite §5 (Tier 0 findings)
-> as the load-bearing current limitation: the v3 LIF brain's
-> AVA/Chalfie phenotype reproduction runs through classifier
-> correlation patterns, not biologically-correct command-cascade
-> dynamics. This is a known gap with a documented Tier 2 fix path.
+> When asked about the simulator state, cite §5 (T0 resolution)
+> as the load-bearing recent finding: the simulator has two
+> glutamate sign-assignment modes (per-neuron NT default,
+> per-edge CeNGEN-derived). Default mode reproduces the Chalfie
+> 1985 phenotype on dREV via a tonic-shift mechanism but does
+> not fire the touch cascade. Per-edge mode fires the cascade
+> correctly (AVD/AVA Δ +60 Hz on touch) but breaks the dREV
+> phenotype reproduction (AVA-ablation effect shifts to dPIR
+> channel). PVC/AVB over-activation under per-edge is an open
+> question; FSM/classifier recalibration under per-edge dynamics
+> is an open question. Per-edge is currently opt-in pending
+> resolution. Full record at `docs/t0_resolution_report.md`.
 >
 > Defer to rohitravi.com/projects/c-elegans-multimodal for live
 > visual reference. Ask Rohit for current code state when that
@@ -291,9 +524,16 @@ Vedantic non-dualism.
 
 1. **This file** (`claude-chat-context.md`) — the primary
    reference.
-2. **`scripts/brain/artifacts/t0_run_report.md`** — most recent
-   audit findings, referenced from §5.
-3. **`src/content/projects/c-elegans-multimodal.mdx`** — the
+2. **`docs/t0_resolution_report.md`** — canonical record of the
+   2026-04-25 T0 resolution diagnostic block. The load-bearing
+   recent finding the project's current state hinges on.
+3. **`docs/current-state-summary.md`** — concise current-state
+   snapshot with pending decisions list.
+4. **`scripts/brain/artifacts/t0_run_report.md`** — historical
+   April 21 T0 framing, with dated postscript referencing the
+   resolution. Useful for understanding what was previously
+   believed and how it changed.
+5. **`src/content/projects/c-elegans-multimodal.mdx`** — the
    public-facing summary, shows what's externally claimed.
 
 Optional (only if discussing specific aspects):
