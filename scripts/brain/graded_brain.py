@@ -106,7 +106,8 @@ class GradedBrain:
     ClosedLoopEnv via the same interface."""
 
     def __init__(self, use_per_edge_glu_signs: bool = False,
-                 include_gap: bool = True):
+                 include_gap: bool = True,
+                 sign_exceptions: dict[tuple[str, str], int] | None = None):
         if hasattr(self, "_brian2_seed"):
             brian2_seed(self._brian2_seed)
 
@@ -116,21 +117,57 @@ class GradedBrain:
         self.idx: dict[str, int] = {n: i for i, n in enumerate(self.names)}
         self.nt_primary = [str(n) for n in d["nt_primary"]]
         sign_base = np.array(d["sign"], dtype=np.int8).copy()
+        # Load W_chem_raw early so both branches and the override-application
+        # block can reference it.
+        W_chem_raw = d["W_chem_raw"].astype(np.float32)
 
         # Same per-edge vs per-neuron choice as LIFBrain
         self._using_per_edge_signs = (
             use_per_edge_glu_signs and "W_chem_per_edge" in d.files
         )
         if self._using_per_edge_signs:
-            W_chem: np.ndarray = d["W_chem_per_edge"].astype(np.float32)
+            # `.copy()` because the per-edge npz array is a memory-mapped
+            # view; mutating via sign_exceptions below would corrupt cache.
+            W_chem: np.ndarray = d["W_chem_per_edge"].astype(np.float32).copy()
         else:
             # Apply Glu→iGluR overrides (from lif_brain.py)
             from lif_brain import DEFAULT_SIGN_OVERRIDES
             for name, new_sign in DEFAULT_SIGN_OVERRIDES.items():
                 if name in self.idx:
                     sign_base[self.idx[name]] = new_sign
-            W_chem_raw = d["W_chem_raw"].astype(np.float32)
             W_chem = (sign_base[:, None].astype(np.float32) * W_chem_raw)
+
+        # Mode-independent: apply DOCUMENTED_SIGN_EXCEPTIONS overlay
+        # (mirrors LIFBrain). NT-class-agnostic.
+        from lif_brain import DOCUMENTED_SIGN_EXCEPTIONS
+        if sign_exceptions is None:
+            sign_exceptions = DOCUMENTED_SIGN_EXCEPTIONS
+        self.sign_exceptions_applied: list[tuple[str, str, int, int]] = []
+        for (pre_name, post_name), new_sign in sign_exceptions.items():
+            if pre_name not in self.idx or post_name not in self.idx:
+                raise KeyError(
+                    f"DOCUMENTED_SIGN_EXCEPTIONS entry "
+                    f"({pre_name}→{post_name}) references neuron(s) "
+                    f"not in connectome roster."
+                )
+            pi, qi = self.idx[pre_name], self.idx[post_name]
+            if W_chem_raw[pi, qi] == 0:
+                raise ValueError(
+                    f"DOCUMENTED_SIGN_EXCEPTIONS entry "
+                    f"({pre_name}→{post_name}) has zero raw chemical "
+                    f"weight; no edge to override."
+                )
+            magnitude = abs(W_chem[pi, qi])
+            cur = W_chem[pi, qi]
+            old_sign = +1 if cur > 0 else (-1 if cur < 0 else 0)
+            if old_sign != new_sign:
+                W_chem[pi, qi] = new_sign * magnitude
+                self.sign_exceptions_applied.append(
+                    (pre_name, post_name, old_sign, new_sign)
+                )
+
+        # Debug-accessible reference to post-override W_chem.
+        self._W_chem_runtime: np.ndarray = W_chem
 
         W_gap = d["W_gap"].astype(np.float32)
 

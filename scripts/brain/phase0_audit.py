@@ -299,12 +299,30 @@ def mode_scenario(args, tier_cfg):
     duration_s = tier_cfg["duration_s"]
     cfg_kwargs = {
         "modulator_tables_path": ART / "modulator_tables.npz",
-        "use_per_edge_glu_signs": False,
+        "use_per_edge_glu_signs": bool(args.use_per_edge_glu),
         "brain_class": args.brain_class,
     }
-    total = len(SCENARIOS) * len(seeds)
-    print(f"SCENARIO audit: tier={args.tier}  scenarios={len(SCENARIOS)}  "
-          f"seeds={len(seeds)}  duration={duration_s}s")
+    if args.g_gap_ns is not None:
+        cfg_kwargs["g_gap_ns"] = args.g_gap_ns
+    if getattr(args, "disable_documented_sign_exceptions", False):
+        cfg_kwargs["sign_exceptions"] = {}
+
+    # Filter scenarios by --scenarios flag (substring match; case-insensitive)
+    scenarios = SCENARIOS
+    if getattr(args, "scenarios", None):
+        filt = [s.lower() for s in args.scenarios]
+        scenarios = [s for s in SCENARIOS if any(f == s[0].lower() for f in filt)]
+        if not scenarios:
+            print(f"No scenarios matched filter {args.scenarios}")
+            print(f"Available: {[s[0] for s in SCENARIOS]}")
+            return
+        print(f"Filtered to scenarios: {[s[0] for s in scenarios]}")
+
+    total = len(scenarios) * len(seeds)
+    print(f"SCENARIO audit: tier={args.tier}  scenarios={len(scenarios)}  "
+          f"seeds={len(seeds)}  duration={duration_s}s  "
+          f"per_edge={cfg_kwargs['use_per_edge_glu_signs']}  "
+          f"sign_exceptions_disabled={getattr(args, 'disable_documented_sign_exceptions', False)}")
     print(f"Total runs: {total}")
     t0 = time.time()
 
@@ -316,7 +334,7 @@ def mode_scenario(args, tier_cfg):
     trace_dir = ART / f"{args.output_prefix}_scenario_traces"
     trace_dir.mkdir(exist_ok=True)
 
-    for scenario, stim in SCENARIOS:
+    for scenario, stim in scenarios:
         for seed in seeds:
             run_idx += 1
             t_r = time.time()
@@ -456,6 +474,15 @@ def main():
                          "(W_chem_per_edge) instead of per-neuron NT-sign "
                          "default. Flips ~518 chemical edges where Glu "
                          "sources target iGluR-dominant neurons.")
+    ap.add_argument("--scenarios", nargs="+", default=None,
+                    help="Filter to scenarios by exact-match name. "
+                         "E.g. --scenarios touch food. Default: all 6.")
+    ap.add_argument("--disable-documented-sign-exceptions",
+                    action="store_true",
+                    help="Pass sign_exceptions={} to disable the "
+                         "DOCUMENTED_SIGN_EXCEPTIONS overlay. Use for "
+                         "pure per-edge / pure default-mode diagnostic "
+                         "runs without curated overrides.")
     args = ap.parse_args()
     tier_cfg = TIERS[args.tier]
 

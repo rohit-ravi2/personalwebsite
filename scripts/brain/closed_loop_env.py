@@ -104,7 +104,8 @@ class ClosedLoopEnv:
                  brain_class: str = "lif",
                  fsm_mode: str = "classifier",
                  sensory_mode: str = "injection",
-                 g_gap_ns: float | None = None):
+                 g_gap_ns: float | None = None,
+                 sign_exceptions: dict[tuple[str, str], int] | None = None):
         """
         fsm_mode:
           - 'classifier' (default): 8-event Atanas-trained classifier
@@ -159,11 +160,13 @@ class ClosedLoopEnv:
             GradedBrain.__init__(
                 brain_instance,
                 use_per_edge_glu_signs=use_per_edge_glu_signs,
+                sign_exceptions=sign_exceptions,
             )
         else:
             brain_instance = LIFBrain.__new__(LIFBrain)
             brain_instance._brian2_seed = seed
-            lif_kwargs = dict(use_per_edge_glu_signs=use_per_edge_glu_signs)
+            lif_kwargs = dict(use_per_edge_glu_signs=use_per_edge_glu_signs,
+                              sign_exceptions=sign_exceptions)
             if g_gap_ns is not None:
                 lif_kwargs["g_gap"] = g_gap_ns * nS
             LIFBrain.__init__(brain_instance, **lif_kwargs)

@@ -24,6 +24,15 @@ brain model (`philshiu/Drosophila_brain_model`), adapted for worm:
     flips ~518 chemical edges (14% of 3707 total) for Glu sources
     targeting iGluR-dominant neurons. See ClosedLoopEnv kwarg of
     the same name.
+
+    DOCUMENTED_SIGN_EXCEPTIONS (mode-independent overlay):
+    On top of EITHER sign-mode, a final overlay applies curated
+    edge-specific sign exceptions where literature documents that
+    the default rule produces the wrong sign at a specific synapse.
+    Currently 7 entries (5 PVC + 2 AIY → AIZ). Mode-independent and
+    NT-class-agnostic — applies to ACh, Glu, GABA pre cells alike.
+    Caller may pass sign_exceptions={} to disable for diagnostic
+    runs. See DOCUMENTED_SIGN_EXCEPTIONS dict below.
   - Gap junctions: continuous summed current `g_gap × w × (v_pre − v_post)`.
     Shiu's model did not include gap junctions; we add them because
     they are quantitatively important in worm (command-interneuron
@@ -145,6 +154,50 @@ DEFAULT_SIGN_OVERRIDES: dict[str, int] = {
 }
 
 
+# ----- Per-edge documented sign exceptions ---------------------------
+# Curated registry of edges where the default sign-computation rules
+# (per-neuron NT in default mode; per-edge CeNGEN receptor profile in
+# --use-per-edge-glu mode) produce signs that contradict published
+# literature for the specific synapse.
+#
+# Application: after both sign-assignment branches resolve W_chem,
+# regardless of mode (default or per-edge). Mode-independent.
+#
+# Admission criterion: an entry is added only when (a) receptor
+# expression and circuit function disagree at the specific synapse,
+# OR the default rule (e.g., "ACh = +1 universally") fails to capture
+# documented inhibitory mechanisms (ACC-gated chloride), AND (b) an
+# inline citation establishes the functional sign.
+DOCUMENTED_SIGN_EXCEPTIONS: dict[tuple[str, str], int] = {
+    # --- Anterior touch sensors → forward command interneuron PVC ---
+    # Chalfie 1985, Wicks 1996: anterior touch suppresses forward
+    # locomotion via inhibitory ALM/AVM → PVC chemical synapse.
+    # Per-edge mode would compute these as +1 (PVC iGluR-dominant in
+    # CeNGEN, ratio 9.6×) but functional sign is inhibitory.
+    # AVA-precedent (WormBook, Brockie & Maricq): iGluR-expressing
+    # cells can carry functional GluCl currents from unidentified
+    # subunits; PVC likely analogous.
+    ("ALML", "PVCL"): -1,
+    ("ALML", "PVCR"): -1,
+    ("ALMR", "PVCR"): -1,
+    ("AVM",  "PVCL"): -1,
+    ("AVM",  "PVCR"): -1,
+
+    # --- AIY → AIZ: ACC-2-mediated cholinergic inhibition ---
+    # Li 2014 (PMC4243084): AIY-AIZ synapse is INHIBITORY, mediated
+    # by ACh-gated chloride channel ACC-2. Simulator's per-NT-class
+    # rule "ACh = +1 always" does not capture ACC-mediated inhibition.
+    # AIY is correctly classified as cholinergic (Loer & Rand 2022,
+    # Pereira 2015); the issue is the universal ACh=+1 sign rule, not
+    # NT classification. CeNGEN ACC subunit expression below TPM 4
+    # threshold; this is a rare exception, not a systematic concern
+    # (only RIG class shows any ACC subunit > TPM 1 across all 91
+    # CeNGEN classes).
+    ("AIYL", "AIZL"): -1,
+    ("AIYR", "AIZR"): -1,
+}
+
+
 class LIFBrain:
     """Brian2-backed LIF network loaded from the Cook 2019 / Loer&Rand
     connectome artifact produced by `build_connectome_matrix.py`."""
@@ -159,6 +212,7 @@ class LIFBrain:
         include_gap=True,
         sign_overrides: dict[str, int] | None = None,
         use_per_edge_glu_signs: bool = False,
+        sign_exceptions: dict[tuple[str, str], int] | None = None,
     ):
         """LIF brain constructor.
 
@@ -170,9 +224,19 @@ class LIFBrain:
             accurate but requires re-tuning of modulation strengths
             and FSM thresholds — kept optional pending v3.3
             re-calibration.
+        sign_exceptions: optional dict[(pre,post), sign] of documented
+            per-edge sign exceptions. Applied as a final overlay AFTER
+            both sign-assignment branches resolve W_chem. Mode-
+            independent (applies in both default and per-edge modes)
+            and NT-class-agnostic (Glu, ACh, GABA pre cells all
+            supported). If None, falls back to DOCUMENTED_SIGN_EXCEPTIONS
+            module-level default. Pass {} to disable all exceptions
+            for diagnostic runs.
         """
         if sign_overrides is None:
             sign_overrides = DEFAULT_SIGN_OVERRIDES
+        if sign_exceptions is None:
+            sign_exceptions = DOCUMENTED_SIGN_EXCEPTIONS
 
         # Deterministic Brian2 RNG. np.random.seed() doesn't lock
         # Brian2's internal noise generator — need brian2.seed()
@@ -198,7 +262,10 @@ class LIFBrain:
         self.sign_overrides_applied: list[tuple[str, int, int]] = []
         has_per_edge = "W_chem_per_edge" in d.files
         if use_per_edge_glu_signs and has_per_edge:
-            W_chem: np.ndarray = d["W_chem_per_edge"].astype(np.float32)
+            # `.copy()` because d["W_chem_per_edge"] returns a memory-
+            # mapped view; mutating it via sign_exceptions below would
+            # silently corrupt the npz cache.
+            W_chem: np.ndarray = d["W_chem_per_edge"].astype(np.float32).copy()
             self._using_per_edge_signs = True
         else:
             # Legacy path (default): apply per-neuron Glu→iGluR exceptions
@@ -210,6 +277,37 @@ class LIFBrain:
                         self.sign_overrides_applied.append((name, old, new_sign))
             W_chem: np.ndarray = (sign_base[:, None].astype(np.float32) * W_chem_raw)
             self._using_per_edge_signs = False
+
+        # Mode-independent: apply DOCUMENTED_SIGN_EXCEPTIONS as a final
+        # overlay on the resolved W_chem. NT-class-agnostic — entries
+        # apply regardless of presynaptic NT class.
+        self.sign_exceptions_applied: list[tuple[str, str, int, int]] = []
+        for (pre_name, post_name), new_sign in sign_exceptions.items():
+            if pre_name not in self.idx or post_name not in self.idx:
+                raise KeyError(
+                    f"DOCUMENTED_SIGN_EXCEPTIONS entry "
+                    f"({pre_name}→{post_name}) references neuron(s) "
+                    f"not in connectome roster."
+                )
+            pi, qi = self.idx[pre_name], self.idx[post_name]
+            if W_chem_raw[pi, qi] == 0:
+                raise ValueError(
+                    f"DOCUMENTED_SIGN_EXCEPTIONS entry "
+                    f"({pre_name}→{post_name}) has zero raw chemical "
+                    f"weight; no edge to override."
+                )
+            magnitude = abs(W_chem[pi, qi])
+            cur = W_chem[pi, qi]
+            old_sign = +1 if cur > 0 else (-1 if cur < 0 else 0)
+            if old_sign != new_sign:
+                W_chem[pi, qi] = new_sign * magnitude
+                self.sign_exceptions_applied.append(
+                    (pre_name, post_name, old_sign, new_sign)
+                )
+
+        # Debug-accessible reference to the post-override W_chem matrix.
+        # Used by unit-level verification + inspection of override effect.
+        self._W_chem_runtime: np.ndarray = W_chem
 
         W_gap: np.ndarray = d["W_gap"].astype(np.float32)
 

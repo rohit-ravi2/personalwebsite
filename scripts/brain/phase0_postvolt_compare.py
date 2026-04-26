@@ -66,9 +66,10 @@ CASCADE_ORDER = [
 ]
 
 CONDITIONS = [
-    ("g_gap=0.1 (default)", "phase0_postvolt_phenotype_default.csv"),
-    ("g_gap=0.3",           "phase0_postvolt_gap03_phenotype_default.csv"),
-    ("g_gap=1.0",           "phase0_postvolt_gap10_phenotype_default.csv"),
+    ("g_gap=0.1 (post-volt baseline)", "phase0_postvolt_phenotype_default.csv"),
+    ("g_gap=0.3",                       "phase0_postvolt_gap03_phenotype_default.csv"),
+    ("g_gap=1.0",                       "phase0_postvolt_gap10_phenotype_default.csv"),
+    ("per-edge Glu signs (g_gap=0.1)",  "phase0_postvolt_peredge_phenotype_default.csv"),
 ]
 
 
