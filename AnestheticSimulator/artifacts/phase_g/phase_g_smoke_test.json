@@ -1,0 +1,20 @@
+{
+  "anesthetic": "halothane",
+  "dose_multiplier": 1.0,
+  "summary": {
+    "n_classes_engaged": 8,
+    "max_class_occupancy": 0.9984000542804112,
+    "mean_class_occupancy": 0.9133711436335656,
+    "n_targets_engaged": 30
+  },
+  "per_class_counts": {
+    "nachr_antagonism": 6,
+    "glucl_potentiation": 4,
+    "gaba_potentiation": 2,
+    "complex_i_block": 5,
+    "complex_ii_block": 1,
+    "nca_block": 3,
+    "snare_cooperativity": 6,
+    "k2p_potentiation": 3
+  }
+}
