@@ -1,0 +1,36 @@
+Device: cuda
+Raw data: 64 traces, 8000 steps, dt=0.02500000037252903 ms
+V range: [-60.00, -17.06] mV
+Subsampled: 1600 steps, dt=0.12500000186264515 ms
+Init test MAE: 52.903 mV (max 57.929); axial_g=1.0000e-03
+Ep   0  loss=3433.8436  test MAE=52.837 mV  axial_g=1.0357e-03
+Ep   2  loss=3409.6445  test MAE=52.695 mV  axial_g=1.1121e-03
+Ep   4  loss=3442.5867  test MAE=52.536 mV  axial_g=1.1977e-03
+Ep   6  loss=3424.4476  test MAE=52.347 mV  axial_g=1.2954e-03
+Ep   8  loss=3426.3506  test MAE=52.105 mV  axial_g=1.4081e-03
+Ep  10  loss=3387.6012  test MAE=51.746 mV  axial_g=1.5388e-03
+Ep  12  loss=3357.5223  test MAE=51.022 mV  axial_g=1.6901e-03
+Ep  14  loss=3190.4513  test MAE=50.124 mV  axial_g=1.8388e-03
+Ep  16  loss=3218.5970  test MAE=48.665 mV  axial_g=1.8038e-03
+Ep  18  loss=3110.9287  test MAE=47.652 mV  axial_g=1.7970e-03
+Ep  20  loss=3075.7445  test MAE=47.893 mV  axial_g=1.7911e-03
+Ep  22  loss=3083.4590  test MAE=47.171 mV  axial_g=1.7929e-03
+Ep  24  loss=3060.3821  test MAE=47.066 mV  axial_g=1.7950e-03
+Ep  26  loss=3026.8969  test MAE=47.360 mV  axial_g=1.7927e-03
+Ep  28  loss=2998.0513  test MAE=45.553 mV  axial_g=1.7939e-03
+Ep  30  loss=3111.6797  test MAE=46.897 mV  axial_g=1.7928e-03
+Ep  32  loss=2993.0903  test MAE=46.480 mV  axial_g=1.7933e-03
+Ep  34  loss=2906.2497  test MAE=45.575 mV  axial_g=1.7940e-03
+Ep  36  loss=3017.5775  test MAE=46.991 mV  axial_g=1.7934e-03
+Ep  38  loss=2988.6500  test MAE=43.985 mV  axial_g=1.7940e-03
+Ep  39  loss=2985.3849  test MAE=46.220 mV  axial_g=1.7937e-03
+
+Final test MAE: 46.220 mV (max 51.230)
+Final axial_g: 1.7937e-03
+Final gbar_egl19: 6.4329e-06  (init 9.2882e-06)
+Final gleak0: 8.0879e-06  (init 1.3362e-05)
+Trained in 793.9s
+Saved results to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/speculative/prototype/results.json
+Saved model to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/speculative/prototype/trained_model.pt
+
+PROTOTYPE OUTCOME: FAIL (threshold 5.0 mV)
