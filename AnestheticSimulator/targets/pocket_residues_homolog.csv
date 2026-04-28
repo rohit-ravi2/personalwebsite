@@ -1,0 +1,33 @@
+target,homolog_PDB,homolog_pocket_residues,celegans_pocket_residues_predicted,pocket_definition_source,confidence
+UNC-49,6X3X,"M2 helix beta+/alpha- interface; mammalian residues T262, A263, S270, A290 (alpha1 numbering)",TBD - populate via Phase A sequence alignment,Mihic 1997 + Olsen photolabel,medium
+EXP-1,6X3X,"Same as UNC-49 (M2 helix beta+/alpha- interface)",TBD,Mihic 1997,medium
+AVR-14,3RHW,"Pore lumen; M2 residues from Hibbs 2011",TBD - 3RHW is the C. elegans GluCl crystal,Hibbs & Gouaux 2011,high
+AVR-15,3RHW,"Same as AVR-14 (M2 helix)",TBD,Hibbs 2011,medium
+GLC-1,3RHW,"Same as AVR-14",TBD,Hibbs 2011,medium
+GLC-2,3RHW,"Same as AVR-14",TBD,Hibbs 2011,medium
+ACR-16,7QL5,"M2 helix; intersubunit interface residues from Forman/Miller mammalian work",TBD,Forman 2007 review,medium
+ACR-2,7QL5,"M2 helix",TBD,Forman 2007,medium
+UNC-29,7QL5,"M2 helix",TBD,Forman 2007,medium
+UNC-38,7QL5,"M2 helix; alpha-subunit primary site",TBD,Forman 2007,medium
+UNC-63,7QL5,"M2 helix",TBD,Forman 2007,medium
+LEV-1,7QL5,"M2 helix",TBD,Forman 2007,medium
+TWK-18,6CQ6,"Fenestration site between TM1 and TM4; pore lining S6",TBD,Lolicato 2017,medium
+TWK-7,6CQ6,"Fenestration",TBD,Lolicato 2017,medium
+TWK-29,6CQ6,"Fenestration",TBD,Lolicato 2017,medium
+NCA-1,7SX3,"S6 pore lining; selectivity filter region",TBD,Xie 2020,medium
+NCA-2,7SX3,"S6 pore lining",TBD,Xie 2020,medium
+UNC-79,n/a,"No mammalian homolog; functional domain TBD",TBD - via fpocket de novo,Phase A discovery,low
+UNC-80,n/a,"No mammalian homolog; large IDR; functional domain TBD",TBD - via fpocket de novo,Phase A discovery,low
+NLF-1,n/a,"No mammalian homolog; ER-resident",TBD - low priority,Phase A discovery,low
+UNC-64,1SFC,"Layer-zero hydrophobic core of SNARE bundle; residues from Sutton 1998",TBD,Sutton 1998,medium
+RIC-4,1SFC,"Layer-zero",TBD,Sutton 1998,medium
+SNB-1,1SFC,"Layer-zero",TBD,Sutton 1998,medium
+UNC-13,4XII,"C2A Ca-binding loops; phorbol-binding C1 domain pocket",TBD,Shin 2010,medium
+UNC-18,4JEU,"Syntaxin-binding cleft (cavity 1)",TBD,Hu 2011,medium
+SNT-1,3F03,"C2B Ca-binding loops; PIP2-binding face",TBD,Sutton 1995,medium
+GAS-1,5LDX,"Q-cavity / Q-binding tunnel; NDUFS2 49 kDa loop",TBD,Zhu 2016,medium
+NUO-1,5LDX,"NDUFV1; FMN-binding cavity",TBD,Zhu 2016,medium
+NUO-2,5LDX,"Inter-subunit interface in N-module",TBD,Zhu 2016,low
+NUO-3,5LDX,"Membrane arm subunit",TBD,Zhu 2016,low
+NUO-4,5LDX,"Membrane arm subunit",TBD,Zhu 2016,low
+MEV-1,1ZOY,"Q-binding cavity (different from CI Q-cavity)",TBD,Yankovskaya 2003,medium

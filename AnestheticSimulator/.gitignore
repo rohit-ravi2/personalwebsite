@@ -1,0 +1,99 @@
+# Wave P .gitignore
+# Wave P artifacts: large structural / docking / MD outputs are not tracked
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Phase A — structures
+artifacts/structures/*.pdb
+artifacts/structures/*.cif
+artifacts/structures/*.tar.gz
+
+# Phase B — binding
+artifacts/binding/*.sdf
+artifacts/binding/*.pdbqt
+artifacts/binding/*.dlg
+
+# Phase D — kinetics (MD trajectories are large)
+artifacts/traces/
+artifacts/kinetics/*.dcd
+artifacts/kinetics/*.xtc
+artifacts/kinetics/*.trr
+artifacts/kinetics/*.h5
+
+# Phase G — network runs (large NPZ)
+artifacts/runs/*.npz
+artifacts/runs/*.h5
+
+# Logs
+artifacts/logs/*.log
+artifacts/*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local config (shouldn't be committed)
+.env
+local_config.yaml
+
+# --- Subdirectory patterns for docking pipeline outputs ---
+# The direct-child patterns above (artifacts/binding/*.pdbqt etc.) don't catch
+# files in subdirectories. The actual layout uses per-gene subdirectories under
+# structures/ and a poses/ subdirectory under binding/, which need explicit **
+# patterns. All matched files are regeneratable from src/phase_*.py scripts.
+
+# Phase A — fpocket per-gene receptor + pocket files
+artifacts/structures/**/*.pdb
+artifacts/structures/**/*.cif
+artifacts/structures/**/*.pqr
+artifacts/structures/**/*.pdbqt
+artifacts/structures/**/*.tar.gz
+artifacts/structures/**/pocket*.tcl
+artifacts/structures/**/pocket*.pml
+artifacts/structures/**/pocket*.sh
+artifacts/structures/**/pocket*.txt
+artifacts/structures/**/pocket*.gro
+artifacts/structures/**/pocket*.mol2
+
+# Phase B — Vina pose files + receptor PDBQT
+artifacts/binding/poses/
+artifacts/binding/receptors/
+artifacts/binding/*.log
+
+# Calibration pipeline binary outputs (regeneratable from
+# src/calibration_dock_runner.py + calibration_scan_negative_poses.py +
+# calibration_pull_mammalian_homologs.py)
+artifacts/calibration/poses_mammalian/
+artifacts/calibration/poses_negative/
+artifacts/calibration/structures/
+artifacts/calibration/receptors/
+artifacts/calibration/checkpoints/
+artifacts/calibration/negative_controls/
+artifacts/calibration/*.log
+artifacts/calibration/calibration_run_state.json
+
+# Pose-prep intermediate ligand files — keep tiny .smi (canonical SMILES,
+# load-bearing for reproducibility), drop regeneratable .sdf/.pdbqt outputs
+anesthetics/anesthetic_smiles/*.sdf
+anesthetics/anesthetic_smiles/*.pdbqt
+anesthetics/negative_controls/*.sdf
+anesthetics/negative_controls/*.pdbqt
+
+# Allow READMEs in artifacts/ subdirectories
+!artifacts/**/README.md

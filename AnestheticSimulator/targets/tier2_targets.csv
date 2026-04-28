@@ -1,0 +1,35 @@
+gene_name,wormbase_id,uniprot_id,anesthesia_rationale,predicted_oligomer_state,structure_priority,AF_DB_url_if_exists,mammalian_homolog_PDB,pocket_compartment,mechanism_class,notes
+NMR-1,WBGene00003600,Q21195,NMDA receptor subunit; ketamine target,heterotetramer,high,https://alphafold.ebi.ac.uk/entry/Q21195,4PE5,membrane_embedded,nmda_antagonism,Ketamine primary target
+NMR-2,WBGene00003601,Q9N4N4,NMDA receptor subunit,heterotetramer,medium,https://alphafold.ebi.ac.uk/entry/Q9N4N4,4PE5,membrane_embedded,nmda_antagonism,
+GLR-1,WBGene00001624,Q17443,AMPA-like glutamate receptor,homotetramer,high,https://alphafold.ebi.ac.uk/entry/Q17443,3KG2,membrane_embedded,ampa_antagonism,Mechanosensory and locomotion
+GLR-2,WBGene00001625,O45100,AMPA-like glutamate receptor,heterotetramer with GLR-1,medium,https://alphafold.ebi.ac.uk/entry/O45100,3KG2,membrane_embedded,ampa_antagonism,
+GLR-3,WBGene00001626,Q21342,Glutamate receptor,heterotetramer,low,n/a,3KG2,membrane_embedded,ampa_antagonism,
+GLR-4,WBGene00001627,Q9NEM1,Glutamate receptor,heterotetramer,low,n/a,3KG2,membrane_embedded,ampa_antagonism,
+GLR-5,WBGene00001628,O18198,Glutamate receptor,heterotetramer,low,n/a,3KG2,membrane_embedded,ampa_antagonism,
+GLR-6,WBGene00001629,Q9NES9,Glutamate receptor,heterotetramer,low,n/a,3KG2,membrane_embedded,ampa_antagonism,
+GLR-7,WBGene00001630,Q9XW69,Glutamate receptor,heterotetramer,low,n/a,3KG2,membrane_embedded,ampa_antagonism,
+GLR-8,WBGene00001631,Q9XX76,Glutamate receptor,heterotetramer,low,n/a,3KG2,membrane_embedded,ampa_antagonism,
+EGL-19,WBGene00001185,P54918,L-type Ca channel; primary muscle Ca,monomer,high,https://alphafold.ebi.ac.uk/entry/P54918,6JP5,membrane_embedded,ca_block,Wave 2 already translated; Wave P consumes
+UNC-2,WBGene00006744,P28723,P/Q-type Ca channel; presynaptic,monomer,medium,https://alphafold.ebi.ac.uk/entry/P28723,7MIX,membrane_embedded,ca_block,
+CCA-1,WBGene00000402,Q19170,T-type Ca channel,monomer,low,https://alphafold.ebi.ac.uk/entry/Q19170,n/a,membrane_embedded,ca_block,
+SHK-1,WBGene00004773,P34411,Kv1.4 / Shaker delayed rectifier homolog,homotetramer,medium,https://alphafold.ebi.ac.uk/entry/P34411,2R9R,membrane_embedded,kv_potentiation,Wave 2 already translated
+SHL-1,WBGene00004791,Q22038,Kv4 / Shal A-type,homotetramer,medium,https://alphafold.ebi.ac.uk/entry/Q22038,2R9R,membrane_embedded,kv_potentiation,Wave 2 already translated
+KVS-1,WBGene00002230,P90977,Kv4 / Shal subfamily,homotetramer,medium,n/a,2R9R,membrane_embedded,kv_potentiation,
+SLO-1,WBGene00004976,P29457,BK / large-conductance Ca-activated K,homotetramer,medium,https://alphafold.ebi.ac.uk/entry/P29457,6V3G,membrane_embedded,kv_potentiation,Wave 2 already translated; halothane sensitivity reported in mammals
+SLO-2,WBGene00004977,O17409,Slack/Slick K channel,homotetramer,low,n/a,6V3G,membrane_embedded,kv_potentiation,
+IRK-1,WBGene00002214,Q9N4F0,Inwardly rectifying K channel; in AVA,homotetramer,high,https://alphafold.ebi.ac.uk/entry/Q9N4F0,3SPI,membrane_embedded,kir_block,Wave 2 in flight; anesthetic effect on Kir is established in mammals
+IRK-2,WBGene00002215,Q9NEY1,Inwardly rectifying K channel,homotetramer,medium,n/a,3SPI,membrane_embedded,kir_block,
+IRK-3,WBGene00002216,Q9N4G2,Inwardly rectifying K channel,homotetramer,low,n/a,3SPI,membrane_embedded,kir_block,
+KQT-1,WBGene00002232,O18199,KCNQ / Kv7 family,homotetramer,medium,n/a,7CR1,membrane_embedded,kv_potentiation,
+KQT-3,WBGene00002235,Q21341,KCNQ / Kv7,homotetramer,medium,https://alphafold.ebi.ac.uk/entry/Q21341,7CR1,membrane_embedded,kv_potentiation,Wave 2 already translated; M-current
+EXP-2,WBGene00001389,O18171,Eag/Erg-like K channel; pharyngeal,homotetramer,low,n/a,5K7L,membrane_embedded,kv_potentiation,
+UNC-103,WBGene00006815,Q9XV42,Erg-like K channel; AVA,homotetramer,high,https://alphafold.ebi.ac.uk/entry/Q9XV42,5K7L,membrane_embedded,kv_potentiation,Wave 2 in flight
+EGL-3,WBGene00001179,Q9XV59,Proprotein convertase / PC1/3 homolog; peptide processing,monomer,medium,https://alphafold.ebi.ac.uk/entry/Q9XV59,n/a,aqueous_intracellular,peptide_processing,
+EGL-21,WBGene00001197,O44425,Carboxypeptidase E homolog; peptide processing,monomer,medium,https://alphafold.ebi.ac.uk/entry/O44425,n/a,aqueous_intracellular,peptide_processing,
+KPC-1,WBGene00002336,Q19014,Furin-like proprotein convertase; PC2,monomer,low,n/a,n/a,aqueous_intracellular,peptide_processing,
+NEP-1,WBGene00003584,O18158,Neprilysin homolog; peptide degradation,monomer,low,n/a,n/a,membrane_interfacial,peptide_processing,
+SER-2,WBGene00004781,Q9NES4,Serotonin receptor (5-HT2-like),GPCR,low,n/a,n/a,membrane_embedded,monoamine_modulation,
+SER-4,WBGene00004783,Q19105,5-HT1-like receptor,GPCR,low,n/a,n/a,membrane_embedded,monoamine_modulation,
+DOP-1,WBGene00001052,Q23357,Dopamine D1-like receptor,GPCR,low,n/a,n/a,membrane_embedded,monoamine_modulation,
+TYRA-2,WBGene00006568,Q9N5E2,Tyramine receptor,GPCR,low,n/a,n/a,membrane_embedded,monoamine_modulation,
+OCTR-1,WBGene00003824,Q19354,Octopamine receptor,GPCR,low,n/a,n/a,membrane_embedded,monoamine_modulation,

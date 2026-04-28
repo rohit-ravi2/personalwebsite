@@ -1,0 +1,18 @@
+gene,allele,phenotype_label,EC50_shift_relative_to_WT,EC50_shift_direction,anesthetic,source_paper,source_PMID,notes
+gas-1,fc21,halothane hypersensitive,0.33-0.5,leftward,halothane,Morgan & Sedensky 1995,7549290,Complex I 30-50% activity reduction
+gas-1,fc21,isoflurane hypersensitive,0.33-0.5,leftward,isoflurane,Morgan & Sedensky 1995,7549290,
+unc-79,e1068,halothane resistant,1.5-3,rightward,halothane,Sedensky 1992,1346264,NCA auxiliary subunit
+unc-79,e1068,isoflurane resistant,1.5-3,rightward,isoflurane,Sedensky 1992,1346264,
+unc-80,e1069,halothane resistant,1.5-3,rightward,halothane,Sedensky 1992,1346264,Similar to unc-79
+twk-18,cn110,halothane resistant,1.5-3,rightward,halothane,Sedensky 2001,11756669,K2P gain-of-function
+unc-13,s69,halothane hypersensitive,0.33-0.5,leftward,halothane,van Swinderen 1999,PMID lookup needed,SNARE priming hypomorph
+unc-13,e51,halothane hypersensitive,0.33-0.5,leftward,halothane,van Swinderen 1999,PMID lookup needed,
+unc-2,e55,halothane hypersensitive,unclear,leftward (mild),halothane,van Swinderen 1999,PMID lookup needed,Presynaptic Ca channel
+mev-1,kn1,halothane hypersensitive (mild),0.7-1.0,slightly leftward,halothane,Kayser 2001 follow-up,PMID lookup needed,Complex II; smaller effect than gas-1
+nuo-1,RNAi,halothane hypersensitive,0.4-0.7,leftward,halothane,Falk 2006,PMID lookup needed,Other Complex I subunit
+atp-2,RNAi,halothane hypersensitive (severe),0.2-0.5,leftward,halothane,Kayser 2008 follow-up,PMID lookup needed,ATP synthase
+unc-64,e246,halothane hypersensitive,0.3-0.6,leftward,halothane,(secondary),PMID lookup needed,Syntaxin partial loss-of-function
+ric-4,reduced,halothane hypersensitive,0.3-0.6,leftward,halothane,(secondary),PMID lookup needed,SNAP-25 reduction
+snb-1,reduced,halothane hypersensitive,0.3-0.6,leftward,halothane,(secondary),PMID lookup needed,VAMP reduction
+nca-1;nca-2,double null,halothane resistant,1.5-3,rightward,halothane,Yeh 2008,PMID lookup needed,NALCN double KO
+gar-3,RNAi,WT-like,~1.0,no shift,halothane,(control),PMID lookup needed,Muscarinic ACh receptor; control
