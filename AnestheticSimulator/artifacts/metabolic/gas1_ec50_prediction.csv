@@ -1,0 +1,7 @@
+anesthetic,block_factor_at_1xEC50,predicted_WT_dose_for_immobilization,predicted_gas1_dose_for_immobilization,predicted_hypersensitivity_ratio
+etomidate,0.9772,inf,inf,nan
+halothane,0.7057,2.4300,0.9800,2.4796
+isoflurane,0.7066,2.4400,0.9800,2.4898
+ketamine,0.7003,2.3900,0.9600,2.4896
+propofol,0.7234,2.5900,1.0400,2.4904
+sevoflurane,0.7105,2.4700,1.0000,2.4700

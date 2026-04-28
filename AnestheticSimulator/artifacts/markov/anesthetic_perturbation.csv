@@ -1,0 +1,7 @@
+anesthetic,raw_n_Ca_delta,effective_n_Ca_delta,n_perturbed,spontaneous_rate_Hz,evoked_release_p,evoked_p_fold_change_vs_WT
+etomidate,-0.2085,-0.0626,3.4375,0.2000,0.0900,1.0000
+halothane,-1.4535,-0.4360,3.0640,0.2000,0.0300,0.3333
+isoflurane,-1.4670,-0.4401,3.0599,0.2000,0.0200,0.2222
+ketamine,-1.4985,-0.4495,3.0505,0.2000,0.0200,0.2222
+propofol,-1.3155,-0.3947,3.1054,0.2000,0.0400,0.4444
+sevoflurane,-1.4475,-0.4342,3.0657,0.2000,0.0300,0.3333
