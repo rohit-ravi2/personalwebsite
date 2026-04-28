@@ -1,0 +1,234 @@
+{
+  "stage": "IV",
+  "mode": "reduced-scope (cross-coupling paused at WB3)",
+  "components": {
+    "lif_per_edge_baseline": {
+      "ALML": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 60.0,
+        "recovery_Hz": 66.5
+      },
+      "ALMR": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 53.0,
+        "recovery_Hz": 62.5
+      },
+      "AVM": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 62.5,
+        "recovery_Hz": 60.5
+      },
+      "PVCL": {
+        "baseline_Hz": 27.5,
+        "touch_Hz": 32.5,
+        "recovery_Hz": 30.0
+      },
+      "PVCR": {
+        "baseline_Hz": 27.5,
+        "touch_Hz": 32.5,
+        "recovery_Hz": 30.0
+      },
+      "AVDL": {
+        "baseline_Hz": 27.5,
+        "touch_Hz": 32.5,
+        "recovery_Hz": 30.0
+      },
+      "AVDR": {
+        "baseline_Hz": 27.5,
+        "touch_Hz": 32.5,
+        "recovery_Hz": 30.0
+      },
+      "AVEL": {
+        "baseline_Hz": 24.5,
+        "touch_Hz": 34.5,
+        "recovery_Hz": 27.0
+      },
+      "AVER": {
+        "baseline_Hz": 26.0,
+        "touch_Hz": 29.0,
+        "recovery_Hz": 26.0
+      },
+      "AVAL": {
+        "baseline_Hz": 28.5,
+        "touch_Hz": 36.0,
+        "recovery_Hz": 31.0
+      },
+      "AVAR": {
+        "baseline_Hz": 28.5,
+        "touch_Hz": 34.5,
+        "recovery_Hz": 30.5
+      },
+      "AVBL": {
+        "baseline_Hz": 21.5,
+        "touch_Hz": 23.5,
+        "recovery_Hz": 21.5
+      },
+      "AVBR": {
+        "baseline_Hz": 26.5,
+        "touch_Hz": 29.0,
+        "recovery_Hz": 26.0
+      },
+      "AIBL": {
+        "baseline_Hz": 9.5,
+        "touch_Hz": 12.5,
+        "recovery_Hz": 14.0
+      },
+      "AIBR": {
+        "baseline_Hz": 12.0,
+        "touch_Hz": 15.0,
+        "recovery_Hz": 10.0
+      },
+      "RIML": {
+        "baseline_Hz": 16.0,
+        "touch_Hz": 20.5,
+        "recovery_Hz": 15.0
+      },
+      "RIMR": {
+        "baseline_Hz": 19.5,
+        "touch_Hz": 24.0,
+        "recovery_Hz": 21.0
+      },
+      "AIYL": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 3.0,
+        "recovery_Hz": 0.5
+      },
+      "AIYR": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 1.0,
+        "recovery_Hz": 0.5
+      }
+    },
+    "wave2_aval_plateau": {
+      "-30": {
+        "injection_pA": -30.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": -39.38878578972373,
+        "plateau_V_mV": -175.33958687279943,
+        "recovery_V_mV": -40.76660832965781,
+        "delta_peak_mV": 0.9247992870463975,
+        "delta_plateau_mV": -135.0260017960293
+      },
+      "-20": {
+        "injection_pA": -20.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": -39.38878578972373,
+        "plateau_V_mV": -135.68917824232852,
+        "recovery_V_mV": -40.50071366536022,
+        "delta_peak_mV": 0.9247992870463975,
+        "delta_plateau_mV": -95.3755931655584
+      },
+      "-10": {
+        "injection_pA": -10.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": -39.38878578972373,
+        "plateau_V_mV": -96.99223875174926,
+        "recovery_V_mV": -40.16645488544861,
+        "delta_peak_mV": 0.9247992870463975,
+        "delta_plateau_mV": -56.67865367497913
+      },
+      "+0": {
+        "injection_pA": 0.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": -39.36553952863834,
+        "plateau_V_mV": -39.365539528638344,
+        "recovery_V_mV": -39.365539528638344,
+        "delta_peak_mV": 0.9480455481317875,
+        "delta_plateau_mV": 0.9480455481317804
+      },
+      "+10": {
+        "injection_pA": 10.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": 39.68380697850335,
+        "plateau_V_mV": 39.68380697850334,
+        "recovery_V_mV": -37.1581176960147,
+        "delta_peak_mV": 79.99739205527348,
+        "delta_plateau_mV": 79.99739205527347
+      },
+      "+20": {
+        "injection_pA": 20.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": 80.61635667914302,
+        "plateau_V_mV": 80.61635667914304,
+        "recovery_V_mV": -36.15809720786897,
+        "delta_peak_mV": 120.92994175591315,
+        "delta_plateau_mV": 120.92994175591316
+      },
+      "+30": {
+        "injection_pA": 30.0,
+        "baseline_V_mV": -40.313585076770124,
+        "peak_V_mV": 120.6896869137788,
+        "plateau_V_mV": 120.6896869137788,
+        "recovery_V_mV": -35.42581919112477,
+        "delta_peak_mV": 161.0032719905489,
+        "delta_plateau_mV": 161.0032719905489
+      }
+    },
+    "wave2_avar_plateau": {
+      "-30": {
+        "injection_pA": -30.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": -24.103423438097263,
+        "plateau_V_mV": -127.20798541119736,
+        "recovery_V_mV": -24.0549944622466,
+        "delta_peak_mV": 0.08154844760888835,
+        "delta_plateau_mV": -103.02301352549121
+      },
+      "-20": {
+        "injection_pA": -20.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": -24.103423438097263,
+        "plateau_V_mV": -95.97838668982918,
+        "recovery_V_mV": -24.051658576772013,
+        "delta_peak_mV": 0.08154844760888835,
+        "delta_plateau_mV": -71.79341480412303
+      },
+      "-10": {
+        "injection_pA": -10.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": -24.103423438097263,
+        "plateau_V_mV": -61.86541423678882,
+        "recovery_V_mV": -24.060673310935154,
+        "delta_peak_mV": 0.08154844760888835,
+        "delta_plateau_mV": -37.680442351082675
+      },
+      "+0": {
+        "injection_pA": 0.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": -24.103423438097263,
+        "plateau_V_mV": -24.49172823562249,
+        "recovery_V_mV": -24.536613090956564,
+        "delta_peak_mV": 0.08154844760888835,
+        "delta_plateau_mV": -0.3067563499163377
+      },
+      "+10": {
+        "injection_pA": 10.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": 16.49328481254366,
+        "plateau_V_mV": 15.662661991855122,
+        "recovery_V_mV": -26.812264840183527,
+        "delta_peak_mV": 40.67825669824981,
+        "delta_plateau_mV": 39.84763387756127
+      },
+      "+20": {
+        "injection_pA": 20.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": 49.44987704731663,
+        "plateau_V_mV": 49.44435010300118,
+        "recovery_V_mV": -26.869716435314853,
+        "delta_peak_mV": 73.63484893302278,
+        "delta_plateau_mV": 73.62932198870733
+      },
+      "+30": {
+        "injection_pA": 30.0,
+        "baseline_V_mV": -24.18497188570615,
+        "peak_V_mV": 79.6544183543701,
+        "plateau_V_mV": 79.65441835437011,
+        "recovery_V_mV": -26.868165183139183,
+        "delta_peak_mV": 103.83939024007624,
+        "delta_plateau_mV": 103.83939024007626
+      }
+    }
+  },
+  "elapsed_s": 75.50482511520386
+}
