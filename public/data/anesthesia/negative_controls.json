@@ -1,0 +1,1290 @@
+{
+  "ligands": [
+    {
+      "name": "benzene",
+      "rationale": "Benzene; weak narcotic at high concentrations; not used clinically",
+      "eger_status": "WEAK_NARCOTIC (high doses only)",
+      "engagement_count_at_1mM": 30,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 332.6,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -4.7,
+          "predicted_Kd_uM": 142.96,
+          "occupancy_at_1mM": 0.8749
+        },
+        "ACR-2": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "AVR-14": {
+          "vina_dG": -4.3,
+          "predicted_Kd_uM": 280.9,
+          "occupancy_at_1mM": 0.7807
+        },
+        "AVR-15": {
+          "vina_dG": -4.5,
+          "predicted_Kd_uM": 200.39,
+          "occupancy_at_1mM": 0.8331
+        },
+        "EXP-1": {
+          "vina_dG": -4.2,
+          "predicted_Kd_uM": 332.57,
+          "occupancy_at_1mM": 0.7504
+        },
+        "GAS-1": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "GLC-1": {
+          "vina_dG": -3.9,
+          "predicted_Kd_uM": 551.95,
+          "occupancy_at_1mM": 0.6444
+        },
+        "GLC-2": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "LEV-1": {
+          "vina_dG": -4.8,
+          "predicted_Kd_uM": 120.74,
+          "occupancy_at_1mM": 0.8923
+        },
+        "MEV-1": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "NCA-2": {
+          "vina_dG": -4.2,
+          "predicted_Kd_uM": 332.57,
+          "occupancy_at_1mM": 0.7504
+        },
+        "NLF-1": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "NUO-1": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "NUO-2": {
+          "vina_dG": -4.8,
+          "predicted_Kd_uM": 120.74,
+          "occupancy_at_1mM": 0.8923
+        },
+        "NUO-3": {
+          "vina_dG": -4.7,
+          "predicted_Kd_uM": 142.96,
+          "occupancy_at_1mM": 0.8749
+        },
+        "NUO-4": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "RIC-4": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "SNB-1": {
+          "vina_dG": -3.5,
+          "predicted_Kd_uM": 1084.55,
+          "occupancy_at_1mM": 0.4797
+        },
+        "SNT-1": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "TWK-18": {
+          "vina_dG": -4.3,
+          "predicted_Kd_uM": 280.9,
+          "occupancy_at_1mM": 0.7807
+        },
+        "TWK-29": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "TWK-7": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "UNC-13": {
+          "vina_dG": -3.5,
+          "predicted_Kd_uM": 1084.55,
+          "occupancy_at_1mM": 0.4797
+        },
+        "UNC-18": {
+          "vina_dG": -4.5,
+          "predicted_Kd_uM": 200.39,
+          "occupancy_at_1mM": 0.8331
+        },
+        "UNC-29": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "UNC-38": {
+          "vina_dG": -4.5,
+          "predicted_Kd_uM": 200.39,
+          "occupancy_at_1mM": 0.8331
+        },
+        "UNC-49": {
+          "vina_dG": -4.3,
+          "predicted_Kd_uM": 280.9,
+          "occupancy_at_1mM": 0.7807
+        },
+        "UNC-63": {
+          "vina_dG": -4.5,
+          "predicted_Kd_uM": 200.39,
+          "occupancy_at_1mM": 0.8331
+        },
+        "UNC-64": {
+          "vina_dG": -3.4,
+          "predicted_Kd_uM": 1284.07,
+          "occupancy_at_1mM": 0.4378
+        },
+        "UNC-79": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        }
+      }
+    },
+    {
+      "name": "cis_12_dichloroethylene",
+      "rationale": "cis-1,2-dichloroethylene; anesthetic conformer of trans-DCE; tests pipeline shape sensitivity",
+      "eger_status": "ANESTHETIC (Eger 2001)",
+      "engagement_count_at_1mM": 29,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 4187.4,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "ACR-2": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "AVR-14": {
+          "vina_dG": -3.0,
+          "predicted_Kd_uM": 2523.12,
+          "occupancy_at_1mM": 0.2838
+        },
+        "AVR-15": {
+          "vina_dG": -3.0,
+          "predicted_Kd_uM": 2523.12,
+          "occupancy_at_1mM": 0.2838
+        },
+        "EXP-1": {
+          "vina_dG": -3.1,
+          "predicted_Kd_uM": 2131.08,
+          "occupancy_at_1mM": 0.3194
+        },
+        "GAS-1": {
+          "vina_dG": -2.5,
+          "predicted_Kd_uM": 5869.82,
+          "occupancy_at_1mM": 0.1456
+        },
+        "GLC-1": {
+          "vina_dG": -2.5,
+          "predicted_Kd_uM": 5869.82,
+          "occupancy_at_1mM": 0.1456
+        },
+        "GLC-2": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "LEV-1": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "MEV-1": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "NCA-2": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "NLF-1": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "NUO-1": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "NUO-2": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "NUO-3": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "NUO-4": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "RIC-4": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "SNB-1": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "SNT-1": {
+          "vina_dG": -2.4,
+          "predicted_Kd_uM": 6949.64,
+          "occupancy_at_1mM": 0.1258
+        },
+        "TWK-18": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "TWK-29": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "TWK-7": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "UNC-13": {
+          "vina_dG": -2.4,
+          "predicted_Kd_uM": 6949.64,
+          "occupancy_at_1mM": 0.1258
+        },
+        "UNC-18": {
+          "vina_dG": -3.0,
+          "predicted_Kd_uM": 2523.12,
+          "occupancy_at_1mM": 0.2838
+        },
+        "UNC-29": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "UNC-38": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "UNC-49": {
+          "vina_dG": -2.5,
+          "predicted_Kd_uM": 5869.82,
+          "occupancy_at_1mM": 0.1456
+        },
+        "UNC-63": {
+          "vina_dG": -3.2,
+          "predicted_Kd_uM": 1799.96,
+          "occupancy_at_1mM": 0.3571
+        },
+        "UNC-64": {
+          "vina_dG": -2.3,
+          "predicted_Kd_uM": 8228.1,
+          "occupancy_at_1mM": 0.1084
+        },
+        "UNC-79": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        }
+      }
+    },
+    {
+      "name": "cyclohexane",
+      "rationale": "Cyclohexane; saturated cyclic alkane, weak narcotic at high concentrations",
+      "eger_status": "WEAK_ANESTHETIC",
+      "engagement_count_at_1mM": 30,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 466.2,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -4.8,
+          "predicted_Kd_uM": 120.74,
+          "occupancy_at_1mM": 0.8923
+        },
+        "ACR-2": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "AVR-14": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "AVR-15": {
+          "vina_dG": -4.6,
+          "predicted_Kd_uM": 169.25,
+          "occupancy_at_1mM": 0.8552
+        },
+        "EXP-1": {
+          "vina_dG": -3.9,
+          "predicted_Kd_uM": 551.95,
+          "occupancy_at_1mM": 0.6444
+        },
+        "GAS-1": {
+          "vina_dG": -3.6,
+          "predicted_Kd_uM": 916.04,
+          "occupancy_at_1mM": 0.5219
+        },
+        "GLC-1": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "GLC-2": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "LEV-1": {
+          "vina_dG": -4.6,
+          "predicted_Kd_uM": 169.25,
+          "occupancy_at_1mM": 0.8552
+        },
+        "MEV-1": {
+          "vina_dG": -4.2,
+          "predicted_Kd_uM": 332.57,
+          "occupancy_at_1mM": 0.7504
+        },
+        "NCA-2": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "NLF-1": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "NUO-1": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "NUO-2": {
+          "vina_dG": -4.5,
+          "predicted_Kd_uM": 200.39,
+          "occupancy_at_1mM": 0.8331
+        },
+        "NUO-3": {
+          "vina_dG": -4.8,
+          "predicted_Kd_uM": 120.74,
+          "occupancy_at_1mM": 0.8923
+        },
+        "NUO-4": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "RIC-4": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "SNB-1": {
+          "vina_dG": -3.2,
+          "predicted_Kd_uM": 1799.96,
+          "occupancy_at_1mM": 0.3571
+        },
+        "SNT-1": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "TWK-18": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "TWK-29": {
+          "vina_dG": -4.3,
+          "predicted_Kd_uM": 280.9,
+          "occupancy_at_1mM": 0.7807
+        },
+        "TWK-7": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "UNC-13": {
+          "vina_dG": -3.6,
+          "predicted_Kd_uM": 916.04,
+          "occupancy_at_1mM": 0.5219
+        },
+        "UNC-18": {
+          "vina_dG": -4.6,
+          "predicted_Kd_uM": 169.25,
+          "occupancy_at_1mM": 0.8552
+        },
+        "UNC-29": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "UNC-38": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "UNC-49": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "UNC-63": {
+          "vina_dG": -4.8,
+          "predicted_Kd_uM": 120.74,
+          "occupancy_at_1mM": 0.8923
+        },
+        "UNC-64": {
+          "vina_dG": -3.3,
+          "predicted_Kd_uM": 1520.29,
+          "occupancy_at_1mM": 0.3968
+        },
+        "UNC-79": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        }
+      }
+    },
+    {
+      "name": "dimethyl_ether",
+      "rationale": "Dimethyl ether; small ether, anesthetic-weak",
+      "eger_status": "WEAK_ANESTHETIC",
+      "engagement_count_at_1mM": 3,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 16167.7,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "ACR-2": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "AVR-14": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "AVR-15": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "EXP-1": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "GAS-1": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "GLC-1": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "GLC-2": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "LEV-1": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "MEV-1": {
+          "vina_dG": -1.7,
+          "predicted_Kd_uM": 22663.34,
+          "occupancy_at_1mM": 0.0423
+        },
+        "NCA-2": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "NLF-1": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "NUO-1": {
+          "vina_dG": -2.4,
+          "predicted_Kd_uM": 6949.64,
+          "occupancy_at_1mM": 0.1258
+        },
+        "NUO-2": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "NUO-3": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "NUO-4": {
+          "vina_dG": -2.2,
+          "predicted_Kd_uM": 9741.75,
+          "occupancy_at_1mM": 0.0931
+        },
+        "RIC-4": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "SNB-1": {
+          "vina_dG": -1.5,
+          "predicted_Kd_uM": 31768.66,
+          "occupancy_at_1mM": 0.0305
+        },
+        "SNT-1": {
+          "vina_dG": -1.7,
+          "predicted_Kd_uM": 22663.34,
+          "occupancy_at_1mM": 0.0423
+        },
+        "TWK-18": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "TWK-29": {
+          "vina_dG": -2.4,
+          "predicted_Kd_uM": 6949.64,
+          "occupancy_at_1mM": 0.1258
+        },
+        "TWK-7": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "UNC-13": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "UNC-18": {
+          "vina_dG": -2.3,
+          "predicted_Kd_uM": 8228.1,
+          "occupancy_at_1mM": 0.1084
+        },
+        "UNC-29": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "UNC-38": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "UNC-49": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "UNC-63": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "UNC-64": {
+          "vina_dG": -1.7,
+          "predicted_Kd_uM": 22663.34,
+          "occupancy_at_1mM": 0.0423
+        },
+        "UNC-79": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        }
+      }
+    },
+    {
+      "name": "hexafluoroethane",
+      "rationale": "Hexafluoroethane; halogenated alkane similar to volatile anesthetics in size/halogenation but non-anesthetic per Eger 1997",
+      "eger_status": "NON_IMMOBILIZER (Eger 2001)",
+      "engagement_count_at_1mM": 30,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 200.4,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -4.9,
+          "predicted_Kd_uM": 101.98,
+          "occupancy_at_1mM": 0.9075
+        },
+        "ACR-2": {
+          "vina_dG": -4.9,
+          "predicted_Kd_uM": 101.98,
+          "occupancy_at_1mM": 0.9075
+        },
+        "AVR-14": {
+          "vina_dG": -5.0,
+          "predicted_Kd_uM": 86.14,
+          "occupancy_at_1mM": 0.9207
+        },
+        "AVR-15": {
+          "vina_dG": -5.2,
+          "predicted_Kd_uM": 61.45,
+          "occupancy_at_1mM": 0.9421
+        },
+        "EXP-1": {
+          "vina_dG": -5.1,
+          "predicted_Kd_uM": 72.75,
+          "occupancy_at_1mM": 0.9322
+        },
+        "GAS-1": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "GLC-1": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "GLC-2": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "LEV-1": {
+          "vina_dG": -5.1,
+          "predicted_Kd_uM": 72.75,
+          "occupancy_at_1mM": 0.9322
+        },
+        "MEV-1": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "NCA-2": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "NLF-1": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "NUO-1": {
+          "vina_dG": -4.2,
+          "predicted_Kd_uM": 332.57,
+          "occupancy_at_1mM": 0.7504
+        },
+        "NUO-2": {
+          "vina_dG": -5.1,
+          "predicted_Kd_uM": 72.75,
+          "occupancy_at_1mM": 0.9322
+        },
+        "NUO-3": {
+          "vina_dG": -5.2,
+          "predicted_Kd_uM": 61.45,
+          "occupancy_at_1mM": 0.9421
+        },
+        "NUO-4": {
+          "vina_dG": -4.7,
+          "predicted_Kd_uM": 142.96,
+          "occupancy_at_1mM": 0.8749
+        },
+        "RIC-4": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "SNB-1": {
+          "vina_dG": -3.4,
+          "predicted_Kd_uM": 1284.07,
+          "occupancy_at_1mM": 0.4378
+        },
+        "SNT-1": {
+          "vina_dG": -4.2,
+          "predicted_Kd_uM": 332.57,
+          "occupancy_at_1mM": 0.7504
+        },
+        "TWK-18": {
+          "vina_dG": -4.6,
+          "predicted_Kd_uM": 169.25,
+          "occupancy_at_1mM": 0.8552
+        },
+        "TWK-29": {
+          "vina_dG": -4.7,
+          "predicted_Kd_uM": 142.96,
+          "occupancy_at_1mM": 0.8749
+        },
+        "TWK-7": {
+          "vina_dG": -4.5,
+          "predicted_Kd_uM": 200.39,
+          "occupancy_at_1mM": 0.8331
+        },
+        "UNC-13": {
+          "vina_dG": -4.2,
+          "predicted_Kd_uM": 332.57,
+          "occupancy_at_1mM": 0.7504
+        },
+        "UNC-18": {
+          "vina_dG": -5.0,
+          "predicted_Kd_uM": 86.14,
+          "occupancy_at_1mM": 0.9207
+        },
+        "UNC-29": {
+          "vina_dG": -4.9,
+          "predicted_Kd_uM": 101.98,
+          "occupancy_at_1mM": 0.9075
+        },
+        "UNC-38": {
+          "vina_dG": -4.7,
+          "predicted_Kd_uM": 142.96,
+          "occupancy_at_1mM": 0.8749
+        },
+        "UNC-49": {
+          "vina_dG": -4.3,
+          "predicted_Kd_uM": 280.9,
+          "occupancy_at_1mM": 0.7807
+        },
+        "UNC-63": {
+          "vina_dG": -5.5,
+          "predicted_Kd_uM": 37.03,
+          "occupancy_at_1mM": 0.9643
+        },
+        "UNC-64": {
+          "vina_dG": -3.9,
+          "predicted_Kd_uM": 551.95,
+          "occupancy_at_1mM": 0.6444
+        },
+        "UNC-79": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        }
+      }
+    },
+    {
+      "name": "methanol",
+      "rationale": "Methanol; very weak anesthetic, requires lethal concentrations for narcosis",
+      "eger_status": "WEAK_ANESTHETIC (lethal-range only)",
+      "engagement_count_at_1mM": 0,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 16167.7,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "ACR-2": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "AVR-14": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "AVR-15": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "EXP-1": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "GAS-1": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "GLC-1": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "GLC-2": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "LEV-1": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "MEV-1": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "NCA-2": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "NLF-1": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "NUO-1": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "NUO-2": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "NUO-3": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "NUO-4": {
+          "vina_dG": -2.2,
+          "predicted_Kd_uM": 9741.75,
+          "occupancy_at_1mM": 0.0931
+        },
+        "RIC-4": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "SNB-1": {
+          "vina_dG": -1.3,
+          "predicted_Kd_uM": 44532.15,
+          "occupancy_at_1mM": 0.022
+        },
+        "SNT-1": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "TWK-18": {
+          "vina_dG": -2.1,
+          "predicted_Kd_uM": 11533.85,
+          "occupancy_at_1mM": 0.0798
+        },
+        "TWK-29": {
+          "vina_dG": -1.8,
+          "predicted_Kd_uM": 19141.97,
+          "occupancy_at_1mM": 0.0496
+        },
+        "TWK-7": {
+          "vina_dG": -1.7,
+          "predicted_Kd_uM": 22663.34,
+          "occupancy_at_1mM": 0.0423
+        },
+        "UNC-13": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "UNC-18": {
+          "vina_dG": -2.2,
+          "predicted_Kd_uM": 9741.75,
+          "occupancy_at_1mM": 0.0931
+        },
+        "UNC-29": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "UNC-38": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "UNC-49": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        },
+        "UNC-63": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "UNC-64": {
+          "vina_dG": -1.7,
+          "predicted_Kd_uM": 22663.34,
+          "occupancy_at_1mM": 0.0423
+        },
+        "UNC-79": {
+          "vina_dG": -1.9,
+          "predicted_Kd_uM": 16167.74,
+          "occupancy_at_1mM": 0.0582
+        }
+      }
+    },
+    {
+      "name": "npentane",
+      "rationale": "n-Pentane; lipophilic alkane, anesthetic only at lethal doses (>10% atm)",
+      "eger_status": "WEAK_ANESTHETIC (lethal-range only)",
+      "engagement_count_at_1mM": 30,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 1084.5,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "ACR-2": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "AVR-14": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "AVR-15": {
+          "vina_dG": -3.9,
+          "predicted_Kd_uM": 551.95,
+          "occupancy_at_1mM": 0.6444
+        },
+        "EXP-1": {
+          "vina_dG": -4.4,
+          "predicted_Kd_uM": 237.25,
+          "occupancy_at_1mM": 0.8082
+        },
+        "GAS-1": {
+          "vina_dG": -3.5,
+          "predicted_Kd_uM": 1084.55,
+          "occupancy_at_1mM": 0.4797
+        },
+        "GLC-1": {
+          "vina_dG": -3.3,
+          "predicted_Kd_uM": 1520.29,
+          "occupancy_at_1mM": 0.3968
+        },
+        "GLC-2": {
+          "vina_dG": -3.2,
+          "predicted_Kd_uM": 1799.96,
+          "occupancy_at_1mM": 0.3571
+        },
+        "LEV-1": {
+          "vina_dG": -4.3,
+          "predicted_Kd_uM": 280.9,
+          "occupancy_at_1mM": 0.7807
+        },
+        "MEV-1": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "NCA-2": {
+          "vina_dG": -3.3,
+          "predicted_Kd_uM": 1520.29,
+          "occupancy_at_1mM": 0.3968
+        },
+        "NLF-1": {
+          "vina_dG": -3.4,
+          "predicted_Kd_uM": 1284.07,
+          "occupancy_at_1mM": 0.4378
+        },
+        "NUO-1": {
+          "vina_dG": -3.5,
+          "predicted_Kd_uM": 1084.55,
+          "occupancy_at_1mM": 0.4797
+        },
+        "NUO-2": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "NUO-3": {
+          "vina_dG": -4.0,
+          "predicted_Kd_uM": 466.19,
+          "occupancy_at_1mM": 0.682
+        },
+        "NUO-4": {
+          "vina_dG": -3.4,
+          "predicted_Kd_uM": 1284.07,
+          "occupancy_at_1mM": 0.4378
+        },
+        "RIC-4": {
+          "vina_dG": -3.2,
+          "predicted_Kd_uM": 1799.96,
+          "occupancy_at_1mM": 0.3571
+        },
+        "SNB-1": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "SNT-1": {
+          "vina_dG": -3.2,
+          "predicted_Kd_uM": 1799.96,
+          "occupancy_at_1mM": 0.3571
+        },
+        "TWK-18": {
+          "vina_dG": -3.9,
+          "predicted_Kd_uM": 551.95,
+          "occupancy_at_1mM": 0.6444
+        },
+        "TWK-29": {
+          "vina_dG": -3.8,
+          "predicted_Kd_uM": 653.49,
+          "occupancy_at_1mM": 0.6048
+        },
+        "TWK-7": {
+          "vina_dG": -3.4,
+          "predicted_Kd_uM": 1284.07,
+          "occupancy_at_1mM": 0.4378
+        },
+        "UNC-13": {
+          "vina_dG": -3.0,
+          "predicted_Kd_uM": 2523.12,
+          "occupancy_at_1mM": 0.2838
+        },
+        "UNC-18": {
+          "vina_dG": -3.6,
+          "predicted_Kd_uM": 916.04,
+          "occupancy_at_1mM": 0.5219
+        },
+        "UNC-29": {
+          "vina_dG": -3.5,
+          "predicted_Kd_uM": 1084.55,
+          "occupancy_at_1mM": 0.4797
+        },
+        "UNC-38": {
+          "vina_dG": -3.7,
+          "predicted_Kd_uM": 773.71,
+          "occupancy_at_1mM": 0.5638
+        },
+        "UNC-49": {
+          "vina_dG": -3.3,
+          "predicted_Kd_uM": 1520.29,
+          "occupancy_at_1mM": 0.3968
+        },
+        "UNC-63": {
+          "vina_dG": -4.1,
+          "predicted_Kd_uM": 393.76,
+          "occupancy_at_1mM": 0.7175
+        },
+        "UNC-64": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "UNC-79": {
+          "vina_dG": -3.6,
+          "predicted_Kd_uM": 916.04,
+          "occupancy_at_1mM": 0.5219
+        }
+      }
+    },
+    {
+      "name": "trans_12_dichloroethylene",
+      "rationale": "trans-1,2-dichloroethylene; non-anesthetic conformer (Eger 2001 anchor)",
+      "eger_status": "NON_IMMOBILIZER (Eger 2001)",
+      "engagement_count_at_1mM": 27,
+      "n_targets_dock": 30,
+      "median_predicted_Kd_uM": 4187.4,
+      "per_target": {
+        "ACR-16": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "ACR-2": {
+          "vina_dG": -2.5,
+          "predicted_Kd_uM": 5869.82,
+          "occupancy_at_1mM": 0.1456
+        },
+        "AVR-14": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "AVR-15": {
+          "vina_dG": -3.0,
+          "predicted_Kd_uM": 2523.12,
+          "occupancy_at_1mM": 0.2838
+        },
+        "EXP-1": {
+          "vina_dG": -3.2,
+          "predicted_Kd_uM": 1799.96,
+          "occupancy_at_1mM": 0.3571
+        },
+        "GAS-1": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "GLC-1": {
+          "vina_dG": -2.4,
+          "predicted_Kd_uM": 6949.64,
+          "occupancy_at_1mM": 0.1258
+        },
+        "GLC-2": {
+          "vina_dG": -2.5,
+          "predicted_Kd_uM": 5869.82,
+          "occupancy_at_1mM": 0.1456
+        },
+        "LEV-1": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "MEV-1": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "NCA-2": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "NLF-1": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "NUO-1": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "NUO-2": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "NUO-3": {
+          "vina_dG": -2.9,
+          "predicted_Kd_uM": 2987.27,
+          "occupancy_at_1mM": 0.2508
+        },
+        "NUO-4": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "RIC-4": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        },
+        "SNB-1": {
+          "vina_dG": -2.0,
+          "predicted_Kd_uM": 13655.63,
+          "occupancy_at_1mM": 0.0682
+        },
+        "SNT-1": {
+          "vina_dG": -2.2,
+          "predicted_Kd_uM": 9741.75,
+          "occupancy_at_1mM": 0.0931
+        },
+        "TWK-18": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "TWK-29": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "TWK-7": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "UNC-13": {
+          "vina_dG": -2.4,
+          "predicted_Kd_uM": 6949.64,
+          "occupancy_at_1mM": 0.1258
+        },
+        "UNC-18": {
+          "vina_dG": -2.8,
+          "predicted_Kd_uM": 3536.82,
+          "occupancy_at_1mM": 0.2204
+        },
+        "UNC-29": {
+          "vina_dG": -2.7,
+          "predicted_Kd_uM": 4187.45,
+          "occupancy_at_1mM": 0.1928
+        },
+        "UNC-38": {
+          "vina_dG": -2.5,
+          "predicted_Kd_uM": 5869.82,
+          "occupancy_at_1mM": 0.1456
+        },
+        "UNC-49": {
+          "vina_dG": -2.3,
+          "predicted_Kd_uM": 8228.1,
+          "occupancy_at_1mM": 0.1084
+        },
+        "UNC-63": {
+          "vina_dG": -3.1,
+          "predicted_Kd_uM": 2131.08,
+          "occupancy_at_1mM": 0.3194
+        },
+        "UNC-64": {
+          "vina_dG": -2.2,
+          "predicted_Kd_uM": 9741.75,
+          "occupancy_at_1mM": 0.0931
+        },
+        "UNC-79": {
+          "vina_dG": -2.6,
+          "predicted_Kd_uM": 4957.78,
+          "occupancy_at_1mM": 0.1678
+        }
+      }
+    }
+  ],
+  "_meta": {
+    "concentration_uM": 1000,
+    "engagement_threshold_occupancy": 0.1,
+    "f_allo_correction": 2.5,
+    "comment": "Engagement counted at 1 mM aqueous post-CP5 correction. Hexafluoroethane and trans-1,2-DCE are Eger 2001 non-immobilizers with high engagement, demonstrating the binding-pipeline's lipophilic-pocket-fit bias."
+  }
+}

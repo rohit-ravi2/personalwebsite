@@ -1,0 +1,43 @@
+{
+  "case_studies": [
+    {
+      "filename": "case_study_phase_f_parameter_lock.md",
+      "title": "Phase F structural parameter-lock",
+      "summary": "Sensitivity-sweep methodology surfaces structural parameter-lock; (1-bf) cancellation analytical proof; downgrade verdict to PASS_PARAMETER_TUNED. Generalizes to any computational pipeline where coupling layer parameters mask the upstream prediction.",
+      "word_count": 1117,
+      "github_path": "AnestheticSimulator/artifacts/methodology_paper/case_study_phase_f_parameter_lock.md"
+    },
+    {
+      "filename": "case_study_kd_ec50_conflation.md",
+      "title": "Kd-vs-EC50 conflation in computational binding calibration",
+      "summary": "Directness-tier audit reveals all 30 ground-truth entries are functional EC50, not strict-Kd. f_allo = 2.50\u00d7 allosteric correction; LOO-CV validates correction generalizes; 76% \u2192 94% within-10\u00d7 post-correction. Per Forman & Miller 2016 PMID 27749338 PAM allosteric coupling theory.",
+      "word_count": 1261,
+      "github_path": "AnestheticSimulator/artifacts/methodology_paper/case_study_kd_ec50_conflation.md"
+    },
+    {
+      "filename": "case_study_eger_nonimmobilizer.md",
+      "title": "Eger non-immobilizer puzzle as boundary diagnostic",
+      "summary": "CP3 cis/trans-DCE FAIL + CP7 hexafluoroethane FAIL \u2192 binding pipeline lacks Eger non-immobilizer discrimination. Documented as boundary, not bug. Multi-target discriminative claim narrowed; binding profile alone is insufficient for anesthetic-specificity.",
+      "word_count": 1379,
+      "github_path": "AnestheticSimulator/artifacts/methodology_paper/case_study_eger_nonimmobilizer.md"
+    },
+    {
+      "filename": "case_study_twk18_direction_inversion.md",
+      "title": "twk-18 direction inversion in literature anchor verification",
+      "summary": "Original anchor 6 had fabricated PMID + inverted biological direction (claimed RESISTANT, real is HYPERSENSITIVE per Singaram 2011 PMID 22137475). Mechanism-trace-vs-empirical-direction methodology surfaces inversions reliably.",
+      "word_count": 1250,
+      "github_path": "AnestheticSimulator/artifacts/methodology_paper/case_study_twk18_direction_inversion.md"
+    },
+    {
+      "filename": "case_study_preflight_pushback.md",
+      "title": "Pre-flight pushback as systematic methodology",
+      "summary": "Umbrella thesis: structured pre-flight pushback is cost-effective methodology for AI-assisted scientific work. Cumulative catch-list 37+ citation issues + 1 parameter-lock + 1 direction-inversion + Kd/EC50 conflation + saturation collapse documented.",
+      "word_count": 1731,
+      "github_path": "AnestheticSimulator/artifacts/methodology_paper/case_study_preflight_pushback.md"
+    }
+  ],
+  "_meta": {
+    "total_word_count": 6738,
+    "umbrella_thesis": "Systematic pre-flight pushback is a cost-effective methodology for AI-assisted computational research, particularly for work that grounds claims in primary sources, depends on parameter calibration, or makes direction-sensitive biological predictions."
+  }
+}

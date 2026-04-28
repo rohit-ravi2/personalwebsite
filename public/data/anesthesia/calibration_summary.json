@@ -1,0 +1,135 @@
+{
+  "f_allo_correction": 2.5,
+  "correction_log10": 0.399,
+  "strict_subset_n": 17,
+  "strict_subset_pre": {
+    "within_10x_count": 13,
+    "within_10x_pct": 76.5,
+    "signed_mean_log_err": 0.527,
+    "mean_abs_log_err": 0.629
+  },
+  "strict_subset_post": {
+    "within_10x_count": 16,
+    "within_10x_pct": 94.1,
+    "within_3x_count": 8,
+    "within_3x_pct": 47.1,
+    "signed_mean_log_err": 0.129,
+    "mean_abs_log_err": 0.454
+  },
+  "per_chem_class": [
+    {
+      "chem_class": "ALKANE_HALOGENATED",
+      "n": 4,
+      "pre_signed_mean": 0.628,
+      "post_signed_mean": 0.229,
+      "pre_mean_abs": 0.628,
+      "post_mean_abs": 0.428,
+      "post_pct_10x": 100.0,
+      "post_pct_3x": 50.0
+    },
+    {
+      "chem_class": "ETHER_HALOGENATED",
+      "n": 6,
+      "pre_signed_mean": 0.287,
+      "post_signed_mean": -0.112,
+      "pre_mean_abs": 0.36,
+      "post_mean_abs": 0.153,
+      "post_pct_10x": 100.0,
+      "post_pct_3x": 83.3
+    },
+    {
+      "chem_class": "IV_ARYLCYCLOHEXYLAMINE",
+      "n": 1,
+      "pre_signed_mean": 0.974,
+      "post_signed_mean": 0.575,
+      "pre_mean_abs": 0.974,
+      "post_mean_abs": 0.575,
+      "post_pct_10x": 100.0,
+      "post_pct_3x": 0.0
+    },
+    {
+      "chem_class": "IV_IMIDAZOLE",
+      "n": 3,
+      "pre_signed_mean": 0.685,
+      "post_signed_mean": 0.286,
+      "pre_mean_abs": 0.977,
+      "post_mean_abs": 0.844,
+      "post_pct_10x": 100.0,
+      "post_pct_3x": 0.0
+    },
+    {
+      "chem_class": "IV_PHENOL",
+      "n": 3,
+      "pre_signed_mean": 0.568,
+      "post_signed_mean": 0.169,
+      "pre_mean_abs": 0.707,
+      "post_mean_abs": 0.661,
+      "post_pct_10x": 66.7,
+      "post_pct_3x": 33.3
+    }
+  ],
+  "verdict_counts": {
+    "VERIFIED": 7,
+    "STRUCTURALLY_GROUNDED_BY_HOMOLOG": 1,
+    "STRUCTURALLY_GROUNDED_AWAITING_WETLAB": 5,
+    "STRUCTURALLY_UNCALIBRATED": 3,
+    "BOUNDARY_FAIL": 2
+  },
+  "verdict_descriptions": {
+    "VERIFIED": "Pipeline output compared against independent experimental measurement on the same target (or close mammalian homolog) under matched conditions; tolerance band met.",
+    "STRUCTURALLY_GROUNDED_BY_HOMOLOG": "Pipeline output calibrated against a mammalian homolog with verified Kd-like measurement; the C. elegans prediction inherits the calibration via sequence/structure homology, with documented log_err.",
+    "STRUCTURALLY_GROUNDED_AWAITING_WETLAB": "Pipeline produces a falsifiable quantitative prediction but no published measurement exists on either the C. elegans target or a close mammalian homolog under matched conditions. Testable; verification is gated on future wet-lab work.",
+    "STRUCTURALLY_UNCALIBRATED": "Pipeline either cannot dock the target (no AlphaFold structure) or the docked target lacks any anchor of any kind to constrain the prediction.",
+    "BOUNDARY_FAIL": "Explicit boundary test the pipeline does not pass; documents the limit, e.g., Eger non-immobilizer discrimination."
+  },
+  "rigor_pass_summary": [
+    {
+      "cp": "CP1",
+      "topic": "Phase F structural diagnosis",
+      "verdict": "PASS_PARAMETER_TUNED",
+      "key_number": "ratio = 2.48 \u00b1 0.05 across 19\u00d7 block_factor variation at GAS1=0.4"
+    },
+    {
+      "cp": "CP2",
+      "topic": "Phase E sensitivity",
+      "verdict": "ROBUST",
+      "key_number": "Stewart band reproduced 5/9 occupancy values; range [0.10, 0.30]"
+    },
+    {
+      "cp": "CP3",
+      "topic": "DCE conformational diagnostic",
+      "verdict": "FAIL",
+      "key_number": "Max cis\u2212trans gap = 0 across 0.1-30 mM"
+    },
+    {
+      "cp": "CP4",
+      "topic": "Strict-Kd subset construction",
+      "verdict": "n=17 T1",
+      "key_number": "0 strict-Kd entries; 17 T1 functional EC50"
+    },
+    {
+      "cp": "CP5",
+      "topic": "Strict-subset recalibration",
+      "verdict": "f_allo = 2.50\u00d7",
+      "key_number": "76% \u2192 94% within 10\u00d7; LOO-CV signed mean +0.097"
+    },
+    {
+      "cp": "CP6",
+      "topic": "Four-category anchor reframe",
+      "verdict": "5+1+5+3+2",
+      "key_number": "twk-18 direction inverted per Singaram 2011 PMID 22137475"
+    },
+    {
+      "cp": "CP7",
+      "topic": "Class stratification + correction",
+      "verdict": "4/5 classes 100% within 10\u00d7",
+      "key_number": "hexafluoroethane engages 30/30 vs cis-DCE 22/30 \u2014 non-discriminative"
+    },
+    {
+      "cp": "CP8",
+      "topic": "Final consolidated verdict",
+      "verdict": "7+1+5+3+2",
+      "key_number": "Replaces v1 5/5 PASS headline"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "anesthetic": "halothane",
+  "substrate": "minimal Brian2 LIF demo (40 E + 10 I, recurrent E\u2194I)",
+  "scenario": "spontaneous baseline; 2 sec sim per dose",
+  "doses": [
+    {
+      "dose_multiplier": 0.001,
+      "firing_rate_Hz": 51.0,
+      "n_spikes": 5100,
+      "max_class_occupancy": 0.3842,
+      "hyperpolarization_pA": -58.4929
+    },
+    {
+      "dose_multiplier": 0.003,
+      "firing_rate_Hz": 39.0,
+      "n_spikes": 3900,
+      "max_class_occupancy": 0.6518,
+      "hyperpolarization_pA": -110.5962
+    },
+    {
+      "dose_multiplier": 0.01,
+      "firing_rate_Hz": 24.0,
+      "n_spikes": 2400,
+      "max_class_occupancy": 0.8619,
+      "hyperpolarization_pA": -166.9797
+    },
+    {
+      "dose_multiplier": 0.03,
+      "firing_rate_Hz": 0.0,
+      "n_spikes": 0,
+      "max_class_occupancy": 0.9493,
+      "hyperpolarization_pA": -201.4773
+    },
+    {
+      "dose_multiplier": 0.1,
+      "firing_rate_Hz": 0.0,
+      "n_spikes": 0,
+      "max_class_occupancy": 0.9842,
+      "hyperpolarization_pA": -220.0018
+    },
+    {
+      "dose_multiplier": 0.3,
+      "firing_rate_Hz": 0.0,
+      "n_spikes": 0,
+      "max_class_occupancy": 0.9947,
+      "hyperpolarization_pA": -226.4863
+    },
+    {
+      "dose_multiplier": 1.0,
+      "firing_rate_Hz": 0.0,
+      "n_spikes": 0,
+      "max_class_occupancy": 0.9984,
+      "hyperpolarization_pA": -228.925
+    },
+    {
+      "dose_multiplier": 3.0,
+      "firing_rate_Hz": 0.0,
+      "n_spikes": 0,
+      "max_class_occupancy": 0.9995,
+      "hyperpolarization_pA": -229.6396
+    }
+  ],
+  "smoke_test": {
+    "anesthetic": "halothane",
+    "dose_multiplier": 1.0,
+    "summary": {
+      "n_classes_engaged": 8,
+      "max_class_occupancy": 0.9984000542804112,
+      "mean_class_occupancy": 0.9133711436335656,
+      "n_targets_engaged": 30
+    },
+    "per_class_counts": {
+      "nachr_antagonism": 6,
+      "glucl_potentiation": 4,
+      "gaba_potentiation": 2,
+      "complex_i_block": 5,
+      "complex_ii_block": 1,
+      "nca_block": 3,
+      "snare_cooperativity": 6,
+      "k2p_potentiation": 3
+    }
+  },
+  "honest_gap": {
+    "demo_50pct_suppression_dose": 0.01,
+    "literature_behavioral_EC50_dose": 1.0,
+    "fold_off_from_literature": 100,
+    "interpretation": "Demo network's 50% firing-rate suppression at 0.01\u00d7 clinical EC50 is 100\u00d7 tighter than Crowder 1996 PMID 8873562 behavioral EC50. Two factors: (1) binding-side saturation \u2014 wave2_overlay_v2 reports occupancy \u2248 1 across all 30 targets at 1\u00d7 EC50, compressing the dose-response high end; (2) demo network coupling sensitivity exceeds real C. elegans. Behavioral threshold calibration is the gap; LIFBrain integration is the next step."
+  },
+  "_meta": {
+    "source_csv": "artifacts/phase_g/phase_g_halothane_dose_response.csv",
+    "smoke_source": "artifacts/phase_g/phase_g_smoke_test.json"
+  }
+}

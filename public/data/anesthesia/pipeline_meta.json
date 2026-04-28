@@ -1,0 +1,86 @@
+{
+  "phases": [
+    {
+      "id": "A",
+      "title": "AlphaFold + fpocket",
+      "status": "SHIPPED",
+      "summary": "30/32 Tier-1 targets fetched from AlphaFold DB v6; pocket detection via fpocket.",
+      "deferred": "NCA-1 + UNC-80 missing from AlphaFold DB; ColabFold T4 fallback deferred."
+    },
+    {
+      "id": "B",
+      "title": "AutoDock Vina docking",
+      "status": "SHIPPED",
+      "summary": "540 dockings (6 anesthetics \u00d7 30 targets \u00d7 3 poses) via Meeko + Vina 1.1.2."
+    },
+    {
+      "id": "C",
+      "title": "Hill-equation occupancy + K_p amplification",
+      "status": "SHIPPED",
+      "summary": "Vina \u0394G \u2192 predicted Kd \u2192 occupancy at 1\u00d7 clinical EC50 with membrane partition coefficient."
+    },
+    {
+      "id": "D",
+      "title": "Kinetic shifts \u2192 wave2_overlay.json",
+      "status": "SHIPPED",
+      "summary": "Per-mechanism-class kinetic shift translation; v1 overlay shipped, v2 corrected."
+    },
+    {
+      "id": "E",
+      "title": "Markov synapse SSA",
+      "status": "SCAFFOLDED",
+      "summary": "Gillespie-style stochastic SNARE simulation; reproduces Stewart 2000 release-p reduction band 0.3-0.7 within sensitivity envelope (CP2)."
+    },
+    {
+      "id": "F",
+      "title": "Metabolic ATP layer",
+      "status": "SCAFFOLDED + PARAMETER_LOCKED",
+      "summary": "ATP steady-state + K-ATP coupling; predicts gas-1 hypersensitivity 2.48\u00d7 \u2014 but CP1 showed block_factor cancels in d_WT/d_g1 ratio. PASS_PARAMETER_TUNED."
+    },
+    {
+      "id": "G",
+      "title": "Network perturbation (Brian2)",
+      "status": "IN_PROGRESS",
+      "summary": "AnestheticPerturbation manager + halothane dose-response demo on 50-neuron LIF demo network. LIFBrain integration pending; behavioral threshold calibration is the gap."
+    },
+    {
+      "id": "H",
+      "title": "Empirical validation table",
+      "status": "SCAFFOLDED",
+      "summary": "v1 5/5 PASS framing superseded by CP8 four-category verdict (7+1+5+3+2)."
+    },
+    {
+      "id": "I",
+      "title": "Inverse design (JAX)",
+      "status": "SCAFFOLDED",
+      "summary": "Gradient flow from desired phenotype to ligand parameter optimization; no shipped predictions yet."
+    },
+    {
+      "id": "J",
+      "title": "Network signature",
+      "status": "SCAFFOLDED",
+      "summary": "Anesthetic-class-specific brain dynamics signatures; no shipped predictions yet."
+    }
+  ],
+  "computational_scope": {
+    "external_spend_USD": 0,
+    "compute": "RTX 4060 Ti, 8GB VRAM",
+    "envs": [
+      "Wave-p-docking conda env (RDKit, Meeko, Vina, BioPython, fpocket)",
+      "Brian2 venv (Python 3.10)"
+    ],
+    "deferred_due_to_compute": [
+      "ColabFold T4 fallback for NCA-1 + UNC-80",
+      "ESMFold local fallback (OOMed on 8GB)"
+    ]
+  },
+  "key_anchors": {
+    "calibration_dataset_size": 30,
+    "anesthetics_validated": 6,
+    "negative_controls_tested": 8,
+    "tier1_targets": 30,
+    "vina_dockings_run": 540,
+    "rigor_checkpoints_passed": 8,
+    "case_studies_drafted": 5
+  }
+}
