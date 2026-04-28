@@ -1,0 +1,88 @@
+{
+  "checkpoint": "path_c_cp1_c2",
+  "completed_at": "2026-04-28T14:30:25Z",
+  "calibration": {
+    "egl19": {
+      "n_cells": 3,
+      "pairs": [
+        {
+          "cell": "AVAL",
+          "tpm": 0.06,
+          "g_nS": 0.104385
+        },
+        {
+          "cell": "AVAR",
+          "tpm": 0.06,
+          "g_nS": 0.0643229
+        },
+        {
+          "cell": "RIM",
+          "tpm": 0.13,
+          "g_nS": 0.0100002118
+        }
+      ],
+      "alpha_median": 1.072,
+      "alpha_mean": 0.9629,
+      "alpha_min": 0.0769,
+      "alpha_max": 1.7398,
+      "alpha_spread_ratio": 22.62
+    },
+    "nca": {
+      "n_cells": 3,
+      "pairs": [
+        {
+          "cell": "AVAR",
+          "tpm": 0.11,
+          "g_nS": 0.0493356
+        },
+        {
+          "cell": "AVAR",
+          "tpm": 0.15,
+          "g_nS": 0.0493356
+        },
+        {
+          "cell": "AIY",
+          "tpm": 0.05,
+          "g_nS": 0.006
+        }
+      ],
+      "alpha_median": 0.3289,
+      "alpha_mean": 0.2991,
+      "alpha_min": 0.12,
+      "alpha_max": 0.4485,
+      "alpha_spread_ratio": 3.74
+    },
+    "unc2": {
+      "n_cells": 1,
+      "pairs": [
+        {
+          "cell": "RIM",
+          "tpm": 0.07,
+          "g_nS": 0.10000211799999999
+        }
+      ],
+      "alpha_median": 1.4286,
+      "alpha_mean": 1.4286,
+      "alpha_min": 1.4286,
+      "alpha_max": 1.4286,
+      "alpha_spread_ratio": 1.0
+    },
+    "shl1": {
+      "n_cells": 1,
+      "pairs": [
+        {
+          "cell": "RIM",
+          "tpm": 0.13,
+          "g_nS": 1.5687012
+        }
+      ],
+      "alpha_median": 12.0669,
+      "alpha_mean": 12.0669,
+      "alpha_min": 12.0669,
+      "alpha_max": 12.0669,
+      "alpha_spread_ratio": 1.0
+    }
+  },
+  "loo_overall_log_err": 0.556,
+  "median_spread_ratio": 13.18
+}

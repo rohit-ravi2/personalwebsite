@@ -1,0 +1,48 @@
+{
+  "checkpoint": "path_c_cp3_c4",
+  "completed_at": "2026-04-28T14:32:13Z",
+  "summaries": [
+    {
+      "cell": "AVBL",
+      "n_predicted_channels": 7,
+      "v_rest_predicted_mV": -47.09,
+      "channels": [
+        "egl19",
+        "unc2",
+        "exp2",
+        "unc103",
+        "slo2",
+        "nca",
+        "nca_aux"
+      ]
+    },
+    {
+      "cell": "PVCL",
+      "n_predicted_channels": 9,
+      "v_rest_predicted_mV": -65.95,
+      "channels": [
+        "egl19",
+        "unc2",
+        "shl1",
+        "kvs1",
+        "shk1",
+        "unc103",
+        "slo1iso",
+        "slo2",
+        "nca_aux"
+      ]
+    },
+    {
+      "cell": "ASHL",
+      "n_predicted_channels": 4,
+      "v_rest_predicted_mV": -44.57,
+      "channels": [
+        "unc2",
+        "shk1",
+        "exp2",
+        "slo2"
+      ]
+    }
+  ],
+  "viability_verdict": "MARGINAL_LINEAR_SCALING_WITH_RECOMMENDED_REFINEMENT_PATH"
+}
