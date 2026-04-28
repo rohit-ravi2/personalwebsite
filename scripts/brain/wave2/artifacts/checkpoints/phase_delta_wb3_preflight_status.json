@@ -1,0 +1,39 @@
+{
+  "phase": "delta",
+  "work_block": "WB3",
+  "checkpoint": "pre-flight",
+  "status": "complete",
+  "date": "2026-04-26",
+  "scope": "pre-flight + CP1 options doc + pause-for-review only",
+  "preflight_findings": {
+    "wb2_findings_read": true,
+    "scoping_doc_release_section_read": true,
+    "primary_sources_verified": [
+      "Wicks Roehrig Rankin 1996 J Neurosci (via PMC6578605 fetch)",
+      "Goodman Hall Avery Lockery 1998 Neuron (via search summary)",
+      "Lockery Goodman 2009 Nat Neurosci (via search summary, in-repo cross-ref)",
+      "Mellem 2008 Nat Neurosci (verified in-repo via mellem_investigation_pushback.md)",
+      "Liu 2009 PNAS (graded NMJ, via PMC2705609 fetch)",
+      "Faumont 2011 PLoS One (search summary)"
+    ],
+    "capacitance_mismatch_verified": true,
+    "capacitance_arithmetic_correction_needed": {
+      "wb2_findings_quoted": "Wave 2 cm ~0.86 pF; ratio ~116x",
+      "actual_ava_C_pF": 9.66,
+      "actual_avar_C_pF": 8.43,
+      "actual_aiy_C_pF": 1.05,
+      "actual_rim_C_pF": 1.55,
+      "lif_C_pF": 100.0,
+      "actual_ratios": {
+        "lif_over_aval": 10.35,
+        "lif_over_avar": 11.86,
+        "lif_over_aiy": 94.86,
+        "lif_over_rim": 64.51
+      },
+      "interpretation": "WB2 findings appears to confuse specific capacitance (uF/cm^2) with total capacitance (pF). The mismatch DIRECTION is correct (Wave 2 < LIF) and the design implication (naive v += W_syn*w on Wave 2 cells is unstable) is unchanged. The ratio is ~10x for AVAL/AVAR (the WB2-active cells) and ~65-95x for AIY/RIM (future drop-ins). Documented in Section 1 of options doc."
+    },
+    "brian2_cython_summed_feasibility_verified": true,
+    "brian2_cython_feasibility_notes": "Pattern already used successfully in graded_brain.py (lines 216, 229) and wave2_hybrid_brain.py LIF gap synapse (lines 400-410). Cython codegen documented as standard. Known issue #925 affects C++ standalone with subgroups, NOT relevant here (using full NeuronGroups). No feasibility blocker."
+  },
+  "next_step": "CP1 options doc + PAUSED_FOR_REVIEW.txt + notify + halt"
+}

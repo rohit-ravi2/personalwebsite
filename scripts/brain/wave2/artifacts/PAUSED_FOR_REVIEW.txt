@@ -1,0 +1,74 @@
+PAUSED_FOR_REVIEW — Phase δ WB3 CP1
+=====================================
+
+Date: 2026-04-26
+Phase: delta, Work block: WB3, Checkpoint: CP1 (options document)
+Spec: artifacts/phase_v_w2_phase_delta_wb3_prompt.md
+
+What's awaiting Rohit's review:
+-------------------------------
+
+1. Release-rule choice (Decision 1 in options doc):
+   - Option A: V-threshold crossing (discrete spike-event)
+   - Option B: Graded Boltzmann release (Wicks 1996 sigmoidal) [PRE-FLIGHT RECOMMENDS]
+   - Option C: Full conductance-based synaptic dynamics
+
+2. Six sub-decisions documented in Section 5 of the options doc:
+   - Decision 2: LIF->Wave2 coupling sub-pattern (B1 vs B2)
+   - Decision 3: AIY/RIM sigmoidal parameters (Wicks/defer/cellular-anchor)
+   - Decision 4: W_graded_I calibration value
+   - Decision 5: E_rev / tau_syn for B2
+   - Decision 6: Numerical-stability safety net design
+   - Decision 7: Wave 2 cell pseudo-spike emission for readout
+
+3. Two pre-flight findings surfaced for Rohit's awareness:
+
+   a) WB2 capacitance arithmetic correction. WB2 findings quote
+      "Wave 2 cm ~0.86 pF; ratio ~116x" — this confuses specific
+      capacitance (uF/cm^2) with total capacitance (pF). Recomputed
+      values: AVAL ~9.66 pF (10x ratio), AVAR ~8.43 pF (12x), AIY
+      ~1.05 pF (95x), RIM ~1.55 pF (65x). Mismatch direction is
+      preserved; only magnitude was wrong. Failure mode of naive
+      v += W_syn * w stands (it's voltage-bump arithmetic, not
+      C-scaled charge delivery). Documented in options doc Section 1
+      and findings doc.
+
+   b) Wicks 1996 scope verification. Wicks does NOT cover AIY or RIM
+      (only sensory + AVA/AVB/AVD/PVC/DVA). Wicks parameters are
+      Ascaris-extrapolated, not C. elegans direct. Implication: AVA
+      release params are defensible (Mellem 2008 + Wicks-Ascaris
+      converge on V_rest ~ -25 mV graded biology). AIY/RIM params
+      are pure extrapolation if Option B chosen — flagged in
+      Section 5 Decision 3.
+
+Files produced this invocation:
+-------------------------------
+
+- wave2/artifacts/phase_delta_wb3_release_rule_options.md (CP1 deliverable)
+- wave2/artifacts/phase_delta_wb3_findings.md (running findings; pre-flight section filled)
+- wave2/artifacts/checkpoints/phase_delta_wb3_preflight_status.json
+- wave2/artifacts/PAUSED_FOR_REVIEW.txt (this file)
+
+What CP2-CP6 will do after authorization:
+-----------------------------------------
+
+CP2 — implement chosen rule in wave2_hybrid_brain.py
+CP3 — 1s/10s/30s numerical-stability smoke tests
+CP4 — 30s touch_anterior cascade validation
+CP5 — F20 catalog entry + findings doc completion
+CP6 — commit + push (4-group structure)
+
+How to resume:
+--------------
+
+After Rohit reads phase_delta_wb3_release_rule_options.md and decides
+on Decisions 1-7 (or accepts pre-flight defaults), start a new agent
+invocation citing:
+  - this PAUSED_FOR_REVIEW.txt
+  - the options doc
+  - the resolved decisions (or "go with defaults")
+
+That invocation handles CP2-CP6.
+
+Halt acknowledged per spec hard-stop. Not proceeding to CP2 in this
+invocation.

@@ -1,0 +1,48 @@
+{
+  "phase": "delta",
+  "work_block": "WB3",
+  "checkpoint": "CP1",
+  "status": "complete_paused_for_review",
+  "date": "2026-04-26",
+  "deliverables_produced": [
+    "wave2/artifacts/phase_delta_wb3_release_rule_options.md",
+    "wave2/artifacts/phase_delta_wb3_findings.md",
+    "wave2/artifacts/PAUSED_FOR_REVIEW.txt",
+    "wave2/artifacts/checkpoints/phase_delta_wb3_preflight_status.json",
+    "wave2/artifacts/checkpoints/phase_delta_wb3_cp1_status.json"
+  ],
+  "options_doc_sections": [
+    "Section 1 — Empirical constraints from WB2 (capacitance correction surfaced)",
+    "Section 2 — Biological constraints from primary sources (Wicks 1996 + Mellem 2008 + Lockery & Goodman 2009 + Liu 2009 + Goodman 1998)",
+    "Section 3 — Three candidate release rules (A/B/C) with explicit tradeoffs",
+    "Section 4 — Recommendation with rationale (Option B graded Boltzmann)",
+    "Section 5 — Decisions requiring biological judgment (7 decisions, all with defaults)"
+  ],
+  "preflight_recommendation_summary": {
+    "release_rule": "Option B (graded Boltzmann release, Wicks 1996 sigmoidal)",
+    "lif_to_wave2_subpattern": "B2 (per-Synapses g_syn(t) with tau_syn = 10 ms)",
+    "aiy_rim_sigmoidal_params": "cellular-anchored V_half + k = 6 mV (Wicks-style anchor)",
+    "W_graded_I": "0.3 pA (Mellem 2008 -30/+30 pA injection-range calibrated)",
+    "E_rev_tau_syn": "E_exc = 0 mV, E_inh = -70 mV, tau_syn = 10 ms",
+    "numerical_safety_net": "soft cap at +/-100 pA with log warning",
+    "readout_pseudo_spikes": "sigma > 0.5 rising-threshold (graded_brain.py pattern)"
+  },
+  "preflight_findings_surfaced": [
+    "WB2 capacitance arithmetic confused specific (uF/cm^2) vs total (pF) capacitance; corrected values: AVAL 9.66 pF (10x), AVAR 8.43 pF (12x), AIY 1.05 pF (95x), RIM 1.55 pF (65x). Mismatch direction preserved; magnitude overstated for AVAL/AVAR. F20 catalog entry should record corrected values.",
+    "Wicks 1996 covers neither AIY nor RIM; parameters are Ascaris-extrapolated. AVA's Wicks-style params reasonable per Mellem 2008 alignment; AIY/RIM are pure extrapolation."
+  ],
+  "primary_sources_verified": [
+    {"citation": "Wicks Roehrig Rankin 1996 J Neurosci 16(12):4017-4031", "method": "WebFetch PMC6578605", "key_quotes": "g_inf(VPRE) = g_bar / [1+e^(K(VPRE-VEQ)/VRANGE)]; K=-4.3944; VRANGE=-35 mV"},
+    {"citation": "Goodman Hall Avery Lockery 1998 Neuron 20:763-772", "method": "WebSearch summary", "key_quotes": "ASER nearly isopotential; no classical Na+ APs"},
+    {"citation": "Lockery Goodman 2009 Nat Neurosci 12:377-378", "method": "WebSearch summary + repo cross-ref", "key_quotes": "small size + high resistance => classical APs unworkable; classical voltage-gated sodium channels absent in C. elegans genome"},
+    {"citation": "Mellem 2008 Nat Neurosci 11:865-867", "method": "in-repo (mellem_investigation_pushback.md)", "key_quotes": "we never observed action potentials in AVA (n=10); rest -20 to -30 mV; glutamate -> short-lived modest changes"},
+    {"citation": "Liu Hollopeter Jorgensen 2009 PNAS 106:10823-10828", "method": "WebFetch PMC2705609", "key_quotes": "C. elegans NMJs release neurotransmitter in a graded fashion"},
+    {"citation": "Faumont 2011 PLoS ONE 6:e24666", "method": "WebSearch summary", "key_quotes": "AVA Ca-imaging methodology; large Ca transients with backward locomotion"}
+  ],
+  "brian2_cython_summed_feasibility": "verified — pattern in production use in graded_brain.py + wave2_hybrid_brain.py LIF gap synapses; no feasibility blocker",
+  "halt_status": "halted at pause-gate per spec; not proceeding to CP2 even though runtime envelope remains",
+  "next_invocation_needs": [
+    "Rohit's adjudication of Decisions 1-7 (or accept pre-flight defaults)",
+    "Citation of phase_delta_wb3_release_rule_options.md as input to CP2"
+  ]
+}
