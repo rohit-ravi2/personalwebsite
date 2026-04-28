@@ -38,3 +38,24 @@ scripts/brain/artifacts/atanas_worm_*.npz
 scripts/brain/artifacts/phase0_*.log
 # Phase 0 scenario traces — per-run NPZ bundles, regeneratable from audit
 scripts/brain/artifacts/phase0_scenario_traces/
+
+# === Session 1 WB1 additions (2026-04-28) ===
+
+# Wave 2 large validation result JSONs (regeneratable from wave2/run_*.py drivers)
+scripts/brain/wave2/artifacts/option_b_*_results.json
+scripts/brain/wave2/artifacts/avar_validation_results.json
+scripts/brain/wave2/artifacts/option_alpha_phase_f_results.json
+scripts/brain/wave2/artifacts/ca_coupling_test_results.json
+
+# Wave 2 — Nicoletti 2024 PDF + page rasters (PLOS ONE source; rasters regenerate via pdftoppm)
+scripts/brain/wave2/artifacts/figures/source_pdfs/
+
+# Phase 0 — LHS sweep traces (236 MB; regeneratable from phase0_param_lhs_runner.py)
+scripts/brain/artifacts/phase0_param_lhs_traces/
+
+# Phase 0 — per-scenario per-edge postvolt traces (regeneratable from postvolt_peredge audit scripts)
+scripts/brain/artifacts/phase0_postvolt_peredge_*_traces/
+
+# NEURON compiled mods
+**/x86_64/
+*.so
