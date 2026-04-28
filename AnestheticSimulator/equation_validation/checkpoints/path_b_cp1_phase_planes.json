@@ -1,0 +1,154 @@
+{
+  "checkpoint": "path_b_cp1_phase_planes",
+  "completed_at": "2026-04-28T14:23:45Z",
+  "cell_data": {
+    "AVAL": {
+      "slow_gate_spec": {
+        "channel": "egl19",
+        "name": "h_egl19",
+        "type": "Ca_inactivation",
+        "v_half_mV": -25.0,
+        "k_mV": 5.0,
+        "tau_ms": 50.0,
+        "rationale": "EGL-19 L-type Ca channel inactivation drives plateau decay; Wicks 1996 + Mellem 2008."
+      },
+      "fixed_points_at": {
+        "I_inj_-5": [
+          {
+            "V_mV": -37.64,
+            "gate": 0.9261
+          }
+        ],
+        "I_inj_0": [
+          {
+            "V_mV": -29.27,
+            "gate": 0.7013
+          }
+        ],
+        "I_inj_5": [
+          {
+            "V_mV": -22.47,
+            "gate": 0.3759
+          }
+        ],
+        "I_inj_20": [
+          {
+            "V_mV": 24.56,
+            "gate": 0.0
+          }
+        ]
+      }
+    },
+    "AVAR": {
+      "slow_gate_spec": {
+        "channel": "egl19",
+        "name": "h_egl19",
+        "type": "Ca_inactivation",
+        "v_half_mV": -25.0,
+        "k_mV": 5.0,
+        "tau_ms": 50.0,
+        "rationale": "Same as AVAL; UNC-103 (ERG-like K) provides additional slow current but EGL-19 inactivation dominates plateau."
+      },
+      "fixed_points_at": {
+        "I_inj_-5": [
+          {
+            "V_mV": -34.88,
+            "gate": 0.8783
+          }
+        ],
+        "I_inj_0": [
+          {
+            "V_mV": -26.83,
+            "gate": 0.5905
+          }
+        ],
+        "I_inj_5": [
+          {
+            "V_mV": -18.96,
+            "gate": 0.2301
+          }
+        ],
+        "I_inj_20": [
+          {
+            "V_mV": 18.95,
+            "gate": 0.0002
+          }
+        ]
+      }
+    },
+    "AIY": {
+      "slow_gate_spec": {
+        "channel": "slo1egl19",
+        "name": "n_slo1egl19",
+        "type": "K_activation_via_Ca_coupling",
+        "v_half_mV": -30.0,
+        "k_mV": 10.0,
+        "tau_ms": 100.0,
+        "rationale": "SLO-1 BK channel activation coupled to EGL-19 Ca influx; slowest dynamic in AIY's channel suite; CP B.1 extrapolated parameters per WB3 caveat."
+      },
+      "fixed_points_at": {
+        "I_inj_-5": [
+          {
+            "V_mV": -91.38,
+            "gate": 0.0022
+          }
+        ],
+        "I_inj_0": [
+          {
+            "V_mV": -66.55,
+            "gate": 0.0252
+          }
+        ],
+        "I_inj_5": [
+          {
+            "V_mV": -44.49,
+            "gate": 0.1901
+          }
+        ],
+        "I_inj_20": [
+          {
+            "V_mV": -0.9,
+            "gate": 0.9483
+          }
+        ]
+      }
+    },
+    "RIM": {
+      "slow_gate_spec": {
+        "channel": "unc2",
+        "name": "h_unc2",
+        "type": "Ca_inactivation",
+        "v_half_mV": -35.0,
+        "k_mV": 6.0,
+        "tau_ms": 80.0,
+        "rationale": "UNC-2 P/Q-type Ca inactivation; RIM's plateau/burst dynamics via Ca-dependent rebound. CP B.1 extrapolated parameters per WB3 caveat."
+      },
+      "fixed_points_at": {
+        "I_inj_-5": [
+          {
+            "V_mV": -73.46,
+            "gate": 0.9984
+          }
+        ],
+        "I_inj_0": [
+          {
+            "V_mV": -71.25,
+            "gate": 0.9976
+          }
+        ],
+        "I_inj_5": [
+          {
+            "V_mV": -69.04,
+            "gate": 0.9966
+          }
+        ],
+        "I_inj_20": [
+          {
+            "V_mV": -62.44,
+            "gate": 0.9898
+          }
+        ]
+      }
+    }
+  }
+}

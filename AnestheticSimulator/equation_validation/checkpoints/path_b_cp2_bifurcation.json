@@ -1,0 +1,42 @@
+{
+  "checkpoint": "path_b_cp2_bifurcation",
+  "completed_at": "2026-04-28T14:25:05Z",
+  "cell_data": {
+    "AVAL": {
+      "classification": "monotone_smooth (no bifurcation in tested range)",
+      "hysteresis": {
+        "hysteresis": false,
+        "max_difference_mV": 1.28,
+        "at_I_inj_pA": 20.0
+      },
+      "csv": "artifacts/bifurcation_AVAL.csv"
+    },
+    "AVAR": {
+      "classification": "monotone_smooth (no bifurcation in tested range)",
+      "hysteresis": {
+        "hysteresis": false,
+        "max_difference_mV": 0.14,
+        "at_I_inj_pA": 16.0
+      },
+      "csv": "artifacts/bifurcation_AVAR.csv"
+    },
+    "AIY": {
+      "classification": "monotone_smooth (no bifurcation in tested range)",
+      "hysteresis": {
+        "hysteresis": false,
+        "max_difference_mV": 0.0,
+        "at_I_inj_pA": null
+      },
+      "csv": "artifacts/bifurcation_AIY.csv"
+    },
+    "RIM": {
+      "classification": "monotone_smooth (no bifurcation in tested range)",
+      "hysteresis": {
+        "hysteresis": false,
+        "max_difference_mV": 0.0,
+        "at_I_inj_pA": null
+      },
+      "csv": "artifacts/bifurcation_RIM.csv"
+    }
+  }
+}

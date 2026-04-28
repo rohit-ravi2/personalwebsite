@@ -1,0 +1,250 @@
+{
+  "checkpoint": "path_b_cp3_hh",
+  "completed_at": "2026-04-28T14:26:33Z",
+  "cell_data": {
+    "AVAL": {
+      "results_per_I": {
+        "0": {
+          "V_max": -26.76,
+          "V_min": -54.94,
+          "V_amplitude": 28.18,
+          "V_final": -29.37,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 2.62
+        },
+        "10": {
+          "V_max": -5.44,
+          "V_min": -54.89,
+          "V_amplitude": 49.45,
+          "V_final": -12.14,
+          "n_spikes": 1,
+          "regenerative": true,
+          "overshoot_above_steady_mV": 6.7
+        },
+        "30": {
+          "V_max": 64.06,
+          "V_min": -54.78,
+          "V_amplitude": 118.84,
+          "V_final": 64.06,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "50": {
+          "V_max": 100.0,
+          "V_min": -54.68,
+          "V_amplitude": 154.68,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "100": {
+          "V_max": 100.0,
+          "V_min": -54.42,
+          "V_amplitude": 154.42,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "200": {
+          "V_max": 100.0,
+          "V_min": -53.9,
+          "V_amplitude": 153.9,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        }
+      },
+      "verdict": "SPIKING under strong drive (1 spikes at strongest tested current)",
+      "max_spikes": 1,
+      "any_regenerative": true
+    },
+    "AVAR": {
+      "results_per_I": {
+        "0": {
+          "V_max": -24.8,
+          "V_min": -54.91,
+          "V_amplitude": 30.12,
+          "V_final": -26.84,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 2.05
+        },
+        "10": {
+          "V_max": -4.44,
+          "V_min": -54.86,
+          "V_amplitude": 50.41,
+          "V_final": -7.65,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 3.2
+        },
+        "30": {
+          "V_max": 46.49,
+          "V_min": -54.74,
+          "V_amplitude": 101.23,
+          "V_final": 46.44,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.06
+        },
+        "50": {
+          "V_max": 100.0,
+          "V_min": -54.62,
+          "V_amplitude": 154.62,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "100": {
+          "V_max": 100.0,
+          "V_min": -54.32,
+          "V_amplitude": 154.32,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "200": {
+          "V_max": 100.0,
+          "V_min": -53.73,
+          "V_amplitude": 153.73,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        }
+      },
+      "verdict": "SPIKING under strong drive (1 spikes at strongest tested current)",
+      "max_spikes": 1,
+      "any_regenerative": false
+    },
+    "AIY": {
+      "results_per_I": {
+        "0": {
+          "V_max": -55.12,
+          "V_min": -66.77,
+          "V_amplitude": 11.65,
+          "V_final": -66.59,
+          "n_spikes": 1,
+          "regenerative": true,
+          "overshoot_above_steady_mV": 11.47
+        },
+        "10": {
+          "V_max": -20.84,
+          "V_min": -54.64,
+          "V_amplitude": 33.81,
+          "V_final": -28.36,
+          "n_spikes": 1,
+          "regenerative": true,
+          "overshoot_above_steady_mV": 7.52
+        },
+        "30": {
+          "V_max": 67.89,
+          "V_min": -53.69,
+          "V_amplitude": 121.58,
+          "V_final": 36.93,
+          "n_spikes": 1,
+          "regenerative": true,
+          "overshoot_above_steady_mV": 30.95
+        },
+        "50": {
+          "V_max": 100.0,
+          "V_min": -52.74,
+          "V_amplitude": 152.74,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "100": {
+          "V_max": 100.0,
+          "V_min": -50.37,
+          "V_amplitude": 150.37,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        },
+        "200": {
+          "V_max": 100.0,
+          "V_min": -45.63,
+          "V_amplitude": 145.63,
+          "V_final": 100.0,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.0
+        }
+      },
+      "verdict": "SPIKING under strong drive (1 spikes at strongest tested current)",
+      "max_spikes": 1,
+      "any_regenerative": true
+    },
+    "RIM": {
+      "results_per_I": {
+        "0": {
+          "V_max": -56.2,
+          "V_min": -71.42,
+          "V_amplitude": 15.23,
+          "V_final": -71.26,
+          "n_spikes": 1,
+          "regenerative": true,
+          "overshoot_above_steady_mV": 15.07
+        },
+        "10": {
+          "V_max": -55.87,
+          "V_min": -66.99,
+          "V_amplitude": 11.12,
+          "V_final": -66.85,
+          "n_spikes": 1,
+          "regenerative": true,
+          "overshoot_above_steady_mV": 10.98
+        },
+        "30": {
+          "V_max": -55.23,
+          "V_min": -58.13,
+          "V_amplitude": 2.9,
+          "V_final": -58.07,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 2.84
+        },
+        "50": {
+          "V_max": -49.28,
+          "V_min": -54.58,
+          "V_amplitude": 5.3,
+          "V_final": -49.48,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 0.2
+        },
+        "100": {
+          "V_max": -27.24,
+          "V_min": -52.97,
+          "V_amplitude": 25.73,
+          "V_final": -29.61,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 2.37
+        },
+        "200": {
+          "V_max": 17.11,
+          "V_min": -49.74,
+          "V_amplitude": 66.85,
+          "V_final": 15.48,
+          "n_spikes": 1,
+          "regenerative": false,
+          "overshoot_above_steady_mV": 1.63
+        }
+      },
+      "verdict": "SPIKING under strong drive (1 spikes at strongest tested current)",
+      "max_spikes": 1,
+      "any_regenerative": true
+    }
+  }
+}
