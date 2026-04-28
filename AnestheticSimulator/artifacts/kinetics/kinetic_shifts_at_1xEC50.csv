@@ -1,0 +1,181 @@
+anesthetic,gene,mechanism_class,occupancy_1xEC50,parameter,shift_value,evidence_grade,source
+etomidate,ACR-16,nachr_antagonism,0.104,g_max_factor,0.9272,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+etomidate,ACR-2,nachr_antagonism,0.509,g_max_factor,0.6437,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+etomidate,AVR-14,glucl_potentiation,0.274,tau_decay_factor,1.4110,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+etomidate,AVR-15,glucl_potentiation,0.509,tau_decay_factor,1.7635,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+etomidate,EXP-1,gaba_potentiation,0.212,tau_decay_factor,1.6360,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+etomidate,GAS-1,complex_i_block,0.076,rate_factor,0.9772,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+etomidate,GLC-1,glucl_potentiation,0.120,tau_decay_factor,1.1800,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+etomidate,GLC-2,glucl_potentiation,0.185,tau_decay_factor,1.2775,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+etomidate,LEV-1,nachr_antagonism,0.139,g_max_factor,0.9027,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+etomidate,MEV-1,complex_ii_block,0.346,rate_factor,0.9654,CONSERVATIVE,Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 — mev-1 hypersensitivity is small → Complex II is a weak target; small rate decrement
+etomidate,NCA-2,nca_block,0.212,g_max_factor,0.7880,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+etomidate,NLF-1,nca_block,0.139,g_max_factor,0.8610,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+etomidate,NUO-1,complex_i_block,0.593,rate_factor,0.8221,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+etomidate,NUO-2,complex_i_block,0.551,rate_factor,0.8347,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+etomidate,NUO-3,complex_i_block,0.826,rate_factor,0.7522,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+etomidate,NUO-4,complex_i_block,0.346,rate_factor,0.8962,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+etomidate,RIC-4,snare_cooperativity,0.003,n_Ca_delta,-0.0045,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+etomidate,SNB-1,snare_cooperativity,0.040,n_Ca_delta,-0.0600,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+etomidate,SNT-1,snare_cooperativity,0.003,n_Ca_delta,-0.0045,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+etomidate,TWK-18,k2p_potentiation,0.593,g_max_factor,2.1860,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+etomidate,TWK-29,k2p_potentiation,0.309,g_max_factor,1.6180,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+etomidate,TWK-7,k2p_potentiation,0.065,g_max_factor,1.1300,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+etomidate,UNC-13,snare_cooperativity,0.009,n_Ca_delta,-0.0135,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+etomidate,UNC-18,snare_cooperativity,0.033,n_Ca_delta,-0.0495,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+etomidate,UNC-29,nachr_antagonism,0.089,g_max_factor,0.9377,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+etomidate,UNC-38,nachr_antagonism,0.309,g_max_factor,0.7837,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+etomidate,UNC-49,gaba_potentiation,0.467,tau_decay_factor,2.4010,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+etomidate,UNC-63,nachr_antagonism,0.242,g_max_factor,0.8306,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+etomidate,UNC-64,snare_cooperativity,0.139,n_Ca_delta,-0.2085,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+etomidate,UNC-79,nca_block,0.185,g_max_factor,0.8150,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+halothane,ACR-16,nachr_antagonism,0.996,g_max_factor,0.3028,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+halothane,ACR-2,nachr_antagonism,0.989,g_max_factor,0.3077,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+halothane,AVR-14,glucl_potentiation,0.989,tau_decay_factor,2.4835,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+halothane,AVR-15,glucl_potentiation,0.995,tau_decay_factor,2.4925,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+halothane,EXP-1,gaba_potentiation,0.989,tau_decay_factor,3.9670,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+halothane,GAS-1,complex_i_block,0.981,rate_factor,0.7057,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+halothane,GLC-1,glucl_potentiation,0.978,tau_decay_factor,2.4670,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+halothane,GLC-2,glucl_potentiation,0.978,tau_decay_factor,2.4670,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+halothane,LEV-1,nachr_antagonism,0.996,g_max_factor,0.3028,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+halothane,MEV-1,complex_ii_block,0.986,rate_factor,0.9014,CONSERVATIVE,Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 — mev-1 hypersensitivity is small → Complex II is a weak target; small rate decrement
+halothane,NCA-2,nca_block,0.986,g_max_factor,0.0140,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+halothane,NLF-1,nca_block,0.978,g_max_factor,0.0220,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+halothane,NUO-1,complex_i_block,0.986,rate_factor,0.7042,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+halothane,NUO-2,complex_i_block,0.995,rate_factor,0.7015,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+halothane,NUO-3,complex_i_block,0.994,rate_factor,0.7018,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+halothane,NUO-4,complex_i_block,0.989,rate_factor,0.7033,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+halothane,RIC-4,snare_cooperativity,0.129,n_Ca_delta,-0.1935,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+halothane,SNB-1,snare_cooperativity,0.941,n_Ca_delta,-1.4115,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+halothane,SNT-1,snare_cooperativity,0.149,n_Ca_delta,-0.2235,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+halothane,TWK-18,k2p_potentiation,0.990,g_max_factor,2.9800,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+halothane,TWK-29,k2p_potentiation,0.993,g_max_factor,2.9860,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+halothane,TWK-7,k2p_potentiation,0.986,g_max_factor,2.9720,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+halothane,UNC-13,snare_cooperativity,0.129,n_Ca_delta,-0.1935,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+halothane,UNC-18,snare_cooperativity,0.488,n_Ca_delta,-0.7320,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+halothane,UNC-29,nachr_antagonism,0.989,g_max_factor,0.3077,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+halothane,UNC-38,nachr_antagonism,0.990,g_max_factor,0.3070,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+halothane,UNC-49,gaba_potentiation,0.981,tau_decay_factor,3.9430,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+halothane,UNC-63,nachr_antagonism,0.996,g_max_factor,0.3028,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+halothane,UNC-64,snare_cooperativity,0.969,n_Ca_delta,-1.4535,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+halothane,UNC-79,nca_block,0.989,g_max_factor,0.0110,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+isoflurane,ACR-16,nachr_antagonism,0.996,g_max_factor,0.3028,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+isoflurane,ACR-2,nachr_antagonism,0.994,g_max_factor,0.3042,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+isoflurane,AVR-14,glucl_potentiation,0.994,tau_decay_factor,2.4910,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+isoflurane,AVR-15,glucl_potentiation,0.996,tau_decay_factor,2.4940,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+isoflurane,EXP-1,gaba_potentiation,0.990,tau_decay_factor,3.9700,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+isoflurane,GAS-1,complex_i_block,0.978,rate_factor,0.7066,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+isoflurane,GLC-1,glucl_potentiation,0.974,tau_decay_factor,2.4610,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+isoflurane,GLC-2,glucl_potentiation,0.974,tau_decay_factor,2.4610,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+isoflurane,LEV-1,nachr_antagonism,0.996,g_max_factor,0.3028,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+isoflurane,MEV-1,complex_ii_block,0.986,rate_factor,0.9014,CONSERVATIVE,Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 — mev-1 hypersensitivity is small → Complex II is a weak target; small rate decrement
+isoflurane,NCA-2,nca_block,0.984,g_max_factor,0.0160,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+isoflurane,NLF-1,nca_block,0.969,g_max_factor,0.0310,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+isoflurane,NUO-1,complex_i_block,0.990,rate_factor,0.7030,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+isoflurane,NUO-2,complex_i_block,0.995,rate_factor,0.7015,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+isoflurane,NUO-3,complex_i_block,0.996,rate_factor,0.7012,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+isoflurane,NUO-4,complex_i_block,0.990,rate_factor,0.7030,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+isoflurane,RIC-4,snare_cooperativity,0.407,n_Ca_delta,-0.6105,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+isoflurane,SNB-1,snare_cooperativity,0.941,n_Ca_delta,-1.4115,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+isoflurane,SNT-1,snare_cooperativity,0.259,n_Ca_delta,-0.3885,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+isoflurane,TWK-18,k2p_potentiation,0.990,g_max_factor,2.9800,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+isoflurane,TWK-29,k2p_potentiation,0.995,g_max_factor,2.9900,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+isoflurane,TWK-7,k2p_potentiation,0.993,g_max_factor,2.9860,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+isoflurane,UNC-13,snare_cooperativity,0.367,n_Ca_delta,-0.5505,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+isoflurane,UNC-18,snare_cooperativity,0.726,n_Ca_delta,-1.0890,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+isoflurane,UNC-29,nachr_antagonism,0.989,g_max_factor,0.3077,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+isoflurane,UNC-38,nachr_antagonism,0.992,g_max_factor,0.3056,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+isoflurane,UNC-49,gaba_potentiation,0.969,tau_decay_factor,3.9070,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+isoflurane,UNC-63,nachr_antagonism,0.996,g_max_factor,0.3028,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+isoflurane,UNC-64,snare_cooperativity,0.978,n_Ca_delta,-1.4670,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+isoflurane,UNC-79,nca_block,0.984,g_max_factor,0.0160,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+ketamine,ACR-16,nachr_antagonism,0.999,g_max_factor,0.3007,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+ketamine,ACR-2,nachr_antagonism,1.000,g_max_factor,0.3000,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+ketamine,AVR-14,glucl_potentiation,1.000,tau_decay_factor,2.5000,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+ketamine,AVR-15,glucl_potentiation,1.000,tau_decay_factor,2.5000,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+ketamine,EXP-1,gaba_potentiation,0.999,tau_decay_factor,3.9970,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+ketamine,GAS-1,complex_i_block,0.999,rate_factor,0.7003,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+ketamine,GLC-1,glucl_potentiation,0.999,tau_decay_factor,2.4985,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+ketamine,GLC-2,glucl_potentiation,0.999,tau_decay_factor,2.4985,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+ketamine,LEV-1,nachr_antagonism,0.999,g_max_factor,0.3007,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+ketamine,MEV-1,complex_ii_block,1.000,rate_factor,0.9000,CONSERVATIVE,Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 — mev-1 hypersensitivity is small → Complex II is a weak target; small rate decrement
+ketamine,NCA-2,nca_block,0.999,g_max_factor,0.0010,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+ketamine,NLF-1,nca_block,0.999,g_max_factor,0.0010,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+ketamine,NUO-1,complex_i_block,1.000,rate_factor,0.7000,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+ketamine,NUO-2,complex_i_block,1.000,rate_factor,0.7000,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+ketamine,NUO-3,complex_i_block,1.000,rate_factor,0.7000,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+ketamine,NUO-4,complex_i_block,1.000,rate_factor,0.7000,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+ketamine,RIC-4,snare_cooperativity,0.965,n_Ca_delta,-1.4475,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+ketamine,SNB-1,snare_cooperativity,0.995,n_Ca_delta,-1.4925,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+ketamine,SNT-1,snare_cooperativity,0.982,n_Ca_delta,-1.4730,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+ketamine,TWK-18,k2p_potentiation,1.000,g_max_factor,3.0000,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+ketamine,TWK-29,k2p_potentiation,0.999,g_max_factor,2.9980,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+ketamine,TWK-7,k2p_potentiation,0.998,g_max_factor,2.9960,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+ketamine,UNC-13,snare_cooperativity,0.997,n_Ca_delta,-1.4955,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+ketamine,UNC-18,snare_cooperativity,0.999,n_Ca_delta,-1.4985,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+ketamine,UNC-29,nachr_antagonism,0.998,g_max_factor,0.3014,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+ketamine,UNC-38,nachr_antagonism,0.999,g_max_factor,0.3007,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+ketamine,UNC-49,gaba_potentiation,0.999,tau_decay_factor,3.9970,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+ketamine,UNC-63,nachr_antagonism,0.999,g_max_factor,0.3007,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+ketamine,UNC-64,snare_cooperativity,0.999,n_Ca_delta,-1.4985,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+ketamine,UNC-79,nca_block,1.000,g_max_factor,0.0000,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+propofol,ACR-16,nachr_antagonism,0.970,g_max_factor,0.3210,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+propofol,ACR-2,nachr_antagonism,0.979,g_max_factor,0.3147,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+propofol,AVR-14,glucl_potentiation,0.989,tau_decay_factor,2.4835,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+propofol,AVR-15,glucl_potentiation,0.993,tau_decay_factor,2.4895,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+propofol,EXP-1,gaba_potentiation,0.894,tau_decay_factor,3.6820,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+propofol,GAS-1,complex_i_block,0.922,rate_factor,0.7234,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+propofol,GLC-1,glucl_potentiation,0.922,tau_decay_factor,2.3830,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+propofol,GLC-2,glucl_potentiation,0.858,tau_decay_factor,2.2870,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+propofol,LEV-1,nachr_antagonism,0.943,g_max_factor,0.3399,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+propofol,MEV-1,complex_ii_block,0.965,rate_factor,0.9035,CONSERVATIVE,Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 — mev-1 hypersensitivity is small → Complex II is a weak target; small rate decrement
+propofol,NCA-2,nca_block,0.952,g_max_factor,0.0480,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+propofol,NLF-1,nca_block,0.909,g_max_factor,0.0910,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+propofol,NUO-1,complex_i_block,0.987,rate_factor,0.7039,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+propofol,NUO-2,complex_i_block,0.979,rate_factor,0.7063,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+propofol,NUO-3,complex_i_block,0.998,rate_factor,0.7006,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+propofol,NUO-4,complex_i_block,0.959,rate_factor,0.7123,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+propofol,RIC-4,snare_cooperativity,0.009,n_Ca_delta,-0.0135,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+propofol,SNB-1,snare_cooperativity,0.784,n_Ca_delta,-1.1760,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+propofol,SNT-1,snare_cooperativity,0.009,n_Ca_delta,-0.0135,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+propofol,TWK-18,k2p_potentiation,0.970,g_max_factor,2.9400,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+propofol,TWK-29,k2p_potentiation,0.970,g_max_factor,2.9400,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+propofol,TWK-7,k2p_potentiation,0.989,g_max_factor,2.9780,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+propofol,UNC-13,snare_cooperativity,0.011,n_Ca_delta,-0.0165,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+propofol,UNC-18,snare_cooperativity,0.025,n_Ca_delta,-0.0375,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+propofol,UNC-29,nachr_antagonism,0.934,g_max_factor,0.3462,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+propofol,UNC-38,nachr_antagonism,0.943,g_max_factor,0.3399,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+propofol,UNC-49,gaba_potentiation,0.952,tau_decay_factor,3.8560,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+propofol,UNC-63,nachr_antagonism,0.909,g_max_factor,0.3637,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+propofol,UNC-64,snare_cooperativity,0.877,n_Ca_delta,-1.3155,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+propofol,UNC-79,nca_block,0.943,g_max_factor,0.0570,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+sevoflurane,ACR-16,nachr_antagonism,0.997,g_max_factor,0.3021,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+sevoflurane,ACR-2,nachr_antagonism,0.987,g_max_factor,0.3091,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+sevoflurane,AVR-14,glucl_potentiation,0.992,tau_decay_factor,2.4880,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+sevoflurane,AVR-15,glucl_potentiation,0.996,tau_decay_factor,2.4940,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+sevoflurane,EXP-1,gaba_potentiation,0.970,tau_decay_factor,3.9100,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+sevoflurane,GAS-1,complex_i_block,0.965,rate_factor,0.7105,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+sevoflurane,GLC-1,glucl_potentiation,0.965,tau_decay_factor,2.4475,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+sevoflurane,GLC-2,glucl_potentiation,0.982,tau_decay_factor,2.4730,ANALOGY,Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved
+sevoflurane,LEV-1,nachr_antagonism,0.993,g_max_factor,0.3049,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+sevoflurane,MEV-1,complex_ii_block,0.970,rate_factor,0.9030,CONSERVATIVE,Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 — mev-1 hypersensitivity is small → Complex II is a weak target; small rate decrement
+sevoflurane,NCA-2,nca_block,0.978,g_max_factor,0.0220,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+sevoflurane,NLF-1,nca_block,0.942,g_max_factor,0.0580,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
+sevoflurane,NUO-1,complex_i_block,0.987,rate_factor,0.7039,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+sevoflurane,NUO-2,complex_i_block,0.987,rate_factor,0.7039,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+sevoflurane,NUO-3,complex_i_block,0.995,rate_factor,0.7015,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+sevoflurane,NUO-4,complex_i_block,0.987,rate_factor,0.7039,LITERATURE,Hanley 2002 / Kayser 2001 PMID 11278828 — Complex I sensitive to halogenated anesthetics
+sevoflurane,RIC-4,snare_cooperativity,0.432,n_Ca_delta,-0.6480,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+sevoflurane,SNB-1,snare_cooperativity,0.893,n_Ca_delta,-1.3395,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+sevoflurane,SNT-1,snare_cooperativity,0.279,n_Ca_delta,-0.4185,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+sevoflurane,TWK-18,k2p_potentiation,0.978,g_max_factor,2.9560,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+sevoflurane,TWK-29,k2p_potentiation,0.989,g_max_factor,2.9780,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+sevoflurane,TWK-7,k2p_potentiation,0.989,g_max_factor,2.9780,LITERATURE,Patel & Honoré 1999 — TASK / TREK-1 activated by volatile anesthetics
+sevoflurane,UNC-13,snare_cooperativity,0.432,n_Ca_delta,-0.6480,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+sevoflurane,UNC-18,snare_cooperativity,0.873,n_Ca_delta,-1.3095,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+sevoflurane,UNC-29,nachr_antagonism,0.970,g_max_factor,0.3210,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+sevoflurane,UNC-38,nachr_antagonism,0.987,g_max_factor,0.3091,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+sevoflurane,UNC-49,gaba_potentiation,0.965,tau_decay_factor,3.8950,LITERATURE,Hales & Lambert 1991 — halothane potentiates GABA-A τ_decay 2-4× at clinical doses
+sevoflurane,UNC-63,nachr_antagonism,0.994,g_max_factor,0.3042,LITERATURE,Forman 1996 / Wachtel 1995 — halothane open-channel block at high occupancy
+sevoflurane,UNC-64,snare_cooperativity,0.965,n_Ca_delta,-1.4475,LITERATURE,Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 — SNARE Ca-cooperativity reduction
+sevoflurane,UNC-79,nca_block,0.970,g_max_factor,0.0300,LITERATURE,"Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 — unc-79/80 resistance, NCA block"
