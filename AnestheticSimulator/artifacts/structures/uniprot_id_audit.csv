@@ -1,0 +1,33 @@
+gene_name,csv_uniprot_id,csv_wormbase_id,verified_uniprot_id,verified_wormbase_id,verified_reviewed,verified_protein_name,verified_length,uniprot_match,wormbase_match,alphafold_db_status,alphafold_pdb_path,alphafold_global_plddt,alphafold_version,alphafold_frac_high_confidence
+UNC-49,Q17791,WBGene00006765,G5EBQ0,T21C12.1b,False,Gamma-aminobutyric acid receptor subunit beta,487,MISMATCH,MISMATCH,OK v6 320.1 KB pLDDT=77.31,artifacts/structures/UNC-49_G5EBQ0.pdb,77.31,6,0.464
+EXP-1,O44185,WBGene00001388,G5ECJ0,H35N03.1,True,Gamma-aminobutyric acid receptor exp-1,539,MISMATCH,MISMATCH,OK v6 355.2 KB pLDDT=72.56,artifacts/structures/EXP-1_G5ECJ0.pdb,72.56,6,0.288
+AVR-14,O17127,WBGene00000242,Q8IFY7,B0207.12c,False,Neurotransmitter-gated ion-channel ligand-binding domain-containing protein,239,MISMATCH,MISMATCH,OK v6 162.7 KB pLDDT=85.44,artifacts/structures/AVR-14_Q8IFY7.pdb,85.44,6,0.603
+AVR-15,P34367,WBGene00000243,G5ECH3,R11G10.1a,False,Ig-like domain-containing protein,657,MISMATCH,MISMATCH,OK v6 424.0 KB pLDDT=67.88,artifacts/structures/AVR-15_G5ECH3.pdb,67.88,6,0.371
+GLC-1,O18219,WBGene00001623,G5EBR3,F11A5.10,True,Glutamate-gated chloride channel alpha,461,MISMATCH,MISMATCH,OK v6 299.7 KB pLDDT=82.06,artifacts/structures/GLC-1_G5EBR3.pdb,82.06,6,0.549
+GLC-2,Q17738,WBGene00001624,Q17328,F25F8.2,True,Glutamate-gated chloride channel subunit beta,434,MISMATCH,MISMATCH,OK v6 284.1 KB pLDDT=86.38,artifacts/structures/GLC-2_Q17328.pdb,86.38,6,0.673
+ACR-16,Q21306,WBGene00000043,P48180,F25G6.3,True,Acetylcholine receptor subunit alpha-type acr-16,498,MISMATCH,MISMATCH,OK v6 325.5 KB pLDDT=82.19,artifacts/structures/ACR-16_P48180.pdb,82.19,6,0.482
+ACR-2,Q9XW79,WBGene00000038,P48182,K11G12.2,True,Acetylcholine receptor subunit beta-type acr-2,575,MISMATCH,MISMATCH,OK v6 372.7 KB pLDDT=75.62,artifacts/structures/ACR-2_P48182.pdb,75.62,6,0.350
+UNC-29,P34418,WBGene00006754,P48181,T08G11.5,True,Acetylcholine receptor subunit beta-type unc-29,493,MISMATCH,MISMATCH,OK v6 321.8 KB pLDDT=83.44,artifacts/structures/UNC-29_P48181.pdb,83.44,6,0.448
+UNC-38,P34903,WBGene00006759,Q23022,F21F3.5,True,Acetylcholine receptor subunit alpha-type unc-38,511,MISMATCH,MISMATCH,OK v6 338.8 KB pLDDT=82.88,artifacts/structures/UNC-38_Q23022.pdb,82.88,6,0.474
+UNC-63,Q17744,WBGene00006788,Q9N587,Y110A7A.3,True,Acetylcholine receptor subunit alpha-type unc-63,502,MISMATCH,MISMATCH,OK v6 327.6 KB pLDDT=82.12,artifacts/structures/UNC-63_Q9N587.pdb,82.12,6,0.498
+LEV-1,P30811,WBGene00002308,Q27218,F09E8.7a,True,Acetylcholine receptor subunit beta-type lev-1,507,MISMATCH,MISMATCH,OK v6 329.8 KB pLDDT=81.06,artifacts/structures/LEV-1_Q27218.pdb,81.06,6,0.448
+TWK-18,P91173,WBGene00006626,Q18120,C24A3.6,True,TWiK family of potassium channels protein 18,461,MISMATCH,MISMATCH,OK v6 300.5 KB pLDDT=73.5,artifacts/structures/TWK-18_Q18120.pdb,73.5,6,0.217
+TWK-7,Q9N4T8,WBGene00006616,P34410,F22B7.7,True,TWiK family of potassium channels protein 7,557,MISMATCH,MISMATCH,OK v6 364.7 KB pLDDT=67.31,artifacts/structures/TWK-7_P34410.pdb,67.31,6,0.346
+TWK-29,Q9N4S8,WBGene00006637,Q564V7,F46A9.3b,False,Potassium channel domain-containing protein,447,MISMATCH,MISMATCH,OK v6 287.8 KB pLDDT=69.25,artifacts/structures/TWK-29_Q564V7.pdb,69.25,6,0.170
+NCA-1,Q9N4D6,WBGene00003583,Q6Q762,,False,Sodium leak channel NALCN,1831,MISMATCH,no_xref,FAIL AF DB has no entry for Q6Q762 (404),,,,
+NCA-2,Q21413,WBGene00003584,G5EDM1,C27F2.2a,False,Four domain-type voltage-gated ion channel alpha-1 subunit,1785,MISMATCH,MISMATCH,OK v6 1161.6 KB pLDDT=74.12,artifacts/structures/NCA-2_G5EDM1.pdb,74.12,6,0.300
+UNC-79,Q9XV28,WBGene00006788,P42173,C03C10.6,True,Uncoordinated protein 79,870,MISMATCH,MISMATCH,OK v6 553.0 KB pLDDT=83.12,artifacts/structures/UNC-79_P42173.pdb,83.12,6,0.590
+UNC-80,Q9N5E6,WBGene00006794,Q9XV66,F25C8.3a,True,Protein unc-80,3263,MISMATCH,MISMATCH,FAIL AF DB has no entry for Q9XV66 (404),,,,
+NLF-1,O01567,WBGene00012009,M4Q8W4,F55A4.2,False,NCA Localization Factor,438,MISMATCH,MISMATCH,OK v6 286.2 KB pLDDT=67.88,artifacts/structures/NLF-1_M4Q8W4.pdb,67.88,6,0.199
+UNC-64,Q22298,WBGene00006741,O16000,F56A8.7a,True,Syntaxin-1A homolog,291,MISMATCH,MISMATCH,OK v6 189.5 KB pLDDT=83.88,artifacts/structures/UNC-64_O16000.pdb,83.88,6,0.471
+RIC-4,Q9XU05,WBGene00004351,A5PEW5,Y22F5A.3b,False,Synaptosomal-associated protein,234,MISMATCH,MISMATCH,OK v6 148.4 KB pLDDT=81.06,artifacts/structures/RIC-4_A5PEW5.pdb,81.06,6,0.466
+SNB-1,Q21989,WBGene00004907,O02495,T10H9.4,True,Synaptobrevin-1,109,MISMATCH,MISMATCH,OK v6 71.0 KB pLDDT=83.56,artifacts/structures/SNB-1_O02495.pdb,83.56,6,0.541
+UNC-13,P27715,WBGene00006750,P27715,ZK524.2a,True,Phorbol ester/diacylglycerol-binding protein unc-13,2155,OK,MISMATCH,OK v6 1381.0 KB pLDDT=62.97,artifacts/structures/UNC-13_P27715.pdb,62.97,6,0.256
+UNC-18,O17444,WBGene00006753,P34815,F27D9.1a,True,Acetylcholine regulator unc-18,591,MISMATCH,MISMATCH,OK v6 381.6 KB pLDDT=90.5,artifacts/structures/UNC-18_P34815.pdb,90.5,6,0.802
+SNT-1,P34693,WBGene00004921,P34693,F31E8.2a,True,Synaptotagmin-1,441,OK,MISMATCH,OK v6 283.7 KB pLDDT=77.5,artifacts/structures/SNT-1_P34693.pdb,77.5,6,0.440
+GAS-1,Q21533,WBGene00001520,Q93873,K09A9.5,True,"Probable NADH dehydrogenase [ubiquinone] iron-sulfur protein 2, mitochondrial",482,MISMATCH,MISMATCH,OK v6 310.2 KB pLDDT=83.5,artifacts/structures/GAS-1_Q93873.pdb,83.5,6,0.676
+NUO-1,Q9XVU2,WBGene00003834,Q17880,C09H10.3,False,"NADH dehydrogenase [ubiquinone] flavoprotein 1, mitochondrial",479,MISMATCH,MISMATCH,OK v6 297.6 KB pLDDT=91.69,artifacts/structures/NUO-1_Q17880.pdb,91.69,6,0.879
+NUO-2,O45495,WBGene00003835,Q86NC2,T10E9.7,False,"NADH dehydrogenase [ubiquinone] iron-sulfur protein 3, mitochondrial",268,MISMATCH,MISMATCH,OK v6 178.1 KB pLDDT=83.62,artifacts/structures/NUO-2_Q86NC2.pdb,83.62,6,0.687
+NUO-3,Q9XVU0,WBGene00003836,O18236,Y57G11C.12,False,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 6,131,MISMATCH,MISMATCH,OK v6 89.0 KB pLDDT=87.06,artifacts/structures/NUO-3_O18236.pdb,87.06,6,0.679
+NUO-4,Q19792,WBGene00003837,Q21233,K04G7.4a,False,"NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 10, mitochondrial",436,MISMATCH,MISMATCH,OK v6 291.6 KB pLDDT=85.0,artifacts/structures/NUO-4_Q21233.pdb,85.0,6,0.596
+MEV-1,Q22760,WBGene00003225,P41956,T07C4.7a,True,"Succinate dehydrogenase cytochrome b560 subunit, mitochondrial",182,MISMATCH,MISMATCH,OK v6 116.7 KB pLDDT=88.81,artifacts/structures/MEV-1_P41956.pdb,88.81,6,0.753
