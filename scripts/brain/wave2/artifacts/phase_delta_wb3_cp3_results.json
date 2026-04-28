@@ -1,0 +1,1026 @@
+{
+  "cp3_1_a_1s": {
+    "label": "1s_spontaneous",
+    "t_ms": 1000.0,
+    "lif_spike_count": 1850,
+    "n_active_gt0p5Hz": 188,
+    "mean_rate_Hz": 7.18,
+    "max_rate_Hz": 40.0,
+    "lif_v_min_mV": -34.066093687406024,
+    "lif_v_max_mV": -10.935885510028136,
+    "lif_v_mean_mV": -22.386119072363243,
+    "wave2_voltages_mV": {
+      "AVAL": -19.3499221504658,
+      "AVAR": -19.310864697412235
+    },
+    "soft_cap_warnings_total": 44,
+    "wall_time_s": 27.774230241775513,
+    "fails": []
+  },
+  "cp3_1_b_10s": {
+    "label": "10s_spontaneous",
+    "t_ms": 10000.0,
+    "lif_spike_count": 19470,
+    "n_active_gt0p5Hz": 188,
+    "mean_rate_Hz": 6.4,
+    "max_rate_Hz": 36.0,
+    "lif_v_min_mV": -37.387638105284196,
+    "lif_v_max_mV": -11.273066713024596,
+    "lif_v_mean_mV": -21.961606352283216,
+    "wave2_voltages_mV": {
+      "AVAL": -23.180321107732965,
+      "AVAR": -22.914084333121576
+    },
+    "soft_cap_warnings_total": 267,
+    "wall_time_s": 302.24427366256714,
+    "fails": []
+  },
+  "cp3_1_c_30s_touch": {
+    "label": "30s_with_touch",
+    "t_ms": 30000.0,
+    "lif_spike_count": 60862,
+    "n_active_gt0p5Hz": 200,
+    "mean_rate_Hz": 8.253333333333334,
+    "max_rate_Hz": 64.0,
+    "lif_v_min_mV": -35.161386555455366,
+    "lif_v_max_mV": -11.774602166070197,
+    "lif_v_mean_mV": -22.33450186039947,
+    "wave2_voltages_mV": {
+      "AVAL": -22.011751259750515,
+      "AVAR": -21.8036902986114
+    },
+    "soft_cap_warnings_total": 717,
+    "wall_time_s": 802.5595092773438,
+    "pre_touch": {
+      "label": "pre_touch_5s",
+      "t_ms": 5000.0,
+      "lif_spike_count": 9527,
+      "n_active_gt0p5Hz": 205,
+      "mean_rate_Hz": 6.533333333333333,
+      "max_rate_Hz": 44.0,
+      "lif_v_min_mV": -32.680667018535694,
+      "lif_v_max_mV": -12.300946306957727,
+      "lif_v_mean_mV": -21.980161217635487,
+      "wave2_voltages_mV": {
+        "AVAL": -21.01040741476156,
+        "AVAR": -21.42106259878687
+      },
+      "soft_cap_warnings_total": 120
+    },
+    "touch": {
+      "label": "touch_2s",
+      "t_ms": 7000.0,
+      "lif_spike_count": 14252,
+      "n_active_gt0p5Hz": 189,
+      "mean_rate_Hz": 8.353333333333333,
+      "max_rate_Hz": 72.0,
+      "lif_v_min_mV": -50.78761909626229,
+      "lif_v_max_mV": -11.719678265592856,
+      "lif_v_mean_mV": -22.774379084268272,
+      "wave2_voltages_mV": {
+        "AVAL": -22.11568757942802,
+        "AVAR": -22.8958871620067
+      },
+      "soft_cap_warnings_total": 172
+    },
+    "fails": []
+  },
+  "cp3_2_v_half_sensitivity": {
+    "AIY": [
+      {
+        "cell": "AIY",
+        "delta_V_half_mV": -5.0,
+        "V_half_mV": -60.0,
+        "cell_metrics": {
+          "AIYL": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -27.141062087537563,
+            "touch_V_mV": -28.680927455894714
+          },
+          "AIYR": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -31.578011205510965,
+            "touch_V_mV": -31.068540583047607
+          }
+        },
+        "n_downstream_cells": 24,
+        "downstream_metrics": {
+          "ADFR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 2.5,
+            "delta_touch_Hz": -0.5
+          },
+          "AFDL": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 0.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AFDR": {
+            "baseline_Hz": 2.5,
+            "touch_Hz": 3.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AIBL": {
+            "baseline_Hz": 8.5,
+            "touch_Hz": 6.5,
+            "delta_touch_Hz": -2.0
+          },
+          "AINL": {
+            "baseline_Hz": 2.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AIZL": {
+            "baseline_Hz": 7.5,
+            "touch_Hz": 3.5,
+            "delta_touch_Hz": -4.0
+          },
+          "AIZR": {
+            "baseline_Hz": 13.0,
+            "touch_Hz": 7.5,
+            "delta_touch_Hz": -5.5
+          },
+          "ASEL": {
+            "baseline_Hz": 2.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.0
+          },
+          "ASER": {
+            "baseline_Hz": 6.5,
+            "touch_Hz": 6.0,
+            "delta_touch_Hz": -0.5
+          },
+          "ASGR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 2.5,
+            "delta_touch_Hz": 1.0
+          },
+          "AWAL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 0.5,
+            "delta_touch_Hz": 0.0
+          },
+          "AWAR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": -0.5
+          },
+          "AWBR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AWCL": {
+            "baseline_Hz": 4.5,
+            "touch_Hz": 4.5,
+            "delta_touch_Hz": 0.0
+          },
+          "AWCR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 4.0,
+            "delta_touch_Hz": 1.0
+          },
+          "BAGR": {
+            "baseline_Hz": 4.5,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -2.5
+          },
+          "HSNR": {
+            "baseline_Hz": 2.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.0
+          },
+          "RIAL": {
+            "baseline_Hz": 26.5,
+            "touch_Hz": 28.0,
+            "delta_touch_Hz": 1.5
+          },
+          "RIAR": {
+            "baseline_Hz": 26.5,
+            "touch_Hz": 28.0,
+            "delta_touch_Hz": 1.5
+          },
+          "RIBL": {
+            "baseline_Hz": 10.5,
+            "touch_Hz": 9.0,
+            "delta_touch_Hz": -1.5
+          },
+          "RIBR": {
+            "baseline_Hz": 15.5,
+            "touch_Hz": 10.5,
+            "delta_touch_Hz": -5.0
+          },
+          "RIH": {
+            "baseline_Hz": 6.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -4.0
+          },
+          "RIR": {
+            "baseline_Hz": 5.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -3.0
+          },
+          "RIVR": {
+            "baseline_Hz": 19.5,
+            "touch_Hz": 22.5,
+            "delta_touch_Hz": 3.0
+          }
+        },
+        "soft_cap_warnings_total": 519
+      },
+      {
+        "cell": "AIY",
+        "delta_V_half_mV": 0.0,
+        "V_half_mV": -55.0,
+        "cell_metrics": {
+          "AIYL": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -27.159166405469705,
+            "touch_V_mV": -28.62776431858166
+          },
+          "AIYR": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -31.584100492507016,
+            "touch_V_mV": -31.0286509982001
+          }
+        },
+        "n_downstream_cells": 24,
+        "downstream_metrics": {
+          "ADFR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 2.5,
+            "delta_touch_Hz": -0.5
+          },
+          "AFDL": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 0.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AFDR": {
+            "baseline_Hz": 2.5,
+            "touch_Hz": 3.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AIBL": {
+            "baseline_Hz": 8.5,
+            "touch_Hz": 7.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AINL": {
+            "baseline_Hz": 2.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AIZL": {
+            "baseline_Hz": 7.5,
+            "touch_Hz": 3.5,
+            "delta_touch_Hz": -4.0
+          },
+          "AIZR": {
+            "baseline_Hz": 13.0,
+            "touch_Hz": 7.5,
+            "delta_touch_Hz": -5.5
+          },
+          "ASEL": {
+            "baseline_Hz": 2.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.0
+          },
+          "ASER": {
+            "baseline_Hz": 6.5,
+            "touch_Hz": 6.0,
+            "delta_touch_Hz": -0.5
+          },
+          "ASGR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 2.5,
+            "delta_touch_Hz": 1.0
+          },
+          "AWAL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 0.5,
+            "delta_touch_Hz": 0.0
+          },
+          "AWAR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": -0.5
+          },
+          "AWBR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AWCL": {
+            "baseline_Hz": 4.5,
+            "touch_Hz": 5.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AWCR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 4.5,
+            "delta_touch_Hz": 1.5
+          },
+          "BAGR": {
+            "baseline_Hz": 4.5,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -2.5
+          },
+          "HSNR": {
+            "baseline_Hz": 2.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.0
+          },
+          "RIAL": {
+            "baseline_Hz": 26.5,
+            "touch_Hz": 28.0,
+            "delta_touch_Hz": 1.5
+          },
+          "RIAR": {
+            "baseline_Hz": 26.5,
+            "touch_Hz": 28.0,
+            "delta_touch_Hz": 1.5
+          },
+          "RIBL": {
+            "baseline_Hz": 10.5,
+            "touch_Hz": 9.0,
+            "delta_touch_Hz": -1.5
+          },
+          "RIBR": {
+            "baseline_Hz": 15.5,
+            "touch_Hz": 10.5,
+            "delta_touch_Hz": -5.0
+          },
+          "RIH": {
+            "baseline_Hz": 6.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -4.0
+          },
+          "RIR": {
+            "baseline_Hz": 5.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -3.0
+          },
+          "RIVR": {
+            "baseline_Hz": 19.5,
+            "touch_Hz": 21.5,
+            "delta_touch_Hz": 2.0
+          }
+        },
+        "soft_cap_warnings_total": 550
+      },
+      {
+        "cell": "AIY",
+        "delta_V_half_mV": 5.0,
+        "V_half_mV": -50.0,
+        "cell_metrics": {
+          "AIYL": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -27.19939081267502,
+            "touch_V_mV": -28.66498748222937
+          },
+          "AIYR": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -31.59762178218569,
+            "touch_V_mV": -31.04119474104462
+          }
+        },
+        "n_downstream_cells": 24,
+        "downstream_metrics": {
+          "ADFR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 2.5,
+            "delta_touch_Hz": -0.5
+          },
+          "AFDL": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 0.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AFDR": {
+            "baseline_Hz": 2.5,
+            "touch_Hz": 3.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AIBL": {
+            "baseline_Hz": 8.5,
+            "touch_Hz": 7.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AINL": {
+            "baseline_Hz": 2.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": -1.5
+          },
+          "AIZL": {
+            "baseline_Hz": 7.5,
+            "touch_Hz": 3.5,
+            "delta_touch_Hz": -4.0
+          },
+          "AIZR": {
+            "baseline_Hz": 13.5,
+            "touch_Hz": 7.5,
+            "delta_touch_Hz": -6.0
+          },
+          "ASEL": {
+            "baseline_Hz": 2.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.0
+          },
+          "ASER": {
+            "baseline_Hz": 6.5,
+            "touch_Hz": 6.0,
+            "delta_touch_Hz": -0.5
+          },
+          "ASGR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 2.5,
+            "delta_touch_Hz": 1.0
+          },
+          "AWAL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 0.5,
+            "delta_touch_Hz": 0.0
+          },
+          "AWAR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": -0.5
+          },
+          "AWBR": {
+            "baseline_Hz": 1.5,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AWCL": {
+            "baseline_Hz": 4.5,
+            "touch_Hz": 5.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AWCR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 4.5,
+            "delta_touch_Hz": 1.5
+          },
+          "BAGR": {
+            "baseline_Hz": 4.5,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -2.5
+          },
+          "HSNR": {
+            "baseline_Hz": 2.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": 0.0
+          },
+          "RIAL": {
+            "baseline_Hz": 26.5,
+            "touch_Hz": 28.0,
+            "delta_touch_Hz": 1.5
+          },
+          "RIAR": {
+            "baseline_Hz": 26.5,
+            "touch_Hz": 28.0,
+            "delta_touch_Hz": 1.5
+          },
+          "RIBL": {
+            "baseline_Hz": 10.5,
+            "touch_Hz": 9.0,
+            "delta_touch_Hz": -1.5
+          },
+          "RIBR": {
+            "baseline_Hz": 15.5,
+            "touch_Hz": 10.5,
+            "delta_touch_Hz": -5.0
+          },
+          "RIH": {
+            "baseline_Hz": 6.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -4.0
+          },
+          "RIR": {
+            "baseline_Hz": 5.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -3.0
+          },
+          "RIVR": {
+            "baseline_Hz": 19.5,
+            "touch_Hz": 21.5,
+            "delta_touch_Hz": 2.0
+          }
+        },
+        "soft_cap_warnings_total": 544
+      }
+    ],
+    "RIM": [
+      {
+        "cell": "RIM",
+        "delta_V_half_mV": -5.0,
+        "V_half_mV": -48.0,
+        "cell_metrics": {
+          "RIML": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -16.170770461033687,
+            "touch_V_mV": -21.406290621281208
+          },
+          "RIMR": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -18.41313382010282,
+            "touch_V_mV": -21.685402555313537
+          }
+        },
+        "n_downstream_cells": 27,
+        "downstream_metrics": {
+          "ADAR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 4.0,
+            "delta_touch_Hz": 1.0
+          },
+          "AIBL": {
+            "baseline_Hz": 13.0,
+            "touch_Hz": 12.0,
+            "delta_touch_Hz": -1.0
+          },
+          "AIBR": {
+            "baseline_Hz": 16.5,
+            "touch_Hz": 15.5,
+            "delta_touch_Hz": -1.0
+          },
+          "AVBL": {
+            "baseline_Hz": 33.0,
+            "touch_Hz": 24.0,
+            "delta_touch_Hz": -9.0
+          },
+          "AVBR": {
+            "baseline_Hz": 32.5,
+            "touch_Hz": 25.5,
+            "delta_touch_Hz": -7.0
+          },
+          "AVER": {
+            "baseline_Hz": 23.0,
+            "touch_Hz": 16.0,
+            "delta_touch_Hz": -7.0
+          },
+          "AVJL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AVKL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 0.0,
+            "delta_touch_Hz": -0.5
+          },
+          "AVKR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -1.0
+          },
+          "RIAL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "RIBL": {
+            "baseline_Hz": 23.0,
+            "touch_Hz": 17.0,
+            "delta_touch_Hz": -6.0
+          },
+          "RIBR": {
+            "baseline_Hz": 26.0,
+            "touch_Hz": 20.0,
+            "delta_touch_Hz": -6.0
+          },
+          "RICR": {
+            "baseline_Hz": 6.0,
+            "touch_Hz": 3.0,
+            "delta_touch_Hz": -3.0
+          },
+          "RIS": {
+            "baseline_Hz": 22.5,
+            "touch_Hz": 22.0,
+            "delta_touch_Hz": -0.5
+          },
+          "RMDL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "RMDR": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "RMFL": {
+            "baseline_Hz": 9.0,
+            "touch_Hz": 5.5,
+            "delta_touch_Hz": -3.5
+          },
+          "RMFR": {
+            "baseline_Hz": 11.5,
+            "touch_Hz": 8.5,
+            "delta_touch_Hz": -3.0
+          },
+          "SAADL": {
+            "baseline_Hz": 30.0,
+            "touch_Hz": 30.0,
+            "delta_touch_Hz": 0.0
+          },
+          "SAADR": {
+            "baseline_Hz": 32.5,
+            "touch_Hz": 28.5,
+            "delta_touch_Hz": -4.0
+          },
+          "SAAVL": {
+            "baseline_Hz": 11.5,
+            "touch_Hz": 10.0,
+            "delta_touch_Hz": -1.5
+          },
+          "SAAVR": {
+            "baseline_Hz": 9.0,
+            "touch_Hz": 10.0,
+            "delta_touch_Hz": 1.0
+          },
+          "SMDDL": {
+            "baseline_Hz": 42.0,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -3.5
+          },
+          "SMDDR": {
+            "baseline_Hz": 42.0,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -3.5
+          },
+          "SMDVL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "SMDVR": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "VB1": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": 0.5
+          }
+        },
+        "soft_cap_warnings_total": 1427
+      },
+      {
+        "cell": "RIM",
+        "delta_V_half_mV": 0.0,
+        "V_half_mV": -43.0,
+        "cell_metrics": {
+          "RIML": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -16.16828778063021,
+            "touch_V_mV": -21.399936986931873
+          },
+          "RIMR": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.0,
+            "recovery_Hz": 0.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -18.411387992186263,
+            "touch_V_mV": -21.68104202274369
+          }
+        },
+        "n_downstream_cells": 27,
+        "downstream_metrics": {
+          "ADAR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 4.0,
+            "delta_touch_Hz": 1.0
+          },
+          "AIBL": {
+            "baseline_Hz": 13.0,
+            "touch_Hz": 12.0,
+            "delta_touch_Hz": -1.0
+          },
+          "AIBR": {
+            "baseline_Hz": 16.5,
+            "touch_Hz": 15.5,
+            "delta_touch_Hz": -1.0
+          },
+          "AVBL": {
+            "baseline_Hz": 33.0,
+            "touch_Hz": 24.0,
+            "delta_touch_Hz": -9.0
+          },
+          "AVBR": {
+            "baseline_Hz": 32.5,
+            "touch_Hz": 25.5,
+            "delta_touch_Hz": -7.0
+          },
+          "AVER": {
+            "baseline_Hz": 23.0,
+            "touch_Hz": 16.0,
+            "delta_touch_Hz": -7.0
+          },
+          "AVJL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AVKL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 0.0,
+            "delta_touch_Hz": -0.5
+          },
+          "AVKR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -1.0
+          },
+          "RIAL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "RIBL": {
+            "baseline_Hz": 23.0,
+            "touch_Hz": 17.0,
+            "delta_touch_Hz": -6.0
+          },
+          "RIBR": {
+            "baseline_Hz": 26.0,
+            "touch_Hz": 20.0,
+            "delta_touch_Hz": -6.0
+          },
+          "RICR": {
+            "baseline_Hz": 6.0,
+            "touch_Hz": 3.0,
+            "delta_touch_Hz": -3.0
+          },
+          "RIS": {
+            "baseline_Hz": 22.5,
+            "touch_Hz": 22.0,
+            "delta_touch_Hz": -0.5
+          },
+          "RMDL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "RMDR": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "RMFL": {
+            "baseline_Hz": 9.0,
+            "touch_Hz": 5.5,
+            "delta_touch_Hz": -3.5
+          },
+          "RMFR": {
+            "baseline_Hz": 11.5,
+            "touch_Hz": 8.5,
+            "delta_touch_Hz": -3.0
+          },
+          "SAADL": {
+            "baseline_Hz": 30.0,
+            "touch_Hz": 30.0,
+            "delta_touch_Hz": 0.0
+          },
+          "SAADR": {
+            "baseline_Hz": 32.5,
+            "touch_Hz": 28.5,
+            "delta_touch_Hz": -4.0
+          },
+          "SAAVL": {
+            "baseline_Hz": 11.5,
+            "touch_Hz": 10.0,
+            "delta_touch_Hz": -1.5
+          },
+          "SAAVR": {
+            "baseline_Hz": 9.0,
+            "touch_Hz": 10.0,
+            "delta_touch_Hz": 1.0
+          },
+          "SMDDL": {
+            "baseline_Hz": 42.0,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -3.5
+          },
+          "SMDDR": {
+            "baseline_Hz": 42.0,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -3.5
+          },
+          "SMDVL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "SMDVR": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.0,
+            "delta_touch_Hz": -2.5
+          },
+          "VB1": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": 0.5
+          }
+        },
+        "soft_cap_warnings_total": 1430
+      },
+      {
+        "cell": "RIM",
+        "delta_V_half_mV": 5.0,
+        "V_half_mV": -38.0,
+        "cell_metrics": {
+          "RIML": {
+            "baseline_Hz": 1.0,
+            "touch_Hz": 1.0,
+            "recovery_Hz": 1.0,
+            "delta_touch_Hz": 0.0,
+            "baseline_V_mV": -16.201839707625023,
+            "touch_V_mV": -21.38599793373404
+          },
+          "RIMR": {
+            "baseline_Hz": 0.0,
+            "touch_Hz": 0.5,
+            "recovery_Hz": 0.5,
+            "delta_touch_Hz": 0.5,
+            "baseline_V_mV": -18.444045080445022,
+            "touch_V_mV": -21.671271729293192
+          }
+        },
+        "n_downstream_cells": 27,
+        "downstream_metrics": {
+          "ADAR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 4.0,
+            "delta_touch_Hz": 1.0
+          },
+          "AIBL": {
+            "baseline_Hz": 13.0,
+            "touch_Hz": 12.0,
+            "delta_touch_Hz": -1.0
+          },
+          "AIBR": {
+            "baseline_Hz": 16.5,
+            "touch_Hz": 15.5,
+            "delta_touch_Hz": -1.0
+          },
+          "AVBL": {
+            "baseline_Hz": 33.0,
+            "touch_Hz": 24.5,
+            "delta_touch_Hz": -8.5
+          },
+          "AVBR": {
+            "baseline_Hz": 32.5,
+            "touch_Hz": 26.0,
+            "delta_touch_Hz": -6.5
+          },
+          "AVER": {
+            "baseline_Hz": 23.0,
+            "touch_Hz": 16.5,
+            "delta_touch_Hz": -6.5
+          },
+          "AVJL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": 0.5
+          },
+          "AVKL": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 0.0,
+            "delta_touch_Hz": -0.5
+          },
+          "AVKR": {
+            "baseline_Hz": 3.0,
+            "touch_Hz": 2.0,
+            "delta_touch_Hz": -1.0
+          },
+          "RIAL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -2.0
+          },
+          "RIBL": {
+            "baseline_Hz": 23.0,
+            "touch_Hz": 17.0,
+            "delta_touch_Hz": -6.0
+          },
+          "RIBR": {
+            "baseline_Hz": 25.5,
+            "touch_Hz": 20.0,
+            "delta_touch_Hz": -5.5
+          },
+          "RICR": {
+            "baseline_Hz": 6.0,
+            "touch_Hz": 3.0,
+            "delta_touch_Hz": -3.0
+          },
+          "RIS": {
+            "baseline_Hz": 22.5,
+            "touch_Hz": 22.5,
+            "delta_touch_Hz": 0.0
+          },
+          "RMDL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -2.0
+          },
+          "RMDR": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -2.0
+          },
+          "RMFL": {
+            "baseline_Hz": 9.0,
+            "touch_Hz": 5.5,
+            "delta_touch_Hz": -3.5
+          },
+          "RMFR": {
+            "baseline_Hz": 11.5,
+            "touch_Hz": 8.5,
+            "delta_touch_Hz": -3.0
+          },
+          "SAADL": {
+            "baseline_Hz": 30.0,
+            "touch_Hz": 30.0,
+            "delta_touch_Hz": 0.0
+          },
+          "SAADR": {
+            "baseline_Hz": 32.5,
+            "touch_Hz": 29.0,
+            "delta_touch_Hz": -3.5
+          },
+          "SAAVL": {
+            "baseline_Hz": 11.5,
+            "touch_Hz": 10.5,
+            "delta_touch_Hz": -1.0
+          },
+          "SAAVR": {
+            "baseline_Hz": 9.0,
+            "touch_Hz": 10.0,
+            "delta_touch_Hz": 1.0
+          },
+          "SMDDL": {
+            "baseline_Hz": 42.0,
+            "touch_Hz": 39.0,
+            "delta_touch_Hz": -3.0
+          },
+          "SMDDR": {
+            "baseline_Hz": 42.0,
+            "touch_Hz": 39.5,
+            "delta_touch_Hz": -2.5
+          },
+          "SMDVL": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -2.0
+          },
+          "SMDVR": {
+            "baseline_Hz": 40.5,
+            "touch_Hz": 38.5,
+            "delta_touch_Hz": -2.0
+          },
+          "VB1": {
+            "baseline_Hz": 0.5,
+            "touch_Hz": 1.0,
+            "delta_touch_Hz": 0.5
+          }
+        },
+        "soft_cap_warnings_total": 1437
+      }
+    ]
+  },
+  "cp3_3_soft_cap_warning_counts": {
+    "cp3_1_a_1s": 44,
+    "cp3_1_b_10s": 267,
+    "cp3_1_c_30s_touch": 717
+  }
+}

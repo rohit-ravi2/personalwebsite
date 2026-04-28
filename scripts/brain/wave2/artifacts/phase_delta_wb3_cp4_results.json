@@ -1,0 +1,314 @@
+{
+  "cp4_1_default": {
+    "W_graded_I_pA": 0.3,
+    "wave2_active": [
+      "AVAL",
+      "AVAR"
+    ],
+    "v_half_overrides": {},
+    "soft_cap_warnings_total": 218,
+    "wave2_voltages_end_mV": {
+      "AVAL": -23.709899537267223,
+      "AVAR": -24.26063965635634
+    },
+    "ALML": {
+      "baseline_Hz": 0.5,
+      "touch_Hz": 63.5,
+      "recovery_Hz": 60.5,
+      "delta_touch_Hz": 63.0
+    },
+    "ALMR": {
+      "baseline_Hz": 1.0,
+      "touch_Hz": 61.5,
+      "recovery_Hz": 57.0,
+      "delta_touch_Hz": 60.5
+    },
+    "AVM": {
+      "baseline_Hz": 0.5,
+      "touch_Hz": 63.0,
+      "recovery_Hz": 60.0,
+      "delta_touch_Hz": 62.5
+    },
+    "PVCL": {
+      "baseline_Hz": 1.0,
+      "touch_Hz": 0.0,
+      "recovery_Hz": 0.0,
+      "delta_touch_Hz": -1.0
+    },
+    "PVCR": {
+      "baseline_Hz": 1.0,
+      "touch_Hz": 0.0,
+      "recovery_Hz": 0.0,
+      "delta_touch_Hz": -1.0
+    },
+    "AVDL": {
+      "baseline_Hz": 9.5,
+      "touch_Hz": 11.5,
+      "recovery_Hz": 9.0,
+      "delta_touch_Hz": 2.0
+    },
+    "AVDR": {
+      "baseline_Hz": 10.0,
+      "touch_Hz": 8.0,
+      "recovery_Hz": 8.0,
+      "delta_touch_Hz": -2.0
+    },
+    "AVEL": {
+      "baseline_Hz": 14.5,
+      "touch_Hz": 14.5,
+      "recovery_Hz": 13.5,
+      "delta_touch_Hz": 0.0
+    },
+    "AVER": {
+      "baseline_Hz": 15.5,
+      "touch_Hz": 18.5,
+      "recovery_Hz": 15.5,
+      "delta_touch_Hz": 3.0
+    },
+    "AVAL": {
+      "baseline_Hz": 1.5,
+      "touch_Hz": 1.0,
+      "recovery_Hz": 4.5,
+      "delta_touch_Hz": -0.5
+    },
+    "AVAR": {
+      "baseline_Hz": 1.0,
+      "touch_Hz": 2.0,
+      "recovery_Hz": 4.0,
+      "delta_touch_Hz": 1.0
+    },
+    "AVBL": {
+      "baseline_Hz": 20.5,
+      "touch_Hz": 22.0,
+      "recovery_Hz": 13.0,
+      "delta_touch_Hz": 1.5
+    },
+    "AVBR": {
+      "baseline_Hz": 19.0,
+      "touch_Hz": 14.5,
+      "recovery_Hz": 12.0,
+      "delta_touch_Hz": -4.5
+    },
+    "AIBL": {
+      "baseline_Hz": 9.5,
+      "touch_Hz": 17.0,
+      "recovery_Hz": 9.5,
+      "delta_touch_Hz": 7.5
+    },
+    "AIBR": {
+      "baseline_Hz": 10.5,
+      "touch_Hz": 18.0,
+      "recovery_Hz": 11.0,
+      "delta_touch_Hz": 7.5
+    },
+    "RIML": {
+      "baseline_Hz": 28.5,
+      "touch_Hz": 33.0,
+      "recovery_Hz": 29.0,
+      "delta_touch_Hz": 4.5
+    },
+    "RIMR": {
+      "baseline_Hz": 28.5,
+      "touch_Hz": 37.5,
+      "recovery_Hz": 28.0,
+      "delta_touch_Hz": 9.0
+    },
+    "AIYL": {
+      "baseline_Hz": 10.0,
+      "touch_Hz": 14.0,
+      "recovery_Hz": 10.5,
+      "delta_touch_Hz": 4.0
+    },
+    "AIYR": {
+      "baseline_Hz": 11.5,
+      "touch_Hz": 16.5,
+      "recovery_Hz": 8.0,
+      "delta_touch_Hz": 5.0
+    },
+    "wave2_pseudo_spike_counts_total": {
+      "AVAL": 21,
+      "AVAR": 21
+    },
+    "wall_time_s": 239.01799178123474
+  },
+  "cp4_2_retune": {
+    "starting_value_pA": 0.3,
+    "target_delta_Hz": 5.0,
+    "final_value_pA": 10.0,
+    "final_AVAL_delta_Hz": 0.0,
+    "trajectory": [
+      {
+        "W_graded_I_pA": 0.3,
+        "AVAL_delta_Hz": -0.5,
+        "AVAR_delta_Hz": 1.0,
+        "rationale": "Mellem-calibrated starting point (Decision 4 default)",
+        "outcome": "below_target"
+      },
+      {
+        "W_graded_I_pA": 1.0,
+        "AVAL_delta_Hz": 0.5,
+        "AVAR_delta_Hz": 0.5,
+        "rationale": "Per-cell Mellem injection scale doesn't account for cumulative summation across many active inputs OR not all weights saturate to \u03c3=1 in physiological regime; scale up empirically until cascade matches per-edge LIF baseline (+7.5 Hz from Stage IV)",
+        "outcome": "below_target",
+        "soft_cap_warnings_total": 214
+      },
+      {
+        "W_graded_I_pA": 3.0,
+        "AVAL_delta_Hz": -0.5,
+        "AVAR_delta_Hz": -0.5,
+        "rationale": "Per-cell Mellem injection scale doesn't account for cumulative summation across many active inputs OR not all weights saturate to \u03c3=1 in physiological regime; scale up empirically until cascade matches per-edge LIF baseline (+7.5 Hz from Stage IV)",
+        "outcome": "below_target",
+        "soft_cap_warnings_total": 271
+      },
+      {
+        "W_graded_I_pA": 10.0,
+        "AVAL_delta_Hz": 0.0,
+        "AVAR_delta_Hz": 0.0,
+        "rationale": "Per-cell Mellem injection scale doesn't account for cumulative summation across many active inputs OR not all weights saturate to \u03c3=1 in physiological regime; scale up empirically until cascade matches per-edge LIF baseline (+7.5 Hz from Stage IV)",
+        "outcome": "below_target",
+        "soft_cap_warnings_total": 1104
+      }
+    ],
+    "final_result": {
+      "W_graded_I_pA": 10.0,
+      "wave2_active": [
+        "AVAL",
+        "AVAR"
+      ],
+      "v_half_overrides": {},
+      "soft_cap_warnings_total": 1104,
+      "wave2_voltages_end_mV": {
+        "AVAL": -16.088766157987965,
+        "AVAR": -15.613332623035447
+      },
+      "ALML": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 67.0,
+        "recovery_Hz": 67.0,
+        "delta_touch_Hz": 66.0
+      },
+      "ALMR": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 63.5,
+        "recovery_Hz": 59.0,
+        "delta_touch_Hz": 62.5
+      },
+      "AVM": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 60.0,
+        "recovery_Hz": 60.5,
+        "delta_touch_Hz": 59.5
+      },
+      "PVCL": {
+        "baseline_Hz": 113.0,
+        "touch_Hz": 78.5,
+        "recovery_Hz": 67.5,
+        "delta_touch_Hz": -34.5
+      },
+      "PVCR": {
+        "baseline_Hz": 106.5,
+        "touch_Hz": 71.5,
+        "recovery_Hz": 64.5,
+        "delta_touch_Hz": -35.0
+      },
+      "AVDL": {
+        "baseline_Hz": 102.5,
+        "touch_Hz": 74.5,
+        "recovery_Hz": 65.0,
+        "delta_touch_Hz": -28.0
+      },
+      "AVDR": {
+        "baseline_Hz": 100.5,
+        "touch_Hz": 75.5,
+        "recovery_Hz": 64.0,
+        "delta_touch_Hz": -25.0
+      },
+      "AVEL": {
+        "baseline_Hz": 67.5,
+        "touch_Hz": 55.0,
+        "recovery_Hz": 46.5,
+        "delta_touch_Hz": -12.5
+      },
+      "AVER": {
+        "baseline_Hz": 82.5,
+        "touch_Hz": 67.5,
+        "recovery_Hz": 59.0,
+        "delta_touch_Hz": -15.0
+      },
+      "AVAL": {
+        "baseline_Hz": 0.0,
+        "touch_Hz": 0.0,
+        "recovery_Hz": 0.0,
+        "delta_touch_Hz": 0.0
+      },
+      "AVAR": {
+        "baseline_Hz": 0.0,
+        "touch_Hz": 0.0,
+        "recovery_Hz": 0.0,
+        "delta_touch_Hz": 0.0
+      },
+      "AVBL": {
+        "baseline_Hz": 109.5,
+        "touch_Hz": 85.5,
+        "recovery_Hz": 69.5,
+        "delta_touch_Hz": -24.0
+      },
+      "AVBR": {
+        "baseline_Hz": 119.0,
+        "touch_Hz": 83.5,
+        "recovery_Hz": 73.0,
+        "delta_touch_Hz": -35.5
+      },
+      "AIBL": {
+        "baseline_Hz": 10.5,
+        "touch_Hz": 16.5,
+        "recovery_Hz": 10.5,
+        "delta_touch_Hz": 6.0
+      },
+      "AIBR": {
+        "baseline_Hz": 13.5,
+        "touch_Hz": 20.5,
+        "recovery_Hz": 14.0,
+        "delta_touch_Hz": 7.0
+      },
+      "RIML": {
+        "baseline_Hz": 38.0,
+        "touch_Hz": 38.5,
+        "recovery_Hz": 35.0,
+        "delta_touch_Hz": 0.5
+      },
+      "RIMR": {
+        "baseline_Hz": 45.5,
+        "touch_Hz": 43.0,
+        "recovery_Hz": 35.0,
+        "delta_touch_Hz": -2.5
+      },
+      "AIYL": {
+        "baseline_Hz": 11.0,
+        "touch_Hz": 16.5,
+        "recovery_Hz": 12.0,
+        "delta_touch_Hz": 5.5
+      },
+      "AIYR": {
+        "baseline_Hz": 12.0,
+        "touch_Hz": 20.0,
+        "recovery_Hz": 9.5,
+        "delta_touch_Hz": 8.0
+      },
+      "wave2_pseudo_spike_counts_total": {
+        "AVAL": 1,
+        "AVAR": 1
+      },
+      "wall_time_s": 234.16570019721985
+    }
+  },
+  "cp4_3_mechanistic": {
+    "AVAL_AVAR_distinguishable": false,
+    "AVAL_v_end_mV": -16.088766157987965,
+    "AVAR_v_end_mV": -15.613332623035447,
+    "AVAL_delta_touch_Hz": 0.0,
+    "AVAR_delta_touch_Hz": 0.0,
+    "stage_IV_AVAL_delta_Hz": 7.5,
+    "delta_difference_Hz": 7.5
+  }
+}
