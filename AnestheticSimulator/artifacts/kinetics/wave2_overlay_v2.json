@@ -1,0 +1,2362 @@
+{
+  "by_anesthetic": {
+    "etomidate": {
+      "ACR-16": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.22533926491197953,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.9272,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.104,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "ACR-2": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.7220664954622114,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.6436999999999999,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.509,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-14": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.4860809831321791,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 1.411,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.274,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-15": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.7220664954622114,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 1.7635,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.509,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "EXP-1": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.4027113697447587,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 1.6360000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.212,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GAS-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.1709021120536131,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.9772,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.076,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-1": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.2547003278930494,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 1.18,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.12,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-2": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.3625991373645828,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 1.2774999999999999,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.185,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "LEV-1": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.2880468190285566,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.9027000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.139,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "MEV-1": {
+        "mechanism_class": "complex_ii_block",
+        "occupancy_1xEC50": 0.570051892676299,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.9654,
+            "evidence_grade": "CONSERVATIVE",
+            "source": "Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 \u2014 mev-1 hypersensitivity is small \u2192 Complex II is a weak target; small rate decrement"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.346,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NCA-2": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.4027113697447587,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.788,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.212,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NLF-1": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.2880468190285566,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.861,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.139,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.7850113036594751,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.8221,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.593,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-2": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.7546268681352116,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.8347,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.551,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-3": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9224614909151634,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7522,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.826,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-4": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.570051892676299,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.8962,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.346,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "RIC-4": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.007484510288496586,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.0045000000000000005,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.003,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNB-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.09454836351530668,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.06,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.04,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNT-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.007484510288496586,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.0045000000000000005,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.003,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-18": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.7850113036594751,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.186,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.593,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-29": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.5284524552167649,
+        "parameters": {
+          "g_max_factor": {
+            "value": 1.6179999999999999,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.309,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-7": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.14837192049453474,
+        "parameters": {
+          "g_max_factor": {
+            "value": 1.13,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.065,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-13": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.022253339630730635,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.013499999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.009,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-18": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.07878582344596874,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.0495,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.033,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-29": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.19668000350777695,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.9377,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.089,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-38": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.5284524552167649,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.7837000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.309,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-49": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.6870877654972866,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.401,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.467,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-63": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.44447638144750895,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.8306,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.242,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-64": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.2880468190285566,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.20850000000000002,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.139,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-79": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.3625991373645828,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.815,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.185,
+        "correction_applied": "f_allo_2.50x_CP5"
+      }
+    },
+    "halothane": {
+      "ACR-16": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30280000000000007,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "ACR-2": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3077000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-14": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4835000000000003,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-15": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.997998862318622,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4924999999999997,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.995,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "EXP-1": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.967,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GAS-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9923309576895443,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7057,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.981,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-1": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.467,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-2": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.467,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "LEV-1": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30280000000000007,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "MEV-1": {
+        "mechanism_class": "complex_ii_block",
+        "occupancy_1xEC50": 0.9943662509666749,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.9014,
+            "evidence_grade": "CONSERVATIVE",
+            "source": "Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 \u2014 mev-1 hypersensitivity is small \u2192 Complex II is a weak target; small rate decrement"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.986,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NCA-2": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9943662509666749,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.014000000000000012,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.986,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NLF-1": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.02200000000000002,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9943662509666749,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7041999999999999,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.986,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-2": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.997998862318622,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7015,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.995,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-3": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9975971863989963,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7018,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.994,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-4": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7033,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "RIC-4": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.2706952328859804,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.1935,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.129,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNB-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9755920864138498,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4115,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.941,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNT-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.30497153217114736,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.22349999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.149,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-18": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9959856255858234,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.98,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.99,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-29": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9971950256453083,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.9859999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.993,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-7": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9943662509666749,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.972,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.986,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-13": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.2706952328859804,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.1935,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.129,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-18": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.7048959574193184,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.732,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.488,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-29": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3077000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-38": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9959856255858234,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30700000000000005,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.99,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-49": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9923309576895443,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.943,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.981,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-63": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30280000000000007,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-64": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9873954014822011,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4535,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.969,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-79": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.01100000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      }
+    },
+    "isoflurane": {
+      "ACR-16": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30280000000000007,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "ACR-2": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9975971863989963,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3042,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.994,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-14": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9975971863989963,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.491,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.994,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-15": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4939999999999998,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "EXP-1": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9959856255858234,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.9699999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.99,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GAS-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7066,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-1": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.989460671820256,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.461,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.974,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-2": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.989460671820256,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.461,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.974,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "LEV-1": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30280000000000007,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "MEV-1": {
+        "mechanism_class": "complex_ii_block",
+        "occupancy_1xEC50": 0.9943662509666749,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.9014,
+            "evidence_grade": "CONSERVATIVE",
+            "source": "Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 \u2014 mev-1 hypersensitivity is small \u2192 Complex II is a weak target; small rate decrement"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.986,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NCA-2": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9935536156992528,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.016000000000000014,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.984,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NLF-1": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9873954014822011,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.031000000000000028,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.969,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9959856255858234,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7030000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.99,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-2": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.997998862318622,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7015,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.995,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-3": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7012,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-4": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9959856255858234,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7030000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.99,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "RIC-4": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.6323589735526917,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.6104999999999999,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.407,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNB-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9755920864138498,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4115,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.941,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNT-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.4669380353617261,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.3885,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.259,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-18": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9959856255858234,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.98,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.99,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-29": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.997998862318622,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.99,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.995,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-7": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9971950256453083,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.9859999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.993,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-13": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.5923341025617833,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.5505,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.367,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-18": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.8691146568116257,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.089,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.726,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-29": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3077000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-38": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9967923791792153,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3056000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.992,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-49": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9873954014822011,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.907,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.969,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-63": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30280000000000007,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-64": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.467,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-79": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9935536156992528,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.016000000000000014,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.984,
+        "correction_applied": "f_allo_2.50x_CP5"
+      }
+    },
+    "ketamine": {
+      "ACR-16": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3007000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "ACR-2": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30000000000000004,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-14": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.5,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-15": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.5,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "EXP-1": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.997,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GAS-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7003,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-1": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4985,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-2": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4985,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "LEV-1": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3007000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "MEV-1": {
+        "mechanism_class": "complex_ii_block",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.9,
+            "evidence_grade": "CONSERVATIVE",
+            "source": "Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 \u2014 mev-1 hypersensitivity is small \u2192 Complex II is a weak target; small rate decrement"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NCA-2": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.0010000000000000009,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NLF-1": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.0010000000000000009,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-2": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-3": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-4": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "RIC-4": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9857340567346882,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4475,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.965,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNB-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.997998862318622,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4925,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.995,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNT-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9927390055744725,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4729999999999999,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.982,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-18": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "g_max_factor": {
+            "value": 3.0,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-29": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.998,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-7": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9992009898248396,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.996,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.998,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-13": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9988007631584798,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4955,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.997,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-18": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4985,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-29": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9992009898248396,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3014,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.998,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-38": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3007000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-49": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.997,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-63": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3007000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-64": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9996007351494053,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4985,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.999,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-79": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 1.0,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.0,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 1.0,
+        "correction_applied": "f_allo_2.50x_CP5"
+      }
+    },
+    "propofol": {
+      "ACR-16": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.32100000000000006,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "ACR-2": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9915133717533732,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3147000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.979,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-14": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4835000000000003,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-15": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9971950256453083,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4895,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.993,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "EXP-1": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9548255992180207,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.682,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.894,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GAS-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9673453356901409,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7234,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.922,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-1": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9673453356901409,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.383,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.922,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-2": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.938051908933629,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.287,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.858,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "LEV-1": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9764488212647846,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3399000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.943,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "MEV-1": {
+        "mechanism_class": "complex_ii_block",
+        "occupancy_1xEC50": 0.9857340567346882,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.9035,
+            "evidence_grade": "CONSERVATIVE",
+            "source": "Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 \u2014 mev-1 hypersensitivity is small \u2192 Complex II is a weak target; small rate decrement"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.965,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NCA-2": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.980277884677914,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.04800000000000004,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.952,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NLF-1": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9615880319884612,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.09099999999999997,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.909,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9947718302717242,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7039,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.987,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-2": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9915133717533732,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7063,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.979,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-3": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9992009898248396,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7006,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.998,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-4": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9832266848705492,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7123,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.959,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "RIC-4": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.022253339630730635,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.013499999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.009,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNB-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9009533085566254,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.1760000000000002,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.784,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNT-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.022253339630730635,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.013499999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.009,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-18": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.94,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-29": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.94,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-7": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.9779999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-13": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.0271179335069953,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.0165,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.011,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-18": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.06037928628179085,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.037500000000000006,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.025,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-29": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.972576625961329,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.34619999999999995,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.934,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-38": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9764488212647846,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3399000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.943,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-49": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.980277884677914,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.856,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.952,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-63": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9615880319884612,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3637,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.909,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-64": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9470023543838622,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.3155000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.877,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-79": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9764488212647846,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.05700000000000005,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.943,
+        "correction_applied": "f_allo_2.50x_CP5"
+      }
+    },
+    "sevoflurane": {
+      "ACR-16": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9988007631584798,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30210000000000004,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.997,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "ACR-2": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9947718302717242,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30910000000000004,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.987,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-14": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9967923791792153,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.488,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.992,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "AVR-15": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9984000542804112,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4939999999999998,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.996,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "EXP-1": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.91,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GAS-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9857340567346882,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7105,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.965,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-1": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9857340567346882,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.4475,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.965,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "GLC-2": {
+        "mechanism_class": "glucl_potentiation",
+        "occupancy_1xEC50": 0.9927390055744725,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 2.473,
+            "evidence_grade": "ANALOGY",
+            "source": "Transfer from GABA-A; Hibbs 2011 PMID 21572436 confirms GluCl pocket conserved"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.982,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "LEV-1": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9971950256453083,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30490000000000006,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.993,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "MEV-1": {
+        "mechanism_class": "complex_ii_block",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.903,
+            "evidence_grade": "CONSERVATIVE",
+            "source": "Senoo-Matsuda 2001 / Kayser 2003 PMID 12878724 \u2014 mev-1 hypersensitivity is small \u2192 Complex II is a weak target; small rate decrement"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NCA-2": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.02200000000000002,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NLF-1": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9760207205749583,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.05800000000000005,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.942,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-1": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9947718302717242,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7039,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.987,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-2": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9947718302717242,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7039,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.987,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-3": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.997998862318622,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7015,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.995,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "NUO-4": {
+        "mechanism_class": "complex_i_block",
+        "occupancy_1xEC50": 0.9947718302717242,
+        "parameters": {
+          "rate_factor": {
+            "value": 0.7039,
+            "evidence_grade": "LITERATURE",
+            "source": "Hanley 2002 / Kayser 2001 PMID 11278828 \u2014 Complex I sensitive to halogenated anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.987,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "RIC-4": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.6558908809837443,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.648,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.432,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNB-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9543701374600713,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.3395000000000001,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.893,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "SNT-1": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.492326626663103,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.41850000000000004,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.279,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-18": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9911038318870263,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.956,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.978,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-29": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.9779999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "TWK-7": {
+        "mechanism_class": "k2p_potentiation",
+        "occupancy_1xEC50": 0.9955815166911993,
+        "parameters": {
+          "g_max_factor": {
+            "value": 2.9779999999999998,
+            "evidence_grade": "LITERATURE",
+            "source": "Patel & Honor\u00e9 1999 \u2014 TASK / TREK-1 activated by volatile anesthetics"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.989,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-13": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.6558908809837443,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -0.648,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.432,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-18": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9451364399646872,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.3094999999999999,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.873,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-29": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.32100000000000006,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-38": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9947718302717242,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.30910000000000004,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.987,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-49": {
+        "mechanism_class": "gaba_potentiation",
+        "occupancy_1xEC50": 0.9857340567346882,
+        "parameters": {
+          "tau_decay_factor": {
+            "value": 3.895,
+            "evidence_grade": "LITERATURE",
+            "source": "Hales & Lambert 1991 \u2014 halothane potentiates GABA-A \u03c4_decay 2-4\u00d7 at clinical doses"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.965,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-63": {
+        "mechanism_class": "nachr_antagonism",
+        "occupancy_1xEC50": 0.9975971863989963,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.3042,
+            "evidence_grade": "LITERATURE",
+            "source": "Forman 1996 / Wachtel 1995 \u2014 halothane open-channel block at high occupancy"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.994,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-64": {
+        "mechanism_class": "snare_cooperativity",
+        "occupancy_1xEC50": 0.9857340567346882,
+        "parameters": {
+          "n_Ca_delta": {
+            "value": -1.4475,
+            "evidence_grade": "LITERATURE",
+            "source": "Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 \u2014 SNARE Ca-cooperativity reduction"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.965,
+        "correction_applied": "f_allo_2.50x_CP5"
+      },
+      "UNC-79": {
+        "mechanism_class": "nca_block",
+        "occupancy_1xEC50": 0.9878094667213132,
+        "parameters": {
+          "g_max_factor": {
+            "value": 0.030000000000000027,
+            "evidence_grade": "LITERATURE",
+            "source": "Lu 2007 / Sedensky & Meneely 1987 PMID 3576211 \u2014 unc-79/80 resistance, NCA block"
+          }
+        },
+        "occupancy_1xEC50_v1": 0.97,
+        "correction_applied": "f_allo_2.50x_CP5"
+      }
+    }
+  },
+  "_meta": {
+    "version": "v2",
+    "correction": "divided predicted Kd by f_allo = 2.51\u00d7 (CP5 median allosteric correction)",
+    "correction_log": 0.399,
+    "source_doc": "artifacts/calibration/cp5_strict_recalibration.md"
+  }
+}
