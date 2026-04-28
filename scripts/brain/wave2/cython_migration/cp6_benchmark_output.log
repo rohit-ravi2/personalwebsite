@@ -1,0 +1,52 @@
+======================================================================
+CP6 — Phase-δ-like representative benchmark
+======================================================================
+
+Workload: each cell × 10s simulated time, +10 pA step injection
+(1s baseline, 5s step, 4s recovery). dt=0.025 ms, rk4 integrator.
+
+----------------------------------------------------------------------
+Pass 1: numpy
+----------------------------------------------------------------------
+
+[AVAL, numpy]
+  prefs.codegen.target = 'numpy'
+  elapsed: 117.33 s   final v: -39.3655 mV   plateau v: 39.6838 mV
+
+[AIY, numpy]
+  prefs.codegen.target = 'numpy'
+  elapsed: 548.07 s   final v: -55.1386 mV   plateau v: -17.4304 mV
+
+[RIM, numpy]
+  prefs.codegen.target = 'numpy'
+  elapsed: 305.38 s   final v: -43.3088 mV   plateau v: 15.9008 mV
+
+----------------------------------------------------------------------
+Pass 2: cython
+----------------------------------------------------------------------
+
+[AVAL, cython]
+  prefs.codegen.target = 'cython'
+  elapsed: 9.07 s   final v: -39.3655 mV   plateau v: 39.6838 mV
+
+[AIY, cython]
+  prefs.codegen.target = 'cython'
+  elapsed: 16.14 s   final v: -55.1386 mV   plateau v: -17.4304 mV
+
+[RIM, cython]
+  prefs.codegen.target = 'cython'
+  elapsed: 17.54 s   final v: -43.3088 mV   plateau v: 15.9008 mV
+
+======================================================================
+CP6 results
+======================================================================
+Cell       numpy (s)    cython (s)   speedup     Δ final v     Δ plateau
+----------------------------------------------------------------------
+AVAL          117.33          9.07    12.93x    0.000000 mV    0.000000 mV
+AIY           548.07         16.14    33.96x    0.000000 mV    0.000000 mV
+RIM           305.38         17.54    17.41x    0.000000 mV    0.000000 mV
+----------------------------------------------------------------------
+TOTAL         970.78         42.75    22.71x
+
+Mean per-cell speedup: 21.44x
+Saved to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/cython_migration/cp6_benchmark_result.json

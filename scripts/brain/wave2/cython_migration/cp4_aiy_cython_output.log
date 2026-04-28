@@ -1,0 +1,159 @@
+======================================================================
+CP4 — AIY re-validation under codegen='cython'
+======================================================================
+
+======================================================================
+CP3 — VC Brian2 7-channel AIY vs NEURON AIY
+======================================================================
+
+AIY geometry: surf=6.589e-07 cm², cm=1.6
+Brian2 cell channels: [egl19, slo1egl19, nca, leak, slo1iso, kqt1, shl1]
+NEURON cell:          [egl19, slo1egl19, nca, leak, slo1iso, kqt1, shl1] (Nicoletti AIY canonical)
+
+Densities (S/cm² from g0 = {'leak': 0.14, 'slo1iso': 1.0, 'kqt1': 0.2, 'egl19': 0.1, 'slo1egl19': 0.92, 'nca': 0.06, 'shl1': 0.5}):
+  leak      : 2.125e-04
+  slo1iso   : 1.518e-03
+  kqt1      : 3.035e-04
+  egl19     : 1.518e-04
+  slo1egl19 : 1.396e-03
+  nca       : 9.106e-05
+  shl1      : 7.588e-04
+
+Building NEURON AIY reference...
+  Built. surf=6.589e-07 cm², C_m=1.054 pF
+
+Running voltage-clamp comparison at 11 holds...
+
+CP3 results:
+  panel_pass: True
+  holds passing: 11/11 (100.0%)
+
+Per-hold detail:
+  hold=  -80 mV  brian2_peak=     -5.27  nrn_peak=     -5.27  div=0.0000(P)  brian2_ss=     -5.26  nrn_ss=     -5.26  div=0.0001(P)
+  hold=  -60 mV  brian2_peak=     -1.06  nrn_peak=     -1.06  div=0.0000(P)  brian2_ss=     -1.06  nrn_ss=     -1.06  div=0.0000(P)
+  hold=  -40 mV  brian2_peak=     +3.46  nrn_peak=     +3.46  div=0.0001(P)  brian2_ss=     +3.32  nrn_ss=     +3.32  div=0.0000(P)
+  hold=  -30 mV  brian2_peak=     +6.19  nrn_peak=     +6.20  div=0.0009(P)  brian2_ss=     +5.38  nrn_ss=     +5.38  div=0.0003(P)
+  hold=  -20 mV  brian2_peak=     +9.88  nrn_peak=     +9.90  div=0.0016(P)  brian2_ss=     +7.36  nrn_ss=     +7.36  div=0.0005(P)
+  hold=  -10 mV  brian2_peak=    +14.71  nrn_peak=    +14.75  div=0.0028(P)  brian2_ss=     +9.43  nrn_ss=     +9.43  div=0.0005(P)
+  hold=   +0 mV  brian2_peak=    +20.73  nrn_peak=    +20.78  div=0.0023(P)  brian2_ss=    +12.01  nrn_ss=    +12.01  div=0.0001(P)
+  hold=  +10 mV  brian2_peak=    +28.08  nrn_peak=    +28.20  div=0.0042(P)  brian2_ss=    +15.86  nrn_ss=    +15.88  div=0.0018(P)
+  hold=  +20 mV  brian2_peak=    +38.02  nrn_peak=    +38.24  div=0.0057(P)  brian2_ss=    +22.21  nrn_ss=    +22.31  div=0.0048(P)
+  hold=  +30 mV  brian2_peak=    +50.27  nrn_peak=    +50.65  div=0.0077(P)  brian2_ss=    +32.15  nrn_ss=    +32.42  div=0.0084(P)
+  hold=  +40 mV  brian2_peak=    +65.08  nrn_peak=    +65.72  div=0.0098(P)  brian2_ss=    +45.73  nrn_ss=    +46.26  div=0.0113(P)
+
+======================================================================
+CP4 — CC Brian2 7-channel AIY vs NEURON AIY (upstream)
+======================================================================
+
+Protocol (from AIY_simulation_iclamp.py + AIY_simulation.py):
+  delay = 1000 ms, duration = 5000 ms, simdur = 11000 ms
+  injection levels: 11 steps from -15 to +35 pA (per AIY_simulation.py line 21: linspace(-0.015, 0.035, 11) nA)
+  v_init = -60 mV, dt = 0.4 ms (Nicoletti AIY uses 0.4 ms)
+
+Injection levels (pA): ['-15.0', '-10.0', '-5.0', '+0.0', '+5.0', '+10.0', '+15.0', '+20.0', '+25.0', '+30.0', '+35.0']
+
+[NEURON]
+
+  Invoking upstream AIY via direct NEURON construction (matching AIY_simulation_iclamp.py exactly)...
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+
+[Brian2]
+  Running Brian2 7-channel AIY cell under same protocol (dt=0.4 ms)...
+
+----------------------------------------------------------------------
+Per-sweep comparison:
+----------------------------------------------------------------------
+
+Injection:  -15.0 pA
+  Brian2: pre=-55.23  peak=-129.78  plat=-121.81  post=-55.22
+  NEURON: pre=-55.23  peak=-128.66  plat=-128.66  post=-55.22
+  Δ: pre=0.000  peak=1.119  plateau=6.844  post=0.000
+  feature_pass=False, timepoint_pass=False (2738/5000 = 54.8%); sweep_pass=False
+
+Injection:  -10.0 pA
+  Brian2: pre=-55.23  peak=-103.61  plat=-103.60  post=-55.22
+  NEURON: pre=-55.23  peak=-103.61  plat=-103.60  post=-55.22
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:   -5.0 pA
+  Brian2: pre=-55.23  peak=-78.72  plat=-78.72  post=-55.21
+  NEURON: pre=-55.23  peak=-78.72  plat=-78.72  post=-55.21
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:   +0.0 pA
+  Brian2: pre=-55.23  peak=-55.20  plat=-55.20  post=-55.20
+  NEURON: pre=-55.23  peak=-55.20  plat=-55.20  post=-55.20
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:   +5.0 pA
+  Brian2: pre=-55.23  peak=-31.22  plat=-33.40  post=-55.16
+  NEURON: pre=-55.23  peak=-31.22  plat=-33.40  post=-55.16
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +10.0 pA
+  Brian2: pre=-55.23  peak= -3.86  plat=-17.45  post=-55.15
+  NEURON: pre=-55.23  peak= -3.86  plat=-17.45  post=-55.16
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +15.0 pA
+  Brian2: pre=-55.23  peak= +8.73  plat= -5.19  post=-55.15
+  NEURON: pre=-55.23  peak= +8.73  plat= -5.19  post=-55.15
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +20.0 pA
+  Brian2: pre=-55.23  peak=+17.13  plat= +5.25  post=-55.15
+  NEURON: pre=-55.23  peak=+17.13  plat= +5.25  post=-55.15
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +25.0 pA
+  Brian2: pre=-55.23  peak=+23.14  plat=+13.40  post=-55.15
+  NEURON: pre=-55.23  peak=+23.14  plat=+13.40  post=-55.15
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +30.0 pA
+  Brian2: pre=-55.23  peak=+27.96  plat=+19.58  post=-55.15
+  NEURON: pre=-55.23  peak=+27.96  plat=+19.58  post=-55.16
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +35.0 pA
+  Brian2: pre=-55.23  peak=+32.09  plat=+24.55  post=-55.15
+  NEURON: pre=-55.23  peak=+32.09  plat=+24.55  post=-55.16
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.001
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+----------------------------------------------------------------------
+Aggregate: 10/11 sweeps pass (90.9%)
+Aggregate timepoint pass: 52738/55000 (95.9%)
+Component 4 panel_pass: True
+
+======================================================================
+CP5 — AIY outcome classification
+======================================================================
+
+Verdict: VERDICT_AIY_PRODUCTION_GRADE
+  Both apples-to-apples comparisons pass. Brian2 7-channel AIY matches Nicoletti's NEURON AIY within tolerance for both voltage-clamp and 5000 ms current-clamp protocols.
+
+Results saved to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/artifacts/option_b_aiy_results.json
+Elapsed: 229.4 s
+
+Wall-clock: 229.4 s
+Saved to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/cython_migration/cp4_aiy_cython_result.json

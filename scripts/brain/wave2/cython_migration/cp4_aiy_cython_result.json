@@ -1,0 +1,8 @@
+{
+  "checkpoint": "cython_CP4",
+  "target": "cython",
+  "verdict": "VERDICT_AIY_PRODUCTION_GRADE",
+  "elapsed_s": 229.4401752948761,
+  "component_3_vc": {},
+  "component_4_cc": {}
+}

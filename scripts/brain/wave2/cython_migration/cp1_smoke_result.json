@@ -1,0 +1,23 @@
+[
+  {
+    "codegen_target_arg": null,
+    "codegen_target_resolved": "auto",
+    "first_run_s": 4.083643913269043,
+    "second_run_s": 0.17779994010925293,
+    "final_v_mV": -55.4011004755996
+  },
+  {
+    "codegen_target_arg": "numpy",
+    "codegen_target_resolved": "numpy",
+    "first_run_s": 1.2074334621429443,
+    "second_run_s": 1.0468196868896484,
+    "final_v_mV": -55.40110047559977
+  },
+  {
+    "codegen_target_arg": "cython",
+    "codegen_target_resolved": "cython",
+    "first_run_s": 0.3991258144378662,
+    "second_run_s": 0.1536703109741211,
+    "final_v_mV": -55.4011004755996
+  }
+]

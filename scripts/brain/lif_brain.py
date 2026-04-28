@@ -68,7 +68,7 @@ from brian2 import (
 )
 
 # Silence Brian2's cython cache noise; we want deterministic output.
-prefs.codegen.target = "numpy"
+prefs.codegen.target = "cython"
 
 
 ARTIFACT = Path(__file__).resolve().parent / "artifacts" / "connectome.npz"

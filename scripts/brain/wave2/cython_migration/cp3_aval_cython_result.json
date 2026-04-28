@@ -1,0 +1,21 @@
+{
+  "checkpoint": "cython_CP3",
+  "target": "cython",
+  "verdict": "PRODUCTION_GRADE",
+  "elapsed_s": 53.13740515708923,
+  "component_2a": {
+    "panel_pass": true,
+    "n_holds": 11,
+    "n_holds_passing": 11,
+    "fraction_passing": 1.0
+  },
+  "component_2b": {
+    "panel_pass": true,
+    "n_sweeps": 7,
+    "n_sweeps_passing": 7,
+    "fraction_sweeps_passing": 1.0,
+    "aggregate_timepoint_pass_fraction": 1.0
+  },
+  "max_peak_div_2a": 0.0035335958702938717,
+  "max_ss_div_2a": 0.00011442186338879352
+}

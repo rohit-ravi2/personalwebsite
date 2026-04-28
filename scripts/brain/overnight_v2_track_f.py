@@ -40,7 +40,7 @@ try:
         ms, mV, pA, nS, pF, siemens, volt, second,
         start_scope, prefs, seed as brian2_seed,
     )
-    prefs.codegen.target = "numpy"
+    prefs.codegen.target = "cython"
     BRIAN2_OK = True
 except Exception:
     BRIAN2_OK = False

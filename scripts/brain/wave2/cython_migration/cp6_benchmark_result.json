@@ -1,0 +1,72 @@
+{
+  "results": {
+    "AVAL": {
+      "numpy": {
+        "cell": "AVAL",
+        "target": "numpy",
+        "run_total_ms": 10000.0,
+        "step_amp_pA": 10.0,
+        "elapsed_s": 117.32777762413025,
+        "final_v_mV": -39.365539528612985,
+        "plateau_v_mV": 39.68380697850655
+      },
+      "cython": {
+        "cell": "AVAL",
+        "target": "cython",
+        "run_total_ms": 10000.0,
+        "step_amp_pA": 10.0,
+        "elapsed_s": 9.070840835571289,
+        "final_v_mV": -39.36553952860792,
+        "plateau_v_mV": 39.68380697850335
+      }
+    },
+    "AIY": {
+      "numpy": {
+        "cell": "AIY",
+        "target": "numpy",
+        "run_total_ms": 10000.0,
+        "step_amp_pA": 10.0,
+        "elapsed_s": 548.0685806274414,
+        "final_v_mV": -55.13856714337176,
+        "plateau_v_mV": -17.430422069447175
+      },
+      "cython": {
+        "cell": "AIY",
+        "target": "cython",
+        "run_total_ms": 10000.0,
+        "step_amp_pA": 10.0,
+        "elapsed_s": 16.139957904815674,
+        "final_v_mV": -55.13856714337176,
+        "plateau_v_mV": -17.430422069447417
+      }
+    },
+    "RIM": {
+      "numpy": {
+        "cell": "RIM",
+        "target": "numpy",
+        "run_total_ms": 10000.0,
+        "step_amp_pA": 10.0,
+        "elapsed_s": 305.3821084499359,
+        "final_v_mV": -43.30884748106667,
+        "plateau_v_mV": 15.900849549220883
+      },
+      "cython": {
+        "cell": "RIM",
+        "target": "cython",
+        "run_total_ms": 10000.0,
+        "step_amp_pA": 10.0,
+        "elapsed_s": 17.536335468292236,
+        "final_v_mV": -43.308847481066614,
+        "plateau_v_mV": 15.90084954922232
+      }
+    }
+  },
+  "n_total_s": 970.7784667015076,
+  "c_total_s": 42.7471342086792,
+  "aggregate_speedup_x": 22.709790601691488,
+  "per_cell_speedups": {
+    "AVAL": 12.934608792167264,
+    "AIY": 33.957249694183794,
+    "RIM": 17.41424877518469
+  }
+}

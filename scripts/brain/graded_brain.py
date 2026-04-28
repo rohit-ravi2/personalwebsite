@@ -46,7 +46,7 @@ from brian2 import (
 )
 
 
-prefs.codegen.target = "numpy"
+prefs.codegen.target = "cython"
 
 ARTIFACT = Path(__file__).resolve().parent / "artifacts" / "connectome.npz"
 

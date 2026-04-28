@@ -1,0 +1,162 @@
+======================================================================
+CP5 — RIM re-validation under codegen='numpy'
+======================================================================
+
+======================================================================
+CP5 — VC Brian2 7-channel RIM vs NEURON RIM
+======================================================================
+
+RIM geometry: surf=1.033e-06 cm², cm=1.5
+Channels:     [shl1, egl2, irk, cca1, unc2, egl19, leak]
+
+Densities (S/cm² already; no gScm2 rescale):
+  shl1  : 9.0488e-04
+  egl2  : 1.4116e-04
+  irk   : 3.2729e-04
+  cca1  : 8.4519e-04
+  unc2  : 9.6768e-05
+  egl19 : 3.2006e-04
+  leak  : 9.6768e-05
+
+eca = 60.0 mV (F18 refinement: symmetric USEION ca contract)
+ek  = -80.0 mV
+eleak = -50.0 mV
+
+Building NEURON RIM reference...
+  Built. surf=1.033e-06 cm², C_m=1.550 pF
+
+Running voltage-clamp comparison at 11 holds...
+
+CP5 results:
+  panel_pass: True
+  holds passing: 11/11 (100.0%)
+
+Per-hold detail:
+  hold=  -80 mV  b2_peak=     -4.24  nrn_peak=     -4.24  div=0.0001(P)  b2_ss=     -3.00  nrn_ss=     -3.00  div=0.0001(P)
+  hold=  -60 mV  b2_peak=     -0.83  nrn_peak=     -0.83  div=0.0005(P)  b2_ss=     -0.83  nrn_ss=     -0.83  div=0.0018(P)
+  hold=  -40 mV  b2_peak=     +2.01  nrn_peak=     +2.01  div=0.0004(P)  b2_ss=     +1.23  nrn_ss=     +1.23  div=0.0006(P)
+  hold=  -30 mV  b2_peak=     +5.54  nrn_peak=     +5.54  div=0.0008(P)  b2_ss=     +3.10  nrn_ss=     +3.10  div=0.0003(P)
+  hold=  -20 mV  b2_peak=     +9.92  nrn_peak=     +9.93  div=0.0017(P)  b2_ss=     +4.12  nrn_ss=     +4.12  div=0.0008(P)
+  hold=  -10 mV  b2_peak=    +16.67  nrn_peak=    +16.73  div=0.0037(P)  b2_ss=     +5.25  nrn_ss=     +5.24  div=0.0008(P)
+  hold=   +0 mV  b2_peak=    +25.90  nrn_peak=    +25.97  div=0.0026(P)  b2_ss=     +7.21  nrn_ss=     +7.20  div=0.0006(P)
+  hold=  +10 mV  b2_peak=    +36.20  nrn_peak=    +36.35  div=0.0043(P)  b2_ss=     +9.99  nrn_ss=     +9.99  div=0.0007(P)
+  hold=  +20 mV  b2_peak=    +49.26  nrn_peak=    +49.46  div=0.0040(P)  b2_ss=    +13.47  nrn_ss=    +13.46  div=0.0006(P)
+  hold=  +30 mV  b2_peak=    +62.42  nrn_peak=    +62.61  div=0.0031(P)  b2_ss=    +17.93  nrn_ss=    +17.93  div=0.0002(P)
+  hold=  +40 mV  b2_peak=    +74.98  nrn_peak=    +75.14  div=0.0022(P)  b2_ss=    +23.30  nrn_ss=    +23.31  div=0.0001(P)
+
+======================================================================
+CP6 — CC Brian2 7-channel RIM vs NEURON RIM (upstream)
+======================================================================
+
+Protocol (from RIM_simulation_iclamp.py + RIM_simulation.py):
+  delay = 5000 ms, duration = 5000 ms, simdur = 14000 ms
+  injection levels: 11 steps from -15 to +35 pA (per RIM_simulation.py line 20: linspace(-0.015, 0.035, 11) nA)
+  v_init = -60 mV, dt = 0.04 ms
+
+Injection levels (pA): ['-15.0', '-10.0', '-5.0', '+0.0', '+5.0', '+10.0', '+15.0', '+20.0', '+25.0', '+30.0', '+35.0']
+
+[NEURON]
+
+  Invoking upstream RIM via direct NEURON construction (matching RIM_simulation_iclamp.py exactly)...
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+Changed dt
+
+[Brian2]
+  Running Brian2 7-channel RIM cell under same protocol (dt=0.04 ms)...
+
+----------------------------------------------------------------------
+Per-sweep comparison:
+----------------------------------------------------------------------
+
+Injection:  -15.0 pA
+  Brian2: pre=-43.31  peak=-109.76  plat=-109.74  post=-43.31
+  NEURON: pre=-43.31  peak=-109.76  plat=-109.74  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  -10.0 pA
+  Brian2: pre=-43.31  peak=-99.04  plat=-99.00  post=-43.31
+  NEURON: pre=-43.31  peak=-99.04  plat=-99.00  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:   -5.0 pA
+  Brian2: pre=-43.31  peak=-86.64  plat=-86.59  post=-43.31
+  NEURON: pre=-43.31  peak=-86.64  plat=-86.59  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:   +0.0 pA
+  Brian2: pre=-43.31  peak=-43.31  plat=-43.31  post=-43.31
+  NEURON: pre=-43.31  peak=-43.31  plat=-43.31  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:   +5.0 pA
+  Brian2: pre=-43.31  peak= -6.96  plat= -6.96  post=-43.31
+  NEURON: pre=-43.31  peak= -6.96  plat= -6.96  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +10.0 pA
+  Brian2: pre=-43.31  peak=+15.90  plat=+15.90  post=-43.31
+  NEURON: pre=-43.31  peak=+15.90  plat=+15.90  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +15.0 pA
+  Brian2: pre=-43.31  peak=+29.55  plat=+29.55  post=-43.31
+  NEURON: pre=-43.31  peak=+29.55  plat=+29.55  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +20.0 pA
+  Brian2: pre=-43.31  peak=+39.80  plat=+39.80  post=-43.31
+  NEURON: pre=-43.31  peak=+39.80  plat=+39.80  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +25.0 pA
+  Brian2: pre=-43.31  peak=+49.01  plat=+49.01  post=-43.31
+  NEURON: pre=-43.31  peak=+49.01  plat=+49.01  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +30.0 pA
+  Brian2: pre=-43.31  peak=+57.89  plat=+57.89  post=-43.31
+  NEURON: pre=-43.31  peak=+57.89  plat=+57.89  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+Injection:  +35.0 pA
+  Brian2: pre=-43.31  peak=+66.70  plat=+66.70  post=-43.31
+  NEURON: pre=-43.31  peak=+66.70  plat=+66.70  post=-43.31
+  Δ: pre=0.000  peak=0.000  plateau=0.000  post=0.000
+  feature_pass=True, timepoint_pass=True (5000/5000 = 100.0%); sweep_pass=True
+
+----------------------------------------------------------------------
+Aggregate: 11/11 sweeps pass (100.0%)
+Aggregate timepoint pass: 55000/55000 (100.0%)
+Component CP6 panel_pass: True
+
+======================================================================
+CP7 — RIM outcome classification
+======================================================================
+
+Verdict: VERDICT_RIM_PRODUCTION_GRADE
+  Both apples-to-apples comparisons pass. Brian2 7-channel RIM matches Nicoletti's NEURON RIM within tolerance for both voltage-clamp and 5000 ms current-clamp protocols.
+
+Results saved to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/artifacts/option_b_rim_results.json
+Elapsed: 3188.9 s
+
+Wall-clock: 3188.9 s
+Saved to /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/cython_migration/cp5_rim_numpy_result.json
