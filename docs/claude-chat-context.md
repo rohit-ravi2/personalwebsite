@@ -54,12 +54,37 @@ Four layers, each with a 'legacy' and an 'upgraded' path:
   synapses, W_syn=0.8 mV tuned for balanced regime).
 - **Alternative**: `GradedBrain` (T1a Kunert-Graf 2014, σ(V)
   continuous release + L-type Ca plateau on 14 command neurons).
-- **Scaffold for v4**: 15-neuron compartmental pool (soma+dendrite
-  + L-type Ca + slow h-inactivation) in `compartmental_neurons.py`.
-  Compiles in Brian2; plateau parameters not yet calibrated against
-  Mellem 2008 (PMID 18587393) voltage-clamp data. (Earlier docs
-  cited "Gao & Hobert 2020"; that citation does not exist —
-  Mellem 2008 is the correct anchor for AVA voltage data.)
+- **Scaffold for v4 (Wave 1, sandbox)**: 15-neuron compartmental pool
+  (soma+dendrite + L-type Ca + slow h-inactivation) in
+  `compartmental_neurons.py`. Compiles in Brian2 but NOT production-
+  wired into ClosedLoopEnv (per Phase δ scoping primary-source check).
+  Earlier framing of "calibrated against Mellem 2008 voltage-clamp
+  data" was based on the Mellem-2008-as-AVA-anchor framing that
+  Wave 2's Mellem investigation later identified as misattributed —
+  Mellem 2008 (Mellem/Brockie/Madsen/Maricq, *Nat Neurosci* 11:865-867)
+  characterizes RMD plateau dynamics, NOT AVA. AVA experimental
+  data (rest, IV curves, current-clamp) traces to Liu/Chen/Wang 2020
+  *Nat Commun* 11:5076 (DOI 10.1038/s41467-020-18893-9, ref [29] in
+  Nicoletti 2024 PDF; raw recordings shared informally with
+  Nicoletti per her acknowledgments). Wave 2 cellular layer (below)
+  supersedes the v4 sandbox scaffold for AVA-class cells.
+- **Wave 2 cellular layer (production-grade, isolated)**: 4 Brian2
+  cell builders matching Nicoletti 2024 published phenotypes to
+  5-decimal-place agreement on full VC + CC validation panels.
+  AVAL (4 channels: IRK/LEAK/EGL19/NCA), AIY (7 channels including
+  SLO1+EGL19, KQT1, SHL1; eca=127.59 mV per F18 multi-USEION-ca
+  asymmetric ion_style override), RIM (7 channels including CCA1,
+  EGL2, UNC2; eca=60 mV symmetric), AVAR (5 channels = AVAL +
+  UNC103). 14 NMODL channel translations + F1-F18 gotcha catalog +
+  cython codegen baseline (22.71× aggregate speedup over numpy).
+  Wave2HybridBrain integration scaffold runs cleanly in
+  `cross_coupling="off"` mode but the cross-coupling biology
+  question (capacitance mismatch — Wave 2 cm ~0.86 pF vs LIF cm
+  100 pF — makes naive `v += W_syn * w` structurally unstable;
+  3 biology questions documented for review before release-event
+  rule implementation, WB3-paused). Wave 2 cellular layer is
+  isolated production-grade; full network integration pending
+  WB3 biology adjudication.
 - **Sign-convention mode** (constructor flag
   `use_per_edge_glu_signs`): two glutamate sign-assignment modes
   exist in the codebase.
@@ -301,10 +326,40 @@ not the same as mechanistic validity.
 
 - Whether per-edge becomes production default or stays opt-in
   (depends on resolving PVC/AVB and FSM recalibration).
-- Plateau dynamics (still requires SK/BK + compartmental work;
-  per-edge sign mode doesn't address this).
+- Plateau dynamics (Wave 2 cellular layer addresses this for
+  AVAL/AVAR/AIY/RIM specifically — see §3 Wave 2 entry. AVAL/AVAR
+  Wave 2 phenotype is RC-passive graded plateau matching Nicoletti
+  2024, not regenerative; this is the actual published biology and
+  differs from the previously-assumed "20 mV / 600 ms plateau in
+  AVA" framing carried over from the Mellem-as-AVA-anchor
+  misattribution).
 - Membrane time constant τ (10 ms in simulator vs 50-200 ms in
   worm computational models).
+
+### Stage IV cross-validation (overnight 2026-04-27/28)
+
+Independent test under conservative drive (200 Hz Poisson on
+ALML/ALMR/AVM @ 8 mV) confirms §5 cascade-firing claim:
+ALM/AVM activate ~60 Hz peak; AIB/PVC/AVD/AVA all show
+ΔHz > 0; ΔAVA = +7.5 Hz (modest but real, consistent with
+§5 above which used specifically tuned weighting for the +60 Hz
+result). The cascade fires under per-edge mode regardless of
+stim parameters within reasonable range.
+
+The §5 quoted "broken cascade" framing — which appeared in
+some derived documents — is a v3-LIF-activity-mode-FSM-specific
+phenotype, not a LIF-general failure. Per-edge LIF + per-neuron
+LIF differ on whether the cascade fires; Stage IV confirms the
+per-edge resolution holds.
+
+Wave 2 cellular layer's contribution is orthogonal: AVAL and
+AVAR are biologically distinguishable under Wave 2 detail
+(AVAL rest -40 mV / +80 mV plateau at +10 pA; AVAR rest -24 mV
+/ +40 mV plateau at +10 pA — different cells, different leak,
+different K-channel set including UNC-103) where they are
+identical-except-for-indices in LIF. Wave 2's value
+proposition is "mechanistic biological resolution beyond LIF's
+spike-count abstraction," not "fix to a broken cascade."
 
 ## 6 · Roadmap (prioritised — substantial reordering 2026-04-25)
 
@@ -355,12 +410,23 @@ about per-edge as default.
 6. **Production sign-mode decision.** Per-edge as default, opt-
    in, or hybrid (curated per-edge override list). Depends on
    Block 1 #1 and #2 outcomes.
-7. **Compartmental integration**: `LIFBrain.replace_neurons_
-   with_compartmental([...])` substituting the 15 compartmental
-   models. Calibrate plateau dynamics against Mellem 2008.
-   Independent of T0 resolution; plateau dynamics are a separate
-   active-conductance question that per-edge sign mode does not
-   address.
+7. **Wave 2 cellular layer integration** (substantively complete
+   2026-04-26-28): the Wave 1 v4 sandbox `compartmental_neurons.py`
+   was superseded by Wave 2's NEURON→Brian2 channel-translation
+   pipeline. Production-grade now: AVAL, AIY, RIM, AVAR (4 cells,
+   5-decimal-place Nicoletti 2024 match). Network integration
+   (Wave2HybridBrain class exists) PAUSED at WB3 — capacitance
+   mismatch + release-event rule are open biology questions
+   (`scripts/brain/wave2/artifacts/phase_delta_wb2_findings.md`,
+   3 questions for review). Earlier framing of "calibrate plateau
+   dynamics against Mellem 2008" carried the misattribution that
+   Wave 2's Mellem investigation later corrected — Mellem 2008
+   characterizes RMD plateau, not AVA. The corrected target for
+   AVA is Nicoletti 2024's published phenotype (RC-passive graded
+   plateau, NOT regenerative; 4-channel set; references Liu/Chen/
+   Wang 2020 as upstream source). Independent of T0 resolution;
+   plateau dynamics are a separate active-conductance question
+   that per-edge sign mode does not address.
 8. **Muscle driver**: new `muscle_driver.py` reads motor-neuron
    rates, applies innervation matrix, writes to v2 actuators.
    Replace position actuators with real `<muscle>` on
@@ -504,7 +570,7 @@ Vedantic non-dualism.
 >   scientific discussion.
 >
 > When asked about the simulator state, cite §5 (T0 resolution)
-> as the load-bearing recent finding: the simulator has two
+> as the load-bearing recent finding for the LIF brain: two
 > glutamate sign-assignment modes (per-neuron NT default,
 > per-edge CeNGEN-derived). Default mode reproduces the Chalfie
 > 1985 phenotype on dREV via a tonic-shift mechanism but does
@@ -515,6 +581,19 @@ Vedantic non-dualism.
 > question; FSM/classifier recalibration under per-edge dynamics
 > is an open question. Per-edge is currently opt-in pending
 > resolution. Full record at `docs/t0_resolution_report.md`.
+>
+> Also cite §3 Wave 2 cellular layer + §6 #7 for biophysical
+> resolution beyond LIF: 4 production-grade Brian2 cells (AVAL,
+> AIY, RIM, AVAR) matching Nicoletti 2024 to 5-decimal-place
+> agreement; 14 NMODL channel translations; cython codegen
+> baseline 22.71×; Wave2HybridBrain integration scaffold paused
+> at WB3 capacitance-mismatch + release-event rule biology
+> questions. Wave 2 caught the Mellem-2008-as-AVA-anchor
+> misattribution (Mellem characterizes RMD; AVA traces to Liu
+> 2020) — relevant if user asks about plateau-dynamics targets.
+> Stage IV cross-validation independently confirms §5 cascade-
+> firing claim under conservative drive (per
+> `wave2/artifacts/stage_IV_touch_cascade_findings.md`).
 >
 > Defer to rohitravi.com/projects/c-elegans-multimodal for live
 > visual reference. Ask Rohit for current code state when that
@@ -559,3 +638,38 @@ Update this file when:
 Re-upload to the Claude.ai Project after substantial updates. Old
 version will be replaced; conversations after re-upload see new
 context automatically.
+
+### Maintenance log
+
+- **2026-04-25:** §5 T0 resolution added (supersedes April 21
+  framing); §6 reordered post-resolution.
+- **2026-04-26 to 2026-04-28 (Wave 2 + Phase δ scoping):**
+  - §3 Brain section: Wave 2 cellular layer entry added (4
+    production-grade cells matching Nicoletti 2024 to 5-decimal
+    place; 14 NMODL channel translations; cython baseline 22.71×;
+    Wave2HybridBrain integration scaffold paused at WB3 capacitance
+    + release-event biology questions).
+  - §3 v4 sandbox entry: corrected the Mellem-2008-as-AVA-anchor
+    framing. Mellem 2008 characterizes RMD, NOT AVA (caught by
+    Wave 2 Mellem investigation; primary source quote:
+    "we never observed action potentials in AVA"). AVA experimental
+    data traces to Liu/Chen/Wang 2020 *Nat Commun* via Nicoletti
+    2024 ref [29] + raw recordings shared informally per
+    Nicoletti's acknowledgments.
+  - §5 Stage IV cross-validation note: independent confirmation
+    of §5 cascade-firing under conservative drive (200 Hz Poisson
+    @ 8 mV; ΔAVA = +7.5 Hz). The "broken cascade" framing in some
+    derived documents is v3-LIF-activity-mode-FSM-specific, not
+    LIF-general.
+  - §6 #7 Compartmental integration: Mellem 2008 calibration
+    target replaced with Nicoletti 2024 published phenotype (RC-
+    passive graded plateau, NOT regenerative). Wave 2 cellular
+    layer flagged as substantively complete (4 cells production-
+    grade); network integration paused at WB3.
+  - §11 custom instructions: Wave 2 cellular layer + Stage IV
+    cross-validation cited as load-bearing alongside §5.
+  - **Citation propagation discipline:** Wave 2 work caught
+    multiple citation propagation errors via primary-source
+    verification (Mellem 2008→AVA, Nicoletti 2019 PCBI vs PLOS
+    ONE, Wang 2001→SHK-1, Liu 2018→2020 ref [29]). Audit at
+    `scripts/brain/wave2/artifacts/architectural_plan_citation_audit.md`.
