@@ -7,6 +7,44 @@ triggers WB3 hard-stop pause.
 
 ---
 
+## CORRECTION NOTE (added 2026-04-26 during WB3 CP1 pre-flight)
+
+**Original WB2 findings (cm ~0.86 pF, ~116× LIF/Wave 2 ratio) overstated
+the magnitude of the capacitance mismatch.** The figures conflated
+specific capacitance (μF/cm², an intensive property) with total
+capacitance (pF, the extensive quantity that appears in `dv/dt = -I/C`).
+
+**Corrected magnitudes (re-derived from Brian2 cell-builder code in
+`option_alpha_*_cell.py`):**
+
+| Cell | C_total (pF) | LIF / Wave 2 ratio |
+|------|-------------:|--------------------:|
+| AVAL | **9.66 pF**  | **10.35×**          |
+| AVAR | **8.43 pF**  | **11.86×**          |
+| AIY  | **1.05 pF**  | **94.86×**          |
+| RIM  | **1.55 pF**  | **64.51×**          |
+| LIF  | **100 pF**   | 1.0×                |
+
+See `wave2/translation_patterns.md` F20 entry ("Cross-group coupling
+under heterogeneous capacitance scales") for the full correction
+analysis + methodology lesson on specific-vs-total capacitance
+conflation.
+
+**Mismatch direction + design conclusion (naive `v += W_syn * w`
+structurally unstable) preserved; only magnitude correction.** The
+voltage-bump rule is structurally unstable regardless of the cm
+ratio because voltage bumps don't scale with cm — they accumulate
+unboundedly across edges and spike-times. WB3 CP2-CP6 implements the
+graded Boltzmann release rule (Wicks 1996, B2 sub-pattern) that
+correctly handles the heterogeneous capacitance scale.
+
+The original WB2 findings (below) are preserved as historical record
+of the problem-discovery work. The cm ~0.86 pF / ~116× quotes appear
+in lines 30, 114, 115, 116-117, and 600 (search) of this document;
+treat those as referring to corrected values per the table above.
+
+---
+
 ## Headline finding
 
 **Wave2HybridBrain class built and verified in isolated mode** (cross-coupling

@@ -342,6 +342,144 @@ acceptance criterion.
 
 ---
 
+## P16 / F20: Cross-group coupling under heterogeneous capacitance scales requires conductance-based / graded synaptic models (from Phase δ WB2 / WB3)
+
+**Recognition signature:**
+- Hybrid brain network mixes Wave 2 single-compartment cells (cm 1-10
+  pF, biological; e.g., AVAL 9.66 pF, AVAR 8.43 pF, AIY 1.05 pF, RIM
+  1.55 pF) with LIF cells (cm 100 pF default).
+- Cross-group chemical synapse using `v_post += W_syn * w` voltage
+  bumps (LIF→LIF idiom) drives Wave 2 V to physically unrealistic
+  values (V → +∞ within seconds; voltage bumps don't scale with cm,
+  they accumulate unboundedly across spike-times-and-edges).
+- Capped-current variants (e.g., ±20 pA hard cap) suppress the input
+  signal rather than fix the rule; cells settle far below their
+  physiological range.
+
+**Recommended handling: graded Boltzmann release (Wicks 1996
+sigmoidal) with `(summed)` continuous coupling.**
+
+For the **Wave 2 → LIF (forward) direction:**
+```
+syn_w2_to_lif = Synapses(
+    wave2_groups[name], lif_neurons,
+    model="""
+    w : 1
+    sigma_pre = 1.0/(1.0 + exp(-(v_pre - v_half_mV*mV)/(k_mV*mV))) : 1
+    I_w2lif_<name>_<sign>_post = ±W_graded_I_pA*pA*w*sigma_pre : amp (summed)
+    """,
+    namespace=ns,
+)
+```
+
+For the **LIF → Wave 2 (reverse) direction (B2 sub-pattern):**
+- Per-Synapses g_syn(t) state with `τ_syn = 10 ms` decay.
+- `on_pre = "g_syn += W_g * w"` (kicked by each LIF spike).
+- Current per W2 = `Σ g_syn * (E_rev - v_post)` with
+  `E_rev = 0 mV` (excitatory) / `-70 mV` (inhibitory) per per-edge
+  sign mode.
+- If cell-builder NeuronGroups don't expose summed-receiver variables
+  (i.e. cell-builder code is fixed / out of scope), implement the
+  per-edge g_syn(t) state in numpy and write summed current to the
+  cell's `I_ext` via a `network_operation` at LIF dt; mathematically
+  equivalent for `τ_syn ≫ dt`.
+
+**Soft-cap safety net:** log warnings when `|I_total per W2| > 100
+pA` without truncating; investigate via component breakdown
+(chemical vs gap excursions) if rate > 10/s post-settling. In WB3
+validation, post-settling warning rate ~ 30/s with gap-junction
+currents dominating excursions (95%) over chemical release (5%).
+
+**Pseudo-spike emission** for W2 → downstream LIF spike-consumer
+APIs: σ > 0.5 rising-threshold (per `graded_brain.py:269`
+`_poll_sigma`). **WB3 CP4 surface caveat:** this readout is
+quantitatively misleading when σ saturates (cells running with V ≫
+V_half spend most of their time at σ ≈ 1, never re-cross from below;
+pseudo-spike rate → 0 even at maximum biological release). For
+cells in saturated regime, prefer σ-magnitude readout
+(`graded_brain.py.output_rates()` line 378 pattern: σ * 100
+rate-equivalent) over rising-threshold pseudo-spike rate.
+
+**Cross-channel implications:**
+- Any future Wave 2 cell with biological cm coupled to LIF needs the
+  same handling pattern (P16 W2→LIF + P16-B2 LIF→W2).
+- Multi-source W2 → single-LIF target requires either:
+  - one summed-receiver variable per (source-NG, sign-class) on the
+    LIF NG, or
+  - merge sources by maintaining a unified W2 NG (extracts cell-
+    builder eqs into a single multi-cell NeuronGroup; out of scope
+    for WB3 since cell-builders are production code outside
+    `integration/`).
+- W2 → W2 cross-cell coupling (e.g., AVAL ↔ AVAR): same σ-modulated
+  current pattern; if target W2 NG lacks summed-receiver variables,
+  use the same writer path as LIF→W2 (numpy-state).
+- Cross-group gap junctions: `g_gap * w * (V_pre − V_post)` per edge,
+  same pattern as LIF↔LIF gap. In WB3 implementation, W2→LIF gap
+  currents are folded into the writer's LIF I_ext output for
+  consistency (rather than competing for LIF's existing I_gap summed
+  variable).
+
+**Source finding: WB3 (Phase δ, 2026-04-26).**
+
+---
+
+### WB2 capacitance arithmetic correction (load-bearing methodology lesson)
+
+**The original WB2 findings document conflated specific capacitance
+(μF/cm², an intensive property) with total capacitance (pF, the
+extensive quantity that appears in `dv/dt = -I/C`).**
+
+WB2 quoted `cm ~0.86 pF` and `~116× ratio` for AVAL/AVAR vs LIF.
+Re-derivation from the Brian2 cell builders
+(`option_alpha_*_cell.py`) yields:
+
+| Cell | surf (cm²) | specific cm (μF/cm²) | C_total (pF) | LIF / W2 ratio |
+|------|-----------:|---------------------:|-------------:|----------------:|
+| AVAL | 1123.84e-8 | 0.859551             | **9.66 pF**  | **10.35×**      |
+| AVAR | 1121.79e-8 | 0.751761             | **8.43 pF**  | **11.86×**      |
+| AIY  |   65.89e-8 | 1.6                  | **1.05 pF**  | **94.86×**      |
+| RIM  |  103.34e-8 | 1.5                  | **1.55 pF**  | **64.51×**      |
+| LIF  | (lumped)   | n/a                  | **100 pF**   | 1.0×            |
+
+`C_MEM_DEFAULT = 100 * pF` per `lif_brain.py:106`.
+
+The Brian2 equation for AVAL (`option_alpha_ava_cell.py:160`) is
+
+```
+dv/dt = -I_total / (cm_uFcm2_param * surf_cm2_param * 1e6 * pF)
+```
+
+so the effective total capacitance is the product
+`cm_uFcm2_param × surf_cm2_param × 1e6 [pF]`.
+
+**Corrected magnitudes:**
+- AVAL/AVAR ratio vs LIF is ~10×, NOT the WB2-quoted ~116×.
+- AIY/RIM ratio is ~65-95× (the original ~116× number is closer to
+  AIY's ~95× — plausibly the WB2 author conflated AVAL's surface
+  area with AIY's, or pulled a unit-shift wrong).
+
+**Methodology lesson:** primary-source re-derivation (here:
+re-deriving the total cm from Brian2 cell-builder code, not from
+downstream documentation) catches arithmetic propagation that
+downstream documentation may have inherited. Same pattern as the
+Mellem-misattribution catch in `mellem_investigation_pushback.md`:
+**primary source over downstream paraphrase.**
+
+**Design conclusion preserved:** even at the corrected 10× ratio for
+AVA-class cells, naive `v += W_syn * w` cross-coupling remains
+structurally unstable — voltage bumps don't scale with cm, they
+accumulate unboundedly across edges and spike-times. The mismatch
+direction WB2 surfaced is correct; only the magnitude is corrected.
+
+**Source finding: WB3 pre-flight CP1 (2026-04-26).** Caught during
+the options-document draft; documented in
+`phase_delta_wb3_findings.md` Section "Pre-flight findings" + here.
+Original WB2 findings are amended inline (see
+`phase_delta_wb2_findings.md`) with a pointer to this entry for the
+corrected magnitudes.
+
+---
+
 ## Summary of pattern usage so far
 
 | Pattern | Used in run #1 | Should be checked in run #2+ |
@@ -361,3 +499,4 @@ acceptance criterion.
 | P13 cai default 5e-5 mM | (implicit) | All cells without explicit pool |
 | P14 ion_style asymmetry trigger | AIY (override) + RIM (preserved) | All multi-USEION-ca cells |
 | P15 GLOBAL → Brian2 per-cell auto | UNC-2 (RIM CP3) | Any channel with GLOBAL derived assignments |
+| P16 / F20 cross-group graded coupling + WB2 cm correction | Wave2HybridBrain graded_b2 (Phase δ WB3) | Any future hybrid Wave 2 + LIF deployment

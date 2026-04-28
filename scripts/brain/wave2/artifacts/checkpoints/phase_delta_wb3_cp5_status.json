@@ -1,0 +1,48 @@
+{
+  "checkpoint": "phase_delta_wb3_cp5",
+  "status": "complete",
+  "date": "2026-04-26",
+  "deliverables": {
+    "phase_delta_wb3_findings_md": {
+      "path": "scripts/brain/wave2/artifacts/phase_delta_wb3_findings.md",
+      "sections_added": 11,
+      "key_findings": [
+        "All 3 numerical-stability smoke tests PASS (1s/10s/30s)",
+        "AIY/RIM V_half ± 5 mV sensitivity: LOW (< 1 Hz Δ in 24+ downstream cells)",
+        "Root cause of low sensitivity: AIY/RIM operate well above V_half; sigma saturated",
+        "Cascade DOES propagate biologically (ALM +63 Hz, AIB +7.5 Hz, RIM +4.5 Hz, AIY +4 Hz)",
+        "AVAL/AVAR pseudo-spike rate readout artifact at high drive (sigma saturation collapses rising-threshold rate to 0)",
+        "W_graded_I retune trajectory documented honestly: 0.3 -> 1.0 -> 3.0 -> 10.0 pA all below +5 Hz target due to readout artifact, not biology",
+        "Soft-cap warnings dominated by gap-junction excursions (95%), not chemical release",
+        "WB2 capacitance arithmetic correction propagated in F20"
+      ]
+    },
+    "translation_patterns_md_F20_entry": {
+      "path": "scripts/brain/wave2/translation_patterns.md",
+      "pattern_id": "P16 / F20",
+      "title": "Cross-group coupling under heterogeneous capacitance scales requires conductance-based / graded synaptic models",
+      "wb2_correction_propagated": true,
+      "corrected_values": {
+        "AVAL_pF": 9.66,
+        "AVAR_pF": 8.43,
+        "AIY_pF": 1.05,
+        "RIM_pF": 1.55,
+        "AVA_class_ratio_vs_LIF": "10-12x",
+        "AIY_RIM_ratio_vs_LIF": "65-95x"
+      }
+    },
+    "phase_delta_wb2_findings_md_amendment": {
+      "path": "scripts/brain/wave2/artifacts/phase_delta_wb2_findings.md",
+      "amendment_type": "inline correction note pointing to F20",
+      "preserved_historical_record": true
+    }
+  },
+  "per_cell_class_confidence": {
+    "AVAL_AVAR": "primary-source-anchored (Mellem 2008 + Lockery & Goodman 2009 + Wicks 1996)",
+    "AIY_RIM": "anchored extrapolation (cell-builder validation + Wicks-style universalization)"
+  },
+  "wb4_readiness": "READY (4-cell {AVAL, AVAR, AIYL, AIYR} active set verified during CP3.2 sweeps)",
+  "phase_g_unblocked": true,
+  "phase_g_caveat": "Phase G should consume sigma-magnitude readout for W2 cells, NOT pseudo-spike rate (artifact at saturation)",
+  "next": "CP6 grouped commits + push"
+}
