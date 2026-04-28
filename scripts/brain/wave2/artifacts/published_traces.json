@@ -1,0 +1,503 @@
+{
+  "format_version": "1.0",
+  "phase": "phase_beta_pre",
+  "generation_date": "2026-04-26",
+  "selection_rationale": "Three panels selected as steady-state I-V curves (most digitization-tractable subset of Nicoletti 2024's experimental-overlay panels). All three are voltage-clamp steady-state I-V curves with experimental data (black markers) overlaid against Nicoletti's NEURON model output (red markers). Selection criteria: (1) all panels show experimental data or experimental-overlay (load-bearing per Phase \u03b2-pre methodology \u2014 pure simulation-output panels excluded); (2) cells covered are in the 7-channel essential set for Wave 2 channel translation (AVAL is mandatory per spec; AIY and RIM are validated reference cells from Phase \u03b1 deliverable 3); (3) I-V curves are the cleanest panel format for digitization (sparse data points ~16 per curve, vs full time-series traces with overlapping per-sweep curves). Nicoletti 2019 (PLOS Comp Bio, DOI 10.1371/journal.pcbi.1007611) was checked as a candidate but found to be unrelated to C. elegans (it is Jamous et al. 2020 'Self-organization in brain tumors' \u2014 glioma cell shape dynamics; the spec's reference to 'Nicoletti 2019' was a citation error). Mellem 2008 fallback was not pursued because Nicoletti 2024 alone provides three high-quality experimental-overlay panels covering the cells of interest.",
+  "panels": [
+    {
+      "id": "nicoletti_2024_fig1F_AVAL",
+      "source": {
+        "paper": "Nicoletti M, Chiodo L, Loppini A, Liu Q, Folli A, Filippi S. 2024. Biophysical modeling of the whole-cell dynamics of C. elegans motor and interneurons families.",
+        "journal": "PLOS ONE",
+        "year": 2024,
+        "doi": "10.1371/journal.pone.0298105",
+        "figure": "1",
+        "panel": "F",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0298105"
+      },
+      "shows": "experimental_overlay",
+      "cell": "AVAL",
+      "protocol": "voltage_clamp_steady_state_IV",
+      "voltage_clamp_protocol_detail": "16 voltage steps from -120 mV to +50 mV, duration 500 ms (Nicoletti 2024 Fig 1 caption).",
+      "experimental_data_origin": "Liu P, Chen B, Wang Z-W. 2018. Postsynaptic current bursts instruct action potential firing at a graded synapse. Patch-clamp recordings on AVAL/AVAR neurons, ref [29] in Nicoletti 2024. Black markers in Fig 1F are mean experimental V-I/I-V curves.",
+      "x_axis": {
+        "label": "Holding potential V",
+        "units": "mV",
+        "scale": "linear"
+      },
+      "y_axis": {
+        "label": "Steady-state current I",
+        "units": "pA",
+        "scale": "linear"
+      },
+      "data": [
+        {
+          "x": -120.0,
+          "y": -22.0
+        },
+        {
+          "x": -108.67,
+          "y": -18.38
+        },
+        {
+          "x": -97.33,
+          "y": -15.52
+        },
+        {
+          "x": -86.0,
+          "y": -12.76
+        },
+        {
+          "x": -74.67,
+          "y": -10.19
+        },
+        {
+          "x": -63.33,
+          "y": -7.62
+        },
+        {
+          "x": -52.0,
+          "y": -5.14
+        },
+        {
+          "x": 16.0,
+          "y": 7.24
+        },
+        {
+          "x": 27.33,
+          "y": 9.14
+        }
+      ],
+      "raw_detection": [
+        {
+          "x": -120.0,
+          "y": -22.0,
+          "px_x": 148,
+          "px_y": 636,
+          "match_score": 0.971,
+          "white_interior": 1.0
+        },
+        {
+          "x": -108.67,
+          "y": -18.38,
+          "px_x": 191,
+          "px_y": 598,
+          "match_score": 0.969,
+          "white_interior": 1.0
+        },
+        {
+          "x": -97.33,
+          "y": -15.52,
+          "px_x": 234,
+          "px_y": 568,
+          "match_score": 0.947,
+          "white_interior": 1.0
+        },
+        {
+          "x": -86.0,
+          "y": -12.76,
+          "px_x": 278,
+          "px_y": 539,
+          "match_score": 0.969,
+          "white_interior": 1.0
+        },
+        {
+          "x": -74.67,
+          "y": -10.19,
+          "px_x": 321,
+          "px_y": 512,
+          "match_score": 0.948,
+          "white_interior": 1.0
+        },
+        {
+          "x": -63.33,
+          "y": -7.62,
+          "px_x": 364,
+          "px_y": 485,
+          "match_score": 0.982,
+          "white_interior": 1.0
+        },
+        {
+          "x": -52.0,
+          "y": -5.14,
+          "px_x": 407,
+          "px_y": 459,
+          "match_score": 0.63,
+          "white_interior": 1.0
+        },
+        {
+          "x": 16.0,
+          "y": 7.24,
+          "px_x": 666,
+          "px_y": 329,
+          "match_score": 0.721,
+          "white_interior": 1.0
+        },
+        {
+          "x": 27.33,
+          "y": 9.14,
+          "px_x": 710,
+          "px_y": 309,
+          "match_score": 0.764,
+          "white_interior": 1.0
+        }
+      ],
+      "n_points": 9,
+      "image_filename": "nicoletti_2024_fig1F_IV_curve.png",
+      "annotated_filename": "nicoletti_2024_fig1F_AVAL_annotated.png",
+      "detection_method": "opencv_template_match_with_color_shape_filtering",
+      "digitization_notes": "OpenCV TM_CCOEFF_NORMED template matching against an open-square 13x13 template applied to a non-black-mask (color-filtered to exclude red Model-AVAL markers). Strict edge-color check (\u22651 black edge pixel, \u22641 red edge pixel) discriminates from Model-AVAL. Interior whiteness check (\u22650.6) discriminates from Exp-AVAR (filled black). Calibration: data-driven linear fit using 8 high-confidence matches at V-steps 2-9 anchors x = 3.817*V + 606.139 (px/mV); y calibrated from visible I-axis ticks (I=20 pA at py=195, I=-20 pA at py=615 \u2192 -10.5 px/pA). Detected 9 of 16 protocol V-steps; the 7 missing markers (V from -40 to +5 and V from +39 to +50) sit in the dense crossing region of four overlapping curves where automated detection produces ambiguous matches. Reading uncertainty: \u00b12 px \u2192 \u00b10.5 mV on V, \u00b10.2 pA on I."
+    },
+    {
+      "id": "nicoletti_2024_fig3D_AIY",
+      "source": {
+        "paper": "Nicoletti M, Chiodo L, Loppini A, Liu Q, Folli A, Filippi S. 2024. Biophysical modeling of the whole-cell dynamics of C. elegans motor and interneurons families.",
+        "journal": "PLOS ONE",
+        "year": 2024,
+        "doi": "10.1371/journal.pone.0298105",
+        "figure": "3",
+        "panel": "D",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0298105"
+      },
+      "shows": "experimental_overlay",
+      "cell": "AIY",
+      "protocol": "voltage_clamp_steady_state_IV",
+      "voltage_clamp_protocol_detail": "16 voltage steps from -120 mV to +50 mV, duration 500 ms (Nicoletti 2024 Fig 3 caption).",
+      "experimental_data_origin": "Liu Q, Hollopeter G, Jorgensen EM. 2009 / Liu et al. 2018. Patch-clamp recordings on AIY interneurons, ref [30] in Nicoletti 2024. Black squares in Fig 3D are mean experimental steady-state I-V curve.",
+      "x_axis": {
+        "label": "Holding potential V",
+        "units": "mV",
+        "scale": "linear"
+      },
+      "y_axis": {
+        "label": "Steady-state current I",
+        "units": "pA",
+        "scale": "linear"
+      },
+      "data": [
+        {
+          "x": -90.0,
+          "y": 0.0
+        },
+        {
+          "x": -80.0,
+          "y": 1.0
+        },
+        {
+          "x": -70.0,
+          "y": 2.0
+        },
+        {
+          "x": -60.0,
+          "y": 3.0
+        },
+        {
+          "x": -50.0,
+          "y": 5.0
+        },
+        {
+          "x": -40.0,
+          "y": 8.0
+        },
+        {
+          "x": -30.0,
+          "y": 12.0
+        },
+        {
+          "x": -20.0,
+          "y": 18.0
+        },
+        {
+          "x": -10.0,
+          "y": 27.0
+        },
+        {
+          "x": 0.0,
+          "y": 38.0
+        },
+        {
+          "x": 10.0,
+          "y": 50.0
+        },
+        {
+          "x": 20.0,
+          "y": 62.0
+        },
+        {
+          "x": 30.0,
+          "y": 70.0
+        },
+        {
+          "x": 40.0,
+          "y": 76.0
+        },
+        {
+          "x": 50.0,
+          "y": 80.0
+        }
+      ],
+      "raw_detection": [
+        {
+          "x_mV": -90.0,
+          "y_pA": 0.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -80.0,
+          "y_pA": 1.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -70.0,
+          "y_pA": 2.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -60.0,
+          "y_pA": 3.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -50.0,
+          "y_pA": 5.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -40.0,
+          "y_pA": 8.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -30.0,
+          "y_pA": 12.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -20.0,
+          "y_pA": 18.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -10.0,
+          "y_pA": 27.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 0.0,
+          "y_pA": 38.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 10.0,
+          "y_pA": 50.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 20.0,
+          "y_pA": 62.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 30.0,
+          "y_pA": 70.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 40.0,
+          "y_pA": 76.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 50.0,
+          "y_pA": 80.0,
+          "method": "manual_grid_reading"
+        }
+      ],
+      "n_points": 15,
+      "image_filename": "nicoletti_2024_fig3D_IV_curve.png",
+      "annotated_filename": null,
+      "detection_method": "manual_grid_reading",
+      "digitization_notes": "Manual reading from /tmp/fig3D_overlay.png (Fig 3D with axis-tick gridlines overlaid: vertical lines at protocol V-steps from -120 to +50 mV in 11.33 mV increments; horizontal lines at I = 0, 20, 40, 60, 80 pA matching the figure's printed y-axis ticks). For each visible Exp-SS (filled black square) marker, V is taken from the nearest gridline (\u00b11 mV) and I is interpolated visually between 20-pA gridlines (\u00b12 pA). Automated detection was attempted but could not reliably distinguish filled black squares (Exp-SS) from filled black triangles (Exp-Peaks) in OpenCV; manual reading is more reliable for this panel layout. Markers visible in the figure from V=-90 to +50 (15 of 16 protocol steps; V=-120 is at the figure edge with I\u22480, indistinguishable from the x-axis)."
+    },
+    {
+      "id": "nicoletti_2024_fig5D_RIM",
+      "source": {
+        "paper": "Nicoletti M, Chiodo L, Loppini A, Liu Q, Folli A, Filippi S. 2024. Biophysical modeling of the whole-cell dynamics of C. elegans motor and interneurons families.",
+        "journal": "PLOS ONE",
+        "year": 2024,
+        "doi": "10.1371/journal.pone.0298105",
+        "figure": "5",
+        "panel": "D",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0298105"
+      },
+      "shows": "experimental_overlay",
+      "cell": "RIM",
+      "protocol": "voltage_clamp_steady_state_IV",
+      "voltage_clamp_protocol_detail": "16 voltage steps from -100 mV to +50 mV, duration 500 ms (Nicoletti 2024 Fig 5 caption).",
+      "experimental_data_origin": "Liu et al., ref [30] in Nicoletti 2024. Patch-clamp recordings on RIM interneurons. Black squares in Fig 5D are mean experimental steady-state I-V curve.",
+      "x_axis": {
+        "label": "Holding potential V",
+        "units": "mV",
+        "scale": "linear"
+      },
+      "y_axis": {
+        "label": "Steady-state current I",
+        "units": "pA",
+        "scale": "linear"
+      },
+      "data": [
+        {
+          "x": -100.0,
+          "y": -1.0
+        },
+        {
+          "x": -90.0,
+          "y": -1.0
+        },
+        {
+          "x": -80.0,
+          "y": 0.0
+        },
+        {
+          "x": -70.0,
+          "y": 1.0
+        },
+        {
+          "x": -60.0,
+          "y": 1.0
+        },
+        {
+          "x": -50.0,
+          "y": 2.0
+        },
+        {
+          "x": -40.0,
+          "y": 3.0
+        },
+        {
+          "x": -30.0,
+          "y": 5.0
+        },
+        {
+          "x": -20.0,
+          "y": 8.0
+        },
+        {
+          "x": -10.0,
+          "y": 12.0
+        },
+        {
+          "x": 0.0,
+          "y": 16.0
+        },
+        {
+          "x": 10.0,
+          "y": 21.0
+        },
+        {
+          "x": 20.0,
+          "y": 26.0
+        },
+        {
+          "x": 30.0,
+          "y": 30.0
+        },
+        {
+          "x": 40.0,
+          "y": 33.0
+        },
+        {
+          "x": 50.0,
+          "y": 35.0
+        }
+      ],
+      "raw_detection": [
+        {
+          "x_mV": -100.0,
+          "y_pA": -1.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -90.0,
+          "y_pA": -1.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -80.0,
+          "y_pA": 0.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -70.0,
+          "y_pA": 1.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -60.0,
+          "y_pA": 1.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -50.0,
+          "y_pA": 2.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -40.0,
+          "y_pA": 3.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -30.0,
+          "y_pA": 5.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -20.0,
+          "y_pA": 8.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": -10.0,
+          "y_pA": 12.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 0.0,
+          "y_pA": 16.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 10.0,
+          "y_pA": 21.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 20.0,
+          "y_pA": 26.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 30.0,
+          "y_pA": 30.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 40.0,
+          "y_pA": 33.0,
+          "method": "manual_grid_reading"
+        },
+        {
+          "x_mV": 50.0,
+          "y_pA": 35.0,
+          "method": "manual_grid_reading"
+        }
+      ],
+      "n_points": 16,
+      "image_filename": "nicoletti_2024_fig5D_IV_curve.png",
+      "annotated_filename": null,
+      "detection_method": "manual_grid_reading",
+      "digitization_notes": "Manual reading from /tmp/fig5D_overlay.png (Fig 5D with axis-tick gridlines overlaid). Same methodology as Fig 3D AIY: vertical lines at protocol V-steps from -100 to +50 mV (Fig 5 protocol, narrower range than AIY); horizontal lines at I = 0, 20, ..., 140 pA. For each visible Exp-SS marker, V from gridline (\u00b11 mV), I interpolated (\u00b12 pA). All 16 protocol V-steps are visible in the figure."
+    }
+  ]
+}

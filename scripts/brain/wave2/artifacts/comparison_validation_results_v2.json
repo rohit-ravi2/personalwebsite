@@ -1,0 +1,2114 @@
+{
+  "phase": "phase_beta_pre_v2",
+  "generation_date": "2026-04-26",
+  "tolerance_metric": "Per-feature: divergence(m, r, peak) = |m-r| / max(|m|, |r|, 0.1*peak); feature pass: divergence \u2264 0.05. Per-step: ALL features pass. Per-panel: > 80% of steps pass (looser than v1's per-point \u2265 90% \u2014 feature-based has fewer comparison points). Per-cell: panel passes.",
+  "overall_verdict": "multi_panel_fail_real_invalidation",
+  "n_panels_total": 4,
+  "n_panels_passing": 0,
+  "panel_results": [
+    {
+      "panel_id": "nicoletti_2024_fig1A_AVAL",
+      "cell": "AVAL",
+      "n_steps_total": 7,
+      "n_steps_passing": 0,
+      "fraction_passing": 0.0,
+      "panel_pass": false,
+      "feature_peaks_for_tolerance_floor": {
+        "peak_voltage_mV": 175.34,
+        "plateau_amplitude_mV": 175.34,
+        "plateau_duration_ms": 1000.0,
+        "time_to_peak_ms": 1000.0,
+        "settling_time_ms": 406.8
+      },
+      "secondary_diagnostics": {
+        "voltage_features_only_n_pass": 1,
+        "voltage_features_only_fraction_pass": 0.1429,
+        "voltage_features_only_panel_pass": false,
+        "timing_features_only_n_pass": 0,
+        "timing_features_only_fraction_pass": 0.0,
+        "voltage_abs_error_mV_mean": 8.88,
+        "voltage_abs_error_mV_median": 8.78,
+        "voltage_abs_error_mV_max": 16.94,
+        "interpretation": "voltage_features_only excludes timing-feature failures that are dominated by digitization-sampling resolution noise. Voltage features (peak, plateau) reflect the actual model-vs-experiment fit quality. Mean/median voltage abs error in mV gives the absolute-scale residual independent of relative-tolerance arithmetic."
+      },
+      "per_step_comparison": [
+        {
+          "current_pA": -30.0,
+          "exp_features": {
+            "peak_voltage_mV": -172.5,
+            "plateau_amplitude_mV": -171.88,
+            "plateau_duration_ms": 386.4,
+            "time_to_peak_ms": 569.5,
+            "settling_time_ms": 406.8
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -175.34,
+            "plateau_amplitude_mV": -175.34,
+            "plateau_duration_ms": 911.2,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 88.8
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -172.5,
+              "neuron": -175.34,
+              "divergence": 0.0162,
+              "pass": true
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -171.88,
+              "neuron": -175.34,
+              "divergence": 0.0197,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 386.4,
+              "neuron": 911.2,
+              "divergence": 0.5759,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 569.5,
+              "neuron": 1000.0,
+              "divergence": 0.4305,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 406.8,
+              "neuron": 88.8,
+              "divergence": 0.7817,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -20.0,
+          "exp_features": {
+            "peak_voltage_mV": -127.5,
+            "plateau_amplitude_mV": -126.25,
+            "plateau_duration_ms": 711.9,
+            "time_to_peak_ms": 183.1,
+            "settling_time_ms": 81.4
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -135.69,
+            "plateau_amplitude_mV": -135.69,
+            "plateau_duration_ms": 911.4,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 88.6
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -127.5,
+              "neuron": -135.69,
+              "divergence": 0.0604,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -126.25,
+              "neuron": -135.69,
+              "divergence": 0.0696,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 711.9,
+              "neuron": 911.4,
+              "divergence": 0.2189,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 183.1,
+              "neuron": 1000.0,
+              "divergence": 0.8169,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 81.4,
+              "neuron": 88.6,
+              "divergence": 0.0813,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -10.0,
+          "exp_features": {
+            "peak_voltage_mV": -85.0,
+            "plateau_amplitude_mV": -81.25,
+            "plateau_duration_ms": 732.2,
+            "time_to_peak_ms": 813.6,
+            "settling_time_ms": 61.0
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -96.99,
+            "plateau_amplitude_mV": -96.99,
+            "plateau_duration_ms": 896.6,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 103.4
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -85.0,
+              "neuron": -96.99,
+              "divergence": 0.1236,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -81.25,
+              "neuron": -96.99,
+              "divergence": 0.1623,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 732.2,
+              "neuron": 896.6,
+              "divergence": 0.1834,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 813.6,
+              "neuron": 1000.0,
+              "divergence": 0.1864,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 61.0,
+              "neuron": 103.4,
+              "divergence": 0.4101,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 0.0,
+          "exp_features": {
+            "peak_voltage_mV": -23.12,
+            "plateau_amplitude_mV": -30.0,
+            "plateau_duration_ms": 854.2,
+            "time_to_peak_ms": 996.6,
+            "settling_time_ms": 0.0
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -39.37,
+            "plateau_amplitude_mV": -39.37,
+            "plateau_duration_ms": 1000.0,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 0.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -23.12,
+              "neuron": -39.37,
+              "divergence": 0.4128,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -30.0,
+              "neuron": -39.37,
+              "divergence": 0.238,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 854.2,
+              "neuron": 1000.0,
+              "divergence": 0.1458,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 996.6,
+              "neuron": 1000.0,
+              "divergence": 0.0034,
+              "pass": true
+            },
+            "settling_time_ms": {
+              "experimental": 0.0,
+              "neuron": 0.0,
+              "divergence": 0.0,
+              "pass": true
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 10.0,
+          "exp_features": {
+            "peak_voltage_mV": 43.75,
+            "plateau_amplitude_mV": 42.5,
+            "plateau_duration_ms": 650.8,
+            "time_to_peak_ms": 772.9,
+            "settling_time_ms": 162.7
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 39.68,
+            "plateau_amplitude_mV": 39.68,
+            "plateau_duration_ms": 865.7,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 134.3
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 43.75,
+              "neuron": 39.68,
+              "divergence": 0.093,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 42.5,
+              "neuron": 39.68,
+              "divergence": 0.0664,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 650.8,
+              "neuron": 865.7,
+              "divergence": 0.2482,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 772.9,
+              "neuron": 1000.0,
+              "divergence": 0.2271,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 162.7,
+              "neuron": 134.3,
+              "divergence": 0.1746,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 20.0,
+          "exp_features": {
+            "peak_voltage_mV": 85.0,
+            "plateau_amplitude_mV": 77.5,
+            "plateau_duration_ms": 752.5,
+            "time_to_peak_ms": 223.7,
+            "settling_time_ms": 20.3
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 80.62,
+            "plateau_amplitude_mV": 80.62,
+            "plateau_duration_ms": 901.6,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 98.4
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 85.0,
+              "neuron": 80.62,
+              "divergence": 0.0515,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 77.5,
+              "neuron": 80.62,
+              "divergence": 0.0387,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 752.5,
+              "neuron": 901.6,
+              "divergence": 0.1654,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 223.7,
+              "neuron": 1000.0,
+              "divergence": 0.7763,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 20.3,
+              "neuron": 98.4,
+              "divergence": 0.7937,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 30.0,
+          "exp_features": {
+            "peak_voltage_mV": 103.75,
+            "plateau_amplitude_mV": 105.0,
+            "plateau_duration_ms": 569.5,
+            "time_to_peak_ms": 691.5,
+            "settling_time_ms": 223.7
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 120.69,
+            "plateau_amplitude_mV": 120.69,
+            "plateau_duration_ms": 907.2,
+            "time_to_peak_ms": 1000.0,
+            "settling_time_ms": 92.8
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 103.75,
+              "neuron": 120.69,
+              "divergence": 0.1404,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 105.0,
+              "neuron": 120.69,
+              "divergence": 0.13,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 569.5,
+              "neuron": 907.2,
+              "divergence": 0.3722,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 691.5,
+              "neuron": 1000.0,
+              "divergence": 0.3085,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 223.7,
+              "neuron": 92.8,
+              "divergence": 0.5852,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        }
+      ],
+      "full_waveform_rmse_diagnostic": [
+        {
+          "current_pA": -30.0,
+          "n_compared_points": 27,
+          "rmse_mV": 5.12
+        },
+        {
+          "current_pA": -20.0,
+          "n_compared_points": 37,
+          "rmse_mV": 8.81
+        },
+        {
+          "current_pA": -10.0,
+          "n_compared_points": 40,
+          "rmse_mV": 14.97
+        },
+        {
+          "current_pA": 0.0,
+          "n_compared_points": 47,
+          "rmse_mV": 9.71
+        },
+        {
+          "current_pA": 10.0,
+          "n_compared_points": 36,
+          "rmse_mV": 3.61
+        },
+        {
+          "current_pA": 20.0,
+          "n_compared_points": 40,
+          "rmse_mV": 24.3
+        },
+        {
+          "current_pA": 30.0,
+          "n_compared_points": 34,
+          "rmse_mV": 33.36
+        }
+      ],
+      "neuron_warning": null
+    },
+    {
+      "panel_id": "nicoletti_2024_fig1B_AVAR",
+      "cell": "AVAR",
+      "n_steps_total": 7,
+      "n_steps_passing": 0,
+      "fraction_passing": 0.0,
+      "panel_pass": false,
+      "feature_peaks_for_tolerance_floor": {
+        "peak_voltage_mV": 104.54,
+        "plateau_amplitude_mV": 111.59,
+        "plateau_duration_ms": 1000.0,
+        "time_to_peak_ms": 813.6,
+        "settling_time_ms": 854.2
+      },
+      "secondary_diagnostics": {
+        "voltage_features_only_n_pass": 0,
+        "voltage_features_only_fraction_pass": 0.0,
+        "voltage_features_only_panel_pass": false,
+        "timing_features_only_n_pass": 0,
+        "timing_features_only_fraction_pass": 0.0,
+        "voltage_abs_error_mV_mean": 15.16,
+        "voltage_abs_error_mV_median": 10.36,
+        "voltage_abs_error_mV_max": 42.52,
+        "interpretation": "voltage_features_only excludes timing-feature failures that are dominated by digitization-sampling resolution noise. Voltage features (peak, plateau) reflect the actual model-vs-experiment fit quality. Mean/median voltage abs error in mV gives the absolute-scale residual independent of relative-tolerance arithmetic."
+      },
+      "per_step_comparison": [
+        {
+          "current_pA": -30.0,
+          "exp_features": {
+            "peak_voltage_mV": -104.27,
+            "plateau_amplitude_mV": -111.59,
+            "plateau_duration_ms": 101.7,
+            "time_to_peak_ms": 793.2,
+            "settling_time_ms": 650.8
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -101.06,
+            "plateau_amplitude_mV": -101.06,
+            "plateau_duration_ms": 933.8,
+            "time_to_peak_ms": 787.1,
+            "settling_time_ms": 66.2
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -104.27,
+              "neuron": -101.06,
+              "divergence": 0.0308,
+              "pass": true
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -111.59,
+              "neuron": -101.06,
+              "divergence": 0.0944,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 101.7,
+              "neuron": 933.8,
+              "divergence": 0.8911,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 793.2,
+              "neuron": 787.1,
+              "divergence": 0.0077,
+              "pass": true
+            },
+            "settling_time_ms": {
+              "experimental": 650.8,
+              "neuron": 66.2,
+              "divergence": 0.8983,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -20.0,
+          "exp_features": {
+            "peak_voltage_mV": -73.78,
+            "plateau_amplitude_mV": -76.83,
+            "plateau_duration_ms": 264.4,
+            "time_to_peak_ms": 589.8,
+            "settling_time_ms": 528.8
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -67.79,
+            "plateau_amplitude_mV": -67.79,
+            "plateau_duration_ms": 926.6,
+            "time_to_peak_ms": 779.7,
+            "settling_time_ms": 73.4
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -73.78,
+              "neuron": -67.79,
+              "divergence": 0.0812,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -76.83,
+              "neuron": -67.79,
+              "divergence": 0.1177,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 264.4,
+              "neuron": 926.6,
+              "divergence": 0.7147,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 589.8,
+              "neuron": 779.7,
+              "divergence": 0.2436,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 528.8,
+              "neuron": 73.4,
+              "divergence": 0.8612,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -10.0,
+          "exp_features": {
+            "peak_voltage_mV": -52.44,
+            "plateau_amplitude_mV": -53.35,
+            "plateau_duration_ms": 467.8,
+            "time_to_peak_ms": 528.8,
+            "settling_time_ms": 345.8
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -30.54,
+            "plateau_amplitude_mV": -30.54,
+            "plateau_duration_ms": 919.8,
+            "time_to_peak_ms": 465.0,
+            "settling_time_ms": 80.2
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -52.44,
+              "neuron": -30.54,
+              "divergence": 0.4176,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -53.35,
+              "neuron": -30.54,
+              "divergence": 0.4276,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 467.8,
+              "neuron": 919.8,
+              "divergence": 0.4914,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 528.8,
+              "neuron": 465.0,
+              "divergence": 0.1207,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 345.8,
+              "neuron": 80.2,
+              "divergence": 0.7681,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 0.0,
+          "exp_features": {
+            "peak_voltage_mV": -31.71,
+            "plateau_amplitude_mV": -25.3,
+            "plateau_duration_ms": 61.0,
+            "time_to_peak_ms": 813.6,
+            "settling_time_ms": 854.2
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 10.81,
+            "plateau_amplitude_mV": 10.81,
+            "plateau_duration_ms": 1000.0,
+            "time_to_peak_ms": 296.8,
+            "settling_time_ms": 0.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -31.71,
+              "neuron": 10.81,
+              "divergence": 1.3409,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -25.3,
+              "neuron": 10.81,
+              "divergence": 1.4273,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 61.0,
+              "neuron": 1000.0,
+              "divergence": 0.939,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 813.6,
+              "neuron": 296.8,
+              "divergence": 0.6352,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 854.2,
+              "neuron": 0.0,
+              "divergence": 1.0,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 10.0,
+          "exp_features": {
+            "peak_voltage_mV": 36.59,
+            "plateau_amplitude_mV": 34.76,
+            "plateau_duration_ms": 406.8,
+            "time_to_peak_ms": 711.9,
+            "settling_time_ms": 366.1
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 44.88,
+            "plateau_amplitude_mV": 44.88,
+            "plateau_duration_ms": 935.7,
+            "time_to_peak_ms": 791.7,
+            "settling_time_ms": 64.3
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 36.59,
+              "neuron": 44.88,
+              "divergence": 0.1847,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 34.76,
+              "neuron": 44.88,
+              "divergence": 0.2255,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 406.8,
+              "neuron": 935.7,
+              "divergence": 0.5652,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 711.9,
+              "neuron": 791.7,
+              "divergence": 0.1008,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 366.1,
+              "neuron": 64.3,
+              "divergence": 0.8244,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 20.0,
+          "exp_features": {
+            "peak_voltage_mV": 70.12,
+            "plateau_amplitude_mV": 64.63,
+            "plateau_duration_ms": 793.2,
+            "time_to_peak_ms": 528.8,
+            "settling_time_ms": 0.0
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 74.82,
+            "plateau_amplitude_mV": 74.82,
+            "plateau_duration_ms": 941.0,
+            "time_to_peak_ms": 745.2,
+            "settling_time_ms": 59.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 70.12,
+              "neuron": 74.82,
+              "divergence": 0.0628,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 64.63,
+              "neuron": 74.82,
+              "divergence": 0.1362,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 793.2,
+              "neuron": 941.0,
+              "divergence": 0.1571,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 528.8,
+              "neuron": 745.2,
+              "divergence": 0.2904,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 0.0,
+              "neuron": 59.0,
+              "divergence": 0.6907,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 30.0,
+          "exp_features": {
+            "peak_voltage_mV": 93.9,
+            "plateau_amplitude_mV": 88.41,
+            "plateau_duration_ms": 793.2,
+            "time_to_peak_ms": 81.4,
+            "settling_time_ms": 0.0
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 104.54,
+            "plateau_amplitude_mV": 104.54,
+            "plateau_duration_ms": 942.2,
+            "time_to_peak_ms": 754.4,
+            "settling_time_ms": 57.8
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 93.9,
+              "neuron": 104.54,
+              "divergence": 0.1018,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 88.41,
+              "neuron": 104.54,
+              "divergence": 0.1543,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 793.2,
+              "neuron": 942.2,
+              "divergence": 0.1581,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 81.4,
+              "neuron": 754.4,
+              "divergence": 0.8921,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 0.0,
+              "neuron": 57.8,
+              "divergence": 0.6767,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        }
+      ],
+      "full_waveform_rmse_diagnostic": [
+        {
+          "current_pA": -30.0,
+          "n_compared_points": 11,
+          "rmse_mV": 11.51
+        },
+        {
+          "current_pA": -20.0,
+          "n_compared_points": 38,
+          "rmse_mV": 23.74
+        },
+        {
+          "current_pA": -10.0,
+          "n_compared_points": 35,
+          "rmse_mV": 25.25
+        },
+        {
+          "current_pA": 0.0,
+          "n_compared_points": 11,
+          "rmse_mV": 34.74
+        },
+        {
+          "current_pA": 10.0,
+          "n_compared_points": 39,
+          "rmse_mV": 14.42
+        },
+        {
+          "current_pA": 20.0,
+          "n_compared_points": 40,
+          "rmse_mV": 11.74
+        },
+        {
+          "current_pA": 30.0,
+          "n_compared_points": 31,
+          "rmse_mV": 20.23
+        }
+      ],
+      "neuron_warning": "AVAR_simulation_iclamp.py missing from upstream repo. Used AVAL_simulation_iclamp with AVAR-specific conductances and surface area; UNC103 channel contribution NOT included (AVAL iclamp script does not insert 'unc103'). This biases AVAR predictions, particularly the resting potential and depolarizing-step plateau."
+    },
+    {
+      "panel_id": "nicoletti_2024_fig3A_AIY",
+      "cell": "AIY",
+      "n_steps_total": 11,
+      "n_steps_passing": 0,
+      "fraction_passing": 0.0,
+      "panel_pass": false,
+      "feature_peaks_for_tolerance_floor": {
+        "peak_voltage_mV": 128.66,
+        "plateau_amplitude_mV": 128.66,
+        "plateau_duration_ms": 5000.0,
+        "time_to_peak_ms": 5000.0,
+        "settling_time_ms": 1813.6
+      },
+      "secondary_diagnostics": {
+        "voltage_features_only_n_pass": 0,
+        "voltage_features_only_fraction_pass": 0.0,
+        "voltage_features_only_panel_pass": false,
+        "timing_features_only_n_pass": 0,
+        "timing_features_only_fraction_pass": 0.0,
+        "voltage_abs_error_mV_mean": 6.83,
+        "voltage_abs_error_mV_median": 5.66,
+        "voltage_abs_error_mV_max": 20.33,
+        "interpretation": "voltage_features_only excludes timing-feature failures that are dominated by digitization-sampling resolution noise. Voltage features (peak, plateau) reflect the actual model-vs-experiment fit quality. Mean/median voltage abs error in mV gives the absolute-scale residual independent of relative-tolerance arithmetic."
+      },
+      "per_step_comparison": [
+        {
+          "current_pA": -15.0,
+          "exp_features": {
+            "peak_voltage_mV": -122.03,
+            "plateau_amplitude_mV": -122.48,
+            "plateau_duration_ms": 4667.8,
+            "time_to_peak_ms": 623.7,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -128.66,
+            "plateau_amplitude_mV": -128.66,
+            "plateau_duration_ms": 4987.6,
+            "time_to_peak_ms": 254.8,
+            "settling_time_ms": 12.4
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -122.03,
+              "neuron": -128.66,
+              "divergence": 0.0515,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -122.48,
+              "neuron": -128.66,
+              "divergence": 0.048,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 4667.8,
+              "neuron": 4987.6,
+              "divergence": 0.0641,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 623.7,
+              "neuron": 254.8,
+              "divergence": 0.5915,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 12.4,
+              "divergence": 0.343,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -10.0,
+          "exp_features": {
+            "peak_voltage_mV": -115.71,
+            "plateau_amplitude_mV": -109.77,
+            "plateau_duration_ms": 4118.6,
+            "time_to_peak_ms": 623.7,
+            "settling_time_ms": 440.7
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -103.6,
+            "plateau_amplitude_mV": -103.6,
+            "plateau_duration_ms": 4987.7,
+            "time_to_peak_ms": 348.1,
+            "settling_time_ms": 12.3
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -115.71,
+              "neuron": -103.6,
+              "divergence": 0.1047,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -109.77,
+              "neuron": -103.6,
+              "divergence": 0.0562,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4118.6,
+              "neuron": 4987.7,
+              "divergence": 0.1742,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 623.7,
+              "neuron": 348.1,
+              "divergence": 0.4419,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 440.7,
+              "neuron": 12.3,
+              "divergence": 0.9721,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -5.0,
+          "exp_features": {
+            "peak_voltage_mV": -82.93,
+            "plateau_amplitude_mV": -82.63,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 2820.3,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -78.72,
+            "plateau_amplitude_mV": -78.72,
+            "plateau_duration_ms": 4988.3,
+            "time_to_peak_ms": 58.4,
+            "settling_time_ms": 11.7
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -82.93,
+              "neuron": -78.72,
+              "divergence": 0.0508,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -82.63,
+              "neuron": -78.72,
+              "divergence": 0.0473,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 4988.3,
+              "divergence": 0.0276,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 2820.3,
+              "neuron": 58.4,
+              "divergence": 0.9793,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 11.7,
+              "divergence": 0.3468,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 0.0,
+          "exp_features": {
+            "peak_voltage_mV": -51.2,
+            "plateau_amplitude_mV": -51.95,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 1172.9,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -55.21,
+            "plateau_amplitude_mV": -55.21,
+            "plateau_duration_ms": 5000.0,
+            "time_to_peak_ms": 5000.0,
+            "settling_time_ms": 0.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -51.2,
+              "neuron": -55.21,
+              "divergence": 0.0726,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -51.95,
+              "neuron": -55.21,
+              "divergence": 0.059,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 5000.0,
+              "divergence": 0.0298,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 1172.9,
+              "neuron": 5000.0,
+              "divergence": 0.7654,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 0.0,
+              "divergence": 0.4113,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 5.0,
+          "exp_features": {
+            "peak_voltage_mV": -27.14,
+            "plateau_amplitude_mV": -25.71,
+            "plateau_duration_ms": 4576.3,
+            "time_to_peak_ms": 2911.9,
+            "settling_time_ms": 349.2
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -31.4,
+            "plateau_amplitude_mV": -33.42,
+            "plateau_duration_ms": 4990.2,
+            "time_to_peak_ms": 64.4,
+            "settling_time_ms": 9.8
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -27.14,
+              "neuron": -31.4,
+              "divergence": 0.1357,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -25.71,
+              "neuron": -33.42,
+              "divergence": 0.2307,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4576.3,
+              "neuron": 4990.2,
+              "divergence": 0.0829,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 2911.9,
+              "neuron": 64.4,
+              "divergence": 0.9779,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 349.2,
+              "neuron": 9.8,
+              "divergence": 0.9719,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 10.0,
+          "exp_features": {
+            "peak_voltage_mV": -2.33,
+            "plateau_amplitude_mV": 0.08,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 2454.2,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -4.44,
+            "plateau_amplitude_mV": -17.53,
+            "plateau_duration_ms": 4993.3,
+            "time_to_peak_ms": 55.9,
+            "settling_time_ms": 6.7
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -2.33,
+              "neuron": -4.44,
+              "divergence": 0.164,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 0.08,
+              "neuron": -17.53,
+              "divergence": 1.0046,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 4993.3,
+              "divergence": 0.0285,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 2454.2,
+              "neuron": 55.9,
+              "divergence": 0.9772,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 6.7,
+              "divergence": 0.3744,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 15.0,
+          "exp_features": {
+            "peak_voltage_mV": 16.47,
+            "plateau_amplitude_mV": 14.96,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 1172.9,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 8.36,
+            "plateau_amplitude_mV": -5.37,
+            "plateau_duration_ms": 4994.3,
+            "time_to_peak_ms": 111.6,
+            "settling_time_ms": 5.7
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 16.47,
+              "neuron": 8.36,
+              "divergence": 0.4924,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 14.96,
+              "neuron": -5.37,
+              "divergence": 1.359,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 4994.3,
+              "divergence": 0.0287,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 1172.9,
+              "neuron": 111.6,
+              "divergence": 0.9049,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 5.7,
+              "divergence": 0.3799,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 20.0,
+          "exp_features": {
+            "peak_voltage_mV": 17.82,
+            "plateau_amplitude_mV": 19.47,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 3827.1,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 16.87,
+            "plateau_amplitude_mV": 5.0,
+            "plateau_duration_ms": 4994.8,
+            "time_to_peak_ms": 146.2,
+            "settling_time_ms": 5.2
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 17.82,
+              "neuron": 16.87,
+              "divergence": 0.0533,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 19.47,
+              "neuron": 5.0,
+              "divergence": 0.7432,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 4994.8,
+              "divergence": 0.0288,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 3827.1,
+              "neuron": 146.2,
+              "divergence": 0.9618,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 5.2,
+              "divergence": 0.3827,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 25.0,
+          "exp_features": {
+            "peak_voltage_mV": 21.58,
+            "plateau_amplitude_mV": 22.33,
+            "plateau_duration_ms": 3478.0,
+            "time_to_peak_ms": 3827.1,
+            "settling_time_ms": 1447.5
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 22.94,
+            "plateau_amplitude_mV": 13.16,
+            "plateau_duration_ms": 4995.4,
+            "time_to_peak_ms": 158.7,
+            "settling_time_ms": 4.6
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 21.58,
+              "neuron": 22.94,
+              "divergence": 0.0593,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 22.33,
+              "neuron": 13.16,
+              "divergence": 0.4107,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 3478.0,
+              "neuron": 4995.4,
+              "divergence": 0.3038,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 3827.1,
+              "neuron": 158.7,
+              "divergence": 0.9585,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 1447.5,
+              "neuron": 4.6,
+              "divergence": 0.9968,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 30.0,
+          "exp_features": {
+            "peak_voltage_mV": 22.63,
+            "plateau_amplitude_mV": 23.38,
+            "plateau_duration_ms": 3020.3,
+            "time_to_peak_ms": 3827.1,
+            "settling_time_ms": 1813.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 27.78,
+            "plateau_amplitude_mV": 19.37,
+            "plateau_duration_ms": 4996.0,
+            "time_to_peak_ms": 167.9,
+            "settling_time_ms": 4.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 22.63,
+              "neuron": 27.78,
+              "divergence": 0.1854,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 23.38,
+              "neuron": 19.37,
+              "divergence": 0.1715,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 3020.3,
+              "neuron": 4996.0,
+              "divergence": 0.3955,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 3827.1,
+              "neuron": 167.9,
+              "divergence": 0.9561,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 1813.6,
+              "neuron": 4.0,
+              "divergence": 0.9978,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 35.0,
+          "exp_features": {
+            "peak_voltage_mV": 25.04,
+            "plateau_amplitude_mV": 26.09,
+            "plateau_duration_ms": 3569.5,
+            "time_to_peak_ms": 1996.6,
+            "settling_time_ms": 1355.9
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 31.93,
+            "plateau_amplitude_mV": 24.35,
+            "plateau_duration_ms": 4996.6,
+            "time_to_peak_ms": 174.7,
+            "settling_time_ms": 3.4
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 25.04,
+              "neuron": 31.93,
+              "divergence": 0.2158,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 26.09,
+              "neuron": 24.35,
+              "divergence": 0.0667,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 3569.5,
+              "neuron": 4996.6,
+              "divergence": 0.2856,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 1996.6,
+              "neuron": 174.7,
+              "divergence": 0.9125,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 1355.9,
+              "neuron": 3.4,
+              "divergence": 0.9975,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        }
+      ],
+      "full_waveform_rmse_diagnostic": [
+        {
+          "current_pA": -15.0,
+          "n_compared_points": 41,
+          "rmse_mV": 5.76
+        },
+        {
+          "current_pA": -10.0,
+          "n_compared_points": 54,
+          "rmse_mV": 5.93
+        },
+        {
+          "current_pA": -5.0,
+          "n_compared_points": 51,
+          "rmse_mV": 3.78
+        },
+        {
+          "current_pA": 0.0,
+          "n_compared_points": 54,
+          "rmse_mV": 3.01
+        },
+        {
+          "current_pA": 5.0,
+          "n_compared_points": 54,
+          "rmse_mV": 8.29
+        },
+        {
+          "current_pA": 10.0,
+          "n_compared_points": 54,
+          "rmse_mV": 17.17
+        },
+        {
+          "current_pA": 15.0,
+          "n_compared_points": 54,
+          "rmse_mV": 19.19
+        },
+        {
+          "current_pA": 20.0,
+          "n_compared_points": 54,
+          "rmse_mV": 14.34
+        },
+        {
+          "current_pA": 25.0,
+          "n_compared_points": 54,
+          "rmse_mV": 9.47
+        },
+        {
+          "current_pA": 30.0,
+          "n_compared_points": 54,
+          "rmse_mV": 5.66
+        },
+        {
+          "current_pA": 35.0,
+          "n_compared_points": 49,
+          "rmse_mV": 2.38
+        }
+      ],
+      "neuron_warning": null
+    },
+    {
+      "panel_id": "nicoletti_2024_fig5A_RIM",
+      "cell": "RIM",
+      "n_steps_total": 11,
+      "n_steps_passing": 0,
+      "fraction_passing": 0.0,
+      "panel_pass": false,
+      "feature_peaks_for_tolerance_floor": {
+        "peak_voltage_mV": 109.76,
+        "plateau_amplitude_mV": 109.74,
+        "plateau_duration_ms": 5000.0,
+        "time_to_peak_ms": 5000.0,
+        "settling_time_ms": 1447.5
+      },
+      "secondary_diagnostics": {
+        "voltage_features_only_n_pass": 2,
+        "voltage_features_only_fraction_pass": 0.1818,
+        "voltage_features_only_panel_pass": false,
+        "timing_features_only_n_pass": 0,
+        "timing_features_only_fraction_pass": 0.0,
+        "voltage_abs_error_mV_mean": 8.79,
+        "voltage_abs_error_mV_median": 8.38,
+        "voltage_abs_error_mV_max": 17.87,
+        "interpretation": "voltage_features_only excludes timing-feature failures that are dominated by digitization-sampling resolution noise. Voltage features (peak, plateau) reflect the actual model-vs-experiment fit quality. Mean/median voltage abs error in mV gives the absolute-scale residual independent of relative-tolerance arithmetic."
+      },
+      "per_step_comparison": [
+        {
+          "current_pA": -15.0,
+          "exp_features": {
+            "peak_voltage_mV": -100.36,
+            "plateau_amplitude_mV": -106.91,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 806.8,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -109.76,
+            "plateau_amplitude_mV": -109.74,
+            "plateau_duration_ms": 4985.8,
+            "time_to_peak_ms": 83.6,
+            "settling_time_ms": 14.2
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -100.36,
+              "neuron": -109.76,
+              "divergence": 0.0856,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -106.91,
+              "neuron": -109.74,
+              "divergence": 0.0258,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 4985.8,
+              "divergence": 0.0271,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 806.8,
+              "neuron": 83.6,
+              "divergence": 0.8964,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 14.2,
+              "divergence": 0.4173,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -10.0,
+          "exp_features": {
+            "peak_voltage_mV": -106.91,
+            "plateau_amplitude_mV": -106.0,
+            "plateau_duration_ms": 3844.1,
+            "time_to_peak_ms": 4284.7,
+            "settling_time_ms": 1081.4
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -99.04,
+            "plateau_amplitude_mV": -99.0,
+            "plateau_duration_ms": 4984.3,
+            "time_to_peak_ms": 67.6,
+            "settling_time_ms": 15.7
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -106.91,
+              "neuron": -99.04,
+              "divergence": 0.0736,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -106.0,
+              "neuron": -99.0,
+              "divergence": 0.066,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 3844.1,
+              "neuron": 4984.3,
+              "divergence": 0.2288,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 4284.7,
+              "neuron": 67.6,
+              "divergence": 0.9842,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 1081.4,
+              "neuron": 15.7,
+              "divergence": 0.9855,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": -5.0,
+          "exp_features": {
+            "peak_voltage_mV": -96.55,
+            "plateau_amplitude_mV": -83.09,
+            "plateau_duration_ms": 4667.8,
+            "time_to_peak_ms": 4101.7,
+            "settling_time_ms": 257.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -86.64,
+            "plateau_amplitude_mV": -86.59,
+            "plateau_duration_ms": 4959.1,
+            "time_to_peak_ms": 64.2,
+            "settling_time_ms": 40.9
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -96.55,
+              "neuron": -86.64,
+              "divergence": 0.1026,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -83.09,
+              "neuron": -86.59,
+              "divergence": 0.0404,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 4667.8,
+              "neuron": 4959.1,
+              "divergence": 0.0587,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 4101.7,
+              "neuron": 64.2,
+              "divergence": 0.9843,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 257.6,
+              "neuron": 40.9,
+              "divergence": 0.8412,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 0.0,
+          "exp_features": {
+            "peak_voltage_mV": -42.73,
+            "plateau_amplitude_mV": -42.18,
+            "plateau_duration_ms": 3294.9,
+            "time_to_peak_ms": 1813.6,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -43.31,
+            "plateau_amplitude_mV": -43.31,
+            "plateau_duration_ms": 5000.0,
+            "time_to_peak_ms": 5000.0,
+            "settling_time_ms": 0.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": -42.73,
+              "neuron": -43.31,
+              "divergence": 0.0134,
+              "pass": true
+            },
+            "plateau_amplitude_mV": {
+              "experimental": -42.18,
+              "neuron": -43.31,
+              "divergence": 0.0261,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 3294.9,
+              "neuron": 5000.0,
+              "divergence": 0.341,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 1813.6,
+              "neuron": 5000.0,
+              "divergence": 0.6373,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 0.0,
+              "divergence": 0.5154,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 5.0,
+          "exp_features": {
+            "peak_voltage_mV": 10.91,
+            "plateau_amplitude_mV": 10.09,
+            "plateau_duration_ms": 4118.6,
+            "time_to_peak_ms": 4925.4,
+            "settling_time_ms": 806.8
+          },
+          "nrn_features": {
+            "peak_voltage_mV": -6.96,
+            "plateau_amplitude_mV": -6.96,
+            "plateau_duration_ms": 4936.4,
+            "time_to_peak_ms": 1808.3,
+            "settling_time_ms": 63.6
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 10.91,
+              "neuron": -6.96,
+              "divergence": 1.6281,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 10.09,
+              "neuron": -6.96,
+              "divergence": 1.5537,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4118.6,
+              "neuron": 4936.4,
+              "divergence": 0.1657,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 4925.4,
+              "neuron": 1808.3,
+              "divergence": 0.6329,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 806.8,
+              "neuron": 63.6,
+              "divergence": 0.9212,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 10.0,
+          "exp_features": {
+            "peak_voltage_mV": 23.82,
+            "plateau_amplitude_mV": 32.09,
+            "plateau_duration_ms": 4850.8,
+            "time_to_peak_ms": 2179.7,
+            "settling_time_ms": 74.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 15.9,
+            "plateau_amplitude_mV": 15.9,
+            "plateau_duration_ms": 4971.3,
+            "time_to_peak_ms": 1581.0,
+            "settling_time_ms": 28.7
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 23.82,
+              "neuron": 15.9,
+              "divergence": 0.3325,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 32.09,
+              "neuron": 15.9,
+              "divergence": 0.5045,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4850.8,
+              "neuron": 4971.3,
+              "divergence": 0.0242,
+              "pass": true
+            },
+            "time_to_peak_ms": {
+              "experimental": 2179.7,
+              "neuron": 1581.0,
+              "divergence": 0.2747,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 74.6,
+              "neuron": 28.7,
+              "divergence": 0.3171,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 15.0,
+          "exp_features": {
+            "peak_voltage_mV": 33.45,
+            "plateau_amplitude_mV": 39.64,
+            "plateau_duration_ms": 3386.4,
+            "time_to_peak_ms": 440.7,
+            "settling_time_ms": 1447.5
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 29.55,
+            "plateau_amplitude_mV": 29.55,
+            "plateau_duration_ms": 4944.1,
+            "time_to_peak_ms": 4106.3,
+            "settling_time_ms": 55.9
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 33.45,
+              "neuron": 29.55,
+              "divergence": 0.1166,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 39.64,
+              "neuron": 29.55,
+              "divergence": 0.2545,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 3386.4,
+              "neuron": 4944.1,
+              "divergence": 0.3151,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 440.7,
+              "neuron": 4106.3,
+              "divergence": 0.8927,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 1447.5,
+              "neuron": 55.9,
+              "divergence": 0.9614,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 20.0,
+          "exp_features": {
+            "peak_voltage_mV": 55.82,
+            "plateau_amplitude_mV": 54.36,
+            "plateau_duration_ms": 4393.2,
+            "time_to_peak_ms": 3827.1,
+            "settling_time_ms": 532.2
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 39.8,
+            "plateau_amplitude_mV": 39.8,
+            "plateau_duration_ms": 4951.9,
+            "time_to_peak_ms": 4374.7,
+            "settling_time_ms": 48.0
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 55.82,
+              "neuron": 39.8,
+              "divergence": 0.287,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 54.36,
+              "neuron": 39.8,
+              "divergence": 0.2678,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4393.2,
+              "neuron": 4951.9,
+              "divergence": 0.1128,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 3827.1,
+              "neuron": 4374.7,
+              "divergence": 0.1252,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 532.2,
+              "neuron": 48.0,
+              "divergence": 0.9098,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 25.0,
+          "exp_features": {
+            "peak_voltage_mV": 64.73,
+            "plateau_amplitude_mV": 63.09,
+            "plateau_duration_ms": 4576.3,
+            "time_to_peak_ms": 2179.7,
+            "settling_time_ms": 257.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 49.01,
+            "plateau_amplitude_mV": 49.01,
+            "plateau_duration_ms": 4957.2,
+            "time_to_peak_ms": 4383.3,
+            "settling_time_ms": 42.7
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 64.73,
+              "neuron": 49.01,
+              "divergence": 0.2429,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 63.09,
+              "neuron": 49.01,
+              "divergence": 0.2232,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4576.3,
+              "neuron": 4957.2,
+              "divergence": 0.0768,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 2179.7,
+              "neuron": 4383.3,
+              "divergence": 0.5027,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 257.6,
+              "neuron": 42.7,
+              "divergence": 0.8342,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 30.0,
+          "exp_features": {
+            "peak_voltage_mV": 66.73,
+            "plateau_amplitude_mV": 64.64,
+            "plateau_duration_ms": 4576.3,
+            "time_to_peak_ms": 4925.4,
+            "settling_time_ms": 257.6
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 57.89,
+            "plateau_amplitude_mV": 57.89,
+            "plateau_duration_ms": 4959.8,
+            "time_to_peak_ms": 4385.0,
+            "settling_time_ms": 40.2
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 66.73,
+              "neuron": 57.89,
+              "divergence": 0.1325,
+              "pass": false
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 64.64,
+              "neuron": 57.89,
+              "divergence": 0.1044,
+              "pass": false
+            },
+            "plateau_duration_ms": {
+              "experimental": 4576.3,
+              "neuron": 4959.8,
+              "divergence": 0.0773,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 4925.4,
+              "neuron": 4385.0,
+              "divergence": 0.1097,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 257.6,
+              "neuron": 40.2,
+              "divergence": 0.8439,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        },
+        {
+          "current_pA": 35.0,
+          "exp_features": {
+            "peak_voltage_mV": 67.09,
+            "plateau_amplitude_mV": 64.82,
+            "plateau_duration_ms": 4667.8,
+            "time_to_peak_ms": 4925.4,
+            "settling_time_ms": 166.1
+          },
+          "nrn_features": {
+            "peak_voltage_mV": 66.7,
+            "plateau_amplitude_mV": 66.7,
+            "plateau_duration_ms": 4961.1,
+            "time_to_peak_ms": 4215.6,
+            "settling_time_ms": 38.9
+          },
+          "feature_divergences": {
+            "peak_voltage_mV": {
+              "experimental": 67.09,
+              "neuron": 66.7,
+              "divergence": 0.0058,
+              "pass": true
+            },
+            "plateau_amplitude_mV": {
+              "experimental": 64.82,
+              "neuron": 66.7,
+              "divergence": 0.0282,
+              "pass": true
+            },
+            "plateau_duration_ms": {
+              "experimental": 4667.8,
+              "neuron": 4961.1,
+              "divergence": 0.0591,
+              "pass": false
+            },
+            "time_to_peak_ms": {
+              "experimental": 4925.4,
+              "neuron": 4215.6,
+              "divergence": 0.1441,
+              "pass": false
+            },
+            "settling_time_ms": {
+              "experimental": 166.1,
+              "neuron": 38.9,
+              "divergence": 0.7658,
+              "pass": false
+            }
+          },
+          "step_pass": false
+        }
+      ],
+      "full_waveform_rmse_diagnostic": [
+        {
+          "current_pA": -15.0,
+          "n_compared_points": 54,
+          "rmse_mV": 5.46
+        },
+        {
+          "current_pA": -10.0,
+          "n_compared_points": 54,
+          "rmse_mV": 5.22
+        },
+        {
+          "current_pA": -5.0,
+          "n_compared_points": 48,
+          "rmse_mV": 4.31
+        },
+        {
+          "current_pA": 0.0,
+          "n_compared_points": 19,
+          "rmse_mV": 1.06
+        },
+        {
+          "current_pA": 5.0,
+          "n_compared_points": 54,
+          "rmse_mV": 15.65
+        },
+        {
+          "current_pA": 10.0,
+          "n_compared_points": 54,
+          "rmse_mV": 15.33
+        },
+        {
+          "current_pA": 15.0,
+          "n_compared_points": 54,
+          "rmse_mV": 11.22
+        },
+        {
+          "current_pA": 20.0,
+          "n_compared_points": 54,
+          "rmse_mV": 12.97
+        },
+        {
+          "current_pA": 25.0,
+          "n_compared_points": 54,
+          "rmse_mV": 13.48
+        },
+        {
+          "current_pA": 30.0,
+          "n_compared_points": 54,
+          "rmse_mV": 6.25
+        },
+        {
+          "current_pA": 35.0,
+          "n_compared_points": 54,
+          "rmse_mV": 2.34
+        }
+      ],
+      "neuron_warning": null
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "results": [
+    {
+      "neuron": "AVAL",
+      "iclamp": {
+        "shape": {
+          "ok": true,
+          "issues": [],
+          "v_min_mV": -175.33958687209832,
+          "v_max_mV": 120.68968691272569,
+          "viss_first_last_mV": [
+            -89.3130694300352,
+            13.724925928175583
+          ],
+          "n_sweeps": 7,
+          "trace_len": 60000
+        },
+        "determinism": {
+          "pass": true,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "scale": 175.33958687209832
+        },
+        "v_trace_shape": [
+          7,
+          60000
+        ]
+      },
+      "vclamp": {
+        "shape": {
+          "ok": true,
+          "issues": [],
+          "i_min_pA": -13.349164834707134,
+          "i_max_pA": 13.546575502622105,
+          "iv_first_last_pA": [
+            -13.349164834350498,
+            12.417251359160343
+          ],
+          "n_sweeps": 17,
+          "trace_len": 40000
+        },
+        "determinism": {
+          "pass": true,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "scale": 13.546575502622105
+        },
+        "i_trace_shape": [
+          17,
+          40000
+        ]
+      }
+    },
+    {
+      "neuron": "AIY",
+      "iclamp": {
+        "shape": {
+          "ok": true,
+          "issues": [],
+          "v_min_mV": -128.65939923164012,
+          "v_max_mV": 31.930845829146826,
+          "viss_first_last_mV": [
+            -128.65592059914096,
+            24.350866698011558
+          ],
+          "n_sweeps": 11,
+          "trace_len": 440001
+        },
+        "determinism": {
+          "pass": true,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "scale": 128.65939923164012
+        },
+        "v_trace_shape": [
+          11,
+          440001
+        ]
+      },
+      "vclamp": {
+        "shape": {
+          "ok": true,
+          "issues": [],
+          "i_min_pA": -13.69217692026485,
+          "i_max_pA": 84.10751238561164,
+          "iv_first_last_pA": [
+            -13.27151927185822,
+            65.4192357668294
+          ],
+          "n_sweeps": 18,
+          "trace_len": 56000
+        },
+        "determinism": {
+          "pass": true,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "scale": 84.10751238561164
+        },
+        "i_trace_shape": [
+          18,
+          56000
+        ]
+      }
+    },
+    {
+      "neuron": "RIM",
+      "iclamp": {
+        "shape": {
+          "ok": true,
+          "issues": [],
+          "v_min_mV": -109.76355468579297,
+          "v_max_mV": 66.70053772748047,
+          "viss_first_last_mV": [
+            -97.87930849185169,
+            43.83577654199761
+          ],
+          "n_sweeps": 11,
+          "trace_len": 400001
+        },
+        "determinism": {
+          "pass": true,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "scale": 109.76355468579297
+        },
+        "v_trace_shape": [
+          11,
+          400001
+        ]
+      },
+      "vclamp": {
+        "shape": {
+          "ok": true,
+          "issues": [],
+          "i_min_pA": -33.700382189001665,
+          "i_max_pA": 88.41547867788587,
+          "iv_first_last_pA": [
+            -10.451726859011254,
+            25.915610162435097
+          ],
+          "n_sweeps": 16,
+          "trace_len": 56000
+        },
+        "determinism": {
+          "pass": true,
+          "max_abs_diff": 0.0,
+          "max_rel_diff": 0.0,
+          "scale": 88.41547867788587
+        },
+        "i_trace_shape": [
+          16,
+          56000
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failures": [],
+    "deliverable_3_pass": true
+  }
+}
