@@ -1,0 +1,7 @@
+name,smiles,mw,logP,clinical_aqueous_EC50_uM,celegans_EC50_published,oil_water_partition_coefficient,vapor_pressure_torr_25C,anchor_papers
+halothane,FC(F)(F)C(Cl)Br,197.38,2.30,340,3% atm (~340 uM aqueous),250,243,Crowder 1996 PMID 8855256; Sedensky 1992 PMID 1346264
+isoflurane,FC(F)(F)C(Cl)OC(F)F,184.49,2.06,290,5% atm (~290 uM aqueous),90,238,Morgan 1995; Crowder 1996; Morgan & Sedensky 1995 PMID 7549290
+sevoflurane,FC(F)(F)C(OCF)C(F)(F)F,200.05,1.81,230,7% atm (~230 uM aqueous),50,170,Crowder lab; secondary; PMID lookup needed
+propofol,CC(C)c1cccc(C(C)C)c1O,178.27,3.79,1,~1 uM aqueous (Boddington 2017),1300,0.001,Boddington 2017 (PMID lookup needed)
+ketamine,CNC1(c2ccccc2Cl)CCCCC1=O,237.73,2.18,5000,~5 mM aqueous,10,0.001,(secondary control; PMID lookup needed)
+etomidate,CCOC(=O)c1cncn1[C@@H](C)c1ccccc1,244.29,2.50,0.3,~0.3 uM (control specificity),50,0.001,(GABA-A specificity control; PMID lookup needed)
