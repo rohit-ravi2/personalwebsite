@@ -1,0 +1,31 @@
+target_class,mammalian_homolog,human_uniprot,anesthetic,value_uM,value_type,uncertainty_pct,experimental_method,anchor_source,anchor_PMID,anchor_year,conditions,notes
+gaba_potentiation,GABA-A_α1β2γ2,P14867,halothane,250,EC50_potentiation,30,patch-clamp_dose-response,Mihic 1997 Nature 389:385,9311785,1997,recombinant_α1β2γ2_in_HEK,Mutant rescue paper; reports EC50 of GABA potentiation by isoflurane/halothane on WT
+gaba_potentiation,GABA-A_α1β2γ2,P14867,isoflurane,260,EC50_potentiation,30,patch-clamp_dose-response,Mihic 1997 Nature 389:385,9311785,1997,recombinant_α1β2γ2_in_HEK,Same paper as halothane row
+gaba_potentiation,GABA-A_α1β2γ2,P14867,sevoflurane,210,EC50_potentiation,30,patch-clamp_dose-response,Krasowski 1999 J Pharm Exp Ther 290:1352,10454514,1999,recombinant_α1β2γ2_in_HEK,Krasowski review; concentration-response of volatiles
+gaba_potentiation,GABA-A_α1β2γ2,P14867,propofol,1.5,EC50_potentiation,40,patch-clamp_dose-response,Krasowski 1999 J Pharm Exp Ther 290:1352,10454514,1999,recombinant_α1β2γ2_in_HEK,Propofol functional EC50; not radioligand Kd
+gaba_potentiation,GABA-A_α1β2γ2,P14867,etomidate,2.0,EC50_potentiation,30,patch-clamp_dose-response,Belelli 1997 Br J Pharmacol 121:1097,9298537,1997,recombinant_α1β2γ2,Etomidate β2/β3-specific potentiation EC50
+gaba_potentiation,GABA-A_α1β2γ2,P14867,ketamine,1000,EC50_potentiation,50,patch-clamp_dose-response,Hara 2002 Anesth Analg 95:1572,12435831,2002,native_neuronal_GABA-A,Ketamine is weak GABA-A potentiator; primary effect is NMDAR
+glucl_potentiation,GlyR_α1,P23415,halothane,250,EC50_potentiation,30,patch-clamp_dose-response,Mascia 1996 Mol Pharmacol 50:402,8794881,1996,recombinant_GlyR_α1_in_oocytes,Glycine receptor potentiation by halothane
+glucl_potentiation,GlyR_α1,P23415,isoflurane,250,EC50_potentiation,30,patch-clamp_dose-response,Mascia 1996 Mol Pharmacol 50:402,8794881,1996,recombinant_GlyR_α1_in_oocytes,Same paper as halothane row
+glucl_potentiation,GlyR_α1,P23415,sevoflurane,200,EC50_potentiation,40,patch-clamp_dose-response,Daniels & Roberts 1998 Toxicol Lett 100-101:71,10049144,1998,recombinant_GlyR,Sevoflurane potentiation; literature consensus
+glucl_potentiation,GlyR_α1,P23415,propofol,30,EC50_potentiation,40,patch-clamp_dose-response,Pistis 1997 Br J Pharmacol 122:1707,9422816,1997,recombinant_GlyR_α1,Propofol on GlyR; weaker than on GABA-A
+glucl_potentiation,GlyR_α1,P23415,etomidate,5,EC50_potentiation,50,patch-clamp_dose-response,Pistis 1997 Br J Pharmacol 122:1707,9422816,1997,recombinant_GlyR_α1,Etomidate also potentiates GlyR weakly
+glucl_potentiation,GlyR_α1,P23415,ketamine,1500,EC50_potentiation,50,patch-clamp_dose-response,Salazar 1998 Eur J Pharmacol 357:65,9788775,1998,native_GlyR,Ketamine inhibits GlyR weakly at high concentrations
+nachr_antagonism,nAChR_α4β2,P43681,halothane,130,IC50_block,30,patch-clamp_block,Forman 1996 Anesthesiology 84:691,8633440,1996,Torpedo_nAChR_recombinant,Halothane open-channel block; paper title is Forman 1996 actually about α4β2 may differ
+nachr_antagonism,nAChR_α4β2,P43681,isoflurane,170,IC50_block,30,patch-clamp_block,Wachtel 1995 Mol Pharmacol 48:947,8531442,1995,native_nAChR,Wachtel verified PMID 8531442
+nachr_antagonism,nAChR_α4β2,P43681,sevoflurane,80,IC50_block,40,patch-clamp_block,Yamashita 1999 Anesth Analg 88:850,10195537,1999,recombinant_nAChR,Sevoflurane stronger block than halothane
+nachr_antagonism,nAChR_α4β2,P43681,propofol,90,IC50_block,40,patch-clamp_block,Flood 1997 Anesthesiology 86:859,9105234,1997,recombinant_α4β2,Propofol block of α4β2 nAChR
+nachr_antagonism,nAChR_α4β2,P43681,etomidate,300,IC50_block,50,patch-clamp_block,Flood 2002 Anesthesiology 96:1413,12068116,2002,recombinant_nAChR,Etomidate weak nAChR effect; primary GABA
+nachr_antagonism,nAChR_α4β2,P43681,ketamine,5,IC50_block,30,patch-clamp_block,Yamakura 2000 Anesthesiology 92:1144,10773888,2000,recombinant_α4β2,Ketamine is potent NMDAR but also nAChR blocker; α4β2 IC50 ~5 µM
+k2p_potentiation,TREK-1_KCNK2,O95069,halothane,700,EC50_activation,40,patch-clamp_activation,Patel & Honoré 1999 Nat Neurosci 2:422,10321245,1999,recombinant_TREK-1_oocyte,Patel & Honoré canonical TREK-1 paper
+k2p_potentiation,TREK-1_KCNK2,O95069,isoflurane,500,EC50_activation,40,patch-clamp_activation,Patel & Honoré 1999 Nat Neurosci 2:422,10321245,1999,recombinant_TREK-1_oocyte,Same paper
+k2p_potentiation,TREK-1_KCNK2,O95069,sevoflurane,400,EC50_activation,50,patch-clamp_activation,Honoré 2007 Nat Rev Neurosci 8:251,17375043,2007,review_consensus,Honoré review summary
+k2p_potentiation,TREK-1_KCNK2,O95069,propofol,,no_significant_effect,,patch-clamp,Patel & Honoré 1999 Nat Neurosci 2:422,10321245,1999,recombinant_TREK-1,Propofol does NOT activate TREK-1 (intravenous-IV anesthetics differ from volatiles here)
+k2p_potentiation,TREK-1_KCNK2,O95069,etomidate,,no_significant_effect,,patch-clamp,Honoré 2007 review,17375043,2007,review_consensus,Etomidate IV; not a TREK-1 modulator
+k2p_potentiation,TREK-1_KCNK2,O95069,ketamine,,weak_or_inactive,,patch-clamp,literature_consensus,,,review_consensus,Ketamine not characterized as TREK-1 activator
+complex_i_block,NDUFS2_ComplexI,O75306,halothane,500,IC50_inhibition,40,O2_consumption_assay,Hanley 2002 J Physiol 544:687,12411414,2002,isolated_mitochondria,Hanley Complex I anchor; verify PMID
+complex_i_block,NDUFS2_ComplexI,O75306,isoflurane,400,IC50_inhibition,40,O2_consumption_assay,Hanley 2002 J Physiol 544:687,12411414,2002,isolated_mitochondria,Same paper
+complex_i_block,NDUFS2_ComplexI,O75306,sevoflurane,500,IC50_inhibition,50,O2_consumption_assay,Hanley 2002 J Physiol 544:687,12411414,2002,isolated_mitochondria,Same paper, weaker effect
+complex_i_block,NDUFS2_ComplexI,O75306,propofol,,minimal_effect,,O2_consumption,Branca 1991 Biochem Pharmacol 42:R9,1859446,1991,isolated_mitochondria,Propofol weak Complex I effect at clinical concentrations
+complex_i_block,NDUFS2_ComplexI,O75306,etomidate,,minimal_effect,,assay,literature_consensus,,,clinical_consensus,Etomidate not characterized as Complex I inhibitor
+complex_i_block,NDUFS2_ComplexI,O75306,ketamine,,minimal_effect,,assay,literature_consensus,,,clinical_consensus,Ketamine not characterized as Complex I inhibitor at clinical concentrations
