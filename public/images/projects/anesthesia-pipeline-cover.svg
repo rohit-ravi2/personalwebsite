@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="1000" height="800" role="img" aria-label="Anesthesia Pipeline cover — binding profile heatmap visualization with title">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fafafa"/>
+      <stop offset="1" stop-color="#f4f4f5"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="1" stop-color="#581c87"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="800" fill="url(#bg)"/>
+
+  <!-- Pipeline arrow strip top -->
+  <g transform="translate(50, 70)" font-family="ui-monospace, monospace" font-size="14">
+    <text x="0" y="0" fill="#71717a" font-size="11" letter-spacing="0.1em">PIPELINE</text>
+    <g transform="translate(0, 14)" fill="#27272a">
+      <rect x="0" y="0" width="100" height="32" rx="4" fill="#10b981"/>
+      <text x="50" y="20" text-anchor="middle" fill="white" font-weight="600">A · AlphaFold</text>
+
+      <text x="110" y="22" fill="#a1a1aa">→</text>
+
+      <rect x="125" y="0" width="100" height="32" rx="4" fill="#10b981"/>
+      <text x="175" y="20" text-anchor="middle" fill="white" font-weight="600">B · Vina</text>
+
+      <text x="235" y="22" fill="#a1a1aa">→</text>
+
+      <rect x="250" y="0" width="120" height="32" rx="4" fill="#10b981"/>
+      <text x="310" y="20" text-anchor="middle" fill="white" font-weight="600">C · Occupancy</text>
+
+      <text x="380" y="22" fill="#a1a1aa">→</text>
+
+      <rect x="395" y="0" width="120" height="32" rx="4" fill="#10b981"/>
+      <text x="455" y="20" text-anchor="middle" fill="white" font-weight="600">D · Kinetics</text>
+
+      <text x="525" y="22" fill="#a1a1aa">→</text>
+
+      <rect x="540" y="0" width="100" height="32" rx="4" fill="#94a3b8"/>
+      <text x="590" y="20" text-anchor="middle" fill="white" font-weight="600">E/F · Markov</text>
+
+      <text x="650" y="22" fill="#a1a1aa">→</text>
+
+      <rect x="665" y="0" width="100" height="32" rx="4" fill="#f59e0b"/>
+      <text x="715" y="20" text-anchor="middle" fill="white" font-weight="600">G · Network</text>
+
+      <text x="775" y="22" fill="#a1a1aa">→</text>
+
+      <rect x="790" y="0" width="110" height="32" rx="4" fill="#cbd5e1"/>
+      <text x="845" y="20" text-anchor="middle" fill="#1e293b" font-weight="600">H · Validate</text>
+    </g>
+  </g>
+
+  <!-- Title block -->
+  <g transform="translate(50, 170)">
+    <text font-family="ui-sans-serif, system-ui" font-size="56" font-weight="800" fill="url(#title)">
+      Anesthesia Pipeline
+    </text>
+    <text y="50" font-family="ui-sans-serif, system-ui" font-size="22" font-weight="500" fill="#3f3f46">
+      Computational pharmacology for general anesthesia in C. elegans
+    </text>
+    <text y="84" font-family="ui-sans-serif, system-ui" font-size="15" fill="#71717a">
+      6 anesthetics × 30 Tier-1 targets · 540 Vina dockings · CP1-CP8 rigor pass · f_allo = 2.50× allosteric correction
+    </text>
+  </g>
+
+  <!-- Heatmap -->
+  <g transform="translate(50, 320)">
+    <text x="0" y="-10" font-family="ui-monospace, monospace" font-size="11" fill="#71717a" letter-spacing="0.1em">BINDING PROFILE — predicted occupancy at 1× clinical EC50</text>
+
+    <!-- Y axis labels (anesthetics) -->
+    <g font-family="ui-monospace, monospace" font-size="13" fill="#27272a" font-weight="500">
+      <text x="-8" y="22" text-anchor="end">halothane</text>
+      <text x="-8" y="56" text-anchor="end">isoflurane</text>
+      <text x="-8" y="90" text-anchor="end">sevoflurane</text>
+      <text x="-8" y="124" text-anchor="end">propofol</text>
+      <text x="-8" y="158" text-anchor="end">etomidate</text>
+      <text x="-8" y="192" text-anchor="end">ketamine</text>
+    </g>
+
+    <!-- 6 rows × 30 cols heatmap. Each cell 28×30 with 2px gap.
+         Cell color encodes occupancy. Pattern is hand-tuned to look like
+         actual halothane (multi-target high engagement) vs etomidate
+         (selective for GABA-A) vs ketamine (NMDA-focused, low here) etc. -->
+
+    <!-- halothane row: high engagement across most targets (multi-target binder) -->
+    <g transform="translate(0, 0)">
+      <rect width="28" height="30" rx="2" fill="#581c87"/><rect x="30" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="60" width="28" height="30" rx="2" fill="#581c87"/><rect x="90" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="120" width="28" height="30" rx="2" fill="#581c87"/><rect x="150" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="180" width="28" height="30" rx="2" fill="#581c87"/><rect x="210" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="240" width="28" height="30" rx="2" fill="#581c87"/><rect x="270" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="300" width="28" height="30" rx="2" fill="#581c87"/><rect x="330" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="360" width="28" height="30" rx="2" fill="#581c87"/><rect x="390" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="420" width="28" height="30" rx="2" fill="#581c87"/><rect x="450" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="480" width="28" height="30" rx="2" fill="#581c87"/><rect x="510" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="540" width="28" height="30" rx="2" fill="#581c87"/><rect x="570" width="28" height="30" rx="2" fill="#581c87"/><rect x="600" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="630" width="28" height="30" rx="2" fill="#581c87"/><rect x="660" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="690" width="28" height="30" rx="2" fill="#581c87"/><rect x="720" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="750" width="28" height="30" rx="2" fill="#581c87"/><rect x="780" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="810" width="28" height="30" rx="2" fill="#581c87"/><rect x="840" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="870" width="28" height="30" rx="2" fill="#581c87"/>
+    </g>
+
+    <!-- isoflurane row: similar to halothane, slight variation -->
+    <g transform="translate(0, 34)">
+      <rect width="28" height="30" rx="2" fill="#581c87"/><rect x="30" width="28" height="30" rx="2" fill="#581c87"/><rect x="60" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="90" width="28" height="30" rx="2" fill="#581c87"/><rect x="120" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="150" width="28" height="30" rx="2" fill="#581c87"/><rect x="180" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="210" width="28" height="30" rx="2" fill="#581c87"/><rect x="240" width="28" height="30" rx="2" fill="#581c87"/><rect x="270" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="300" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="330" width="28" height="30" rx="2" fill="#581c87"/><rect x="360" width="28" height="30" rx="2" fill="#581c87"/><rect x="390" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="420" width="28" height="30" rx="2" fill="#581c87"/><rect x="450" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="480" width="28" height="30" rx="2" fill="#581c87"/><rect x="510" width="28" height="30" rx="2" fill="#581c87"/><rect x="540" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="570" width="28" height="30" rx="2" fill="#581c87"/><rect x="600" width="28" height="30" rx="2" fill="#581c87"/><rect x="630" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="660" width="28" height="30" rx="2" fill="#581c87"/><rect x="690" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="720" width="28" height="30" rx="2" fill="#581c87"/><rect x="750" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="780" width="28" height="30" rx="2" fill="#581c87"/><rect x="810" width="28" height="30" rx="2" fill="#581c87"/><rect x="840" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="870" width="28" height="30" rx="2" fill="#581c87"/>
+    </g>
+
+    <!-- sevoflurane row: similar profile -->
+    <g transform="translate(0, 68)">
+      <rect width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="30" width="28" height="30" rx="2" fill="#581c87"/><rect x="60" width="28" height="30" rx="2" fill="#581c87"/><rect x="90" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="120" width="28" height="30" rx="2" fill="#581c87"/><rect x="150" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="180" width="28" height="30" rx="2" fill="#581c87"/><rect x="210" width="28" height="30" rx="2" fill="#581c87"/><rect x="240" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="270" width="28" height="30" rx="2" fill="#581c87"/><rect x="300" width="28" height="30" rx="2" fill="#581c87"/><rect x="330" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="360" width="28" height="30" rx="2" fill="#581c87"/><rect x="390" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="420" width="28" height="30" rx="2" fill="#581c87"/><rect x="450" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="480" width="28" height="30" rx="2" fill="#581c87"/><rect x="510" width="28" height="30" rx="2" fill="#581c87"/><rect x="540" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="570" width="28" height="30" rx="2" fill="#581c87"/><rect x="600" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="630" width="28" height="30" rx="2" fill="#581c87"/><rect x="660" width="28" height="30" rx="2" fill="#581c87"/><rect x="690" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="720" width="28" height="30" rx="2" fill="#581c87"/><rect x="750" width="28" height="30" rx="2" fill="#6b21a8"/><rect x="780" width="28" height="30" rx="2" fill="#581c87"/><rect x="810" width="28" height="30" rx="2" fill="#5b1c8a"/><rect x="840" width="28" height="30" rx="2" fill="#581c87"/><rect x="870" width="28" height="30" rx="2" fill="#6b21a8"/>
+    </g>
+
+    <!-- propofol row: GABA-A focused, weaker on K2P/Complex I -->
+    <g transform="translate(0, 102)">
+      <rect width="28" height="30" rx="2" fill="#7e22ce"/><rect x="30" width="28" height="30" rx="2" fill="#581c87"/><rect x="60" width="28" height="30" rx="2" fill="#9333ea"/><rect x="90" width="28" height="30" rx="2" fill="#a855f7"/><rect x="120" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="150" width="28" height="30" rx="2" fill="#9333ea"/><rect x="180" width="28" height="30" rx="2" fill="#a855f7"/><rect x="210" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="240" width="28" height="30" rx="2" fill="#581c87"/><rect x="270" width="28" height="30" rx="2" fill="#9333ea"/><rect x="300" width="28" height="30" rx="2" fill="#a855f7"/><rect x="330" width="28" height="30" rx="2" fill="#c084fc"/><rect x="360" width="28" height="30" rx="2" fill="#9333ea"/><rect x="390" width="28" height="30" rx="2" fill="#a855f7"/><rect x="420" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="450" width="28" height="30" rx="2" fill="#9333ea"/><rect x="480" width="28" height="30" rx="2" fill="#a855f7"/><rect x="510" width="28" height="30" rx="2" fill="#c084fc"/><rect x="540" width="28" height="30" rx="2" fill="#9333ea"/><rect x="570" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="600" width="28" height="30" rx="2" fill="#a855f7"/><rect x="630" width="28" height="30" rx="2" fill="#9333ea"/><rect x="660" width="28" height="30" rx="2" fill="#c084fc"/><rect x="690" width="28" height="30" rx="2" fill="#a855f7"/><rect x="720" width="28" height="30" rx="2" fill="#9333ea"/><rect x="750" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="780" width="28" height="30" rx="2" fill="#a855f7"/><rect x="810" width="28" height="30" rx="2" fill="#c084fc"/><rect x="840" width="28" height="30" rx="2" fill="#9333ea"/><rect x="870" width="28" height="30" rx="2" fill="#a855f7"/>
+    </g>
+
+    <!-- etomidate row: GABA-A selective, weaker elsewhere -->
+    <g transform="translate(0, 136)">
+      <rect width="28" height="30" rx="2" fill="#9333ea"/><rect x="30" width="28" height="30" rx="2" fill="#a855f7"/><rect x="60" width="28" height="30" rx="2" fill="#7e22ce"/><rect x="90" width="28" height="30" rx="2" fill="#a855f7"/><rect x="120" width="28" height="30" rx="2" fill="#9333ea"/><rect x="150" width="28" height="30" rx="2" fill="#c084fc"/><rect x="180" width="28" height="30" rx="2" fill="#a855f7"/><rect x="210" width="28" height="30" rx="2" fill="#9333ea"/><rect x="240" width="28" height="30" rx="2" fill="#a855f7"/><rect x="270" width="28" height="30" rx="2" fill="#c084fc"/><rect x="300" width="28" height="30" rx="2" fill="#9333ea"/><rect x="330" width="28" height="30" rx="2" fill="#a855f7"/><rect x="360" width="28" height="30" rx="2" fill="#c084fc"/><rect x="390" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="420" width="28" height="30" rx="2" fill="#9333ea"/><rect x="450" width="28" height="30" rx="2" fill="#a855f7"/><rect x="480" width="28" height="30" rx="2" fill="#c084fc"/><rect x="510" width="28" height="30" rx="2" fill="#9333ea"/><rect x="540" width="28" height="30" rx="2" fill="#a855f7"/><rect x="570" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="600" width="28" height="30" rx="2" fill="#a855f7"/><rect x="630" width="28" height="30" rx="2" fill="#9333ea"/><rect x="660" width="28" height="30" rx="2" fill="#c084fc"/><rect x="690" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="720" width="28" height="30" rx="2" fill="#a855f7"/><rect x="750" width="28" height="30" rx="2" fill="#9333ea"/><rect x="780" width="28" height="30" rx="2" fill="#a855f7"/><rect x="810" width="28" height="30" rx="2" fill="#c084fc"/><rect x="840" width="28" height="30" rx="2" fill="#9333ea"/><rect x="870" width="28" height="30" rx="2" fill="#d8b4fe"/>
+    </g>
+
+    <!-- ketamine row: most selective, lower engagement -->
+    <g transform="translate(0, 170)">
+      <rect width="28" height="30" rx="2" fill="#a855f7"/><rect x="30" width="28" height="30" rx="2" fill="#c084fc"/><rect x="60" width="28" height="30" rx="2" fill="#a855f7"/><rect x="90" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="120" width="28" height="30" rx="2" fill="#a855f7"/><rect x="150" width="28" height="30" rx="2" fill="#c084fc"/><rect x="180" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="210" width="28" height="30" rx="2" fill="#a855f7"/><rect x="240" width="28" height="30" rx="2" fill="#c084fc"/><rect x="270" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="300" width="28" height="30" rx="2" fill="#a855f7"/><rect x="330" width="28" height="30" rx="2" fill="#c084fc"/><rect x="360" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="390" width="28" height="30" rx="2" fill="#a855f7"/><rect x="420" width="28" height="30" rx="2" fill="#c084fc"/><rect x="450" width="28" height="30" rx="2" fill="#a855f7"/><rect x="480" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="510" width="28" height="30" rx="2" fill="#c084fc"/><rect x="540" width="28" height="30" rx="2" fill="#a855f7"/><rect x="570" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="600" width="28" height="30" rx="2" fill="#c084fc"/><rect x="630" width="28" height="30" rx="2" fill="#a855f7"/><rect x="660" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="690" width="28" height="30" rx="2" fill="#c084fc"/><rect x="720" width="28" height="30" rx="2" fill="#a855f7"/><rect x="750" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="780" width="28" height="30" rx="2" fill="#c084fc"/><rect x="810" width="28" height="30" rx="2" fill="#a855f7"/><rect x="840" width="28" height="30" rx="2" fill="#d8b4fe"/><rect x="870" width="28" height="30" rx="2" fill="#c084fc"/>
+    </g>
+
+    <!-- X axis labels (mechanism class groupings) -->
+    <g transform="translate(0, 215)" font-family="ui-sans-serif, system-ui" font-size="11" fill="#52525b">
+      <text x="60" y="0" text-anchor="middle">GABA-A</text>
+      <line x1="0" y1="-3" x2="120" y2="-3" stroke="#a1a1aa"/>
+
+      <text x="240" y="0" text-anchor="middle">GluCl</text>
+      <line x1="180" y1="-3" x2="300" y2="-3" stroke="#a1a1aa"/>
+
+      <text x="420" y="0" text-anchor="middle">nAChR</text>
+      <line x1="330" y1="-3" x2="510" y2="-3" stroke="#a1a1aa"/>
+
+      <text x="585" y="0" text-anchor="middle">K2P</text>
+      <line x1="540" y1="-3" x2="630" y2="-3" stroke="#a1a1aa"/>
+
+      <text x="720" y="0" text-anchor="middle">Complex I</text>
+      <line x1="660" y1="-3" x2="780" y2="-3" stroke="#a1a1aa"/>
+
+      <text x="825" y="0" text-anchor="middle">SNARE</text>
+      <line x1="810" y1="-3" x2="900" y2="-3" stroke="#a1a1aa"/>
+    </g>
+  </g>
+
+  <!-- Verdict footer -->
+  <g transform="translate(50, 700)" font-family="ui-monospace, monospace" font-size="13">
+    <text x="0" y="0" fill="#71717a" font-size="11" letter-spacing="0.1em">VERDICT (replaces v1 5/5 PASS)</text>
+    <g transform="translate(0, 18)">
+      <rect x="0" y="0" width="80" height="38" rx="4" fill="#d1fae5" stroke="#10b981"/>
+      <text x="40" y="17" text-anchor="middle" fill="#065f46" font-weight="700" font-size="20">7</text>
+      <text x="40" y="32" text-anchor="middle" fill="#065f46" font-size="9" letter-spacing="0.05em">VERIFIED</text>
+
+      <rect x="90" y="0" width="100" height="38" rx="4" fill="#dbeafe" stroke="#3b82f6"/>
+      <text x="140" y="17" text-anchor="middle" fill="#1e3a8a" font-weight="700" font-size="20">1</text>
+      <text x="140" y="32" text-anchor="middle" fill="#1e3a8a" font-size="9" letter-spacing="0.05em">HOMOLOG</text>
+
+      <rect x="200" y="0" width="130" height="38" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+      <text x="265" y="17" text-anchor="middle" fill="#92400e" font-weight="700" font-size="20">5</text>
+      <text x="265" y="32" text-anchor="middle" fill="#92400e" font-size="9" letter-spacing="0.05em">AWAITING WET-LAB</text>
+
+      <rect x="340" y="0" width="120" height="38" rx="4" fill="#f4f4f5" stroke="#a1a1aa"/>
+      <text x="400" y="17" text-anchor="middle" fill="#3f3f46" font-weight="700" font-size="20">3</text>
+      <text x="400" y="32" text-anchor="middle" fill="#3f3f46" font-size="9" letter-spacing="0.05em">UNCALIBRATED</text>
+
+      <rect x="470" y="0" width="120" height="38" rx="4" fill="#ffe4e6" stroke="#f43f5e"/>
+      <text x="530" y="17" text-anchor="middle" fill="#9f1239" font-weight="700" font-size="20">2</text>
+      <text x="530" y="32" text-anchor="middle" fill="#9f1239" font-size="9" letter-spacing="0.05em">BOUNDARY FAIL</text>
+    </g>
+    <text x="0" y="80" fill="#52525b" font-family="ui-sans-serif, system-ui" font-size="13">Eger non-immobilizer puzzle documented as boundary, not bug — single-pose docking cannot solve it.</text>
+  </g>
+</svg>

@@ -1,0 +1,89 @@
+---
+title: "Anesthesia Pipeline — Computational Pharmacology"
+startDate: 2026-04-15
+description: "Digital pharmacology pipeline for general anesthesia in C. elegans, calibrated against published electrophysiology and rigor-tightened with explicit boundary findings."
+tags: ["Computational Pharmacology", "Anesthesia", "AlphaFold + Vina", "Methodology", "Research"]
+image:
+  url: /images/projects/anesthesia-pipeline-cover.svg
+  alt: "Binding profile heatmap showing 6 anesthetics × 30 C. elegans Tier-1 targets, color-coded by predicted occupancy at clinical EC50 — Wave P digital pharmacology pipeline."
+---
+
+import { AnesthesiaPipeline } from "../../components/react/AnesthesiaPipeline";
+
+## Thesis
+
+General anesthesia is fundamentally a **multi-target binding problem**. Halothane simultaneously potentiates K2P channels, GABA-A receptors, and GluCl channels; antagonizes nAChR; blocks Complex I; and reduces SNARE-mediated synaptic release — at the same clinical concentration. No single-target model captures the phenotype. **Wave P** is a digital pharmacology pipeline that takes the multi-target framing seriously: dock 6 clinical anesthetics + 8 negative controls against 30 *C. elegans* Tier-1 anesthetic targets, propagate occupancies through mechanism-class-specific kinetic shifts, and feed the result into a network perturbation manager — **with honest scope labels per phase and documented boundaries where the binding-pipeline alone is insufficient.**
+
+## Interactive: digital pharmacology playground
+
+<AnesthesiaPipeline client:only="react" />
+
+Pick any of 14 cached compounds (6 anesthetics + 8 negative controls including the Eger 2001 non-immobilizers cis/trans-1,2-DCE and hexafluoroethane) to see the predicted binding profile across 30 targets, mechanism class engagement, dose-response demo, calibration story, and the documented boundary findings. Toggle **Comparison mode** to put halothane next to hexafluoroethane — the binding pipeline gives the Eger non-immobilizer a *stronger* engagement profile than the anesthetic, which is the most informative single finding in the project.
+
+## Pipeline architecture
+
+A → B → C → D → E/F → G is the canonical chain:
+
+- **Phase A (shipped)** — UniProt → AlphaFold DB v6 latestVersion API → fpocket pocket detection. **30/32 Tier-1 targets** retrieved (NCA-1, UNC-80 missing from AF DB; ColabFold T4 fallback deferred per R14 mitigation on 8 GB VRAM).
+- **Phase B (shipped)** — AutoDock Vina 1.1.2 docking via Meeko receptor + ligand prep. **540 dockings** (6 ligands × 30 targets × 3 poses).
+- **Phase C (shipped)** — Vina ΔG → predicted Kd → Hill-equation occupancy with K_p amplification (halothane K_p = 250, etc.).
+- **Phase D (shipped)** — kinetic-shift translation per mechanism class → `wave2_overlay.json` (v1) and `wave2_overlay_v2.json` (post-allosteric correction).
+- **Phase E / F (scaffolded)** — Markov synapse SSA + metabolic ATP layer. Phase F's gas-1 hypersensitivity ratio is structurally **parameter-locked** (CP1) — block_factor cancels in d_WT / d_g1 ratio analytically; the 2.48× value lands in Morgan & Sedensky's 2-3× band by tuning, not by anesthetic-specific signal.
+- **Phase G (in-progress)** — Brian2 LIF network perturbation manager + halothane dose-response demo on a 50-neuron LIF substrate. LIFBrain integration with the full 300-neuron *C. elegans* connectome is the next bet; behavioral threshold calibration is the documented gap.
+
+## Calibration — the CP1-CP8 rigor pass
+
+The original v1 pipeline reported a **5/5 PASS** verdict against published anesthesia phenotypes. A subsequent eight-checkpoint rigor pass downgraded that framing and produced a more honest **7 verified · 1 homolog-grounded · 5 awaiting wet-lab · 3 uncalibrated · 2 boundary FAIL** verdict structure. Highlights:
+
+- **CP1** — Phase F's predicted gas-1 hypersensitivity ratio is invariant to the anesthetic-specific input across 19× variation in `block_factor`. Analytical proof: the (1−bf) term cancels in the d_WT / d_g1 ratio. Verdict downgraded `PASS_5/6 → PASS_PARAMETER_TUNED`.
+- **CP4** — all 30 ground-truth anchors are functional EC50/IC50 from electrophysiology + mitochondrial assays. **Zero strict-Kd entries.** Directness-tier framework (T1 / T2 / T3) introduced; T1 strict subset (n=17) signed median log_err = +0.399 — consistent with PAM allosteric coupling η ≈ 0.4 (Forman & Miller 2016 PMID 27749338).
+- **CP5** — single-parameter allosteric correction `f_allo = 10^0.399 = 2.50×` shifts T1 within-10× from **76% → 94%**. Leave-one-anesthetic-out cross-validation (mean held-out signed = +0.097) confirms the correction generalizes.
+- **CP6** — twk-18 anchor direction was **inverted** in the original preregistration (claimed RESISTANT; real biology per Singaram 2011 PMID 22137475 says K2P GoF is HYPERSENSITIVE). Corrected.
+- **CP7** — per-chemical-class stratification post-correction: 4 of 5 classes 100% within 10×. IV_PHENOL (propofol) retains a 67% within-10× rate driven by propofol's unusually strong GABA-A allosteric coupling (η_allo ≈ 0.02 vs typical 0.1-0.3).
+
+The interactive panel above renders the verdict counts, per-class metrics, and CP-by-CP summary directly from the rigor-pass artifacts.
+
+## Boundary findings (Eger non-immobilizer puzzle)
+
+Two explicit boundary tests document where the binding pipeline operates honestly as a *lipophilic-pocket-fit detector* rather than an *anesthetic-specificity detector*:
+
+- **CP3** — cis-1,2-dichloroethylene (anesthetic per Eger 2001) vs trans-1,2-dichloroethylene (non-anesthetic). Maximum engagement gap across 0.1-30 mM aqueous concentrations: **0**. Pipeline cannot distinguish stereoisomers of small halogenated alkanes.
+- **CP7** — hexafluoroethane (Eger non-immobilizer) engages **30/30** *C. elegans* targets at 1 mM, vs cis-DCE's **22/30**. The Eger non-immobilizer has the *stronger* binding profile.
+
+These are **boundary findings, not pipeline failures**. The Eger non-immobilizer puzzle has been a known mystery in anesthesia research for ~30 years — single-pose docking on small lipophilic molecules cannot solve it. Anesthetic specificity must emerge at the network and behavioral threshold layers; Phase G is the next bet for that test.
+
+## Methodology rigor
+
+The Wave P methodology pattern is **systematic pre-flight pushback** before launching computational work blocks: enumerate every parameter, audit every citation against primary sources, ask whether the prediction is sensitive to its inputs, identify boundary tests *before* execution. Across this project's history this pattern has caught:
+
+- 6 wrong / fabricated PMIDs in the original target CSV (Crowder 1996, Morgan & Sedensky, Sedensky 1992, van Swinderen 1999 mis-cited, Sedensky 2001 fabricated, Boddington 2017 fabricated)
+- 30 / 32 wrong UniProt IDs
+- 1 structural parameter-lock (Phase F)
+- 1 inverted biological direction (twk-18 GoF)
+- 1 calibration ground-truth conflation (Kd vs EC50)
+- 1 mid-flight saturation collapse (Phase E)
+
+Five case studies documenting these patterns are drafted (~6,700 words total) — links above in the Methodology panel. The umbrella thesis: **structured pre-flight pushback is cost-effective methodology for AI-assisted scientific work, particularly for work that grounds claims in primary sources, depends on parameter calibration, or makes direction-sensitive biological predictions.**
+
+## Status
+
+- **Phase A-D**: shipped end-to-end. `wave2_overlay_v2.json` is the canonical downstream input for Phase E/F/G.
+- **Phase E / F**: scaffolded; CP2 sensitivity envelope verified for Phase E; CP1 parameter-lock documented for Phase F.
+- **Phase G**: architecture + perturbation manager + halothane dose-response demo shipped. LIFBrain integration + behavioral threshold calibration pending.
+- **Phase H / I / J**: scaffolded only.
+- **Methodology paper**: 5 case study drafts shipped; full manuscript not yet assembled.
+
+Repo: [`AnestheticSimulator/`](https://github.com/rohit-ravi2/personalwebsite/tree/main/AnestheticSimulator) (public). Built at $0 external spend on an RTX 4060 Ti (8 GB VRAM).
+
+<details>
+<summary className="cursor-pointer text-sm font-medium text-zinc-700 mt-6">Sources & attribution</summary>
+
+**Primary literature anchors used in calibration:** Mihic 1997 PMID 9311785 (GABA-A α1β2γ2 volatile EC50); Patel & Honoré 1999 PMID 10321245 (TREK-1 halothane EC50); Forman 1996 PMID 8633440 (nAChR α4β2 halothane); Hanley 2002 PMID 12411414 (Complex I IC50); Pistis 1997 PMID 9422816 (GlyR propofol/etomidate); Krasowski 1999 PMID 10454514 (volatile review); Belelli 1997 PMID 9298537 (etomidate β-specific); Singaram 2011 PMID 22137475 (twk-18 / K2P GoF in *C. elegans* — corrected per CP6); Stewart 2000 PMID 11095753 (SNARE Ca-cooperativity); van Swinderen 1999 PMID 10051668 (UNC-64 SNARE); Morgan & Sedensky 1994 PMID 7943840 (gas-1 hypersensitivity — corrected from preregistered 1995/PMID 7549290); Sedensky & Meneely 1987 PMID 3576211 (unc-79/80 — corrected from preregistered Sedensky 1992); Forman & Miller 2016 PMID 27749338 (PAM allosteric coupling theory); Eger 2001 *Anesth Analg* 92:1395 (non-immobilizer panel); Heuer 2014 PMID 24501356 (propofol channel-level oocyte IC50 — closest published anchor for whole-animal *C. elegans* propofol immobilization, which has no primary source).
+
+**Computational stack:** AlphaFold DB v6 (UniProt → API); fpocket; AutoDock Vina 1.1.2; Meeko (`mk_prepare_ligand`, `mk_prepare_receptor`); RDKit + GAFF + AM1-BCC; Brian2; JAX (Phase I scaffold); Cython (Wave 2 production simulator default).
+
+**Citation hygiene:** during the rigor pass, the original target CSV had 30/32 wrong UniProt IDs and 6 wrong/fabricated PMIDs; corrections shipped in `CITATION_AUDIT_2026-04-27.md` and propagated through downstream artifacts. Three of the original anchors had no primary source for the *C. elegans* claim and were reclassified per the CP6 four-category framework.
+
+**Author:** Rohit Ravi. NYU undergraduate, Data Science with Philosophy minor. AI-assisted computational research scope; no wet-lab work performed. Methodology paper case studies position this as a public reference example of how pre-flight pushback methodology applies to AI-assisted scientific work.
+
+</details>
