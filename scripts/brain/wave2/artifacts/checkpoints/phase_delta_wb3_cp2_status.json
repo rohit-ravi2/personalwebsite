@@ -1,0 +1,48 @@
+{
+  "checkpoint": "phase_delta_wb3_cp2",
+  "status": "complete",
+  "date": "2026-04-26",
+  "summary": "graded_b2 cross-coupling mode implemented and smoke-tested",
+  "implementation": {
+    "file_modified": "scripts/brain/wave2/integration/wave2_hybrid_brain.py",
+    "new_constructor_kwargs": ["cross_coupling", "W_graded_I_pA", "W_g_nS", "v_half_overrides"],
+    "cross_coupling_modes_supported": ["off", "graded_b2", "naive_voltage_bumps", "graded_current_capped"],
+    "decisions_implemented": {
+      "decision_1_release_rule": "Option B graded Boltzmann (Wicks 1996 sigmoidal)",
+      "decision_2_lif_to_w2_subpattern": "B2 per-Synapses g_syn(t), tau_syn=10ms",
+      "decision_3_aiy_rim_v_half": "cellular-anchored (AIY -55 mV, RIM -43 mV from cell-builder validation), k=6 mV",
+      "decision_4_w_graded_i": "0.3 pA Mellem-calibrated default (Caveat 2: retune if CP4 demands)",
+      "decision_5_e_rev_tau": "E_exc=0 mV, E_inh=-70 mV, tau_syn=10 ms",
+      "decision_6_safety_net": "soft cap +/- 100 pA + log warning, no truncation",
+      "decision_7_pseudo_spike": "sigma > 0.5 rising-threshold (10 ms poll cadence)"
+    }
+  },
+  "smoke_test_outcomes": {
+    "off_mode_1s": {
+      "wall_time_s": 3.1,
+      "lif_spikes": 1812,
+      "active_cells_gt_0p5_Hz": 185,
+      "mean_rate_Hz": 6.91,
+      "AVAL_V_mV": -39.37,
+      "AVAR_V_mV": -24.25
+    },
+    "graded_b2_mode_1s": {
+      "wall_time_s": 37.3,
+      "lif_spikes": 1850,
+      "active_cells_gt_0p5_Hz": 188,
+      "mean_rate_Hz": 7.18,
+      "AVAL_V_mV": -19.35,
+      "AVAR_V_mV": -19.31,
+      "soft_cap_warnings": 44,
+      "AVAL_pseudo_spike_emitted": true,
+      "AVAR_pseudo_spike_emitted": true
+    }
+  },
+  "acceptance_criteria_met": [
+    "graded_b2 mode supported",
+    "cross-group Synapses connect Wave 2 cells to LIF cells per Cook 2019 connectome",
+    "compiles cleanly under cython",
+    "soft cap + pseudo-spike emission implemented per spec"
+  ],
+  "next": "CP3 - numerical stability validation + V_half sensitivity analysis"
+}
