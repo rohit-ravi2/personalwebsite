@@ -1,0 +1,31 @@
+{
+  "phase": "F",
+  "status": "PARTIAL — 2a pass, 2b fail (Condition 6 surfaces)",
+  "component_2a": {
+    "status": "PASS",
+    "panel_pass": true,
+    "n_holds_passing": 11,
+    "n_holds": 11,
+    "max_div": 0.004,
+    "cell": "[leak + EGL-19 + NCA] @ AVAL geometry (apples-to-apples NEURON ref)",
+    "interpretation": "channel kinetics correct in cell context; no per-channel rollback needed"
+  },
+  "component_2b": {
+    "status": "FAIL",
+    "plateau_amp_mV": 46.85,
+    "plateau_amp_target_low": 15,
+    "plateau_amp_target_high": 25,
+    "plateau_amp_pass": false,
+    "plateau_duration_ms": 21.4,
+    "plateau_duration_target_low": 400,
+    "plateau_duration_target_high": 800,
+    "plateau_duration_pass": false,
+    "v_rest_mV": -62.74,
+    "v_peak_mV": -15.90,
+    "cell": "[leak + 7-essential-channels + static_cai] @ AVAL geometry",
+    "interpretation": "single-compartment cell + static Ca-pool cannot reproduce Mellem 2008 plateau dynamics. Architectural insufficiency."
+  },
+  "outcome": "2a-pass / 2b-fail = Condition 6 surfaces",
+  "action_per_spec": "PAUSE for morning review. Do NOT auto-trigger morphology fork.",
+  "construction_doc": "wave2/artifacts/gate2_ava_cell_construction.md"
+}

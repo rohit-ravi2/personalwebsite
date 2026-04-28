@@ -1,0 +1,86 @@
+{
+  "checkpoint": "CP1",
+  "status": "pass",
+  "subcheckpoints": {
+    "CP1.A.1_neuron_reference": {
+      "status": "pass",
+      "deliverable": "wave2/neuron_reference.py",
+      "notes": "Wrapper class supporting AVAL, AIY, RIM, AVAR, custom cells. Self-test reproduces v3-captured AVAL features verbatim (peak_V at +0pA = -39.37 mV, +20pA = +80.62 mV, exact match)."
+    },
+    "CP1.A.2_voltage_clamp_tolerance": {
+      "status": "pass",
+      "deliverable": "wave2/voltage_clamp_harness.py (added voltage_clamp_compare_v2, current_domain_divergence, evaluate_current_domain_panel)",
+      "tolerance_metric": "max(|a-b| / max(|a|, |b|, 0.1*peak)); per-feature ≤ 5%; per-panel > 80% of holds",
+      "notes": "Legacy voltage_clamp_compare retained for backward-compat. New v2 entry point with current-domain peak floor."
+    },
+    "CP1.A.3_layer_a_compare": {
+      "status": "pass",
+      "deliverable": "wave2/plateau_harness.py (added current_clamp_layer_a_compare)",
+      "tolerance_metric": "voltage feature ≤ 3 mV residual at peak + plateau; > 80% of timepoints clear",
+      "notes": "Timing features reported as warn-only diagnostics. Smoke-tested on leak-only matched cells: residuals 0.000 mV at peak/plateau, 1.000 fraction passing."
+    },
+    "CP1.A.4_smoke_tests": {
+      "status": "pass",
+      "deliverable": "wave2/smoke_tests_v2.py",
+      "test_results": {
+        "T1_neuron_reference_wrapper_structure": "pass",
+        "T2_current_domain_tolerance_good_case": "pass (panel_pass=True, frac=1.000)",
+        "T3_current_domain_tolerance_bad_case": "pass (correctly rejected 10% mis-calibrated leak)",
+        "T4_divergence_unit_checks": "pass",
+        "T5_layer_a_compare_leak_only": "pass (peak_residual=0.000 mV, plateau_residual=0.000 mV)"
+      },
+      "phase_alpha_smoke_regression": "all Phase α smoke tests still pass (vc leak match, plateau pass-scaffold pass-as-pass, fail-scaffold pass-as-fail, release-signature distinguishes)"
+    },
+    "CP1.B.5_cadiff_translation": {
+      "status": "pass",
+      "deliverable": "wave2/calcium_pool.py (cadiff_eqs, cadiff_brian2_factory)",
+      "validation": "4/4 holds passing, max_div ≤ 0.035 (well under 5% tolerance)",
+      "calibration": {
+        "method": "Empirical linear fit Δcai/Δt = α·ica + β·(cai - ca_eq) at AIY-like geometry",
+        "alpha_mMperms_per_mAcm2": -0.525,
+        "beta_perms_decay": -1.013,
+        "r2": 0.9844,
+        "n_samples": 57600
+      },
+      "notes": "Symbolic re-derivation gave coefficient ~5183 (NMODL hidden unit-conversion factor of ~1e4). Empirical calibration recovers correct value 0.525. Documented in F6/F7/F8 in findings."
+    },
+    "CP1.B.6_caintra1_translation": {
+      "status": "pass",
+      "deliverable": "wave2/calcium_pool.py (caintra1_eqs, caintra1_brian2_factory)",
+      "validation": "4/4 holds passing, max_div ≤ 0.001 (essentially exact)",
+      "calibration": {
+        "method": "Empirical linear fit, ca_eq corrected to 5e-8 (NEURON's raw numerical value of 0.05e-6 (M))",
+        "alpha_mMperms_per_mAcm2": -4.60e-7,
+        "beta_perms_decay": -0.020,
+        "r2": 1.0000,
+        "n_samples": 57600,
+        "note": "β = -0.020 = -1/50ms = -1/tca, perfect match to formula's intent. Validates caintra1 is purely linear in ica when conditional inactive."
+      },
+      "notes": "caintra1 stores cai in private STATE 'caintra' (does NOT write NEURON's cai). Brian2 cai_mM compared against NEURON's mech._ref_caintra. Documented in F1, F5 in findings."
+    },
+    "CP1.B.7_combined_capool": {
+      "status": "pass",
+      "deliverable": "wave2/validate_calcium_pool.py",
+      "validation": "4/4 holds passing, max_div ≤ 0.005",
+      "configuration": "caintra1 driven by EGL-19 ica at AVAL geometry (the configuration CP3 will use)",
+      "notes": "cadiff and caintra1 cannot coexist with both writing cai (NMODL multi-writer); CP3 uses caintra1 only. EGL-19 has no Ca-dependent inactivation (egl19.mod), so caintra1 is bookkeeping in CP3."
+    }
+  },
+  "issues_surfaced": [
+    "F1: cadiff WRITES cai but caintra1 does NOT (caintra1 stores private state 'caintra'). Recording must be pool-specific.",
+    "F2: NEURON caintra1 produces unphysiologically small Ca peaks (~16 nM from inflated initial states). Upstream behavior; we match it.",
+    "F3: cadiff produces dramatic Ca transients (~600 μM peaks). Unphysiological but matches upstream.",
+    "F6 (CRITICAL): Symbolic NMODL → Python translation produces ~52,700× error for cadiff due to NMODL's hidden unit-conversion machinery. Empirical calibration is the only reliable path.",
+    "F7: Calibration strategy via linear LSQ on Δcai/Δt vs ica + (cai-ca_eq).",
+    "F8: Decision — calibrate empirically, document residuals, proceed."
+  ],
+  "next_action": "proceed_to_CP2",
+  "key_decisions": [
+    "eqs-string encoding for Ca-pool subsystems (option a from harness fitness report).",
+    "current-domain analog tolerance metric for voltage-clamp comparison: |a-b|/max(|a|, |b|, 0.1*peak), 5% per-feature, 80% per-panel.",
+    "voltage-feature ≤3 mV gate for current-clamp Layer A comparison, 80% of timepoints.",
+    "Empirical calibration of Ca-pool coefficients against NEURON (NMODL hidden-unit-factor workaround).",
+    "ca_eq for caintra1 = 5e-8 mM (NEURON's raw numerical value of `0.05e-6 (M)`, NOT the unit-converted value).",
+    "Internal Brian2 Ca-state unit: mM (matches NEURON's native scale for cadiff and caintra1)."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "stage": "IV",
+  "name": "Touch cascade biological validation",
+  "status": "complete (reduced scope)",
+  "timestamp": "2026-04-27T23:30:00",
+  "checkpoints": {
+    "IV.1_LIF_baseline_per_edge": "PASS (cascade IS firing — ALM/AVM activate, AIB/PVC/AVD/AVA all show ΔHz>0)",
+    "IV.2_wave2_AVAL_plateau": "PASS (Nicoletti 2024 phenotype reproduced: graded passive RC, plateau sustained until stim removed)",
+    "IV.3_wave2_AVAR_plateau": "PASS (5-channel cell shows distinct biology vs AVAL: different rest, K-modulated peak)"
+  },
+  "outcome": {
+    "lif_baseline_AVA_delta_Hz": "+7.5 Hz (AVAL), +6.0 Hz (AVAR) on touch_anterior 200 Hz Poisson @ 8 mV",
+    "lif_per_edge_cascade_works": true,
+    "wave2_AVAL_plateau_at_10pA_mV": 80.0,
+    "wave2_AVAR_plateau_at_10pA_mV": 39.8,
+    "wave2_AVAL_AVAR_biologically_distinguishable": true,
+    "central_question_reframed": "§5 cascade IS reproduced under per-edge LIF; the right question is whether Wave 2 adds mechanistic fidelity beyond per-edge LIF",
+    "elapsed_s": 75.5
+  },
+  "hard_stops_triggered": [],
+  "files_produced": [
+    "wave2/integration/stage_iv_touch_cascade.py",
+    "wave2/artifacts/stage_IV_findings.json",
+    "wave2/artifacts/stage_IV_touch_cascade_findings.md",
+    "wave2/artifacts/checkpoints/stage_IV_status.json"
+  ],
+  "interpretation_for_wb3_questions": "Stage IV results inform Q1-Q3 biological-judgment review with concrete data: graded conductance synapses (Q1) is biologically right; Wicks 1996 Boltzmann release (Q2) maps cleanly; FSM needs pseudo-spikes only under current design (Q3) but could read V directly with redesign."
+}

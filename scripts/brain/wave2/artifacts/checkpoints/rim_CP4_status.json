@@ -1,0 +1,22 @@
+{
+  "checkpoint": "rim_CP4",
+  "task": "RIM 7-channel cell construction",
+  "status": "PASS",
+  "module": "option_alpha_rim_cell.py",
+  "channels": ["shl1", "egl2", "irk", "cca1", "unc2", "egl19", "leak"],
+  "g_convention": "S/cm² already (no gScm2 rescale)",
+  "eca_mV": 60.0,
+  "eca_decision": "F18 refinement: RIM symmetric USEION ca contract preserves user-set eca",
+  "ek_mV": -80.0,
+  "v_init_mV": -60.0,
+  "surf_cm2": 1.0334e-06,
+  "cm_uFcm2": 1.5,
+  "e_leak_mV": -50.0,
+  "smoke_test": {
+    "duration_ms": 100,
+    "v_initial": -60.00,
+    "v_final": -43.68,
+    "i_total_range_mAcm2": [-0.003026, 0.0002319],
+    "verdict": "Cell builds and integrates without error."
+  }
+}

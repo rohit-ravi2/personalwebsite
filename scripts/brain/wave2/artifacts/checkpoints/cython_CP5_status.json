@@ -1,0 +1,38 @@
+{
+  "checkpoint": "cython_CP5",
+  "cell": "RIM",
+  "status": "COMPLETE",
+  "verdict": "PRODUCTION_GRADE_PRESERVED",
+  "validation": {
+    "voltage_clamp_layer_a": {
+      "n_holds": 11,
+      "n_holds_passing": 11,
+      "max_peak_div_cython": 0.00427341126585367,
+      "max_ss_div_cython": 0.0017670798796129736,
+      "baseline_max_div": "≤0.0043 (per cellular_validation_findings.md RIM CP5 entry)",
+      "residual_match_within_10pct": true
+    },
+    "current_clamp_layer_a": {
+      "n_sweeps": 11,
+      "n_sweeps_passing": 11,
+      "fraction_passing": 1.0,
+      "max_peak_residual_mV": 0.000160,
+      "max_plateau_residual_mV": 0.000000,
+      "aggregate_timepoint_pass": "55000/55000 (100.0%)",
+      "comment": "Cleaner result than AIY (no extreme-tau slow gate). Cython integrator behavior matches numpy to ~5 decimals."
+    }
+  },
+  "f18_assessment": {
+    "applies": false,
+    "trigger_check": "RIM has 3 USEION ca channels (cca1, unc2, egl19), all with identical READ eca + WRITE ica declarations. Symmetric — NEURON ion_style preserves user-set seg.eca = 60 mV.",
+    "ion_style_int_observed": 8,
+    "preserved_under_cython": true,
+    "comment": "F18 refinement (asymmetric trigger) holds under cython. Cython does not re-introduce the original misprediction."
+  },
+  "unc2_global_assessment": {
+    "global_declarations_in_mod": ["minf", "hinf", "mtau", "htau", "munc2", "hunc2"],
+    "auto_resolution_under_brian2": "per-cell-by-default semantics — every NeuronGroup variable is per-cell",
+    "preserved_under_cython": true,
+    "comment": "Cython namespace handling treats each NeuronGroup eqs variable as per-cell. The GLOBAL pitfall is a NMODL artifact that Brian2 (numpy or cython) cleanly avoids."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "stage": "I",
+  "name": "Literature scoping",
+  "status": "complete",
+  "timestamp": "2026-04-27T22:00:00",
+  "checkpoints": {
+    "I.1_enumerate": "complete",
+    "I.2_mellem_reexamination": "complete (read existing pushback doc)",
+    "I.3_touch_cascade_prioritization": "complete (4/4 deferred with primary-source rationale)",
+    "I.4_ranked_list": "complete"
+  },
+  "outcome": {
+    "strong_candidates": 4,
+    "candidate_names": ["AVAR", "VA5", "VD5", "VB6"],
+    "deferred_with_rationale": ["RMD (Nicoletti 2019 mod files not in repo)", "ALM (MRC focus, not whole-cell biophys)", "AVM (same as ALM)", "AIB (no primary VC/CC)", "AVB (circuit-level only)"],
+    "novel_channels_required": ["slo2egl19", "slo2iso", "cadiff", "slo2unc2", "slo1unc2"],
+    "novel_channels_count": 5,
+    "stage_II_target_order": ["AVAR", "VA5", "VD5", "VB6"],
+    "estimated_total_stage_II_hours": "3-5"
+  },
+  "hard_stops_triggered": [],
+  "next_action": "Stage II — start with AVAR (zero novel channels)",
+  "files_produced": [
+    "wave2/artifacts/literature_scoping_candidates.md",
+    "wave2/artifacts/checkpoints/stage_I_status.json",
+    "wave2/artifacts/overnight_run_findings.md (running)"
+  ]
+}

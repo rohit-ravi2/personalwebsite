@@ -1,0 +1,34 @@
+{
+  "checkpoint": "cython_CP6",
+  "status": "COMPLETE",
+  "verdict": "VERDICT_CYTHON_PRODUCTION_READY",
+  "benchmark": {
+    "workload": "each of {AVAL, AIY, RIM} × 10s simulated time, +10 pA step injection (1s baseline, 5s step, 4s recovery), dt=0.025 ms, rk4",
+    "per_cell": {
+      "AVAL": {"numpy_s": 117.33, "cython_s": 9.07, "speedup_x": 12.93, "final_v_diff_mV": 0.0, "plateau_diff_mV": 0.0},
+      "AIY":  {"numpy_s": 548.07, "cython_s": 16.14, "speedup_x": 33.96, "final_v_diff_mV": 0.0, "plateau_diff_mV": 0.0},
+      "RIM":  {"numpy_s": 305.38, "cython_s": 17.54, "speedup_x": 17.41, "final_v_diff_mV": 0.0, "plateau_diff_mV": 0.0}
+    },
+    "aggregate_numpy_s": 970.78,
+    "aggregate_cython_s": 42.75,
+    "aggregate_speedup_x": 22.71,
+    "mean_per_cell_speedup_x": 21.44,
+    "numerical_equivalence": "exact (0.000 mV final-v + plateau-v difference for all 3 cells)"
+  },
+  "validation_harness_speedups": {
+    "AVAL_full_validation": {"numpy_s": 273.5, "cython_s": 53.1, "speedup_x": 5.15},
+    "AIY_full_validation": {"numpy_s": 689.3, "cython_s": 229.4, "speedup_x": 3.00},
+    "RIM_full_validation": {"numpy_s": 3188.9, "cython_s": 420.6, "speedup_x": 7.58},
+    "aggregate_speedup_x": 5.85,
+    "comment": "Validation harness speedups are lower because they include NEURON reference construction + 11 holds × 200 ms VC + 11 sweeps × 14 s CC, where NEURON's NMODL-compiled portion is constant. The pure-Brian2 benchmark (CP6 above) gives the upper-bound speedup."
+  },
+  "cell_residuals_post_migration": {
+    "AVAL_VC_max_peak_div": 0.003533595870293734,
+    "AVAL_VC_max_ss_div": 0.00011442186338879352,
+    "AIY_VC_max_peak_div": 0.009831027850502208,
+    "AIY_VC_max_ss_div": 0.011325632983099779,
+    "RIM_VC_max_peak_div": 0.00427341126585367,
+    "RIM_VC_max_ss_div": 0.0017670798796129736,
+    "all_match_baseline_within_10pct": true
+  }
+}

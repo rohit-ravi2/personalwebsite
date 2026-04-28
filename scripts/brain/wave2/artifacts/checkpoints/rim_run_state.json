@@ -1,0 +1,80 @@
+{
+  "session_date": "2026-04-26",
+  "phase": "wave2_cellular_RIM",
+  "verdict": "VERDICT_RIM_PRODUCTION_GRADE",
+  "wave2_cellular_status_after_rim": {
+    "production_grade_cells": ["AVAL", "AIY", "RIM"],
+    "channel_translations_total": 14,
+    "channels_new_in_rim_block": ["cca1", "egl2", "unc2"]
+  },
+  "checkpoints": {
+    "rim_CP1_cca1_translation": {
+      "status": "PASS",
+      "panel_pass": true,
+      "n_holds_passing": 10,
+      "n_holds": 11,
+      "fraction_passing": 0.909,
+      "notes": "One peak-direction-flip at +20 mV (small ica, signs cross zero); SS exactly matches"
+    },
+    "rim_CP2_egl2_translation": {
+      "status": "PASS",
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0
+    },
+    "rim_CP3_unc2_translation": {
+      "status": "PASS",
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0,
+      "global_handling_decision": "no special Brian2 handling required; per-cell semantics by default"
+    },
+    "rim_CP4_cell_construction": {
+      "status": "PASS",
+      "module": "option_alpha_rim_cell.py",
+      "channels": ["shl1", "egl2", "irk", "cca1", "unc2", "egl19", "leak"],
+      "g_convention": "S/cm² (no gScm2 rescale)",
+      "eca_mV": 60.0,
+      "eca_decision": "F18 refinement: symmetric USEION ca contract preserves user-set eca",
+      "smoke_test_v_final": -43.68
+    },
+    "rim_CP5_voltage_clamp_layer_a": {
+      "status": "PASS",
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0,
+      "max_divergence": 0.0043
+    },
+    "rim_CP6_current_clamp_layer_a": {
+      "status": "PASS",
+      "panel_pass": true,
+      "n_sweeps_passing": 11,
+      "n_sweeps": 11,
+      "fraction_sweeps_passing": 1.0,
+      "aggregate_timepoint_pass_fraction": 1.0,
+      "max_residual_mV": 0.000,
+      "notes": "All 11 sweeps -15 to +35 pA, all peak/plateau/baseline residuals 0.000 mV"
+    },
+    "rim_CP7_verdict": {
+      "verdict": "VERDICT_RIM_PRODUCTION_GRADE",
+      "elapsed_s": 3136.3
+    }
+  },
+  "findings_extension": {
+    "F18_refinement": {
+      "description": "F18 trigger condition is ASYMMETRIC USEION declarations across channels (a READ-only Ca reader coexisting with ica-writing channels), NOT just multi-USEION-ca count.",
+      "verified": "AVAL (single USEION) eca=60; AIY (asymmetric) eca=127.59; RIM (symmetric multi) eca=60",
+      "methodological_lesson": "always probe seg.eca after brief NEURON run before building Brian2 cell"
+    }
+  },
+  "next_work_block_recommendations_priority_ordered": [
+    "Phase δ network integration scoping (3 production-grade cells available)",
+    "RMD acquisition (Nicoletti 2019)",
+    "F18 refinement methodology paper note",
+    "AVAR upstream issue review and filing",
+    "Optional: dt=0.01 fine-grained CC sanity check on RIM"
+  ]
+}

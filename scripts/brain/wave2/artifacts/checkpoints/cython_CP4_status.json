@@ -1,0 +1,31 @@
+{
+  "checkpoint": "cython_CP4",
+  "cell": "AIY",
+  "status": "COMPLETE",
+  "verdict": "PRODUCTION_GRADE_PRESERVED",
+  "validation": {
+    "voltage_clamp_layer_a": {
+      "n_holds": 11,
+      "n_holds_passing": 11,
+      "max_peak_div_cython": 0.009831027850502208,
+      "max_ss_div_cython": 0.011325632983099779,
+      "baseline_max_div": "≤0.0113 (per cellular_validation_findings.md AIY CP3 table)",
+      "residual_match_within_10pct": true
+    },
+    "current_clamp_layer_a": {
+      "n_sweeps": 11,
+      "n_sweeps_passing": 10,
+      "failing_sweep_pa": -15,
+      "failing_sweep_plateau_residual_cython_mV": 6.844,
+      "failing_sweep_plateau_residual_numpy_baseline_mV": 6.84,
+      "comment": "Same -15 pA failure as numpy baseline. KQT-1 slow s-gate (tau=186s) integrator drift (Brian2 rk4 vs NEURON cnexp) accumulates over 5s window. Cython preserves rk4 method choice, so same drift magnitude as numpy. F19 standing followup carried forward."
+    }
+  },
+  "f18_assessment": {
+    "applies": true,
+    "trigger": "AIY has asymmetric USEION ca: slo1egl19 READS eca without WRITING ica; egl19 + slo1egl19 trigger NEURON ion_style override.",
+    "fix_in_cell": "AIY_ECA_MV = 127.59 (Nernst at celsius=6.3°C, cai=5e-5 mM, cao=2 mM)",
+    "preserved_under_cython": true,
+    "verification": "VC residuals match baseline within decimal-rounding tolerance — confirms eca routing logic in cython EQS produces identical values to numpy at the gate-equation level."
+  }
+}

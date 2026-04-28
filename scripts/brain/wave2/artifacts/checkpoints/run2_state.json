@@ -1,0 +1,11 @@
+{
+  "last_completed_phase": "Phase G",
+  "last_completed_subcheckpoint": "summary_written",
+  "f6_verdict": "PRINCIPLED",
+  "phase_x_triggered": false,
+  "phase_x_completed": false,
+  "channels_translated": ["egl19", "shk1", "shl1", "nca", "kqt3", "slo1iso", "slo1egl19"],
+  "next_action": "RUN_COMPLETE — Phase F.2b condition 6 paused for morning review",
+  "invocation_count": 1,
+  "gate2_outcome": "2a-pass / 2b-fail = Condition 6 surfaces (paused per spec)"
+}

@@ -1,0 +1,32 @@
+{
+  "checkpoint": "cython_CP2",
+  "status": "COMPLETE",
+  "verdict": "CYTHON_SWITCH_VERIFIED",
+  "method": "post-factory prefs.codegen.target override",
+  "test_target": "AVAL 4-channel cell (option_alpha_ava_cell.build_brian2_aval_4channel)",
+  "smoke_results": {
+    "500ms_run": {
+      "numpy_elapsed_s": 6.779,
+      "cython_elapsed_s_warm_cache": 0.612,
+      "speedup_x": 11.08,
+      "final_v_mV_numpy": -39.3888,
+      "final_v_mV_cython": -39.3888,
+      "final_v_diff_mV": 0.0
+    },
+    "5000ms_run": {
+      "numpy_elapsed_s": 60.744,
+      "cython_elapsed_s_warm_cache": 4.527,
+      "speedup_x": 13.42,
+      "final_v_mV_numpy": -39.3655,
+      "final_v_mV_cython": -39.3655,
+      "final_v_diff_mV": 0.0
+    },
+    "first_cython_call_cold_cache": {
+      "elapsed_s_500ms": 8.530,
+      "comment": "compile cost dominates short run. amortized away on subsequent calls."
+    }
+  },
+  "numerical_equivalence": "exact (0.000 mV) at both run lengths",
+  "speedup_in_expected_range": true,
+  "expected_range": "5-10x per spec; observed 11-13x (exceeds expectation)"
+}

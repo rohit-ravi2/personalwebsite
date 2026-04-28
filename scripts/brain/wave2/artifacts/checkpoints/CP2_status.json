@@ -1,0 +1,33 @@
+{
+  "checkpoint": "CP2",
+  "status": "pass",
+  "deliverable": "wave2/channels/egl19.py",
+  "validation": {
+    "panel_pass": true,
+    "n_holds": 11,
+    "n_holds_passing": 11,
+    "fraction_passing": 1.0,
+    "tolerance_metric": "current-domain divergence ≤ 0.05; per-panel > 80% of holds",
+    "max_divergence_observed": 0.004,
+    "max_divergence_observed_at_hold_mV": 10
+  },
+  "iv_curve_match": {
+    "max_residual_pA": 0.01,
+    "all_holds_within": "<= 0.01 pA absolute"
+  },
+  "issues_surfaced": [
+    "F9: Voltage-clamp protocol mismatch — capacitive transient at step onset dominates Brian2-vs-NEURON peak comparison without skip-initial-transient and prestep handling.",
+    "F10 (CRITICAL): Unit-conversion bug in initial EGL-19 eqs (extraneous 1e-3 factor produced 1000× too-small currents). Caught via SS comparison divergence; fixed by removing factor.",
+    "Both issues resolved before pass."
+  ],
+  "key_decisions": [
+    "voltage_clamp_compare_v2 grew skip_initial_transient_ms and brian2_prestep_ms parameters to handle capacitive transient + match NEURON's prestep convention.",
+    "EGL-19 eqs use straight gbar × m × h × (v_mV - eca) for current density in mA/cm² (no 1e-3 factor — units work out via S × mV = mA conversion)."
+  ],
+  "diagnostics": {
+    "channel_implementation_in_isolation_validated": true,
+    "iv_curve_matches_neuron_essentially_exactly": true,
+    "time_to_peak_kinetics_warn_only": "matches_within_dt_resolution"
+  },
+  "next_action": "proceed_to_CP3"
+}

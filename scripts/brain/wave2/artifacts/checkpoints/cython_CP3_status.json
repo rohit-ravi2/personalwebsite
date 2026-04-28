@@ -1,0 +1,35 @@
+{
+  "checkpoint": "cython_CP3",
+  "cell": "AVAL",
+  "status": "COMPLETE",
+  "verdict": "PRODUCTION_GRADE_PRESERVED",
+  "validation": {
+    "voltage_clamp_layer_a": {
+      "n_holds": 11,
+      "n_holds_passing": 11,
+      "max_peak_div_cython": 0.003533595870293734,
+      "max_peak_div_numpy_baseline": 0.003533595870293872,
+      "max_ss_div_cython": 0.00011442186338879352,
+      "max_ss_div_numpy_baseline": 0.00011442186338986577,
+      "residual_match_within_10pct": true,
+      "residual_diff_relative": "essentially identical (last-decimal rounding only)"
+    },
+    "current_clamp_layer_a": {
+      "n_sweeps": 7,
+      "n_sweeps_passing": 7,
+      "fraction_passing": 1.0,
+      "all_residuals_mV": "0.000 (5 decimal places, exact match to numpy baseline)",
+      "aggregate_timepoint_pass_fraction": 1.0
+    }
+  },
+  "timing": {
+    "cython_full_validation_s": 53.1,
+    "numpy_full_validation_s": 273.5,
+    "speedup_x": 5.15,
+    "comment": "Wall-clock includes NEURON reference build + 11 VC holds + 7 CC sweeps in both cells. Speedup is on the Brian2 side; NEURON portion is constant."
+  },
+  "f18_assessment": {
+    "applies": false,
+    "reason": "AVAL has only 1 USEION ca (egl19), no asymmetric ion contracts. eca = 60 mV preserved by NEURON ion_style under both codegens."
+  }
+}

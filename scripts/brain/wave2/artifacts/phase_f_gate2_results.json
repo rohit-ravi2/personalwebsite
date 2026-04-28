@@ -1,0 +1,20 @@
+{
+  "component_2a": {
+    "panel_pass": true,
+    "n_holds_passing": 11,
+    "n_holds": 11,
+    "fraction_passing": 1.0
+  },
+  "component_2b": {
+    "V_base": -62.74200490028869,
+    "V_peak_stim": -15.895525791497434,
+    "V_at_end_of_stim": -15.895220748157774,
+    "plateau_amp_mV": 46.846784152130915,
+    "plateau_duration_ms": 21.44999999999999,
+    "amp_pass": false,
+    "dur_pass": false,
+    "arch_pass": false
+  },
+  "outcome": "2a-pass / 2b-fail \u2014 CONDITION 6 SURFACES. Channels work, architecture insufficient. PAUSE for morning review.",
+  "gate2_pass": false
+}

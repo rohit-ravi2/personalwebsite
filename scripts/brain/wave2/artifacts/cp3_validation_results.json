@@ -1,0 +1,130 @@
+{
+  "vc": {
+    "panel_pass": true,
+    "n_holds": 11,
+    "n_holds_passing": 11,
+    "fraction_passing": 1.0,
+    "per_step": [
+      {
+        "hold_mV": -80.0,
+        "brian2_peak_I_pA": -6.16059645187343,
+        "brian2_ss_I_pA": -6.157299392346934,
+        "ref_peak_I_pA": -6.160403200434956,
+        "ref_ss_I_pA": -6.157059242425828
+      },
+      {
+        "hold_mV": -60.0,
+        "brian2_peak_I_pA": -3.1606018028422898,
+        "brian2_ss_I_pA": -3.1606018028422898,
+        "ref_peak_I_pA": -3.160422526862549,
+        "ref_ss_I_pA": -3.160422444815859
+      },
+      {
+        "hold_mV": -40.0,
+        "brian2_peak_I_pA": -0.23587862575463941,
+        "brian2_ss_I_pA": -0.23587676707322106,
+        "ref_peak_I_pA": -0.23576541645062743,
+        "ref_ss_I_pA": -0.23576025094741582
+      },
+      {
+        "hold_mV": -30.0,
+        "brian2_peak_I_pA": 1.2238635933362807,
+        "brian2_ss_I_pA": 1.0803636418452047,
+        "ref_peak_I_pA": 1.2256910832399364,
+        "ref_ss_I_pA": 1.0804083374820939
+      },
+      {
+        "hold_mV": -20.0,
+        "brian2_peak_I_pA": 2.505226545199358,
+        "brian2_ss_I_pA": 2.1540836388711657,
+        "ref_peak_I_pA": 2.510274322863311,
+        "ref_ss_I_pA": 2.153881531862743
+      },
+      {
+        "hold_mV": -10.0,
+        "brian2_peak_I_pA": 3.695760731864424,
+        "brian2_ss_I_pA": 3.0257426224637682,
+        "ref_peak_I_pA": 3.7047019274848836,
+        "ref_ss_I_pA": 3.0247171892614215
+      },
+      {
+        "hold_mV": 0.0,
+        "brian2_peak_I_pA": 4.744405480902598,
+        "brian2_ss_I_pA": 3.9213995468964016,
+        "ref_peak_I_pA": 4.7618336369590635,
+        "ref_ss_I_pA": 3.9192888017239627
+      },
+      {
+        "hold_mV": 10.0,
+        "brian2_peak_I_pA": 5.5711775123084015,
+        "brian2_ss_I_pA": 4.961310042518305,
+        "ref_peak_I_pA": 5.595623038176592,
+        "ref_ss_I_pA": 4.959492427002731
+      },
+      {
+        "hold_mV": 20.0,
+        "brian2_peak_I_pA": 7.084900810436346,
+        "brian2_ss_I_pA": 6.251012644545715,
+        "ref_peak_I_pA": 7.1081928367826315,
+        "ref_ss_I_pA": 6.250712689505956
+      },
+      {
+        "hold_mV": 30.0,
+        "brian2_peak_I_pA": 8.845437749235392,
+        "brian2_ss_I_pA": 7.960160938742038,
+        "ref_peak_I_pA": 8.86482282120577,
+        "ref_ss_I_pA": 7.960030717989027
+      },
+      {
+        "hold_mV": 40.0,
+        "brian2_peak_I_pA": 10.77483234787208,
+        "brian2_ss_I_pA": 10.070207207649766,
+        "ref_peak_I_pA": 10.788416087559458,
+        "ref_ss_I_pA": 10.070023178206752
+      }
+    ],
+    "tolerance_metric": "divergence(a,b,peak) = |a-b| / max(|a|, |b|, 0.1*peak); per-feature pass: divergence \u2264 0.05; per-panel pass: > 80% of holds clear ALL features",
+    "warnings": []
+  },
+  "cc": {
+    "panel_pass": true,
+    "feature_pass": true,
+    "fraction_passing": 0.899,
+    "brian2_features": {
+      "baseline_pre_mV": -33.69257908843119,
+      "peak_V_mV": 182.43718937584202,
+      "plateau_V_mV": 176.98655745694026,
+      "baseline_post_mV": -38.30001910179514,
+      "time_to_peak_ms": 99.97499999999997,
+      "settling_time_ms": 249.02499999999998
+    },
+    "neuron_features": {
+      "baseline_pre_mV": -46.81779752030819,
+      "peak_V_mV": 182.2008301815169,
+      "plateau_V_mV": 176.6851122920181,
+      "baseline_post_mV": -38.30001908395906,
+      "time_to_peak_ms": 99.99999999986409,
+      "settling_time_ms": 1500.000000004357
+    },
+    "feature_residuals": {
+      "peak_V_mV": 0.2363591943251322,
+      "plateau_V_mV": 0.3014451649221712,
+      "baseline_pre_mV": 13.125218431877002
+    },
+    "timing_diagnostics": {
+      "time_to_peak_residual_ms": 0.02499999986412149,
+      "settling_time_residual_ms": 1250.9750000043568
+    },
+    "warnings": [],
+    "protocol": {
+      "injection_pa": 50.0,
+      "injection_duration_ms": 100.0,
+      "settle_ms": 200.0,
+      "post_ms": 1500.0,
+      "v_rest_mv": -25.0,
+      "voltage_feature_tolerance_mV": 3.0,
+      "timepoint_pass_fraction": 0.8,
+      "dt_ms": 0.025
+    }
+  }
+}

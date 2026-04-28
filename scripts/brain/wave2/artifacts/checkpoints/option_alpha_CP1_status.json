@@ -1,0 +1,31 @@
+{
+  "checkpoint": "option_alpha_CP1",
+  "deliverable": "wave2/channels/unc103.py",
+  "status": "PASS",
+  "validation": {
+    "method": "voltage_clamp_compare_v2 (current-domain divergence metric, P8/P11)",
+    "cell_construction": "[leak + unc103] @ AVAL geometry (neutral testbed)",
+    "n_holds": 11,
+    "n_holds_passing": 11,
+    "fraction_passing": 1.0,
+    "panel_pass": true,
+    "max_divergence_observed": "<0.001 across all holds",
+    "tolerance_metric": "divergence(a,b,peak) = |a-b| / max(|a|, |b|, 0.1*peak); per-feature pass: divergence ≤ 0.05; per-panel pass: > 80% of holds clear ALL features"
+  },
+  "translation_pattern": "P10 (leak-relative scale check); standard voltage-gated K with m · h gates",
+  "key_observations": [
+    "UNC-103 NMODL has no GLOBAL state — STATE block is standard 'm h' per-cell. The original α prompt's 'F2 GLOBAL→per-cell' framing was misattribution; F2 is about caintra1's Ca trajectory (P2 in translation_patterns.md).",
+    "Translation follows SHK-1/SHL-1/KQT-3 pattern exactly. Voltage-only gating, no Ca dependence, no special handling.",
+    "Tau functions use PRODUCT structure (not sum) — same as EGL-2: tau = (term_a) * (term_b). Translated verbatim with proper operator precedence in Brian2 eqs string."
+  ],
+  "issues_surfaced_and_fixed": [
+    {
+      "issue": "Initial run showed NEURON output ≈3 pA (pure leak only, no UNC-103 contribution) while Brian2 showed expected ~thousand pA at depolarized holds.",
+      "root_cause": "neuron_reference._default_currents_to_record() custom-cell branch did not include 'unc103' in the K-channel list → 'ik' was not recorded, only 'i_leak'. The mechanism was inserted and gbar set correctly, but its current was being silently dropped from the I_total summation.",
+      "fix": "Added 'unc103' to the K-channel tuple in neuron_reference.py _default_currents_to_record() custom-cell branch (line ~759). Note: the existing 'k_using' set in _build_custom_section already contained 'unc103', so insertion + ek setting was correct — only the recording list was incomplete.",
+      "validation_post_fix": "11/11 holds pass with divergences <0.001."
+    }
+  ],
+  "use_case": "Required for future Brian2 AVAR work (5-channel cell). NOT used in option α-1 CP3/CP4 (target is true 4-channel AVAL). Completing UNC-103 here completes Brian2's Nicoletti channel coverage for AVA-class neurons.",
+  "next_action": "proceed_to_CP2_irk"
+}

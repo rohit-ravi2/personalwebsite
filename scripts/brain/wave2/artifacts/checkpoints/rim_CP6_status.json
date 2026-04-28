@@ -1,0 +1,8 @@
+{
+  "checkpoint": "rim_CP6",
+  "panel_pass": true,
+  "n_sweeps": 11,
+  "n_sweeps_passing": 11,
+  "fraction_sweeps_passing": 1.0,
+  "aggregate_timepoint_pass_fraction": 1.0
+}

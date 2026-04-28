@@ -1,0 +1,6 @@
+{
+  "checkpoint": "rim_CP7",
+  "verdict": "VERDICT_RIM_PRODUCTION_GRADE",
+  "verdict_msg": "Both apples-to-apples comparisons pass. Brian2 7-channel RIM matches Nicoletti's NEURON RIM within tolerance for both voltage-clamp and 5000 ms current-clamp protocols.",
+  "elapsed_s": 3188.9040298461914
+}

@@ -1,0 +1,12 @@
+{
+  "phase": "E",
+  "status": "PASS",
+  "channel": "slo1egl19",
+  "module": "channels/slo1_egl19_coupled.py",
+  "validator": "validate_slo1egl19.py",
+  "validation_matrix": "11 V holds, [leak+egl19+slo1egl19] cell at AVAL geometry",
+  "panel_pass_rate": "11/11 (100%)",
+  "max_div": 0.0006,
+  "architectural_decision": "Closed-form calcium(V) per F13 (matches Nicoletti exactly via algebraic eqs). EXTERNAL m_egl19/h_egl19 hooked via shared NeuronGroup eqs.",
+  "architecture_doc": "wave2/artifacts/slo1_coupled_architecture.md"
+}

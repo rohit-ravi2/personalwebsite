@@ -1,0 +1,46 @@
+{
+  "stage": "III",
+  "name": "Phase δ network integration (WB2-WB6)",
+  "status": "partial_pass_paused_at_WB3",
+  "timestamp": "2026-04-27T23:00:00",
+  "checkpoints": {
+    "III.1_WB2": "PASS (Wave2HybridBrain skeleton + AVAL/AVAR drop-in works in cross_coupling='off' mode)",
+    "III.2_WB3": "PAUSED — release-event rule design surfaces graded-coupling biology question (per spec's hard-stop)",
+    "III.3_WB4": "NOT STARTED (depends on WB3)",
+    "III.4_WB5": "NOT STARTED (depends on WB4)",
+    "III.5_WB6": "NOT STARTED (depends on WB5)"
+  },
+  "outcome": {
+    "wave2_hybrid_brain_built": true,
+    "wave2_active_cells": ["AVAL", "AVAR"],
+    "lif_lif_chem_synapses_wired_natively": 2926,
+    "lif_lif_gap_synapses_wired_natively": 2002,
+    "cross_group_chem_edges_identified": 194,
+    "cross_group_gap_edges_identified": 186,
+    "cross_coupling_mode_default": "off",
+    "smoke_test_isolated_mode_pass": true,
+    "smoke_test_runtime_s": 3.2,
+    "smoke_test_simulated_ms": 1000,
+    "AVAL_settle_V_mV": -39.39,
+    "AVAR_settle_V_mV": -24.10,
+    "LIF_baseline_mean_rate_Hz": 5.08
+  },
+  "hard_stops_triggered": [
+    "WB3: graded-coupling biology surfaces architectural choice that requires biological-judgment review (per spec's pre-flight guidance)"
+  ],
+  "wb3_questions_for_review": [
+    "Q1: How should LIF→Wave 2 chemical synapses be modeled? (conductance-based graded / firing-rate→current / Ca-permeable receptors)",
+    "Q2: How should Wave 2 → LIF release events work? (V-threshold crossing / Boltzmann graded release with Wicks 1996 parameters)",
+    "Q3: Does Stage IV need pseudo-spike emissions from Wave 2 cells, or can the FSM activity-mode classifier read V directly?"
+  ],
+  "files_produced": [
+    "wave2/integration/__init__.py",
+    "wave2/integration/wave2_hybrid_brain.py",
+    "wave2/option_alpha_ava_cell.py (I_ext alias added)",
+    "wave2/option_alpha_aiy_cell.py (I_ext alias added)",
+    "wave2/option_alpha_rim_cell.py (I_ext alias added)",
+    "wave2/artifacts/phase_delta_wb2_findings.md",
+    "wave2/artifacts/checkpoints/stage_III_status.json"
+  ],
+  "next_action": "Stage IV with reduced-scope biological validation (LIF baseline + Wave 2 cell isolated comparison, since cross-coupling off) OR pause overnight and surface WB3 review questions"
+}

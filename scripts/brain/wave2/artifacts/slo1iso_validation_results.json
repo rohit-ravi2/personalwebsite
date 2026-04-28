@@ -1,0 +1,29 @@
+{
+  "overall_pass": true,
+  "per_cai": {
+    "cai_5e-05": {
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0
+    },
+    "cai_0.0001": {
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0
+    },
+    "cai_0.0005": {
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0
+    },
+    "cai_0.001": {
+      "panel_pass": true,
+      "n_holds_passing": 11,
+      "n_holds": 11,
+      "fraction_passing": 1.0
+    }
+  }
+}

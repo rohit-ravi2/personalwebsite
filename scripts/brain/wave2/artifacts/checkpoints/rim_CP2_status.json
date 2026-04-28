@@ -1,0 +1,8 @@
+{
+  "checkpoint": "rim_CP2",
+  "channel": "egl2",
+  "panel_pass": true,
+  "n_holds_passing": 11,
+  "n_holds": 11,
+  "fraction_passing": 1.0
+}

@@ -1,0 +1,49 @@
+{
+  "checkpoint": "option_alpha_CP3",
+  "deliverable": "wave2/option_alpha_ava_cell.py + wave2/artifacts/option_alpha_cell_construction.md",
+  "status": "PASS (smoke test)",
+  "cell_construction": {
+    "channels": ["egl19", "leak", "irk", "nca"],
+    "rationale": "True 4-channel Nicoletti AVAL per AVAL_simulation_iclamp.py lines 29-32 + AVAL_simulations.py line 26 g0 vector",
+    "geometry": "Nicoletti AVAL: surf=1123.84e-8 cm², cm=0.859551 μF/cm²",
+    "parameters_nS": {
+      "egl19": 0.104385,
+      "leak": 0.150164,
+      "irk": 0.1,
+      "nca": 0.0
+    },
+    "parameters_Scm2": {
+      "egl19": 9.288e-6,
+      "leak": 1.336e-5,
+      "irk": 8.898e-6,
+      "nca": 0.0
+    },
+    "potentials": {
+      "e_leak_mV": -39.0,
+      "eca_mV": 60.0,
+      "ek_mV": -80.0,
+      "v_init_mV": -60.0
+    }
+  },
+  "architectural_choices": {
+    "nca_inclusion": "Inserted with gbar=0 for apples-to-apples fidelity (no-op numerically; matches Nicoletti's insertion list)",
+    "no_ca_pool": "Nicoletti's AVAL doesn't insert cadiff or caintra1; we don't either. cai stays at NEURON default 5e-5 mM.",
+    "no_extra_channels": "No SLO-1, SHK-1, SHL-1, KQT-3, UNC-103. UNC-103 belongs to AVAR (CP1 translation completes coverage but not used here).",
+    "geometry": "Stub-cylinder approximation matching Nicoletti's wrapper (L = sqrt(surf/π) × 1e4)"
+  },
+  "smoke_test": {
+    "initial_v_mV": -60.0,
+    "final_v_mV_after_100ms_no_injection": -44.54,
+    "interpretation": "Cell drifts toward intermediate V reflecting leak/IRK/EGL-19 balance; physiologically reasonable.",
+    "channel_currents_at_settle_mAcm2": {
+      "ica_egl19": -4.260e-6,
+      "ik_irk": 1.749e-5,
+      "i_leak": -7.397e-5
+    }
+  },
+  "differences_from_phase_f_cells": {
+    "vs_phase_f_2a_cell": "Phase F 2a was [leak + EGL-19 + NCA] — 3 channels (no IRK). This cell adds IRK to match Nicoletti's full 4-channel AVAL.",
+    "vs_phase_f_2b_cell": "Phase F 2b was [leak + 7-essential-channel set] — added SLO-1/SHK-1/SHL-1/KQT-3 for Mellem testing. This cell explicitly excludes those to stay grounded in Nicoletti's actual AVAL parameterization."
+  },
+  "next_action": "proceed_to_CP4_phase_f_re_evaluation"
+}

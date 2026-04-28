@@ -1,0 +1,62 @@
+{
+  "cadiff": {
+    "fit": {
+      "alpha_mMperms_per_mAcm2": -0.5250263086641328,
+      "beta_perms_decay": -1.0133558644275076,
+      "r2": 0.984364504669539,
+      "n_samples": 57600,
+      "rmse": 7.667538271317484e-05,
+      "ica_range": [
+        -1.267957215154954,
+        -2.237458947051578e-05
+      ],
+      "cai_dev_range": [
+        0.0,
+        0.6716523754393473
+      ],
+      "dcai_dt_range": [
+        -0.014987018200006474,
+        0.0
+      ]
+    },
+    "geometry": {
+      "surf_cm2": 6.589e-07,
+      "cm_uFcm2": 1.0,
+      "depth_um": 0.1,
+      "beta_per_ms": 1.0
+    },
+    "method": "Linear LSQ on \u0394cai/\u0394t = \u03b1\u00b7ica + \u03b2\u00b7(cai - ca_eq) from cca1+cadiff voltage-clamp trajectory.",
+    "ca_eq_mM": 0.0001
+  },
+  "caintra1": {
+    "fit": {
+      "alpha_mMperms_per_mAcm2": -4.602875338431462e-07,
+      "beta_perms_decay": -0.020004798039954905,
+      "r2": 0.9999999944016065,
+      "n_samples": 57600,
+      "rmse": 8.19804195992316e-12,
+      "ica_range": [
+        -2.290331241528543,
+        -4.5207236809607735e-06
+      ],
+      "cai_dev_range": [
+        3.4219481225434436e-07,
+        4.9383969577439696e-05
+      ],
+      "dcai_dt_range": [
+        -2.853272092334918e-07,
+        5.989537169895343e-07
+      ]
+    },
+    "geometry": {
+      "surf_cm2": 6.589e-07,
+      "vol_cm3": 7.42e-12,
+      "cm_uFcm2": 1.0,
+      "fca": 0.001,
+      "tca_ms": 50.0,
+      "ca_eq_mM": 5e-05
+    },
+    "method": "Linear LSQ on \u0394cai/\u0394t = \u03b1\u00b7ica + \u03b2\u00b7(cai - ca_eq) from cca1+caintra1 voltage-clamp trajectory.",
+    "ca_eq_mM": 5e-05
+  }
+}

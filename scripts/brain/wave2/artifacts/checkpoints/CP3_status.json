@@ -1,0 +1,52 @@
+{
+  "checkpoint": "CP3",
+  "status": "pass",
+  "deliverable": "wave2/validate_cp3_egl19_cell.py + integrated [leak + EGL-19 + caintra1] cell",
+  "validation": {
+    "voltage_clamp": {
+      "panel_pass": true,
+      "n_holds": 11,
+      "n_holds_passing": 11,
+      "fraction_passing": 1.0,
+      "max_divergence_observed": 0.004
+    },
+    "current_clamp": {
+      "panel_pass": true,
+      "feature_pass": true,
+      "feature_residuals_mV": {
+        "peak_V_mV": 0.236,
+        "plateau_V_mV": 0.301,
+        "baseline_pre_mV_diagnostic": 13.125
+      },
+      "fraction_passing_timepoints": 0.899,
+      "n_timepoints_passing": 899,
+      "n_timepoints_total": 1000,
+      "tolerance": "voltage feature ≤ 3 mV residual; > 80% timepoints clear",
+      "timing_diagnostics_warn_only": {
+        "time_to_peak_residual_ms": 0.02,
+        "settling_time_residual_ms": 1250.98
+      }
+    }
+  },
+  "diagnostics": {
+    "baseline_pre_residual_explanation": "Brian2 starts at v_init=-25mV; NEURON settles via membrane equation toward true rest potential (~-46.82 mV given the leak parameters). Both cells reach near-identical peak and plateau, validating channel implementation. The baseline residual is a v_init initialization mismatch, not a translation error.",
+    "settling_time_residual_explanation": "Neither cell returns fully to baseline within 1500ms post-stim because EGL-19 alone has no active termination (no SLO-1, no K-current). This matches spec's expectation: 'CP3 will likely show that EGL-19 alone doesn't produce sustained plateau (Mellem amplitude target requires SLO-1 termination dynamics, which we don't have yet). This is expected, NOT a failure.' Note: Mellem-style sustained plateau itself (target Gate 2b) is not the criterion; CP3 validates implementation correctness, not phenotype.",
+    "phenotype_reproduction_status": "Not applicable — Gate 2b territory after full essential set translated."
+  },
+  "cell_construction": {
+    "channels": ["leak", "egl19", "caintra1"],
+    "rationale": "EGL-19 has no Ca-dependent inactivation in Nicoletti's parameterization (verified by reading egl19.mod DERIVATIVE block — only voltage-dependent m, h gates). caintra1 is bookkeeping; nothing reads cai for V dynamics in this subset. cadiff omitted because cadiff and caintra1 are mutually exclusive cai writers (NMODL multi-writer), and caintra1 is what AIY/RIM use.",
+    "geometry": "AVAL (surf=1123.84e-8 cm², cm=0.86 μF/cm²)",
+    "conductances": "AVAL leak (g=0.150164 nS rescaled) + AVAL EGL-19 (g=0.104385 nS rescaled), e_leak=-39 mV"
+  },
+  "issues_surfaced": [
+    "Baseline_pre divergence 13.125 mV is initialization, not translation. Brian2 v_init=-25 mV; NEURON's finitialize+settle reaches -46.82 mV. Doesn't affect peak/plateau alignment (both cells relax during 200 ms settle window then peak/plateau align within 0.3 mV).",
+    "Settling time differs by ~1250 ms because EGL-19 alone has no termination machinery. Expected per spec; not a translation defect."
+  ],
+  "next_action": "complete_overnight_run_pause_for_morning_review",
+  "key_decisions": [
+    "Cell subset for CP3: [leak + EGL-19 + caintra1] — caintra1 is bookkeeping (no cai consumer in subset), cadiff omitted to avoid NMODL multi-writer.",
+    "VC protocol: 50 ms prestep at -60 + 200 ms test step + 2 ms skip on initial transient. Same as CP2.",
+    "CC protocol: Mellem-style 50 pA × 100 ms with 200 ms settle + 1500 ms post, v_rest=-25 mV (matches plateau-harness convention)."
+  ]
+}

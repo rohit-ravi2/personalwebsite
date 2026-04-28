@@ -1,0 +1,24 @@
+{
+  "phase": "A",
+  "status": "PASS",
+  "verdict": "PRINCIPLED",
+  "subcheckpoints": {
+    "A.1_symbolic_decomposition": "complete — see f6_symbolic_decomposition.md",
+    "A.2_geometry_analysis": "complete — see f6_geometry_analysis.md",
+    "A.3_robustness_test": "complete — see f6_calibration_robustness.md",
+    "A.4_synthesis": "complete — see f6_diagnostic_synthesis.md"
+  },
+  "key_findings": [
+    "F11: F6 was a misdiagnosis. Ca-pool calibration is fully principled. Symbolic α matches empirical to 5 dp.",
+    "F12: AVA/AIY/RIM/AVAR don't insert Ca-pool in Nicoletti's actual cells. Static cai=5e-5 mM.",
+    "F13: slo1egl19 has internal closed-form calcium(V), doesn't read cai. Phase E architectural question resolved trivially."
+  ],
+  "speculative_fork_triggered": false,
+  "implications": {
+    "phase_b": "Update F6 entry in pattern catalog to reflect corrected finding",
+    "phase_c": "No change — Ca-independent channels unaffected",
+    "phase_d": "Simplification — use constant cai for SLO-1 isolated",
+    "phase_e": "Major simplification — match Nicoletti's algebraic calcium(V) formula",
+    "phase_f": "Simplification — Gate 2 cell can omit dynamic Ca-pool (matches Nicoletti's AVA exactly)"
+  }
+}

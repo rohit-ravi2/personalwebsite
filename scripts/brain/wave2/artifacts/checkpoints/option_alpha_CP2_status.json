@@ -1,0 +1,24 @@
+{
+  "checkpoint": "option_alpha_CP2",
+  "deliverable": "wave2/channels/irk.py",
+  "status": "PASS",
+  "validation": {
+    "method": "voltage_clamp_compare_v2 (current-domain divergence metric, P8/P11)",
+    "cell_construction": "[leak + irk] @ AVAL geometry (neutral testbed)",
+    "n_holds": 11,
+    "n_holds_passing": 11,
+    "fraction_passing": 1.0,
+    "panel_pass": true,
+    "max_divergence_observed": "0.008 (peak features at depolarized holds)",
+    "tolerance_metric": "divergence(a,b,peak) = |a-b| / max(|a|, |b|, 0.1*peak); per-feature pass: divergence ≤ 0.05; per-panel pass: > 80% of holds clear ALL features"
+  },
+  "translation_pattern": "P10 (leak-relative scale check); single-gate voltage-gated K, no inactivation",
+  "key_observations": [
+    "Single activation gate `m` only — no inactivation gate. Inward-rectifier signature: minf has a +30 mV shift inside the exponent argument, so it activates as V hyperpolarizes below va_kir-30.",
+    "Tau function is U-shaped: sum of two exponentials with opposite slopes (peak tau near v ~ p2tmkir).",
+    "NMODL annotates gbar units as `(nS/cm2)` — appears to be a documentation typo. Empirically gbar values are treated as S/cm² by NEURON's mechanism interpreter (matches the upstream `gScm2()` rescaling pipeline). Translation correctness validated post-hoc by 11/11 hold agreement."
+  ],
+  "issues_surfaced": [],
+  "use_case": "Required for option α-1 CP3 AVA cell construction (4-channel set [IRK + LEAK + EGL19 + NCA] matching Nicoletti's AVAL).",
+  "next_action": "proceed_to_CP3_ava_cell_construction"
+}

@@ -1,0 +1,7 @@
+{
+  "phase": "B",
+  "status": "PASS",
+  "patterns_systematized": 13,
+  "output": "wave2/translation_patterns.md",
+  "notes": "F1-F10 lifted from run #1 findings as P1-P11. F11-F13 from run #2 Phase A added as P3-revised, P5, P6. P12 and P13 are new methodological / architectural patterns from Phase A diagnostic."
+}

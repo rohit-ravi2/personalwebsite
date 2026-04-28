@@ -1,0 +1,12 @@
+{
+  "phase": "D",
+  "status": "PASS",
+  "channel": "slo1iso",
+  "module": "channels/slo1_iso.py",
+  "validator": "validate_slo1iso.py",
+  "validation_matrix": "4 cai values (5e-5, 1e-4, 5e-4, 1e-3 mM) × 11 V holds = 44 panels",
+  "panel_pass_rate": "44/44 (100%)",
+  "max_div": 0.0001,
+  "ca_dependence_captured": true,
+  "notes": "Brian2 translation matches NEURON exactly across 4 orders of magnitude of activity (closed at resting cai → substantially activated at plateau cai). F6 was a non-issue: SLO-1's Ca-dependence is captured via the channel's own (kxy/(ca*1e3))^nyx formula, not through any Ca-pool dynamic."
+}

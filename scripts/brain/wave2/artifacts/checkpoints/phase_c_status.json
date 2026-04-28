@@ -1,0 +1,13 @@
+{
+  "phase": "C",
+  "status": "PASS",
+  "channels": {
+    "shk1":  {"status": "PASS", "panel_pass": true, "holds_passing": "11/11", "max_div": 0.007, "module": "channels/shk1.py"},
+    "shl1":  {"status": "PASS", "panel_pass": true, "holds_passing": "11/11", "max_div": 0.003, "module": "channels/shl1.py"},
+    "nca":   {"status": "PASS", "panel_pass": true, "holds_passing": "11/11", "max_div": 0.000, "module": "channels/nca.py"},
+    "kqt3":  {"status": "PASS", "panel_pass": true, "holds_passing": "11/11", "max_div": 0.000, "module": "channels/kqt3.py"}
+  },
+  "validators": "validate_phase_c_channels.py + run_phase_c.py",
+  "infrastructure_findings": ["F14: h.v_init bug (fixed in neuron_reference.py)", "F15: SS window mismatch (fixed in voltage_clamp_harness.py)"],
+  "kqt3_translation_bug_caught": "Initial typo: ckqt3=10.0 (should be 0.1). Caught by 80% peak divergence; fixed."
+}

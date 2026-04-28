@@ -1,0 +1,200 @@
+{
+  "cadiff": {
+    "panel_pass": true,
+    "n_holds": 4,
+    "n_holds_passing": 4,
+    "fraction_holds_passing": 1.0,
+    "panel_cai_peak": 0.6104586970287765,
+    "tolerance_metric": "Per-timepoint: divergence(b,n,peak) = |b-n| / max(|b|, |n|, 0.1*peak); step pass: > 80% of timepoints clear divergence \u2264 0.05; panel pass: > 80% of holds clear step pass.",
+    "per_hold_summary": [
+      {
+        "hold_mV": -60.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.013195328150815016,
+        "median_divergence": 0.013195323079720083,
+        "neuron_cai_peak": 0.35809048419508144,
+        "brian2_cai_peak": 0.3628688926904305,
+        "neuron_cai_final": 0.35807913560521615,
+        "brian2_cai_final": 0.3628672866881274,
+        "neuron_ica_peak": 0.691003219755426,
+        "step_pass": true
+      },
+      {
+        "hold_mV": -30.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.019879718111157598,
+        "median_divergence": 0.013793509323361468,
+        "neuron_cai_peak": 0.6104586970287765,
+        "brian2_cai_peak": 0.6180098670842142,
+        "neuron_cai_final": 0.11186542040994475,
+        "brian2_cai_final": 0.11343001842666198,
+        "neuron_ica_peak": 1.3630700757962853,
+        "step_pass": true
+      },
+      {
+        "hold_mV": 0.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.02521703595749669,
+        "median_divergence": 0.0023319336074571215,
+        "neuron_cai_peak": 0.40812567125346433,
+        "brian2_cai_peak": 0.41248886981125943,
+        "neuron_cai_final": 0.0032350517591436937,
+        "brian2_cai_final": 0.0033774066743002826,
+        "neuron_ica_peak": 0.928453350934207,
+        "step_pass": true
+      },
+      {
+        "hold_mV": 30.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.035085514097060816,
+        "median_divergence": 0.001490736747822006,
+        "neuron_cai_peak": 0.35809048419508144,
+        "brian2_cai_peak": 0.358325560719307,
+        "neuron_cai_final": 0.0001,
+        "brian2_cai_final": 0.00019100332126883378,
+        "neuron_ica_peak": 0.691003219755426,
+        "step_pass": true
+      }
+    ]
+  },
+  "caintra1": {
+    "panel_pass": true,
+    "n_holds": 4,
+    "n_holds_passing": 4,
+    "fraction_holds_passing": 1.0,
+    "panel_cai_peak": 2.3516642992069365e-05,
+    "tolerance_metric": "Per-timepoint: divergence(b,n,peak) = |b-n| / max(|b|, |n|, 0.1*peak); step pass: > 80% of timepoints clear divergence \u2264 0.05; panel pass: > 80% of holds clear step pass.",
+    "per_hold_summary": [
+      {
+        "hold_mV": -60.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.00038522883059986535,
+        "median_divergence": 0.00035255190551994965,
+        "neuron_cai_peak": 2.3516642992069365e-05,
+        "brian2_cai_peak": 2.3507583703189895e-05,
+        "neuron_cai_final": 2.3516642992069365e-05,
+        "brian2_cai_final": 2.3507583703189895e-05,
+        "neuron_ica_peak": 1.0273790364501734,
+        "step_pass": true
+      },
+      {
+        "hold_mV": -30.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.0012619309370640191,
+        "median_divergence": 0.00023641442510574548,
+        "neuron_cai_peak": 1.6960288362014646e-05,
+        "brian2_cai_peak": 1.6962584756804056e-05,
+        "neuron_cai_final": 7.168577331519356e-06,
+        "brian2_cai_final": 7.166212944043254e-06,
+        "neuron_ica_peak": 2.6834206622862173,
+        "step_pass": true
+      },
+      {
+        "hold_mV": 0.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.001352568787947522,
+        "median_divergence": 0.0005905706830500754,
+        "neuron_cai_peak": 1.6172933253694295e-05,
+        "brian2_cai_peak": 1.617595707999116e-05,
+        "neuron_cai_final": 4.869629487151519e-07,
+        "brian2_cai_final": 4.872977889372561e-07,
+        "neuron_ica_peak": 2.7736329348459945,
+        "step_pass": true
+      },
+      {
+        "hold_mV": 30.0,
+        "n_timepoints": 8001,
+        "n_passing": 8001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.0007199637200448821,
+        "median_divergence": 0.0004668372362836369,
+        "neuron_cai_peak": 1.4999602152948148e-05,
+        "brian2_cai_peak": 1.500341027183846e-05,
+        "neuron_cai_final": 3.492483304713774e-07,
+        "brian2_cai_final": 3.4914393117992926e-07,
+        "neuron_ica_peak": 1.6910818082623682,
+        "step_pass": true
+      }
+    ]
+  },
+  "combined": {
+    "panel_pass": true,
+    "n_holds": 4,
+    "n_holds_passing": 4,
+    "fraction_holds_passing": 1.0,
+    "panel_cai_peak": 4.795292441998351e-05,
+    "tolerance_metric": "Per-timepoint: divergence(b,n,peak) = |b-n| / max(|b|, |n|, 0.1*peak); step pass: > 80% of timepoints clear divergence \u2264 0.05; panel pass: > 80% of holds clear step pass.",
+    "per_hold_summary": [
+      {
+        "hold_mV": -60.0,
+        "n_timepoints": 12001,
+        "n_passing": 12001,
+        "fraction_passing": 1.0,
+        "max_divergence": 1.1529655005571486e-05,
+        "median_divergence": 1.0969754709750211e-05,
+        "neuron_cai_peak": 1.930172162283646e-07,
+        "brian2_cai_peak": 1.9296192816085755e-07,
+        "neuron_cai_final": 1.930172162283646e-07,
+        "brian2_cai_final": 1.9296192816085755e-07,
+        "neuron_ica_peak": 0.006371206446387571,
+        "step_pass": true
+      },
+      {
+        "hold_mV": -30.0,
+        "n_timepoints": 12001,
+        "n_passing": 12001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.000531890688239156,
+        "median_divergence": 0.00040600456721507847,
+        "neuron_cai_peak": 5.45740209080641e-06,
+        "brian2_cai_peak": 5.45529827894613e-06,
+        "neuron_cai_final": 5.45740209080641e-06,
+        "brian2_cai_final": 5.45529827894613e-06,
+        "neuron_ica_peak": 0.24710729629830572,
+        "step_pass": true
+      },
+      {
+        "hold_mV": 0.0,
+        "n_timepoints": 12001,
+        "n_passing": 12001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.005114046094671226,
+        "median_divergence": 0.00039499695038737963,
+        "neuron_cai_peak": 3.8966029300142315e-05,
+        "brian2_cai_peak": 3.895064860375743e-05,
+        "neuron_cai_final": 3.868722287887018e-05,
+        "brian2_cai_final": 3.8672288938265964e-05,
+        "neuron_ica_peak": 2.5706317303209874,
+        "step_pass": true
+      },
+      {
+        "hold_mV": 30.0,
+        "n_timepoints": 12001,
+        "n_passing": 12001,
+        "fraction_passing": 1.0,
+        "max_divergence": 0.005150686718282463,
+        "median_divergence": 0.00041120262784779204,
+        "neuron_cai_peak": 4.795292441998351e-05,
+        "brian2_cai_peak": 4.793428734631423e-05,
+        "neuron_cai_final": 4.795292441998351e-05,
+        "brian2_cai_final": 4.793428734631423e-05,
+        "neuron_ica_peak": 2.353746574386866,
+        "step_pass": true
+      }
+    ]
+  }
+}
