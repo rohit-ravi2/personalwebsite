@@ -1,0 +1,131 @@
+{
+  "anesthetic": "halothane",
+  "dose_multiplier": 0.003,
+  "scenario": {
+    "duration_ms": 2000,
+    "name": "spontaneous"
+  },
+  "baseline": {
+    "n_seeds": 3,
+    "mean_firing_rate_Hz": 0.0,
+    "stdev_firing_rate_Hz": 0.0
+  },
+  "per_target": {
+    "UNC-49": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 0.0,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 0.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "TWK-18": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 0.0,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 0.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "GAS-1": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 0.0,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 0.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "ACR-16": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 0.0,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 0.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "UNC-64": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 0.0,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 0.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "AVR-14": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 38.5,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 38.5,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "UNC-79": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 38.5,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 38.5,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    }
+  },
+  "ranked_causally_necessary": [],
+  "bystanders": [
+    "UNC-49",
+    "TWK-18",
+    "GAS-1",
+    "ACR-16",
+    "UNC-64",
+    "AVR-14",
+    "UNC-79"
+  ],
+  "ambiguous": [],
+  "n_targets_tested": 7,
+  "_meta": {
+    "substrate": "phase_g_demo_50neuron",
+    "necessity_thresholds": {
+      "cohens_d": 0.8,
+      "log10_fold": 0.3,
+      "alpha_bh": 0.05
+    },
+    "bystander_thresholds": {
+      "cohens_d": 0.2,
+      "log10_fold": 0.075,
+      "alpha_bh": 0.2
+    }
+  }
+}

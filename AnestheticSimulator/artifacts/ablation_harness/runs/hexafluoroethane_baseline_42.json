@@ -1,0 +1,27 @@
+{
+  "anesthetic": "hexafluoroethane",
+  "dose_multiplier": 1.0,
+  "ablation_targets": [],
+  "seed": 42,
+  "phenotype": {
+    "firing_rate_Hz": 0.0,
+    "n_spikes": 0,
+    "fsm_state_fractions": null,
+    "command_interneuron_rates": null
+  },
+  "perturbation_summary": {
+    "n_classes_engaged_post_ablation": 8,
+    "max_class_occupancy_post_ablation": 0.9642963256983766,
+    "n_targets_engaged_post_ablation": 30,
+    "ablation_targets": []
+  },
+  "wall_clock_sec": 0.892,
+  "meta": {
+    "substrate": "phase_g_demo_50neuron_neg_overlay",
+    "scenario": {
+      "duration_ms": 2000,
+      "name": "spontaneous"
+    },
+    "mutant": null
+  }
+}

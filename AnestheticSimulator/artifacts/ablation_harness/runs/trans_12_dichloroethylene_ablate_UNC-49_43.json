@@ -1,0 +1,31 @@
+{
+  "anesthetic": "trans_12_dichloroethylene",
+  "dose_multiplier": 1.0,
+  "ablation_targets": [
+    "UNC-49"
+  ],
+  "seed": 43,
+  "phenotype": {
+    "firing_rate_Hz": 52.5,
+    "n_spikes": 5250,
+    "fsm_state_fractions": null,
+    "command_interneuron_rates": null
+  },
+  "perturbation_summary": {
+    "n_classes_engaged_post_ablation": 8,
+    "max_class_occupancy_post_ablation": 0.35714796276613003,
+    "n_targets_engaged_post_ablation": 26,
+    "ablation_targets": [
+      "UNC-49"
+    ]
+  },
+  "wall_clock_sec": 0.91,
+  "meta": {
+    "substrate": "phase_g_demo_50neuron_neg_overlay",
+    "scenario": {
+      "duration_ms": 2000,
+      "name": "spontaneous"
+    },
+    "mutant": null
+  }
+}

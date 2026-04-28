@@ -1,0 +1,75 @@
+{
+  "anesthetic": "etomidate",
+  "dose_multiplier": 1.0,
+  "scenario": {
+    "duration_ms": 2000,
+    "name": "spontaneous"
+  },
+  "baseline": {
+    "n_seeds": 3,
+    "mean_firing_rate_Hz": 24.5,
+    "stdev_firing_rate_Hz": 0.0
+  },
+  "per_target": {
+    "UNC-49": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 27.0,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 2.5,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.042,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "GAS-1": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 24.5,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 0.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.0,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    },
+    "TWK-18": {
+      "n_seeds": 3,
+      "ablation_mean_rate": 26.5,
+      "ablation_stdev_rate": 0.0,
+      "paired_mean_diff": 2.0,
+      "paired_stdev_diff": 0.0,
+      "cohens_d_paired": 0.0,
+      "log10_fold_vs_baseline": 0.034,
+      "t_stat": 0.0,
+      "p_value_uncorrected": 1.0,
+      "p_value_bh_corrected": 1.0,
+      "necessity_class": "bystander"
+    }
+  },
+  "ranked_causally_necessary": [],
+  "bystanders": [
+    "UNC-49",
+    "GAS-1",
+    "TWK-18"
+  ],
+  "ambiguous": [],
+  "n_targets_tested": 3,
+  "_meta": {
+    "substrate": "phase_g_demo_50neuron",
+    "necessity_thresholds": {
+      "cohens_d": 0.8,
+      "log10_fold": 0.3,
+      "alpha_bh": 0.05
+    },
+    "bystander_thresholds": {
+      "cohens_d": 0.2,
+      "log10_fold": 0.075,
+      "alpha_bh": 0.2
+    }
+  }
+}

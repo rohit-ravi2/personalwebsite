@@ -144,7 +144,8 @@ class AnestheticPerturbation:
             return list(range(len(brain_neuron_names)))
         return [i for i, n in enumerate(brain_neuron_names) if n in expression]
 
-    def apply_to_brain(self, brain, anesthetic: str, dose_multiplier: float = 1.0):
+    def apply_to_brain(self, brain, anesthetic: str, dose_multiplier: float = 1.0,
+                        profile: "PerturbationProfile | None" = None):
         """Apply perturbations to a Brian2-backed brain instance.
 
         Expects brain to have:
@@ -152,6 +153,10 @@ class AnestheticPerturbation:
         - brain.neurons: Brian2 NeuronGroup with I_ext attribute
         - brain._W_chem_runtime: NumPy 2D array (presyn × postsyn)
         - brain.W_syn: scalar (Brian2 quantity)
+
+        If `profile` is provided, use it directly (supports ablation harness
+        passing a profile with target entries zeroed out). Otherwise compute
+        from (anesthetic, dose_multiplier).
 
         Returns revert_handle dict that captures the original values.
         """
@@ -161,7 +166,8 @@ class AnestheticPerturbation:
         except ImportError:
             pA = 1e-12  # SI fallback
 
-        profile = self.compute_perturbation_vector(anesthetic, dose_multiplier)
+        if profile is None:
+            profile = self.compute_perturbation_vector(anesthetic, dose_multiplier)
         revert = {
             "I_ext_orig": np.array(brain.neurons.I_ext[:]),
             "W_chem_orig": brain._W_chem_runtime.copy(),
