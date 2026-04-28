@@ -1,0 +1,12 @@
+{
+  "checkpoint": "path_a_cp1_nernst",
+  "completed_at": "2026-04-28T14:17:50Z",
+  "n_pass": 34,
+  "n_total": 44,
+  "fails_by_cell": {
+    "AVAL": 3,
+    "AVAR": 3,
+    "AIY": 4
+  },
+  "output_csv": "artifacts/nernst_bounds_validation.csv"
+}

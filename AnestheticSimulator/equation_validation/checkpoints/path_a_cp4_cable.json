@@ -1,0 +1,47 @@
+{
+  "checkpoint": "path_a_cp4_cable",
+  "completed_at": "2026-04-28T14:20:55Z",
+  "rows": [
+    {
+      "cell": "AVAL",
+      "g_total_Scm2": 3.1547996156036445e-05,
+      "R_m_Ohm_cm2": 31697.734304708236,
+      "R_m_megaohm_cm2": 0.03,
+      "r_soma_um": 9.46,
+      "lambda_um": 3161.0,
+      "tau_membrane_ms": 27.25,
+      "interpretation": "\u03bb >> r_soma \u2014 single-compartment defensible"
+    },
+    {
+      "cell": "AVAR",
+      "g_total_Scm2": 3.825691974433718e-05,
+      "R_m_Ohm_cm2": 26139.062075117035,
+      "R_m_megaohm_cm2": 0.03,
+      "r_soma_um": 9.45,
+      "lambda_um": 2869.2,
+      "tau_membrane_ms": 19.65,
+      "interpretation": "\u03bb >> r_soma \u2014 single-compartment defensible"
+    },
+    {
+      "cell": "AIY",
+      "g_total_Scm2": 0.00044316284716952505,
+      "R_m_Ohm_cm2": 2256.506849315068,
+      "R_m_megaohm_cm2": 0.0,
+      "r_soma_um": 2.29,
+      "lambda_um": 415.0,
+      "tau_membrane_ms": 3.61,
+      "interpretation": "\u03bb >> r_soma \u2014 single-compartment defensible"
+    },
+    {
+      "cell": "RIM",
+      "g_total_Scm2": 0.002186194,
+      "R_m_Ohm_cm2": 457.4159475325612,
+      "R_m_megaohm_cm2": 0.0,
+      "r_soma_um": 2.87,
+      "lambda_um": 209.1,
+      "tau_membrane_ms": 0.69,
+      "interpretation": "\u03bb >> r_soma \u2014 single-compartment defensible"
+    }
+  ],
+  "applicability_verdict": "single-compartment defensible for current Nicoletti-validated cells"
+}

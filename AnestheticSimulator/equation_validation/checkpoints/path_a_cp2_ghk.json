@@ -1,0 +1,44 @@
+{
+  "checkpoint": "path_a_cp2_ghk",
+  "completed_at": "2026-04-28T14:18:50Z",
+  "n_pass": 4,
+  "n_total": 4,
+  "rows": [
+    {
+      "cell": "AVAL",
+      "V_rest_predicted_mV": -21.42,
+      "V_rest_simulated_mV": -21.42,
+      "divergence_mV": -0.0,
+      "g_total_nS": 0.3545,
+      "n_active_channels": 3,
+      "interpretation": "PASS \u2014 GHK matches Brian2"
+    },
+    {
+      "cell": "AVAR",
+      "V_rest_predicted_mV": -21.5,
+      "V_rest_simulated_mV": -21.5,
+      "divergence_mV": -0.0,
+      "g_total_nS": 0.4292,
+      "n_active_channels": 5,
+      "interpretation": "PASS \u2014 GHK matches Brian2"
+    },
+    {
+      "cell": "AIY",
+      "V_rest_predicted_mV": -70.68,
+      "V_rest_simulated_mV": -70.68,
+      "divergence_mV": 0.0,
+      "g_total_nS": 0.292,
+      "n_active_channels": 7,
+      "interpretation": "PASS \u2014 GHK matches Brian2"
+    },
+    {
+      "cell": "RIM",
+      "V_rest_predicted_mV": -71.24,
+      "V_rest_simulated_mV": -71.24,
+      "divergence_mV": 0.0,
+      "g_total_nS": 2.2592,
+      "n_active_channels": 7,
+      "interpretation": "PASS \u2014 GHK matches Brian2"
+    }
+  ]
+}

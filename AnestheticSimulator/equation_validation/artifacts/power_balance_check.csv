@@ -1,0 +1,5 @@
+cell,V_rest_mV,P_total_W,P_total_pW,ATP_per_sec,ratio_to_niven_laughlin_2008,interpretation
+AVAL,-21.42,1.082e-12,1.0816,1.545e+07,1.545e-02,MARGINAL — closer to cortical reference than expected
+AVAR,-21.5,1.042e-12,1.0424,1.489e+07,1.489e-02,MARGINAL — closer to cortical reference than expected
+AIY,-70.68,5.082e-13,0.5082,7.261e+06,7.261e-03,PASS — within expected C. elegans graded scaling
+RIM,-71.24,2.269e-12,2.2685,3.241e+07,3.241e-02,MARGINAL — closer to cortical reference than expected

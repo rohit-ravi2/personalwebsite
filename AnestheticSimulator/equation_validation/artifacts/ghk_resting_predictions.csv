@@ -1,0 +1,5 @@
+cell,V_rest_predicted_mV,V_rest_simulated_mV,divergence_mV,g_total_nS,n_active_channels,interpretation
+AVAL,-21.42,-21.42,-0.0,0.3545,3,PASS — GHK matches Brian2
+AVAR,-21.5,-21.5,-0.0,0.4292,5,PASS — GHK matches Brian2
+AIY,-70.68,-70.68,0.0,0.292,7,PASS — GHK matches Brian2
+RIM,-71.24,-71.24,0.0,2.2592,7,PASS — GHK matches Brian2

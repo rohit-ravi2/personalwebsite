@@ -1,0 +1,45 @@
+{
+  "checkpoint": "path_a_cp3_power",
+  "completed_at": "2026-04-28T14:19:49Z",
+  "n_pass": 1,
+  "n_total": 4,
+  "phase_f_consistency_finding": "Channel-derived ATP costs span ~30-100\u00d7 across cells. Phase F's uniform K_BASE_CONSUMPTION underestimates AVA-class metabolic vulnerability.",
+  "rows": [
+    {
+      "cell": "AVAL",
+      "V_rest_mV": -21.42,
+      "P_total_W": "1.082e-12",
+      "P_total_pW": 1.0816,
+      "ATP_per_sec": "1.545e+07",
+      "ratio_to_niven_laughlin_2008": "1.545e-02",
+      "interpretation": "MARGINAL \u2014 closer to cortical reference than expected"
+    },
+    {
+      "cell": "AVAR",
+      "V_rest_mV": -21.5,
+      "P_total_W": "1.042e-12",
+      "P_total_pW": 1.0424,
+      "ATP_per_sec": "1.489e+07",
+      "ratio_to_niven_laughlin_2008": "1.489e-02",
+      "interpretation": "MARGINAL \u2014 closer to cortical reference than expected"
+    },
+    {
+      "cell": "AIY",
+      "V_rest_mV": -70.68,
+      "P_total_W": "5.082e-13",
+      "P_total_pW": 0.5082,
+      "ATP_per_sec": "7.261e+06",
+      "ratio_to_niven_laughlin_2008": "7.261e-03",
+      "interpretation": "PASS \u2014 within expected C. elegans graded scaling"
+    },
+    {
+      "cell": "RIM",
+      "V_rest_mV": -71.24,
+      "P_total_W": "2.269e-12",
+      "P_total_pW": 2.2685,
+      "ATP_per_sec": "3.241e+07",
+      "ratio_to_niven_laughlin_2008": "3.241e-02",
+      "interpretation": "MARGINAL \u2014 closer to cortical reference than expected"
+    }
+  ]
+}
