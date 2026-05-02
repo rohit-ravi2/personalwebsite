@@ -1,0 +1,10 @@
+# Worm-behavioral immobilization EC50 anchors — primary literature only.
+# Used by phase_g_state_validator for WT EC50 prediction comparison.
+# Boddington 2017 (propofol) DROPPED — fabricated PMID per CITATION_AUDIT_2026-04-27.
+# Etomidate DROPPED — no clean worm anchor; the "0.3 µM" in earlier panels traces
+#   to a mammalian/clinical EC50 used as control, not a worm immobilization measurement.
+anesthetic,worm_immob_EC50_uM,anchor_quality,source_paper,source_PMID,notes
+halothane,340,PRIMARY,Crowder 1996 PNAS,8855256,"WT EC50 ~3% atm = 340 µM aqueous; the calibration anchor for Gate 1"
+isoflurane,290,PRIMARY,Morgan & Sedensky 1995 Genetics,7549290,"WT EC50 ~5% atm = 290 µM aqueous; the held-out test for Gate 2"
+sevoflurane,230,SECONDARY,Crowder lab follow-up,,"~7% atm = 230 µM aqueous; secondary citation; partial validation"
+ketamine,5000,SECONDARY,,,"~5 mM behavioral immobilization; secondary citation"

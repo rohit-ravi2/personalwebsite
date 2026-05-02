@@ -1,0 +1,15 @@
+anesthetic,mutant_gene,predicted_EC50_uM,max_qf
+cis_12_dichloroethylene,WT,697.0871256703971,0.998
+halothane,WT,248.24799118051945,0.998
+halothane,dgk-1,248.24799118051945,0.998
+halothane,gas-1,140.53301428142132,1.0
+halothane,gas-2,163.8211028889977,1.0
+halothane,goa-1,248.24799118051945,0.998
+halothane,nduf-6,154.46073519386744,1.0
+halothane,ndus-8,154.46073519386744,1.0
+halothane,nuo-1,154.46073519386744,1.0
+halothane,unc-79,145.47192400782612,1.0
+halothane,unc-80,145.47192400782612,1.0
+hexafluoroethane,WT,,0.0
+isoflurane,WT,223.25409466853725,0.998
+trans_12_dichloroethylene,WT,,0.0

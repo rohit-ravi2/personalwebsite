@@ -1,0 +1,129 @@
+{
+  "alpha_calib": 0.13,
+  "sim_duration_s": 60.0,
+  "n_seeds": 5,
+  "gates": {
+    "gate1_halothane_wt": {
+      "predicted_EC50_uM": 316.7540566177027,
+      "published_EC50_uM": 340.0,
+      "fold_error": 1.0733879895036462,
+      "pass_criterion": "\u2264 2\u00d7 off published",
+      "PASS": true
+    },
+    "gate2_iso_wt": {
+      "predicted_EC50_uM": 290.67892936346163,
+      "published_EC50_uM": 290.0,
+      "fold_error": 1.0023411357360745,
+      "pass_criterion": "\u2264 2\u00d7 off published",
+      "PASS": true
+    },
+    "gate3_mutant_directional": {
+      "n_tested": 9,
+      "n_correct": 9,
+      "fraction": 1.0,
+      "pass_criterion": "\u2265 75% correct",
+      "PASS": true,
+      "per_mutant": [
+        {
+          "gene": "dgk-1",
+          "expected": "RESISTANT",
+          "predicted_EC50_uM": 620.0617799731149,
+          "predicted_ratio": 1.9575496099217469,
+          "lit_ratio": "1.5-2.0",
+          "direction_correct": true
+        },
+        {
+          "gene": "gas-1",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 221.47407119717886,
+          "predicted_ratio": 0.6991988470868447,
+          "lit_ratio": "0.33-0.5",
+          "direction_correct": true
+        },
+        {
+          "gene": "gas-2",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 252.23130221425194,
+          "predicted_ratio": 0.796300148157772,
+          "lit_ratio": "0.5-0.7",
+          "direction_correct": true
+        },
+        {
+          "gene": "goa-1",
+          "expected": "RESISTANT",
+          "predicted_EC50_uM": 860.0108571455438,
+          "predicted_ratio": 2.7150744850081256,
+          "lit_ratio": "1.5-3.0",
+          "direction_correct": true
+        },
+        {
+          "gene": "nduf-6",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 238.27002093808665,
+          "predicted_ratio": 0.7522240550991897,
+          "lit_ratio": "0.4-0.6",
+          "direction_correct": true
+        },
+        {
+          "gene": "ndus-8",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 238.27002093808665,
+          "predicted_ratio": 0.7522240550991897,
+          "lit_ratio": "0.4-0.6",
+          "direction_correct": true
+        },
+        {
+          "gene": "nuo-1",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 238.27002093808665,
+          "predicted_ratio": 0.7522240550991897,
+          "lit_ratio": "0.4-0.7",
+          "direction_correct": true
+        },
+        {
+          "gene": "unc-79",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 225.9797539932957,
+          "predicted_ratio": 0.7134233935511536,
+          "lit_ratio": "0.33-0.5",
+          "direction_correct": true
+        },
+        {
+          "gene": "unc-80",
+          "expected": "HYPER",
+          "predicted_EC50_uM": 225.9797539932957,
+          "predicted_ratio": 0.7134233935511536,
+          "lit_ratio": "0.33-0.5",
+          "direction_correct": true
+        }
+      ]
+    },
+    "gate4_eger_specificity": {
+      "n_tested": 3,
+      "n_correct": 3,
+      "pass_criterion": "3/3 correct",
+      "PASS": true,
+      "per_compound": [
+        {
+          "compound": "cis_12_dichloroethylene",
+          "max_qf": 0.9880000000000001,
+          "expected": "ANESTHETIC",
+          "CORRECT": true
+        },
+        {
+          "compound": "hexafluoroethane",
+          "max_qf": 0.0,
+          "expected": "NON_IMMOBILIZER",
+          "CORRECT": true
+        },
+        {
+          "compound": "trans_12_dichloroethylene",
+          "max_qf": 0.0,
+          "expected": "NON_IMMOBILIZER",
+          "CORRECT": true
+        }
+      ]
+    }
+  },
+  "summary": "4/4 gates pass"
+}

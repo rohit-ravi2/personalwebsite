@@ -1,0 +1,26 @@
+{
+  "alpha_calib": 0.22,
+  "halothane_wt_max_qf": 1.0,
+  "non_immobilizer_threshold": 0.5,
+  "verdicts": {
+    "cis_12_dichloroethylene": {
+      "max_qf": 1.0,
+      "max_dose_uM": 30000.0,
+      "expected": "ANESTHETIC",
+      "verdict": "CORRECT"
+    },
+    "trans_12_dichloroethylene": {
+      "max_qf": 0.0,
+      "max_dose_uM": 30000.0,
+      "expected": "NON_IMMOBILIZER",
+      "verdict": "CORRECT"
+    },
+    "hexafluoroethane": {
+      "max_qf": 0.0,
+      "max_dose_uM": 30000.0,
+      "expected": "NON_IMMOBILIZER",
+      "verdict": "CORRECT"
+    }
+  },
+  "gate4_pass": true
+}

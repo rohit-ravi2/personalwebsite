@@ -1,0 +1,14 @@
+gene,direction,mechanism_class,lif_entry_point,testable_v1,WBPhenotype,supporting_papers
+gas-1,HYPERSENSITIVE,complex_i_block,YES — Complex I rate scaling in modulation layer,YES,WBPhenotype:0001611,WBPaper00002037|WBPaper00028429
+gas-2,HYPERSENSITIVE,complex_i_block,YES — Complex I rate scaling in modulation layer,YES,WBPhenotype:0001611,WBPaper00002037
+nduf-6,HYPERSENSITIVE,complex_i_block,YES — Complex I rate scaling in modulation layer,YES,WBPhenotype:0001611,WBPaper00028429
+ndus-8,HYPERSENSITIVE,complex_i_block,YES — Complex I rate scaling in modulation layer,YES,WBPhenotype:0001611,WBPaper00028429
+nuo-1,HYPERSENSITIVE,complex_i_block,YES — Complex I rate scaling in modulation layer,YES,WBPhenotype:0001611,WBPaper00028429
+unc-79,HYPERSENSITIVE,nca_block,YES — NCA leak conductance scaling per neuron,YES,WBPhenotype:0001611,WBPaper00000958
+unc-80,HYPERSENSITIVE,nca_block,YES — NCA leak conductance scaling per neuron,YES,WBPhenotype:0001611,WBPaper00000958
+unc-9,HYPERSENSITIVE,gap_junction,PARTIAL — gap junction weight scaling possible via _W_gap,PARTIAL,WBPhenotype:0001611,WBPaper00000958
+dgk-1,RESISTANT,gao_signaling,NO — Gαo signaling not in current modulation layer; V1 deferred,NO,WBPhenotype:0001618,WBPaper00004721
+eat-16,RESISTANT,gao_signaling,NO — Gαo signaling not in current modulation layer; V1 deferred,NO,WBPhenotype:0001618,WBPaper00004721
+egl-10,RESISTANT,gao_signaling,NO — Gαo signaling not in current modulation layer; V1 deferred,NO,WBPhenotype:0001618,WBPaper00004721
+goa-1,RESISTANT,gao_signaling,NO — Gαo signaling not in current modulation layer; V1 deferred,NO,WBPhenotype:0001618,WBPaper00004721
+ocrl-1,RESISTANT,pip2_phosphatase,NO — PIP2 signaling not in current modulation layer,NO,WBPhenotype:0001618,WBPaper00004721

@@ -1,0 +1,96 @@
+{
+  "WT_EC50_uM": 254.0,
+  "iso_EC50_uM": 232.84355309217972,
+  "mutant_results": [
+    {
+      "gene": "gas-1",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 144.33405770299558,
+      "predicted_ratio": 0.5682443216653369,
+      "lit_ratio": "0.33-0.5",
+      "lit_mid": 0.41500000000000004,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "gas-2",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 186.6065983073616,
+      "predicted_ratio": 0.7346716468793764,
+      "lit_ratio": "0.5-0.7",
+      "lit_mid": 0.6,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "nduf-6",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 167.2418009005674,
+      "predicted_ratio": 0.6584322870101079,
+      "lit_ratio": "0.4-0.6",
+      "lit_mid": 0.5,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "ndus-8",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 167.2418009005674,
+      "predicted_ratio": 0.6584322870101079,
+      "lit_ratio": "0.4-0.6",
+      "lit_mid": 0.5,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "nuo-1",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 167.2418009005674,
+      "predicted_ratio": 0.6584322870101079,
+      "lit_ratio": "0.4-0.7",
+      "lit_mid": 0.55,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "unc-79",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 152.93336886354703,
+      "predicted_ratio": 0.6020998774155395,
+      "lit_ratio": "0.33-0.5",
+      "lit_mid": 0.41500000000000004,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "unc-80",
+      "direction": "HYPER",
+      "predicted_EC50_uM": 152.93336886354703,
+      "predicted_ratio": 0.6020998774155395,
+      "lit_ratio": "0.33-0.5",
+      "lit_mid": 0.41500000000000004,
+      "direction_correct": true,
+      "magnitude_correct": true
+    },
+    {
+      "gene": "goa-1",
+      "direction": "RESISTANT",
+      "predicted_EC50_uM": 253.8709973798962,
+      "predicted_ratio": 0.9994921156688827,
+      "lit_ratio": "1.5-3.0",
+      "lit_mid": 2.25,
+      "direction_correct": false,
+      "magnitude_correct": false
+    },
+    {
+      "gene": "dgk-1",
+      "direction": "RESISTANT",
+      "predicted_EC50_uM": 253.8709973798962,
+      "predicted_ratio": 0.9994921156688827,
+      "lit_ratio": "1.5-2.0",
+      "lit_mid": 1.75,
+      "direction_correct": false,
+      "magnitude_correct": true
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# mutant_baseline_perturbations.csv
+# How each genotype is modeled as a baseline shift before anesthetic perturbation.
+# The validator applies these BEFORE the halothane Hill curve runs.
+#
+# Mechanism columns are LIF-brain entry points:
+#   complex_i_factor: scale on the global K-ATP-coupled hyperpolarizing current baseline
+#                     (lower = ATP deficit = lower baseline firing → halothane hits threshold sooner = HYPERSENSITIVE)
+#   nca_leak_factor:  scale on NCA-2/NLF-1 leak conductance (lower = lost depolarization = HYPER)
+#   wsyn_global_factor: scale on global synaptic weight W_syn (Gαo LoF → higher firing → RESISTANT)
+#   wsyn_excitatory_factor: scale on excitatory chemical weights only (alternative Gαo model)
+#
+# DEFERRED rows: literature direction is in WB, but the LIF entry point is unclear (PIP2 etc).
+gene,direction,complex_i_factor,nca_leak_factor,wsyn_global_factor,wsyn_excitatory_factor,literature_ratio,source_paper,source_PMID,notes
+gas-1,HYPER,0.40,1.0,1.0,1.0,0.33-0.5,Kayser 2001 / Morgan & Sedensky 1995,7549290,"Complex I 30-50% activity reduction (Kayser); EC50 ratio 0.33-0.5"
+gas-2,HYPER,0.60,1.0,1.0,1.0,0.5-0.7,inferred,7549290,"Complex I assembly subunit; weaker effect than gas-1"
+nduf-6,HYPER,0.50,1.0,1.0,1.0,0.4-0.6,inferred,,"Complex I core subunit"
+ndus-8,HYPER,0.50,1.0,1.0,1.0,0.4-0.6,inferred,,"Complex I core subunit"
+nuo-1,HYPER,0.50,1.0,1.0,1.0,0.4-0.7,Falk 2006,,"Complex I 49 kDa core; same family as gas-1"
+unc-79,HYPER,1.0,0.05,1.0,1.0,0.33-0.5,Sedensky 1992 (corrected per WB ontology),1346264,"NCA auxiliary; loss of leak → reduced excitability → hypersensitive (WB:0001611)"
+unc-80,HYPER,1.0,0.05,1.0,1.0,0.33-0.5,Sedensky 1992 (corrected per WB ontology),1346264,"NCA auxiliary; paired with unc-79"
+goa-1,RESISTANT,1.0,1.0,1.5,1.0,1.5-3.0,Lackner 1999 (Gαo signaling),9883712,"Gαo LoF → loss of release inhibition → higher baseline → halothane harder to overcome"
+dgk-1,RESISTANT,1.0,1.0,1.3,1.0,1.5-2.0,Nurrish 1999,10518219,"DAG kinase LoF → enhanced DAG/PKC → higher release → resistant"
+eat-16,DEFERRED,1.0,1.0,1.0,1.0,1.5-2.0,Hajdu-Cronin 1999,,"RGS for Gαo; LoF should ENHANCE Gαo → reduced release → predicts HYPER but WB says RESIST. Modeling-direction-conflict; deferred from V1."
+egl-10,DEFERRED,1.0,1.0,1.0,1.0,1.5-2.0,Koelle 1996,8857538,"RGS like eat-16; same direction conflict; deferred"
+ocrl-1,DEFERRED,1.0,1.0,1.0,1.0,1.5-2.0,,,"PIP2 phosphatase; complex effect on vesicle recycling; no clean LIF entry point"
+WT,WT,1.0,1.0,1.0,1.0,1.0,,,"reference"
