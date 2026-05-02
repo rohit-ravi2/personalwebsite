@@ -3,7 +3,7 @@ export const PROFILE = {
     SEO: {
       title: "Rohit Ravi – AI, Philosophy, and the Science of Mind",
       description:
-        "Undergraduate at NYU (Data Science, Philosophy minor). Research at the intersection of AI, computational neuroscience, and philosophy of mind — connectomics, neural-symbolic reasoning, and the Vedanta–science interface.",
+        "Undergraduate at NYU (Data Science, Philosophy minor). Research at the intersection of AI, computational neuroscience, and philosophy of mind — connectomics and neural-symbolic reasoning.",
     },
   },
   timezone: "America/New_York",
@@ -12,14 +12,13 @@ export const PROFILE = {
   name: "Rohit Ravi",
   headLine: "AI, philosophy, and the science of mind.",
   headLine2:
-    "Undergraduate at NYU (Data Science, Philosophy minor). Working at the intersection of deep learning, computational neuroscience, and philosophy of mind — with a long-running interest in the Vedanta–science interface.",
+    "Undergraduate at NYU (Data Science, Philosophy minor). Working at the intersection of deep learning, computational neuroscience, and philosophy of mind.",
   website: "https://www.rohitravi.com",
   repo: "https://github.com/rohit-ravi2/personalwebsite",
   avatarUrl: "/avatar.png",
   shortIntros: [
     "Data Science @ NYU · Philosophy minor",
     "Research: connectomics, neural-symbolic reasoning, consciousness",
-    "Writing on Vedanta, physics, and the philosophy of mind",
   ],
   words: [
     "Arise, awake, and stop not till the goal is reached. — Swami Vivekananda",
@@ -67,10 +66,6 @@ export const PROFILE = {
     {
       category: "Independent Research",
       title: "C. elegans Connectomics & Transcriptomics",
-    },
-    {
-      category: "Independent Research",
-      title: "Vedanta × Science Synthesis",
     },
     {
       category: "Independent Research",
