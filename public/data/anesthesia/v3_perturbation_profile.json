@@ -1,0 +1,796 @@
+{
+  "meta": {
+    "description": "Per-anesthetic Hill-curve perturbation profile (literature-grounded EC50/IC50 anchors)"
+  },
+  "compounds": {
+    "halothane": {
+      "active": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": 330.0,
+          "max_effect_factor": 3.0,
+          "hill_n": 1.0,
+          "source_paper": "Mihic 1997 Nature",
+          "source_PMID": "9311785",
+          "evidence_grade": "LITERATURE",
+          "notes": "\u03b11\u03b22\u03b32 GABA-A \u03c4_decay potentiation 2-4\u00d7; UNC-49 homolog"
+        },
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 3.0,
+          "hill_n": 1.0,
+          "source_paper": "Patel & Honor\u00e9 1999 Nat Neurosci",
+          "source_PMID": "10321245",
+          "evidence_grade": "LITERATURE",
+          "notes": "TREK-1 activation; max ~3\u00d7; TWK-* homologs"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": 280.0,
+          "max_effect_factor": 0.3,
+          "hill_n": 1.0,
+          "source_paper": "Forman 1996 Mol Pharmacol",
+          "source_PMID": "8633440",
+          "evidence_grade": "LITERATURE",
+          "notes": "\u03b14\u03b22 IC50; max block ~70%"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": 240.0,
+          "max_effect_factor": 0.7,
+          "hill_n": 1.0,
+          "source_paper": "Hanley 2002 Anesthesiology",
+          "source_PMID": "12411414",
+          "evidence_grade": "LITERATURE",
+          "notes": "Complex I IC50 in submitochondrial particles; max block ~30%"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": 340.0,
+          "max_effect_factor": 0.5,
+          "hill_n": 1.0,
+          "source_paper": "Stewart 2000 J Physiol",
+          "source_PMID": "11095753",
+          "evidence_grade": "LITERATURE",
+          "notes": "NMJ release-p reduction 30-50% at clinical [halothane]; van Swinderen 1999 (Drosophila syntaxin)"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": 300.0,
+          "max_effect_factor": 0.2,
+          "hill_n": 1.0,
+          "source_paper": "Lu 2007 Cell",
+          "source_PMID": "17972040",
+          "evidence_grade": "LITERATURE",
+          "notes": "NALCN block; max ~80% per Lu mammalian; Sedensky 1987 unc-79/80 worm anchors"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": 330.0,
+          "max_effect_factor": 2.5,
+          "hill_n": 1.0,
+          "source_paper": "Hibbs 2011 Nature",
+          "source_PMID": "21572436",
+          "evidence_grade": "ANALOGY",
+          "notes": "GluCl Cys-loop pocket conserved with GABA-A; transfer assumed"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": 400.0,
+          "max_effect_factor": 0.9,
+          "hill_n": 1.0,
+          "source_paper": "Kayser 2003 Anesthesiology",
+          "source_PMID": "12878724",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Small effect inferred from mev-1 mild hypersensitivity"
+        }
+      ],
+      "deferred": [],
+      "n_active": 8,
+      "n_deferred": 0
+    },
+    "isoflurane": {
+      "active": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 3.0,
+          "hill_n": 1.0,
+          "source_paper": "Mihic 1997 Nature",
+          "source_PMID": "9311785",
+          "evidence_grade": "LITERATURE",
+          "notes": "Comparable to halothane in \u03b11\u03b22\u03b32 panel"
+        },
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 200.0,
+          "max_effect_factor": 3.0,
+          "hill_n": 1.0,
+          "source_paper": "Patel & Honor\u00e9 1999 Nat Neurosci",
+          "source_PMID": "10321245",
+          "evidence_grade": "LITERATURE",
+          "notes": "TREK-1 EC50 slightly lower than halothane"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 0.3,
+          "hill_n": 1.0,
+          "source_paper": "Forman 1996 Mol Pharmacol",
+          "source_PMID": "8633440",
+          "evidence_grade": "LITERATURE",
+          "notes": "\u03b14\u03b22 IC50; max block ~70%"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 0.75,
+          "hill_n": 1.0,
+          "source_paper": "Hanley 2002 Anesthesiology",
+          "source_PMID": "12411414",
+          "evidence_grade": "LITERATURE",
+          "notes": "Slightly weaker Complex I block than halothane"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": 290.0,
+          "max_effect_factor": 0.55,
+          "hill_n": 1.0,
+          "source_paper": "Stewart 2000 J Physiol",
+          "source_PMID": "11095753",
+          "evidence_grade": "LITERATURE",
+          "notes": "Comparable to halothane; clinical EC50"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 0.25,
+          "hill_n": 1.0,
+          "source_paper": "Lu 2007 Cell",
+          "source_PMID": "17972040",
+          "evidence_grade": "LITERATURE",
+          "notes": "NALCN block at clinical [iso]"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": 290.0,
+          "max_effect_factor": 2.5,
+          "hill_n": 1.0,
+          "source_paper": "Hibbs 2011 Nature",
+          "source_PMID": "21572436",
+          "evidence_grade": "ANALOGY",
+          "notes": "Transfer from GABA-A"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": 400.0,
+          "max_effect_factor": 0.9,
+          "hill_n": 1.0,
+          "source_paper": "Kayser 2003 Anesthesiology",
+          "source_PMID": "12878724",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Weak effect"
+        }
+      ],
+      "deferred": [],
+      "n_active": 8,
+      "n_deferred": 0
+    },
+    "sevoflurane": {
+      "active": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": 200.0,
+          "max_effect_factor": 3.0,
+          "hill_n": 1.0,
+          "source_paper": "Krasowski 1999 review",
+          "source_PMID": "10454514",
+          "evidence_grade": "LITERATURE",
+          "notes": "~comparable potency on GABA-A"
+        },
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 180.0,
+          "max_effect_factor": 3.0,
+          "hill_n": 1.0,
+          "source_paper": "Patel & Honor\u00e9 1999 Nat Neurosci",
+          "source_PMID": "10321245",
+          "evidence_grade": "LITERATURE",
+          "notes": "TREK-1 activation"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 0.4,
+          "hill_n": 1.0,
+          "source_paper": "Forman 1996 Mol Pharmacol",
+          "source_PMID": "8633440",
+          "evidence_grade": "HOMOLOG",
+          "notes": "Weaker \u03b14\u03b22 block than halothane"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": 300.0,
+          "max_effect_factor": 0.8,
+          "hill_n": 1.0,
+          "source_paper": "Hanley 2002 Anesthesiology",
+          "source_PMID": "12411414",
+          "evidence_grade": "LITERATURE",
+          "notes": "Less Complex I sensitive than halothane"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": 230.0,
+          "max_effect_factor": 0.6,
+          "hill_n": 1.0,
+          "source_paper": "Stewart 2000 J Physiol",
+          "source_PMID": "11095753",
+          "evidence_grade": "HOMOLOG",
+          "notes": "Inferred from clinical EC50 ratio"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": 250.0,
+          "max_effect_factor": 0.3,
+          "hill_n": 1.0,
+          "source_paper": "Lu 2007 Cell",
+          "source_PMID": "17972040",
+          "evidence_grade": "HOMOLOG",
+          "notes": "NALCN engagement at sevo MAC"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": 200.0,
+          "max_effect_factor": 2.5,
+          "hill_n": 1.0,
+          "source_paper": "Hibbs 2011 Nature",
+          "source_PMID": "21572436",
+          "evidence_grade": "ANALOGY",
+          "notes": "Transfer from GABA-A"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": 400.0,
+          "max_effect_factor": 0.95,
+          "hill_n": 1.0,
+          "source_paper": "Kayser 2003 Anesthesiology",
+          "source_PMID": "12878724",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Very weak"
+        }
+      ],
+      "deferred": [],
+      "n_active": 8,
+      "n_deferred": 0
+    },
+    "propofol": {
+      "active": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": 1.0,
+          "max_effect_factor": 10.0,
+          "hill_n": 1.5,
+          "source_paper": "Belelli 1997 Br J Pharmacol",
+          "source_PMID": "9298537",
+          "evidence_grade": "LITERATURE",
+          "notes": "\u03b2-specific potentiation; EC50 sub-\u00b5M at \u03b11\u03b22\u03b32; very potent"
+        },
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 5.0,
+          "max_effect_factor": 2.0,
+          "hill_n": 1.0,
+          "source_paper": "Patel & Honor\u00e9 1999 Nat Neurosci",
+          "source_PMID": "10321245",
+          "evidence_grade": "LITERATURE",
+          "notes": "Weak K2P activation; not the dominant mechanism"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": 10.0,
+          "max_effect_factor": 0.5,
+          "hill_n": 1.0,
+          "source_paper": "Flood 1997 Br J Anaesth",
+          "source_PMID": "9135360",
+          "evidence_grade": "LITERATURE",
+          "notes": "Weak nAChR antagonism at clinical concentrations"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": 1.0,
+          "max_effect_factor": 8.0,
+          "hill_n": 1.5,
+          "source_paper": "Belelli 1997 Br J Pharmacol",
+          "source_PMID": "9298537",
+          "evidence_grade": "ANALOGY",
+          "notes": "Transfer from GABA-A; \u03b2-specific via Cys-loop conservation"
+        }
+      ],
+      "deferred": [
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "No clean primary anchor for propofol Complex I block"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "No primary anchor"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "IV anesthetics not significantly active at SNARE Ca-cooperativity per Stewart 2000"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "No primary anchor; not a known propofol target"
+        }
+      ],
+      "n_active": 4,
+      "n_deferred": 4
+    },
+    "ketamine": {
+      "active": [
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": 30.0,
+          "max_effect_factor": 0.5,
+          "hill_n": 1.0,
+          "source_paper": "Flood 1997 Br J Anaesth",
+          "source_PMID": "9135360",
+          "evidence_grade": "LITERATURE",
+          "notes": "Weak nAChR block"
+        },
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 200.0,
+          "max_effect_factor": 1.5,
+          "hill_n": 1.0,
+          "source_paper": "Patel & Honor\u00e9 1999 Nat Neurosci",
+          "source_PMID": "10321245",
+          "evidence_grade": "LITERATURE",
+          "notes": "Mild K2P activation; not dominant"
+        }
+      ],
+      "deferred": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Ketamine is not a GABA-A potentiator at clinical concentrations"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "No clean primary anchor"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        }
+      ],
+      "n_active": 2,
+      "n_deferred": 6
+    },
+    "etomidate": {
+      "active": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": 0.3,
+          "max_effect_factor": 12.0,
+          "hill_n": 1.5,
+          "source_paper": "Belelli 1997 Br J Pharmacol",
+          "source_PMID": "9298537",
+          "evidence_grade": "LITERATURE",
+          "notes": "\u03b2-specific; sub-\u00b5M EC50; the canonical \u03b22/\u03b23 potentiator"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": 0.3,
+          "max_effect_factor": 6.0,
+          "hill_n": 1.5,
+          "source_paper": "Belelli 1997 Br J Pharmacol",
+          "source_PMID": "9298537",
+          "evidence_grade": "ANALOGY",
+          "notes": "\u03b2-specific Cys-loop transfer"
+        }
+      ],
+      "deferred": [
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known etomidate target"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Etomidate is GABA-A specific"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not a known target"
+        }
+      ],
+      "n_active": 2,
+      "n_deferred": 6
+    },
+    "hexafluoroethane": {
+      "active": [
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 5000.0,
+          "max_effect_factor": 1.5,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Some lipid-pocket binding but very weak K2P engagement at any reasonable dose"
+        }
+      ],
+      "deferred": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Eger non-immobilizer; lacks GABA-A potentiation despite lipid solubility (Eger 2001)"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active per van Swinderen panel"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        }
+      ],
+      "n_active": 1,
+      "n_deferred": 7
+    },
+    "trans_12_dichloroethylene": {
+      "active": [
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 3000.0,
+          "max_effect_factor": 1.5,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Weak partial activity"
+        }
+      ],
+      "deferred": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Eger non-immobilizer; minimal GABA-A engagement"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        },
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        }
+      ],
+      "n_active": 1,
+      "n_deferred": 7
+    },
+    "cis_12_dichloroethylene": {
+      "active": [
+        {
+          "mechanism_class": "gaba_potentiation",
+          "target_EC50_uM": 800.0,
+          "max_effect_factor": 2.5,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Cis-DCE is anesthetic per Eger 2001; weaker than clinical volatiles"
+        },
+        {
+          "mechanism_class": "k2p_potentiation",
+          "target_EC50_uM": 500.0,
+          "max_effect_factor": 2.5,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Inferred K2P activity matching anesthetic potency"
+        },
+        {
+          "mechanism_class": "nachr_antagonism",
+          "target_EC50_uM": 800.0,
+          "max_effect_factor": 0.5,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Partial nAChR block"
+        },
+        {
+          "mechanism_class": "complex_i_block",
+          "target_EC50_uM": 800.0,
+          "max_effect_factor": 0.85,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Partial Complex I block; weak"
+        },
+        {
+          "mechanism_class": "snare_cooperativity",
+          "target_EC50_uM": 800.0,
+          "max_effect_factor": 0.7,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Partial SNARE engagement"
+        },
+        {
+          "mechanism_class": "nca_block",
+          "target_EC50_uM": 800.0,
+          "max_effect_factor": 0.4,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "CONSERVATIVE",
+          "notes": "Partial NCA block"
+        },
+        {
+          "mechanism_class": "glucl_potentiation",
+          "target_EC50_uM": 800.0,
+          "max_effect_factor": 2.5,
+          "hill_n": 1.0,
+          "source_paper": "Eger 2001 Anesth Analg",
+          "source_PMID": "11375814",
+          "evidence_grade": "ANALOGY",
+          "notes": "Transfer from GABA-A"
+        }
+      ],
+      "deferred": [
+        {
+          "mechanism_class": "complex_ii_block",
+          "target_EC50_uM": null,
+          "max_effect_factor": null,
+          "hill_n": 1.0,
+          "source_paper": "",
+          "source_PMID": "",
+          "evidence_grade": "DEFERRED",
+          "notes": "Not active"
+        }
+      ],
+      "n_active": 7,
+      "n_deferred": 1
+    }
+  }
+}

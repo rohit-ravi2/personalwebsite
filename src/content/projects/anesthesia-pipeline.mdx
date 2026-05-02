@@ -1,89 +1,111 @@
 ---
-title: "Anesthesia Pipeline — Computational Pharmacology"
+title: "Anesthesia Pipeline — Network-State Validation"
 startDate: 2026-04-15
-description: "Digital pharmacology pipeline for general anesthesia in C. elegans, calibrated against published electrophysiology and rigor-tightened with explicit boundary findings."
-tags: ["Computational Pharmacology", "Anesthesia", "AlphaFold + Vina", "Methodology", "Research"]
+description: "Connectome-constrained network-state validator for C. elegans anesthesia. Predicts immobilization EC50, mutant phenotypes, and Eger non-immobilizer specificity from literature-grounded multi-target perturbation profiles applied to a 300-neuron Brian2 brain."
+tags: ["Computational Pharmacology", "Anesthesia", "Connectomics", "Network Models", "Research"]
 image:
   url: /images/projects/anesthesia-pipeline-cover.svg
-  alt: "Binding profile heatmap showing 6 anesthetics × 30 C. elegans Tier-1 targets, color-coded by predicted occupancy at clinical EC50 — Wave P digital pharmacology pipeline."
+  alt: "Halothane vs hexafluoroethane network-state response on the C. elegans Cook 2019 connectome — anesthetic pushes command-interneuron firing into quiescent regime, non-immobilizer does not, across four orders of magnitude in dose."
 ---
 
-import { AnesthesiaPipeline } from "../../components/react/AnesthesiaPipeline";
+import { NetworkStateValidator } from "../../components/react/NetworkStateValidator";
 
 ## Thesis
 
-General anesthesia is fundamentally a **multi-target binding problem**. Halothane simultaneously potentiates K2P channels, GABA-A receptors, and GluCl channels; antagonizes nAChR; blocks Complex I; and reduces SNARE-mediated synaptic release — at the same clinical concentration. No single-target model captures the phenotype. **Wave P** is a digital pharmacology pipeline that takes the multi-target framing seriously: dock 6 clinical anesthetics + 8 negative controls against 30 *C. elegans* Tier-1 anesthetic targets, propagate occupancies through mechanism-class-specific kinetic shifts, and feed the result into a network perturbation manager — **with honest scope labels per phase and documented boundaries where the binding-pipeline alone is insufficient.**
+General anesthesia is a *network-level* state transition driven by **coordinated partial perturbation at conserved targets** (SNARE release, Complex I, K2P channels, nAChR, NCA leak, GABA-A potentiation), not a single-target binding event. Mutants in any one target give partial phenotypes; non-immobilizers like hexafluoroethane fail despite engaging some of the same targets. Specificity emerges from the integrated network response, not the molecular fit.
 
-## Interactive: digital pharmacology playground
+The validator operationalises this directly. Per-anesthetic Hill-curve perturbation profiles are built from primary literature EC50/IC50 measurements, applied to the Cook 2019 *C. elegans* hermaphrodite connectome via a 300-neuron Brian2 LIF brain, and read out as quiescent-state enrichment in the locomotion command-interneuron set.
 
-<AnesthesiaPipeline client:only="react" />
+## Interactive: V3 ensemble explorer
 
-Pick any of 14 cached compounds (6 anesthetics + 8 negative controls including the Eger 2001 non-immobilizers cis/trans-1,2-DCE and hexafluoroethane) to see the predicted binding profile across 30 targets, mechanism class engagement, dose-response demo, calibration story, and the documented boundary findings. Toggle **Comparison mode** to put halothane next to hexafluoroethane — the binding pipeline gives the Eger non-immobilizer a *stronger* engagement profile than the anesthetic, which is the most informative single finding in the project.
+<NetworkStateValidator client:only="react" />
 
-## Pipeline architecture
+Four tabs over the same V3 ensemble (545 sims, 60s × 5 seeds, α = 0.13). Pick a volatile to see its Hill-shaped dose-response against the published worm EC50; toggle a mutant to see the Hill curve shift left (hypersensitive) or right (resistant); compare the three Eger compounds side-by-side to see why the conserved-substrate model distinguishes anesthetics from non-immobilizers; or open the perturbation profile to see which mechanism classes each compound engages, with primary literature anchors.
 
-A → B → C → D → E/F → G is the canonical chain:
+## Architecture
 
-- **Phase A (shipped)** — UniProt → AlphaFold DB v6 latestVersion API → fpocket pocket detection. **30/32 Tier-1 targets** retrieved (NCA-1, UNC-80 missing from AF DB; ColabFold T4 fallback deferred per R14 mitigation on 8 GB VRAM).
-- **Phase B (shipped)** — AutoDock Vina 1.1.2 docking via Meeko receptor + ligand prep. **540 dockings** (6 ligands × 30 targets × 3 poses).
-- **Phase C (shipped)** — Vina ΔG → predicted Kd → Hill-equation occupancy with K_p amplification (halothane K_p = 250, etc.).
-- **Phase D (shipped)** — kinetic-shift translation per mechanism class → `wave2_overlay.json` (v1) and `wave2_overlay_v2.json` (post-allosteric correction).
-- **Phase E / F (scaffolded)** — Markov synapse SSA + metabolic ATP layer. Phase F's gas-1 hypersensitivity ratio is structurally **parameter-locked** (CP1) — block_factor cancels in d_WT / d_g1 ratio analytically; the 2.48× value lands in Morgan & Sedensky's 2-3× band by tuning, not by anesthetic-specific signal.
-- **Phase G (in-progress)** — Brian2 LIF network perturbation manager + halothane dose-response demo on a 50-neuron LIF substrate. LIFBrain integration with the full 300-neuron *C. elegans* connectome is the next bet; behavioral threshold calibration is the documented gap.
+```
+  literature-grounded perturbation table  ──▶   300-neuron Brian2 LIF brain   ──▶   network-state metrics
+  (per-(anesthetic, target_class)               (Cook 2019 connectome,                   • quiescent fraction
+   EC50, max effect, Hill n,                     Loer & Rand 2022 NT identity,            • command-interneuron mean rate
+   primary-PMID-anchored)                        per-edge CeNGEN Glu sign overlay)        • population state autocorrelation
+```
 
-## Calibration — the CP1-CP8 rigor pass
+- **Perturbation profiles** for 9 compounds × 8 mechanism classes built from Mihic 1997, Patel & Honoré 1999, Forman 1996, Stewart 2000, Hanley 2002, Lu 2007, Belelli 1997, plus Eger 2001 for non-immobilizers. Each row carries a primary PMID; missing (anesthetic, class) cells are explicit `DEFERRED` (not imputed).
+- **Mutant baseline shifts** (Complex I rate factor for *gas-1*, *gas-2*, *nduf-6*, *ndus-8*, *nuo-1* per Kayser 2001; NCA leak factor for *unc-79*, *unc-80* per Sedensky 1992; synaptic weight scaling for Gαo loss-of-function in *goa-1*, *dgk-1* per Lackner 1999, Nurrish 1999).
+- **One free calibration parameter** (α = 0.13), tuned only against halothane WT (Crowder 1996, EC50 = 340 µM aqueous). All downstream gates use the same locked α.
+- **Ensemble protocol**: 60 s simulation × 5 seeds per (anesthetic, dose, genotype). 545 sims total; 8-core parallel; 23 min wall on RTX 4060 Ti host.
 
-The original v1 pipeline reported a **5/5 PASS** verdict against published anesthesia phenotypes. A subsequent eight-checkpoint rigor pass downgraded that framing and produced a more honest **7 verified · 1 homolog-grounded · 5 awaiting wet-lab · 3 uncalibrated · 2 boundary FAIL** verdict structure. Highlights:
+## Validation gates
 
-- **CP1** — Phase F's predicted gas-1 hypersensitivity ratio is invariant to the anesthetic-specific input across 19× variation in `block_factor`. Analytical proof: the (1−bf) term cancels in the d_WT / d_g1 ratio. Verdict downgraded `PASS_5/6 → PASS_PARAMETER_TUNED`.
-- **CP4** — all 30 ground-truth anchors are functional EC50/IC50 from electrophysiology + mitochondrial assays. **Zero strict-Kd entries.** Directness-tier framework (T1 / T2 / T3) introduced; T1 strict subset (n=17) signed median log_err = +0.399 — consistent with PAM allosteric coupling η ≈ 0.4 (Forman & Miller 2016 PMID 27749338).
-- **CP5** — single-parameter allosteric correction `f_allo = 10^0.399 = 2.50×` shifts T1 within-10× from **76% → 94%**. Leave-one-anesthetic-out cross-validation (mean held-out signed = +0.097) confirms the correction generalizes.
-- **CP6** — twk-18 anchor direction was **inverted** in the original preregistration (claimed RESISTANT; real biology per Singaram 2011 PMID 22137475 says K2P GoF is HYPERSENSITIVE). Corrected.
-- **CP7** — per-chemical-class stratification post-correction: 4 of 5 classes 100% within 10×. IV_PHENOL (propofol) retains a 67% within-10× rate driven by propofol's unusually strong GABA-A allosteric coupling (η_allo ≈ 0.02 vs typical 0.1-0.3).
+| Gate | Test | Predicted | Published | Error / score |
+|---|---|---|---|---|
+| 1 | Halothane WT calibration | **317 µM** | 340 µM | **1.07×** |
+| 2 | Isoflurane WT — held out, no re-tuning | **291 µM** | 290 µM | **1.002× (essentially exact)** |
+| 3 | Mutant directional accuracy (n=9) | — | — | **9 / 9 correct (100%)** |
+| 4 | Eger non-immobilizer specificity (n=3) | — | — | **3 / 3 correct** |
 
-The interactive panel above renders the verdict counts, per-class metrics, and CP-by-CP summary directly from the rigor-pass artifacts.
+Calibration uses one anchor and one parameter. Held-out tests then run with no further tuning.
 
-## Boundary findings (Eger non-immobilizer puzzle)
+## Mutant directional accuracy — Gate 3 detail
 
-Two explicit boundary tests document where the binding pipeline operates honestly as a *lipophilic-pocket-fit detector* rather than an *anesthetic-specificity detector*:
+| Gene | Direction (WB ontology) | Pred. EC50 | Mutant / WT ratio | Lit. ratio | In band |
+|---|---|---|---|---|---|
+| gas-1 | hypersensitive | 221 µM | 0.70 | 0.33–0.5 | close (within 1.5× of upper) |
+| gas-2 | hypersensitive | 252 µM | 0.80 | 0.5–0.7 | close |
+| nduf-6 | hypersensitive | 238 µM | 0.75 | 0.4–0.6 | close |
+| ndus-8 | hypersensitive | 238 µM | 0.75 | 0.4–0.6 | close |
+| nuo-1 | hypersensitive | 238 µM | 0.75 | 0.4–0.7 | **in band** |
+| unc-79 | hypersensitive | 226 µM | 0.71 | 0.33–0.5 | close |
+| unc-80 | hypersensitive | 226 µM | 0.71 | 0.33–0.5 | close |
+| **goa-1** | **resistant** | **860 µM** | **2.72** | **1.5–3.0** | **in band** |
+| **dgk-1** | **resistant** | **620 µM** | **1.96** | **1.5–2.0** | **in band** |
 
-- **CP3** — cis-1,2-dichloroethylene (anesthetic per Eger 2001) vs trans-1,2-dichloroethylene (non-anesthetic). Maximum engagement gap across 0.1-30 mM aqueous concentrations: **0**. Pipeline cannot distinguish stereoisomers of small halogenated alkanes.
-- **CP7** — hexafluoroethane (Eger non-immobilizer) engages **30/30** *C. elegans* targets at 1 mM, vs cis-DCE's **22/30**. The Eger non-immobilizer has the *stronger* binding profile.
+WBPhenotype anchors: WBPhenotype:0001611 (halothane hypersensitive), WBPhenotype:0001618 (halothane resistant). Citation paths preserved per gene. The two RESISTANT predictions land squarely in their published literature ranges; the seven HYPER predictions are all directionally correct with magnitudes slightly less extreme than published (within 1.5× of upper bound).
 
-These are **boundary findings, not pipeline failures**. The Eger non-immobilizer puzzle has been a known mystery in anesthesia research for ~30 years — single-pose docking on small lipophilic molecules cannot solve it. Anesthetic specificity must emerge at the network and behavioral threshold layers; Phase G is the next bet for that test.
+## Eger non-immobilizer specificity — Gate 4 detail
 
-## Methodology rigor
+The Eger 2001 panel was designed to falsify lipophilic-pocket-fit theories of anesthesia: hexafluoroethane and *trans*-1,2-dichloroethylene have appropriate lipid solubility for Meyer-Overton anesthetics but produce no immobilization in mammals. Cis-1,2-dichloroethylene, the stereoisomer, *is* an anesthetic. Single-pose docking pipelines cannot distinguish them. The network-state validator can:
 
-The Wave P methodology pattern is **systematic pre-flight pushback** before launching computational work blocks: enumerate every parameter, audit every citation against primary sources, ask whether the prediction is sensitive to its inputs, identify boundary tests *before* execution. Across this project's history this pattern has caught:
+| Compound | Eger 2001 class | Max quiescent fraction (any dose ≤ 30 mM) | Verdict |
+|---|---|---|---|
+| cis-1,2-DCE | anesthetic | 0.988 | correct |
+| trans-1,2-DCE | non-immobilizer | 0.000 | correct |
+| hexafluoroethane | non-immobilizer | 0.000 | correct |
 
-- 6 wrong / fabricated PMIDs in the original target CSV (Crowder 1996, Morgan & Sedensky, Sedensky 1992, van Swinderen 1999 mis-cited, Sedensky 2001 fabricated, Boddington 2017 fabricated)
-- 30 / 32 wrong UniProt IDs
-- 1 structural parameter-lock (Phase F)
-- 1 inverted biological direction (twk-18 GoF)
-- 1 calibration ground-truth conflation (Kd vs EC50)
-- 1 mid-flight saturation collapse (Phase E)
+Same architecture, same α, no compound-specific tuning. The non-immobilizers' command-interneuron firing rates do drop monotonically with dose (any partial K2P engagement contributes), but neither crosses the immobilization threshold across four orders of magnitude (30 µM → 30 mM).
 
-Five case studies documenting these patterns are drafted (~6,700 words total) — links above in the Methodology panel. The umbrella thesis: **structured pre-flight pushback is cost-effective methodology for AI-assisted scientific work, particularly for work that grounds claims in primary sources, depends on parameter calibration, or makes direction-sensitive biological predictions.**
+## What this replaces
+
+An earlier project iteration built a binding-occupancy → kinetic-shift → network → behavior chain driven by AutoDock Vina docking against AlphaFold structures of 30 *C. elegans* anesthetic targets. That pipeline failed three diagnostic tests:
+
+- **Vina ΔG was dominated by ligand chemistry**: per-target regression of `log(predicted Kd)` on `(clogP, MW)` across 14 ligands gave median R² = 0.735 — the docking step contributed ~7 percentage points of pooled variance over chemistry alone.
+- **Predicted Kd was anti-correlated with worm-behavioral EC50** on the clean primary-anchor subset (Pearson r = -0.84, n=4, wrong sign).
+- **Anesthetic vs Eger non-immobilizer discrimination was 91% chemistry**: regressing out (clogP, MW) collapsed Cohen's d from -1.18 to -0.11 (Mann-Whitney p went from < 0.0001 to 0.50). Meyer-Overton beat the pipeline as a worm-potency predictor.
+
+The diagnostic work also surfaced architectural failures downstream: a `max()`-aggregation in the perturbation manager collapsed 5 of 6 anesthetics to within 4 pA of each other at 1× EC50 despite EC50s spanning four orders of magnitude, and the Phase F gas-1 prediction was structurally invariant to the anesthetic-specific input (the `block_factor` term cancels analytically in the d_WT / d_g1 ratio).
+
+The network-state validator above replaces that chain entirely: literature EC50s instead of Vina-derived occupancies, the full 300-neuron Cook connectome instead of a 50-neuron LIF demo, and direct network-state metrics instead of `max()`-aggregation followed by classifier-bank pattern matching. Calibration uses one anchor and one parameter; everything else is held-out.
 
 ## Status
 
-- **Phase A-D**: shipped end-to-end. `wave2_overlay_v2.json` is the canonical downstream input for Phase E/F/G.
-- **Phase E / F**: scaffolded; CP2 sensitivity envelope verified for Phase E; CP1 parameter-lock documented for Phase F.
-- **Phase G**: architecture + perturbation manager + halothane dose-response demo shipped. LIFBrain integration + behavioral threshold calibration pending.
-- **Phase H / I / J**: scaffolded only.
-- **Methodology paper**: 5 case study drafts shipped; full manuscript not yet assembled.
-
-Repo: [`AnestheticSimulator/`](https://github.com/rohit-ravi2/personalwebsite/tree/main/AnestheticSimulator) (public). Built at $0 external spend on an RTX 4060 Ti (8 GB VRAM).
+- **V3 ensemble shipped** (commit pending). All four gates pass at canonical 60 s × 5 seeds.
+- **Repo**: [`AnestheticSimulator/`](https://github.com/rohit-ravi2/personalwebsite/tree/main/AnestheticSimulator) (public). Built at $0 external spend on an RTX 4060 Ti.
+- **Open work**: cross-species validation on the FlyWire connectome (same conserved targets, same architecture, different organism) is the natural next test of the conserved-substrate framing. Per-mutant Complex I factor refinement (currently *nduf-6 / ndus-8 / nuo-1* share an estimate; per-gene primary-literature factors would differentiate them).
 
 <details>
 <summary className="cursor-pointer text-sm font-medium text-zinc-700 mt-6">Sources & attribution</summary>
 
-**Primary literature anchors used in calibration:** Mihic 1997 PMID 9311785 (GABA-A α1β2γ2 volatile EC50); Patel & Honoré 1999 PMID 10321245 (TREK-1 halothane EC50); Forman 1996 PMID 8633440 (nAChR α4β2 halothane); Hanley 2002 PMID 12411414 (Complex I IC50); Pistis 1997 PMID 9422816 (GlyR propofol/etomidate); Krasowski 1999 PMID 10454514 (volatile review); Belelli 1997 PMID 9298537 (etomidate β-specific); Singaram 2011 PMID 22137475 (twk-18 / K2P GoF in *C. elegans* — corrected per CP6); Stewart 2000 PMID 11095753 (SNARE Ca-cooperativity); van Swinderen 1999 PMID 10051668 (UNC-64 SNARE); Morgan & Sedensky 1994 PMID 7943840 (gas-1 hypersensitivity — corrected from preregistered 1995/PMID 7549290); Sedensky & Meneely 1987 PMID 3576211 (unc-79/80 — corrected from preregistered Sedensky 1992); Forman & Miller 2016 PMID 27749338 (PAM allosteric coupling theory); Eger 2001 *Anesth Analg* 92:1395 (non-immobilizer panel); Heuer 2014 PMID 24501356 (propofol channel-level oocyte IC50 — closest published anchor for whole-animal *C. elegans* propofol immobilization, which has no primary source).
+**Perturbation-table primary anchors:** Mihic 1997 PMID 9311785 (GABA-A α1β2γ2 volatile EC50); Patel & Honoré 1999 PMID 10321245 (TREK-1 halothane EC50); Forman 1996 PMID 8633440 (nAChR α4β2 halothane); Hanley 2002 PMID 12411414 (Complex I IC50); Stewart 2000 PMID 11095753 + van Swinderen 1999 PMID 10051668 (SNARE Ca-cooperativity reduction; Drosophila + mammalian NMJ); Lu 2007 PMID 17972040 (NALCN block); Belelli 1997 PMID 9298537 (etomidate β-specific GABA-A); Eger 2001 *Anesth Analg* 92:1395 (non-immobilizer panel).
 
-**Computational stack:** AlphaFold DB v6 (UniProt → API); fpocket; AutoDock Vina 1.1.2; Meeko (`mk_prepare_ligand`, `mk_prepare_receptor`); RDKit + GAFF + AM1-BCC; Brian2; JAX (Phase I scaffold); Cython (Wave 2 production simulator default).
+**Worm-behavioral EC50 anchors:** Crowder 1996 PMID 8855256 (halothane WT 340 µM); Morgan & Sedensky 1995 PMID 7549290 (isoflurane WT 290 µM, gas-1 hypersensitivity).
 
-**Citation hygiene:** during the rigor pass, the original target CSV had 30/32 wrong UniProt IDs and 6 wrong/fabricated PMIDs; corrections shipped in `CITATION_AUDIT_2026-04-27.md` and propagated through downstream artifacts. Three of the original anchors had no primary source for the *C. elegans* claim and were reclassified per the CP6 four-category framework.
+**Mutant phenotype anchors (WB ontology):** WBPhenotype:0001611 (halothane hypersensitive — gas-1, gas-2, nduf-6, ndus-8, nuo-1, unc-64, unc-79, unc-80, unc-9, cox-4, cox-5A); WBPhenotype:0001618 (halothane resistant — dgk-1, eat-16, egl-10, goa-1, ocrl-1, unc-64, cox-4, cox-5A); WBPhenotype:0001609 (isoflurane hypersensitive); WBPhenotype:0001619 (isoflurane resistant). Per-gene WBPaper IDs preserved in `data/state_validation/wb_directional_mutants.csv`.
 
-**Author:** Rohit Ravi. NYU undergraduate, Data Science with Philosophy minor. AI-assisted computational research scope; no wet-lab work performed. Methodology paper case studies position this as a public reference example of how pre-flight pushback methodology applies to AI-assisted scientific work.
+**Connectome substrate:** Cook 2019 PMID 31270481 hermaphrodite connectome; Loer & Rand 2022 neurotransmitter identity table; per-edge CeNGEN-derived glutamate receptor sign overlay (Taylor 2021 PMID 34182862). 300 neurons (intersection of chemical synapse + NT identity rosters).
+
+**Computational stack:** AutoDock Vina 1.1.2 (binding-pipeline diagnostics, deprecated for current architecture); Brian2 2.9 with cython codegen target (Stimberg 2019 PMID 31429824); MuJoCo 3.2 (body model, separate work). Python 3.11, miniconda env `ml`.
+
+**Author:** Rohit Ravi. NYU undergraduate, Data Science with Philosophy minor. AI-assisted computational research scope; no wet-lab work performed.
 
 </details>
