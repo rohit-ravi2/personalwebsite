@@ -1,0 +1,98 @@
+{
+  "created_at_utc": "2026-05-03T10:56:45.033455+00:00",
+  "purpose": "Pre-registered frozen parameters for V3 worm + V4 fly cross-species validator. V5 adversarial controls run AGAINST these \u2014 any subsequent change to a hashed file invalidates downstream results.",
+  "commit_hash_at_freeze": "f14076419c72d61424bb4677457a59654c26cb0a",
+  "free_parameters": {
+    "worm_V3_alpha": 0.13,
+    "fly_V4_alpha": 0.06
+  },
+  "files": {
+    "worm_perturbation_table": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation/anesthetic_perturbation_table.csv",
+      "sha256": "70651e0fd7a816ca4daf39909e7e789eb653837f5cb719030dee36ad14be3a1b",
+      "size_bytes": 8787
+    },
+    "worm_mutant_baselines": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation/mutant_baseline_perturbations.csv",
+      "sha256": "b9faa55ca8b0d08c5827d295cb21370f91f8cae99aa388d82f1e0fba1e585957",
+      "size_bytes": 2569
+    },
+    "worm_immob_anchors": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation/worm_immobilization_anchors.csv",
+      "sha256": "16099013f2921e4b06c44385eb4b359f2f2f9fd5331ba816f68677186937993a",
+      "size_bytes": 927
+    },
+    "worm_directional_test": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation/halothane_directional_test.csv",
+      "sha256": "ea218b70f4c97b9b97da087c3bce79ece26643632d176f650b5323eeb26a5b1b",
+      "size_bytes": 1812
+    },
+    "worm_wb_directional": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation/wb_directional_mutants.csv",
+      "sha256": "2d1277c0de1ce31bfde50e6ee04e695561db53ab7a9e8e250645410a6aa65745",
+      "size_bytes": 6034
+    },
+    "fly_perturbation_table": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation_fly/fly_anesthetic_perturbation_table.csv",
+      "sha256": "6ec9ec91a38389aa6aa837a26c6c6e5d22fa19e2cf58dd62ec925591b8b7ce4a",
+      "size_bytes": 8527
+    },
+    "fly_mutant_baselines": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation_fly/fly_mutant_baseline_perturbations.csv",
+      "sha256": "c3b84d2f6decf0d90d7e1ee57c9bec0f3e649655391ed32e39713d833ba54214",
+      "size_bytes": 2170
+    },
+    "fly_immob_anchors": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation_fly/fly_immobilization_anchors.csv",
+      "sha256": "cc8ea9cbe0481d4b51c85448a698fcd4d0eadae669f16bc2f0e8f8396109e26b",
+      "size_bytes": 1217
+    },
+    "fly_directional_mutants": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation_fly/fly_directional_mutants.csv",
+      "sha256": "8600bff79949e64d9ab6e0204a1bd00b4f59222f5ae9638db80492d0d9cfb94b",
+      "size_bytes": 3200
+    },
+    "fly_nt_heuristic": {
+      "path": "personalwebsite/AnestheticSimulator/data/state_validation_fly/fly_nt_identity_heuristic.csv",
+      "sha256": "810b52d3a91e5ed2dc5a536284892ddef4fc09dc691c4d78c0001066fd79fa84",
+      "size_bytes": 2844
+    },
+    "worm_v3_verdict": {
+      "path": "personalwebsite/AnestheticSimulator/artifacts/state_validation/v3_ensemble/v2_verdict.json",
+      "sha256": "53f73bd2635fd1b72b864efbdc9d1c77a0c88cebcc72ed796423fbed44c901b9",
+      "size_bytes": 3686
+    },
+    "fly_v4_verdict": {
+      "path": "personalwebsite/AnestheticSimulator/artifacts/state_validation_fly/v4_ensemble/v4_verdict.json",
+      "sha256": "7b11cb785dda508f82d19af56fe90a0152e5882a38c05b33476d0758604fbb92",
+      "size_bytes": 4476
+    }
+  },
+  "gate_results_at_freeze": {
+    "worm_V3": {
+      "gate1_halothane_wt_predicted_uM": 316.75,
+      "gate1_halothane_wt_published_uM": 340.0,
+      "gate1_fold_error": 1.0734,
+      "gate2_iso_wt_predicted_uM": 290.68,
+      "gate2_iso_wt_published_uM": 290.0,
+      "gate2_fold_error": 1.0023,
+      "gate3_directional_n_correct": 9,
+      "gate3_directional_n_tested": 9,
+      "gate4_eger_n_correct": 3,
+      "gate4_eger_n_tested": 3
+    },
+    "fly_V4": {
+      "gate1_halothane_wt_predicted_uM": 361.03,
+      "gate1_halothane_wt_published_uM": 340.0,
+      "gate1_fold_error": 1.0619,
+      "gate2_iso_wt_predicted_uM": 322.66,
+      "gate2_iso_wt_published_uM": 290.0,
+      "gate2_fold_error": 1.1126,
+      "gate3_directional_n_correct": 13,
+      "gate3_directional_n_tested": 13,
+      "gate4_eger_n_correct": 3,
+      "gate4_eger_n_tested": 3
+    }
+  },
+  "binding_pledge": "V5 adversarial controls (null perturbation, connectome permutation, sensitivity analysis, calibration cross-validation, bootstrap CIs) will be reported with their outcomes regardless of whether they confirm or disconfirm the V3/V4 result. No re-tuning of \u03b1 or perturbation table parameters is permitted in response to V5 control outcomes. If a control fails decisively, the V3/V4 result claim must be narrowed accordingly in the next page revision."
+}

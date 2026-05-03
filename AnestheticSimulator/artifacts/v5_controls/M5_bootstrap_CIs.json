@@ -1,0 +1,291 @@
+{
+  "method": "95% bootstrap CI (1000 resamples) on per-dose seed-mean qf, refit Hill EC50 each iteration",
+  "rng_seed": 20260503,
+  "n_boot": 1000,
+  "organisms": {
+    "worm_V3": {
+      "halothane__WT": {
+        "anesthetic": "halothane",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 316.89336488040806,
+        "ec50_ci_low_uM": 296.5023400600817,
+        "ec50_ci_high_uM": 334.10861480709,
+        "ec50_log10_sd": 0.013834750117507224
+      },
+      "isoflurane__WT": {
+        "anesthetic": "isoflurane",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 290.840881696881,
+        "ec50_ci_low_uM": 276.0834286715689,
+        "ec50_ci_high_uM": 309.6393104630079,
+        "ec50_log10_sd": 0.012992608979932407
+      },
+      "halothane__gas-1": {
+        "anesthetic": "halothane",
+        "mutant_gene": "gas-1",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 221.5945564064173,
+        "ec50_ci_low_uM": 203.14104494828706,
+        "ec50_ci_high_uM": 234.84082373475036,
+        "ec50_log10_sd": 0.01676839666936125
+      },
+      "halothane__gas-2": {
+        "anesthetic": "halothane",
+        "mutant_gene": "gas-2",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 252.1859221858099,
+        "ec50_ci_low_uM": 240.22717906762034,
+        "ec50_ci_high_uM": 262.7661859768081,
+        "ec50_log10_sd": 0.0098911756044583
+      },
+      "halothane__nduf-6": {
+        "anesthetic": "halothane",
+        "mutant_gene": "nduf-6",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 237.9565578968772,
+        "ec50_ci_low_uM": 223.4968270929215,
+        "ec50_ci_high_uM": 248.6553911348706,
+        "ec50_log10_sd": 0.011839970569047469
+      },
+      "halothane__ndus-8": {
+        "anesthetic": "halothane",
+        "mutant_gene": "ndus-8",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 238.1050219671265,
+        "ec50_ci_low_uM": 222.8361022354316,
+        "ec50_ci_high_uM": 248.98520593054107,
+        "ec50_log10_sd": 0.01229142916660123
+      },
+      "halothane__nuo-1": {
+        "anesthetic": "halothane",
+        "mutant_gene": "nuo-1",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 238.08991971500888,
+        "ec50_ci_low_uM": 223.1780156248038,
+        "ec50_ci_high_uM": 248.80172963704968,
+        "ec50_log10_sd": 0.0121384424396737
+      },
+      "halothane__unc-79": {
+        "anesthetic": "halothane",
+        "mutant_gene": "unc-79",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 226.05547800464126,
+        "ec50_ci_low_uM": 208.03805553615115,
+        "ec50_ci_high_uM": 238.24190266882323,
+        "ec50_log10_sd": 0.016032113226761277
+      },
+      "halothane__unc-80": {
+        "anesthetic": "halothane",
+        "mutant_gene": "unc-80",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 226.19670315230337,
+        "ec50_ci_low_uM": 208.2743371896391,
+        "ec50_ci_high_uM": 238.44932803758053,
+        "ec50_log10_sd": 0.015936517597554198
+      },
+      "halothane__goa-1": {
+        "anesthetic": "halothane",
+        "mutant_gene": "goa-1",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 858.9170514965206,
+        "ec50_ci_low_uM": 828.7929667822916,
+        "ec50_ci_high_uM": 899.8934434977047,
+        "ec50_log10_sd": 0.009310809215443909
+      },
+      "halothane__dgk-1": {
+        "anesthetic": "halothane",
+        "mutant_gene": "dgk-1",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 618.8631426527138,
+        "ec50_ci_low_uM": 591.3715688394099,
+        "ec50_ci_high_uM": 649.060945361309,
+        "ec50_log10_sd": 0.010226396432536937
+      },
+      "cis_12_dichloroethylene__WT": {
+        "anesthetic": "cis_12_dichloroethylene",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 1449.6685492719157,
+        "ec50_ci_low_uM": 1320.431189267922,
+        "ec50_ci_high_uM": 1565.1439904658275,
+        "ec50_log10_sd": 0.019424335085659696
+      }
+    },
+    "fly_V4": {
+      "halothane__WT": {
+        "anesthetic": "halothane",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 361.2349626508601,
+        "ec50_ci_low_uM": 342.99187574839857,
+        "ec50_ci_high_uM": 372.77121024691877,
+        "ec50_log10_sd": 0.009236776744945085
+      },
+      "isoflurane__WT": {
+        "anesthetic": "isoflurane",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 322.9417430594457,
+        "ec50_ci_low_uM": 314.6281362897965,
+        "ec50_ci_high_uM": 327.89826147389215,
+        "ec50_log10_sd": 0.004377633126357524
+      },
+      "halothane__Syx1A": {
+        "anesthetic": "halothane",
+        "mutant_gene": "Syx1A",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 279.1696278334415,
+        "ec50_ci_low_uM": 269.7572965887446,
+        "ec50_ci_high_uM": 287.1076084855094,
+        "ec50_log10_sd": 0.007073908321385063
+      },
+      "halothane__unc-13": {
+        "anesthetic": "halothane",
+        "mutant_gene": "unc-13",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 294.35992604837725,
+        "ec50_ci_low_uM": 281.3917527868429,
+        "ec50_ci_high_uM": 302.3196259922011,
+        "ec50_log10_sd": 0.008152271451369148
+      },
+      "halothane__syt1": {
+        "anesthetic": "halothane",
+        "mutant_gene": "syt1",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 294.38359954755134,
+        "ec50_ci_low_uM": 281.50419450253975,
+        "ec50_ci_high_uM": 302.3196259922011,
+        "ec50_log10_sd": 0.00815533563838274
+      },
+      "halothane__nSyb": {
+        "anesthetic": "halothane",
+        "mutant_gene": "nSyb",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 279.2582784125616,
+        "ec50_ci_low_uM": 269.872387707662,
+        "ec50_ci_high_uM": 287.1489100404661,
+        "ec50_log10_sd": 0.006917754798720167
+      },
+      "halothane__na": {
+        "anesthetic": "halothane",
+        "mutant_gene": "na",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 229.72755172574585,
+        "ec50_ci_low_uM": 224.20631935989803,
+        "ec50_ci_high_uM": 233.68540743277907,
+        "ec50_log10_sd": 0.004748778446835868
+      },
+      "halothane__dunc-79": {
+        "anesthetic": "halothane",
+        "mutant_gene": "dunc-79",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 229.83717088826816,
+        "ec50_ci_low_uM": 224.24559025699625,
+        "ec50_ci_high_uM": 233.84372972813682,
+        "ec50_log10_sd": 0.004756883843423273
+      },
+      "halothane__dunc-80": {
+        "anesthetic": "halothane",
+        "mutant_gene": "dunc-80",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 229.73508584100426,
+        "ec50_ci_low_uM": 224.07029874321412,
+        "ec50_ci_high_uM": 233.8419708215381,
+        "ec50_log10_sd": 0.004763456627068695
+      },
+      "halothane__ND-49": {
+        "anesthetic": "halothane",
+        "mutant_gene": "ND-49",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 224.00929461294015,
+        "ec50_ci_low_uM": 217.66750785453522,
+        "ec50_ci_high_uM": 228.35435889596053,
+        "ec50_log10_sd": 0.005406445928592122
+      },
+      "halothane__ND-75": {
+        "anesthetic": "halothane",
+        "mutant_gene": "ND-75",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 240.0330603219755,
+        "ec50_ci_low_uM": 236.2181834196574,
+        "ec50_ci_high_uM": 242.174962695557,
+        "ec50_log10_sd": 0.0028097327780850887
+      },
+      "halothane__Sandman": {
+        "anesthetic": "halothane",
+        "mutant_gene": "Sandman",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 639.5775732631168,
+        "ec50_ci_low_uM": 618.8606801820532,
+        "ec50_ci_high_uM": 655.744511070951,
+        "ec50_log10_sd": 0.00625427802720243
+      },
+      "halothane__ORK1": {
+        "anesthetic": "halothane",
+        "mutant_gene": "ORK1",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 639.2249407664556,
+        "ec50_ci_low_uM": 617.9825396427278,
+        "ec50_ci_high_uM": 654.7661677513012,
+        "ec50_log10_sd": 0.006284473277302431
+      },
+      "halothane__Go\u03b147A": {
+        "anesthetic": "halothane",
+        "mutant_gene": "Go\u03b147A",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 493.9868430532967,
+        "ec50_ci_low_uM": 478.2871518955041,
+        "ec50_ci_high_uM": 514.8546101790163,
+        "ec50_log10_sd": 0.008303487265507116
+      },
+      "halothane__rdgA": {
+        "anesthetic": "halothane",
+        "mutant_gene": "rdgA",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 423.8979164745511,
+        "ec50_ci_low_uM": 419.68945432887006,
+        "ec50_ci_high_uM": 429.3657244090898,
+        "ec50_log10_sd": 0.0026429288058596122
+      },
+      "cis_12_dichloroethylene__WT": {
+        "anesthetic": "cis_12_dichloroethylene",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 1532.7888973601969,
+        "ec50_ci_low_uM": 1491.451056700297,
+        "ec50_ci_high_uM": 1562.4103022914705,
+        "ec50_log10_sd": 0.005184706956073689
+      }
+    }
+  }
+}
