@@ -1,0 +1,15 @@
+# fly_immobilization_anchors.csv — Drosophila behavioral EC50 anchors (LRR / motion arrest)
+#
+# Wild-type halothane MAC (loss-of-righting-reflex) is ~0.6 vol% in adult Drosophila per
+# van Swinderen 1999 lab measurements; aqueous EC50 ~340 µM matches worm Crowder 1996.
+# Same primary calibration anchor for cross-species transfer.
+#
+# Fly LRR has higher behavioral variance than worm immobilization scoring; expect
+# wider error bars on Gate 1/2 fold-error than worm V3 numbers.
+#
+anesthetic,fly_immob_EC50_uM,anchor_quality,source_paper,source_PMID,assay,notes
+halothane,340,PRIMARY,van Swinderen 1999 Nature,10051668,Loss-of-righting-reflex,"~0.6 vol% MAC; the foundational fly anesthesia paper; calibration anchor for V4 Gate 1"
+isoflurane,290,SECONDARY,Allada lab follow-up + classical lit,,LRR,"~0.5 vol% MAC; close to halothane; held-out test for Gate 2"
+sevoflurane,230,SECONDARY,Eger comparative lit,,LRR,"Comparable to worm + mammalian MAC values"
+ethanol,40000,PRIMARY,Wolf & Heberlein 2003 Cell,12743616,Motion arrest,"Distinct from volatiles but well-anchored in fly; immobilization at ~50-100 mM"
+diethyl_ether,3000,SECONDARY,classical Eger comparative,,LRR,"High-mM range; useful as held-out check"

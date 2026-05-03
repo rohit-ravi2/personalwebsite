@@ -1,0 +1,41 @@
+# fly_nt_identity_heuristic.csv — V1 cell-type → NT identity assignment for FlyLarvaBrain
+#
+# Winding 2023 connectome doesn't carry NT identity per neuron. For V1 we use a
+# cell-type-based heuristic from standard Drosophila neuroanatomy + Eichler/Truman/
+# Heckscher driver-line data where it matches Winding annotations.
+#
+# This is a coarse-grained assumption — refinement to per-neuron driver-line data
+# is V2 work. For the conserved-substrate hypothesis test, the most important
+# correctness property is that mechanism classes (GABA-A potentiation, GluCl
+# potentiation, nAChR antagonism) target the right cell-type populations, not
+# necessarily individual neurons.
+#
+# Sign convention — same as worm V3:
+#   ACh = +1 (excitatory)
+#   Glu = +1 (excitatory in fly; iGluR-dominant in larval CNS, unlike worm CNS)
+#   GABA = −1 (inhibitory)
+#   5HT, OA, DA, TA = handled separately (slow neuromodulation, future work)
+#
+# IMPORTANT: Drosophila glutamate sign convention DIFFERS from worm. In worm CNS,
+# Glu is dominantly GluCl-mediated (Cl-channel, inhibitory); in fly CNS, Glu is
+# dominantly iGluR-mediated (cation-channel, excitatory). This is a structural
+# species difference and is reflected here.
+#
+celltype,n_neurons_in_winding,nt_primary,sign,confidence,literature_basis
+KC,121,ACh,1,HIGH,"Kenyon cells; cholinergic per Crocker / Lovick / Aso et al.; primary mushroom body principal neurons"
+LHN,101,ACh,1,HIGH,"Lateral horn neurons; mostly cholinergic per Schultzhaus / Bates et al."
+PN,103,ACh,1,HIGH,"Projection neurons (olfactory, gustatory); cholinergic to mushroom body / lateral horn"
+PN-somato,76,ACh,1,MEDIUM,"Somatosensory PNs; cholinergic by analogy"
+DN-VNC,91,ACh,1,MEDIUM,"Descending neurons to VNC; mixed but mostly cholinergic in larva (Eichler 2017)"
+DN-SEZ,82,ACh,1,MEDIUM,"Descending to subesophageal; similar mixed"
+pre-DN-VNC,238,ACh,1,LOW,"Heterogeneous; default cholinergic for V1"
+pre-DN-SEZ,51,ACh,1,LOW,"Heterogeneous; default cholinergic for V1"
+LN,56,GABA,-1,HIGH,"Local neurons in antennal lobe + lateral horn; mostly GABAergic for lateral inhibition"
+MBON,24,Glu,1,MEDIUM,"Mushroom body output; mixed (Aso 2014 reports cholinergic + glutamatergic + GABAergic). Default Glu for V1"
+MBIN,14,DA,1,HIGH,"Mushroom body input; mostly dopaminergic (Aso 2014; PAM/PPL clusters in adult). Treat as excitatory neuromodulator"
+MB-FBN,54,ACh,1,LOW,"Feedback neurons; default cholinergic"
+MB-FFN,27,ACh,1,LOW,"Feedforward neurons; default cholinergic"
+CN,50,ACh,1,LOW,"Commissural neurons; heterogeneous; default cholinergic"
+RGN,27,ACh,1,LOW,"Default cholinergic"
+sensory,235,Glu,1,MEDIUM,"Sensory neurons; mostly glutamatergic in larva (mechano-Ch, gustatory) — proprioceptive Ch via ACh actually (some fraction); use Glu as dominant"
+ascending,23,ACh,1,LOW,"Ascending neurons; default cholinergic"

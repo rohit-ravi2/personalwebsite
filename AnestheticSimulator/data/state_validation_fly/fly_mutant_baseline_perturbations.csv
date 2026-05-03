@@ -1,0 +1,27 @@
+# fly_mutant_baseline_perturbations.csv — V4 mutant baseline shifts for FlyLarvaBrain
+#
+# Same structure as worm V3's mutant_baseline_perturbations.csv. LIF entry points
+# match the V3 validator's apply_genotype() function so the same code can run fly
+# mutants by swapping the table.
+#
+# DIFFERENT from worm: SNARE-axis mutants (Syx1A, unc-13, syt1, nSyb) modeled as
+# wsyn_global_factor < 1 (reduced release → reduced baseline excitability → HYPER).
+# This is a NEW LIF entry point not used in worm V3 (worm V3 used Complex I + NCA
+# only for HYPER mutants). Validates the wsyn_global_factor entry point in BOTH
+# directions (< 1 for SNARE LoF, > 1 for Gαo LoF).
+#
+gene,direction,complex_i_factor,nca_leak_factor,wsyn_global_factor,wsyn_excitatory_factor,k2p_baseline_factor,literature_ratio,source_paper,source_PMID,notes
+Syx1A,HYPER,1.0,1.0,0.5,1.0,1.0,0.5-0.7,van Swinderen 1999 Nature,10051668,"Syntaxin1A LoF → reduced SNARE → reduced release → halothane hits faster"
+unc-13,HYPER,1.0,1.0,0.6,1.0,1.0,0.5-0.7,Sandstrom 2008 J Neurosci,18762718,"Munc13 priming hypomorph"
+syt1,HYPER,1.0,1.0,0.6,1.0,1.0,0.5-0.8,Sandstrom 2008 J Neurosci,18762718,"Synaptotagmin Ca-sensor"
+nSyb,HYPER,1.0,1.0,0.5,1.0,1.0,0.5-0.7,van Swinderen et al. follow-ups,,"VAMP family LoF"
+Sandman,RESISTANT,1.0,1.0,1.0,1.0,0.0,1.3-2.0,Pimentel 2016 Nature,27279218,"K2P loss → no baseline K leak → depolarized baseline → resistant"
+ORK1,RESISTANT,1.0,1.0,1.0,1.0,0.0,1.2-1.8,Sandman family lit,,"Same as Sandman"
+na,HYPER,1.0,0.05,1.0,1.0,1.0,0.7-1.0,Lear 2005 Neuron,15610710,"Atypical — hypersensitive at low dose; NCA loss"
+dunc-79,HYPER,1.0,0.05,1.0,1.0,1.0,0.5-0.7,(homology),,
+dunc-80,HYPER,1.0,0.05,1.0,1.0,1.0,0.5-0.7,(homology),,
+Goα47A,RESISTANT,1.0,1.0,1.5,1.0,1.0,1.5-2.5,(inferred from worm goa-1),,"Gαo LoF → enhanced release → resistant"
+rdgA,RESISTANT,1.0,1.0,1.3,1.0,1.0,1.3-2.0,(inferred from worm dgk-1),,"DAG kinase LoF"
+ND-49,HYPER,0.4,1.0,1.0,1.0,1.0,0.5-0.7,(inferred from worm gas-1),,"Complex I 49kDa conserved"
+ND-75,HYPER,0.5,1.0,1.0,1.0,1.0,0.5-0.7,(inferred from worm nuo-1),,"Complex I core"
+WT,WT,1.0,1.0,1.0,1.0,1.0,1.0,,,reference

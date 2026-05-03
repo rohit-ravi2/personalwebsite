@@ -1,0 +1,26 @@
+# fly_directional_mutants.csv — Drosophila anesthesia genetic anchors with sign
+#
+# Smaller panel than worm V3 (n=9) — fly anesthesia mutant literature is published in
+# pieces across van Swinderen / Allada / Sandstrom / Lear lab papers rather than a
+# unified ontology like WBPhenotype. Where literature reports "X% LRR shift" rather
+# than a clean fold-change, we record the rough range and flag.
+#
+# Direction convention same as worm V3:
+#   HYPER     — mutant immobilizes at LOWER anesthetic dose than WT (predicted EC50 ratio < 1)
+#   RESISTANT — mutant requires HIGHER dose (predicted EC50 ratio > 1)
+#
+gene,fly_ortholog_of,direction,anesthetic,lit_ratio_estimate,source_paper,source_PMID,assay_notes,mechanism_class,LIF_entry_point
+Syx1A,unc-64 (worm),HYPER,halothane,0.5-0.7,van Swinderen 1999 Nature,10051668,"~30-50% leftward LRR shift; THE foundational fly anesthesia anchor",snare_cooperativity,wsyn_global_factor < 1.0 (reduced release)
+unc-13,unc-13 (worm — same name),HYPER,halothane,0.5-0.7,Sandstrom 2008 J Neurosci,18762718,"Munc13 priming hypomorph; comparable to syntaxin",snare_cooperativity,wsyn_global_factor < 1.0
+syt1,snt-1 (worm),HYPER,halothane,0.5-0.8,Sandstrom 2008 / van Swinderen et al.,18762718,"Synaptotagmin Ca-sensor LoF; similar SNARE-axis effect",snare_cooperativity,wsyn_global_factor < 1.0
+nSyb,snb-1 (worm),HYPER,halothane,0.5-0.7,van Swinderen et al. follow-ups,,VAMP family LoF,snare_cooperativity,wsyn_global_factor < 1.0
+Sandman,twk-18 (worm K2P family),RESISTANT,halothane,1.3-2.0,Pimentel 2016 Nature; Allada lab,27279218,"K2P loss → reduced K leak → more excitable baseline → resistant",k2p_potentiation,wsyn_global_factor > 1.0 OR remove baseline K2P
+ORK1,K2P family (worm twk),RESISTANT,halothane,1.2-1.8,Sandman family work,,K2P LoF; comparable to Sandman,k2p_potentiation,wsyn_global_factor > 1.0
+na,nca-1 (worm narrow abdomen / NALCN),HYPER (atypical),halothane,0.7-1.0,Lear 2005 Neuron,15610710,"Hypersensitive at low dose; complex circadian × anesthesia interaction",nca_block,nca_leak_factor < 1.0
+dunc-79,unc-79 (worm),HYPER,halothane,0.5-0.7,(homology + Lear-axis literature),,NCA-aux,nca_block,nca_leak_factor < 0.1
+dunc-80,unc-80 (worm),HYPER,halothane,0.5-0.7,(homology + Lear-axis literature),,NCA-aux,nca_block,nca_leak_factor < 0.1
+Goα47A,goa-1 (worm),RESISTANT,halothane,1.5-2.5,(inferred from worm; fly literature thinner),,Gαo subunit; LoF → enhanced release → resistant,gao_signaling,wsyn_global_factor > 1.0
+rdgA,dgk-1 (worm DGK),RESISTANT,halothane,1.3-2.0,(inferred from worm DGK axis),,DAG kinase; LoF → enhanced PKC → enhanced release,gao_signaling,wsyn_global_factor > 1.0
+Rdl,unc-49 (worm GABA-A),HYPER,halothane,0.6-0.8,Schweikert 2014; Klemm 1990 classical,,Resistance-to-dieldrin; primary fly GABA-A; LoF → reduced inhibition baseline (atypical),gaba_potentiation,DEFERRED V1 (complex)
+ND-49,gas-1 (worm Complex I),HYPER,halothane,0.5-0.7,(inferred from worm gas-1 + mitochondrial conservation),,Complex I 49kDa; conserved enzymology,complex_i_block,complex_i_factor 0.4
+ND-75,nuo-1 (worm),HYPER,halothane,0.5-0.7,(inferred from worm nuo-1),,Complex I core,complex_i_block,complex_i_factor 0.5

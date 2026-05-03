@@ -99,24 +99,41 @@ class MutantBaseline:
     wsyn_excitatory_factor: float
     literature_ratio: str
     notes: str
+    # V4: optional fly-specific entry point — K2P baseline leak removal
+    # (Sandman LoF in fly = no constitutive K2P leak → depolarized baseline → resistant)
+    k2p_baseline_factor: float = 1.0
 
 
 def load_mutant_table(path: Path) -> dict[str, MutantBaseline]:
+    """Load a mutant baseline table (worm or fly). Tolerates both worm-V3 schema
+    (7 leading numeric fields) and fly-V4 schema (8 fields with k2p_baseline_factor)."""
     out = {}
     with open(path) as f:
         for line in f:
             if line.startswith('#') or line.strip() == '':
                 continue
             if line.startswith('gene,'):
+                # detect schema by checking column count
                 continue
             parts = next(csv.reader([line]))
-            gene, direction, ci, nca, wsg, wse, lit_r = parts[:7]
-            notes = parts[-1] if len(parts) > 7 else ''
+            gene, direction, ci, nca, wsg, wse = parts[0:6]
+            # Detect schema: V4 fly has k2p_baseline_factor at index 6, V3 worm has lit_ratio
+            try:
+                # try parsing index 6 as float — V4 schema
+                k2p_baseline = float(parts[6])
+                lit_r = parts[7]
+                notes = parts[-1] if len(parts) > 8 else ''
+            except (ValueError, IndexError):
+                # V3 worm schema
+                k2p_baseline = 1.0
+                lit_r = parts[6]
+                notes = parts[-1] if len(parts) > 7 else ''
             out[gene] = MutantBaseline(
                 gene=gene, direction=direction,
                 complex_i_factor=float(ci), nca_leak_factor=float(nca),
                 wsyn_global_factor=float(wsg), wsyn_excitatory_factor=float(wse),
                 literature_ratio=lit_r, notes=notes,
+                k2p_baseline_factor=k2p_baseline,
             )
     return out
 
@@ -135,7 +152,9 @@ QUIESCENT_RATE_THRESHOLD_HZ = 3.0  # mean command-neuron rate below this = quies
 def compute_metrics(spike_times_s: np.ndarray, spike_neuron_ids: np.ndarray,
                     neuron_names: list[str], sim_duration_s: float,
                     record_start_s: float = 10.0,
-                    bin_dt_s: float = 0.5) -> dict:
+                    bin_dt_s: float = 0.5,
+                    quiescent_threshold_hz: float = QUIESCENT_RATE_THRESHOLD_HZ,
+                    command_set: list[str] | list[int] | None = None) -> dict:
     """Compute three primary network-state metrics from a recording.
 
     Returns:
@@ -151,7 +170,12 @@ def compute_metrics(spike_times_s: np.ndarray, spike_neuron_ids: np.ndarray,
     ids = spike_neuron_ids[mask]
 
     # Build command-neuron index list
-    cmd_idxs = [i for i, n in enumerate(neuron_names) if n in COMMAND_NEURONS]
+    if command_set is None:
+        cmd_idxs = [i for i, n in enumerate(neuron_names) if n in COMMAND_NEURONS]
+    elif command_set and isinstance(command_set[0], int):
+        cmd_idxs = list(command_set)  # already indices (e.g., from FlyLarvaBrain)
+    else:
+        cmd_idxs = [i for i, n in enumerate(neuron_names) if n in command_set]
 
     # Bin spikes per neuron
     n_bins = int((record_end_s - record_start_s) / bin_dt_s)
@@ -169,7 +193,7 @@ def compute_metrics(spike_times_s: np.ndarray, spike_neuron_ids: np.ndarray,
         cmd_mean_rate = rates_hz[cmd_idxs, :].mean(axis=0)  # [bins]
     else:
         cmd_mean_rate = rates_hz.mean(axis=0)
-    quiescent_fraction = float((cmd_mean_rate < QUIESCENT_RATE_THRESHOLD_HZ).mean())
+    quiescent_fraction = float((cmd_mean_rate < quiescent_threshold_hz).mean())
     mean_firing_rate_hz = float(cmd_mean_rate.mean())
 
     # State autocorrelation (lag-1) on population state vector
@@ -252,6 +276,12 @@ def apply_genotype(brain, mutant: MutantBaseline | None, alpha_calib: float) -> 
         if hasattr(brain, 'syn_inh') and brain.syn_inh is not None and len(brain.syn_inh) > 0:
             brain.syn_inh.w[:] = np.asarray(brain.syn_inh.w[:]) * f
 
+    # V4 fly-specific: K2P baseline leak loss (Sandman / ORK1 LoF) modeled as
+    # depolarizing baseline current per neuron (loss of hyperpolarizing K leak)
+    if getattr(mutant, 'k2p_baseline_factor', 1.0) < 1.0:
+        k2p_pa = +30.0 * (1.0 - mutant.k2p_baseline_factor) * alpha_calib
+        brain.neurons.I_ext[:] = brain.neurons.I_ext[:] + k2p_pa * pA
+
 
 def apply_anesthetic(brain, profile: dict[str, PerturbationRow], dose_uM: float,
                      alpha_calib: float) -> None:
@@ -310,14 +340,30 @@ def apply_anesthetic(brain, profile: dict[str, PerturbationRow], dose_uM: float,
 def run_single(anesthetic: str, dose_uM: float, seed: int, sim_duration_s: float,
                profile: dict[str, PerturbationRow],
                mutant: MutantBaseline | None = None,
-               alpha_calib: float = 1.0) -> dict:
-    """Run one (anesthetic, dose, seed, mutant) simulation and return metrics."""
-    from brain.lif_brain import LIFBrain
+               alpha_calib: float = 1.0,
+               brain_factory=None,
+               quiescent_threshold_hz: float = QUIESCENT_RATE_THRESHOLD_HZ,
+               command_set: list[str] | list[int] | None = None) -> dict:
+    """Run one (anesthetic, dose, seed, mutant) simulation and return metrics.
+
+    Args:
+        brain_factory: callable(seed) → brain instance. Defaults to worm LIFBrain.
+                       For fly, pass a callable that returns a SeededFlyLarvaBrain.
+        quiescent_threshold_hz: organism-specific quiescent threshold.
+                                Worm baseline ~5 Hz → threshold 3.0 Hz.
+                                Fly baseline ~2 Hz → threshold ~1.0 Hz.
+        command_set: list of command-neuron names or indices. Defaults to worm set.
+                     For fly, pass brain.command_neurons_idx.
+    """
     np.random.seed(seed)
-    # LIFBrain has its own brian2_seed handling via _brian2_seed attribute
-    class SeededLIFBrain(LIFBrain):
-        _brian2_seed = seed
-    brain = SeededLIFBrain(use_per_edge_glu_signs=True)
+    if brain_factory is None:
+        # Default = worm
+        from brain.lif_brain import LIFBrain
+        class SeededLIFBrain(LIFBrain):
+            _brian2_seed = seed
+        brain = SeededLIFBrain(use_per_edge_glu_signs=True)
+    else:
+        brain = brain_factory(seed)
     apply_genotype(brain, mutant, alpha_calib)
     apply_anesthetic(brain, profile, dose_uM, alpha_calib)
     brain.run(sim_duration_s * 1000.0)  # ms
@@ -329,8 +375,16 @@ def run_single(anesthetic: str, dose_uM: float, seed: int, sim_duration_s: float
     else:
         spike_t = np.array([])
         spike_i = np.array([], dtype=int)
+    # If command set wasn't passed, fall back to the brain's own attribute
+    # (FlyLarvaBrain exposes command_neurons_idx; LIFBrain does not, so worm
+    # uses the COMMAND_NEURONS module-level default)
+    effective_command = command_set
+    if effective_command is None and hasattr(brain, 'command_neurons_idx'):
+        effective_command = list(brain.command_neurons_idx)
     metrics = compute_metrics(spike_t, spike_i, brain.names, sim_duration_s,
-                              record_start_s=min(10.0, sim_duration_s * 0.2))
+                              record_start_s=min(10.0, sim_duration_s * 0.2),
+                              quiescent_threshold_hz=quiescent_threshold_hz,
+                              command_set=effective_command)
     metrics['anesthetic'] = anesthetic
     metrics['dose_uM'] = dose_uM
     metrics['seed'] = seed
