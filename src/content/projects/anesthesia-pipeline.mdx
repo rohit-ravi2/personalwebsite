@@ -103,6 +103,25 @@ The same Hill-curve perturbation table (mammalian-receptor electrophys EC50s) ex
 
 Use the **Cross-Species** tab in the interactive above to compare the worm and fly halothane / isoflurane curves side-by-side.
 
+## Adversarial controls (V5) — what survives, what doesn't
+
+Honest follow-on testing reveals where the V3/V4 result is genuinely structural and where it is over-determined:
+
+**Bootstrap 95% CIs** (1000 resamples on 5-seed ensembles): predictions are precise but tight. The worm-isoflurane held-out test (predicted 291 µM, 95% CI [276, 310] µM) sits inside its CI containing the published 290 µM — the strongest of the four EC50 predictions. The other three EC50s sit just outside their 95% CIs (worm halothane CI [297, 334] vs published 340; fly halothane CI [343, 373] vs 340; fly iso CI [315, 328] vs 290). Fold-errors of 1.06–1.11× are real but not statistically consistent with published values to within seed noise.
+
+**Connectome permutation tests** (Erdős-Rényi rewiring, configuration-model degree-preservation, cell-type block shuffle):
+
+| permutation | worm Gate 1 | fly Gate 1 |
+|---|---|---|
+| P1 — full random rewiring | **FAIL** (54 µM, 6.35×) | PASS (370 µM, 1.09×) |
+| P2 — degree-preserving | FAIL (168 µM, 2.02×) | PASS (380 µM, 1.12×) |
+| P3 — cell-type block shuffle | PASS (319 µM, 1.07×) | PASS (356 µM, 1.05×) |
+| Eger specificity (3/3) | PASS in all 6 permutations | |
+
+The "connectome-constrained" framing was over-claiming. **The worm result requires at minimum cell-type-level structural connectivity (random rewiring breaks it; cell-type-block-preserving rewiring doesn't).** **The fly result is NOT connectome-dependent — random graphs of comparable density also pass.** The Eger specificity result is NOT a connectome claim in either organism — it's a perturbation-table sparseness story.
+
+The conserved-substrate hypothesis itself survives: the perturbation-table + network-integration architecture recovers behavioral phenotypes from molecular pharmacology in both organisms. What's narrower than the original claim: the *specific* Cook 2019 / Winding 2023 wiring is NOT the load-bearing structural feature in either organism.
+
 ## Status
 
 - **V3 worm ensemble shipped + V4 fly cross-species ensemble shipped.** All four gates pass in both organisms.
