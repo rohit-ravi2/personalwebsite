@@ -734,16 +734,181 @@ function TabPerturbationProfile({ profile }: { profile: PerturbationProfile }) {
 }
 
 // ===================================================================
+// TAB 5: Cross-species (worm V3 vs fly V4)
+// ===================================================================
+
+type CrossSpeciesData = {
+  meta: { description: string };
+  worm_V3: any;
+  fly_V4: any;
+  shared_substrate: string[];
+  transfer_evidence: string[];
+};
+
+function TabCrossSpecies({ wormDose, flyDose, crossData }: { wormDose: DoseResponseData; flyDose: DoseResponseData; crossData: CrossSpeciesData }) {
+  const [picked, setPicked] = useState<string>("halothane");
+  const wormEntry = wormDose.compounds[picked];
+  const flyEntry = flyDose.compounds[picked];
+  if (!wormEntry || !flyEntry) return <div>Both organism panels missing for {picked}.</div>;
+  const doseMin = 10, doseMax = 3000;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="bg-emerald-50 border border-emerald-200 rounded-md p-3 text-sm text-emerald-900">
+        <strong>Cross-species validation</strong> — same architecture, two unrelated connectomes
+        (Cook 2019 nematode, 300 neurons · Winding 2023 dipteran larva, 2,952 neurons),
+        organism-specific α calibrated on a single behavioral anchor each.
+        Conserved-substrate hypothesis: SAME mechanism classes (SNARE / Complex I / K2P / nAChR /
+        GABA-A / NCA / GluCl) drive anesthesia in worm AND fly.
+      </div>
+
+      {/* Side-by-side dose response */}
+      <div className="grid md:grid-cols-2 gap-3">
+        <div className="bg-white rounded-md border border-zinc-200 p-3">
+          <div className="text-xs uppercase tracking-wide font-semibold text-zinc-700 mb-1">
+            Worm V3 — C. elegans (Cook 2019, 300 neurons)
+          </div>
+          <PlotFrame doseMin={doseMin} doseMax={doseMax} threshold={0.5}>
+            <HillCurve
+              doses={wormEntry.doses}
+              qfMeans={wormEntry.qf_mean}
+              qfSds={wormEntry.qf_sd}
+              doseMin={doseMin} doseMax={doseMax}
+              plotW={600} plotH={300} plotPadX={50} plotPadY={30}
+              color="#7c3aed"
+            />
+            {wormEntry.published_EC50_uM && (
+              <line x1={logDose(wormEntry.published_EC50_uM, doseMin, doseMax, 600, 50)}
+                    y1={30} x2={logDose(wormEntry.published_EC50_uM, doseMin, doseMax, 600, 50)}
+                    y2={300-30} stroke="#16a34a" strokeDasharray="2,3" strokeWidth={1} />
+            )}
+          </PlotFrame>
+          <div className="mt-2 text-sm grid grid-cols-2 gap-2">
+            <div>
+              <div className="text-xs text-zinc-500">Predicted</div>
+              <div className="font-mono">{wormEntry.predicted_EC50_uM?.toFixed(1)} µM</div>
+            </div>
+            <div>
+              <div className="text-xs text-zinc-500">Published</div>
+              <div className="font-mono">{wormEntry.published_EC50_uM} µM</div>
+            </div>
+            {wormEntry.fold_error && (
+              <div className="col-span-2">
+                <div className="text-xs text-zinc-500">Error</div>
+                <div className="font-mono text-purple-700">{wormEntry.fold_error.toFixed(2)}× off</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-md border border-zinc-200 p-3">
+          <div className="text-xs uppercase tracking-wide font-semibold text-zinc-700 mb-1">
+            Fly V4 — Drosophila larva (Winding 2023, 2,952 neurons)
+          </div>
+          <PlotFrame doseMin={doseMin} doseMax={doseMax} threshold={0.5}>
+            <HillCurve
+              doses={flyEntry.doses}
+              qfMeans={flyEntry.qf_mean}
+              qfSds={flyEntry.qf_sd}
+              doseMin={doseMin} doseMax={doseMax}
+              plotW={600} plotH={300} plotPadX={50} plotPadY={30}
+              color="#0891b2"
+            />
+            {flyEntry.published_EC50_uM && (
+              <line x1={logDose(flyEntry.published_EC50_uM, doseMin, doseMax, 600, 50)}
+                    y1={30} x2={logDose(flyEntry.published_EC50_uM, doseMin, doseMax, 600, 50)}
+                    y2={300-30} stroke="#16a34a" strokeDasharray="2,3" strokeWidth={1} />
+            )}
+          </PlotFrame>
+          <div className="mt-2 text-sm grid grid-cols-2 gap-2">
+            <div>
+              <div className="text-xs text-zinc-500">Predicted</div>
+              <div className="font-mono">{flyEntry.predicted_EC50_uM?.toFixed(1)} µM</div>
+            </div>
+            <div>
+              <div className="text-xs text-zinc-500">Published</div>
+              <div className="font-mono">{flyEntry.published_EC50_uM} µM</div>
+            </div>
+            {flyEntry.fold_error && (
+              <div className="col-span-2">
+                <div className="text-xs text-zinc-500">Error</div>
+                <div className="font-mono text-cyan-700">{flyEntry.fold_error.toFixed(2)}× off</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mt-2">
+        {["halothane", "isoflurane"].map((v) => (
+          <button key={v} onClick={() => setPicked(v)}
+            className={`px-3 py-1 text-sm rounded-md border ${
+              picked === v ? "bg-zinc-900 text-white border-zinc-900" : "bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-50"
+            }`}>{v}</button>
+        ))}
+      </div>
+
+      {/* Worm vs fly headline table */}
+      <div className="bg-zinc-50 border border-zinc-200 rounded-md p-3 mt-2">
+        <div className="text-xs uppercase tracking-wide font-semibold text-zinc-700 mb-2">
+          Worm V3 vs Fly V4 — side-by-side
+        </div>
+        <table className="text-sm w-full">
+          <thead>
+            <tr className="border-b border-zinc-300">
+              <th className="text-left py-1 font-medium">metric</th>
+              <th className="text-right py-1 font-medium text-purple-700">worm V3</th>
+              <th className="text-right py-1 font-medium text-cyan-700">fly V4</th>
+            </tr>
+          </thead>
+          <tbody className="text-xs font-mono">
+            <tr><td className="py-1">connectome neurons</td><td className="text-right">300</td><td className="text-right">2,952</td></tr>
+            <tr><td className="py-1">chemical edges</td><td className="text-right">~3,700</td><td className="text-right">~110,000</td></tr>
+            <tr><td className="py-1">α (calibrated)</td><td className="text-right">0.13</td><td className="text-right">0.060</td></tr>
+            <tr><td className="py-1">halothane EC50</td><td className="text-right">317 µM (1.07×)</td><td className="text-right">361 µM (1.06×)</td></tr>
+            <tr><td className="py-1">iso held-out EC50</td><td className="text-right">291 µM (1.002×)</td><td className="text-right">323 µM (1.11×)</td></tr>
+            <tr><td className="py-1">mutant directional</td><td className="text-right">9 / 9</td><td className="text-right">13 / 13</td></tr>
+            <tr><td className="py-1">Eger specificity</td><td className="text-right">3 / 3</td><td className="text-right">3 / 3</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Shared substrate */}
+      <div className="bg-white border border-zinc-200 rounded-md p-3">
+        <div className="text-xs uppercase tracking-wide font-semibold text-zinc-700 mb-2">
+          Conserved-substrate hypothesis — what transfers
+        </div>
+        <ul className="text-sm space-y-1 leading-relaxed">
+          {crossData.shared_substrate.map((s, i) => (
+            <li key={i} className="text-zinc-700">• {s}</li>
+          ))}
+        </ul>
+        <div className="text-xs uppercase tracking-wide font-semibold text-zinc-700 mt-3 mb-2">
+          Transfer evidence
+        </div>
+        <ul className="text-sm space-y-1 leading-relaxed">
+          {crossData.transfer_evidence.map((s, i) => (
+            <li key={i} className="text-zinc-700">• {s}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+
+// ===================================================================
 // MAIN COMPONENT
 // ===================================================================
 
-type Tab = "dose-response" | "mutants" | "eger" | "perturbation";
+type Tab = "dose-response" | "mutants" | "eger" | "perturbation" | "cross-species";
 
 const TABS: { id: Tab; label: string; subtitle: string }[] = [
   { id: "dose-response", label: "Dose-Response", subtitle: "WT volatiles vs published EC50" },
   { id: "mutants", label: "Mutants", subtitle: "halothane × genotype directional shifts" },
   { id: "eger", label: "Eger Specificity", subtitle: "anesthetics vs non-immobilizers" },
   { id: "perturbation", label: "Perturbation Profile", subtitle: "per-anesthetic Hill curves" },
+  { id: "cross-species", label: "Cross-Species", subtitle: "worm V3 vs fly V4 side-by-side" },
 ];
 
 export function NetworkStateValidator() {
@@ -751,6 +916,8 @@ export function NetworkStateValidator() {
   const [doseData, setDoseData] = useState<DoseResponseData | null>(null);
   const [pertData, setPertData] = useState<PerturbationProfile | null>(null);
   const [verdict, setVerdict] = useState<ValidationSummary | null>(null);
+  const [flyDose, setFlyDose] = useState<DoseResponseData | null>(null);
+  const [crossData, setCrossData] = useState<CrossSpeciesData | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -758,17 +925,21 @@ export function NetworkStateValidator() {
       fetchJSON<DoseResponseData>("v3_dose_response.json"),
       fetchJSON<PerturbationProfile>("v3_perturbation_profile.json"),
       fetchJSON<ValidationSummary>("v3_validation_summary.json"),
+      fetchJSON<DoseResponseData>("v4_fly_dose_response.json"),
+      fetchJSON<CrossSpeciesData>("v4_cross_species_summary.json"),
     ])
-      .then(([d, p, v]) => {
+      .then(([d, p, v, fd, cs]) => {
         setDoseData(d);
         setPertData(p);
         setVerdict(v);
+        setFlyDose(fd);
+        setCrossData(cs);
       })
       .catch((e) => setErr(String(e)));
   }, []);
 
   if (err) return <div className="p-4 bg-rose-50 border border-rose-200 rounded text-sm">Failed to load data: {err}</div>;
-  if (!doseData || !pertData || !verdict) return <div className="p-4 text-zinc-500 text-sm">Loading…</div>;
+  if (!doseData || !pertData || !verdict || !flyDose || !crossData) return <div className="p-4 text-zinc-500 text-sm">Loading…</div>;
 
   const gates = verdict.gates;
 
@@ -837,6 +1008,7 @@ export function NetworkStateValidator() {
         {tab === "mutants" && <TabMutants data={doseData} />}
         {tab === "eger" && <TabEger data={doseData} />}
         {tab === "perturbation" && <TabPerturbationProfile profile={pertData} />}
+        {tab === "cross-species" && <TabCrossSpecies wormDose={doseData} flyDose={flyDose} crossData={crossData} />}
       </div>
     </div>
   );

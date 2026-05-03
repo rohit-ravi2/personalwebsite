@@ -20,7 +20,7 @@ The validator operationalises this directly. Per-anesthetic Hill-curve perturbat
 
 <NetworkStateValidator client:only="react" />
 
-Four tabs over the same V3 ensemble (545 sims, 60s × 5 seeds, α = 0.13). Pick a volatile to see its Hill-shaped dose-response against the published worm EC50; toggle a mutant to see the Hill curve shift left (hypersensitive) or right (resistant); compare the three Eger compounds side-by-side to see why the conserved-substrate model distinguishes anesthetics from non-immobilizers; or open the perturbation profile to see which mechanism classes each compound engages, with primary literature anchors.
+Five tabs over the V3 worm ensemble + V4 fly cross-species ensemble. Pick a volatile to see its Hill-shaped dose-response against the published worm EC50; toggle a mutant to see the Hill curve shift left (hypersensitive) or right (resistant); compare the three Eger compounds side-by-side to see why the conserved-substrate model distinguishes anesthetics from non-immobilizers; open the perturbation profile to see which mechanism classes each compound engages with primary literature anchors; or open the **Cross-Species** tab to compare the same architecture's predictions on the *C. elegans* (Cook 2019, 300 neurons) and *Drosophila larva* (Winding 2023, 2,952 neurons) connectomes side-by-side.
 
 ## Architecture
 
@@ -87,11 +87,27 @@ The diagnostic work also surfaced architectural failures downstream: a `max()`-a
 
 The network-state validator above replaces that chain entirely: literature EC50s instead of Vina-derived occupancies, the full 300-neuron Cook connectome instead of a 50-neuron LIF demo, and direct network-state metrics instead of `max()`-aggregation followed by classifier-bank pattern matching. Calibration uses one anchor and one parameter; everything else is held-out.
 
+## Cross-species validation (V4) — fly larva, 4 / 4 gates pass
+
+Same architecture transferred to *Drosophila larva* via the Winding 2023 connectome (2,952 neurons, ~110,000 chemical edges) plus a fly-specific cell-type-based NT-identity heuristic and α calibrated on the single van Swinderen 1999 halothane LRR anchor.
+
+| Gate | worm V3 (Cook 2019, 300 neurons) | fly V4 (Winding 2023, 2,952 neurons) |
+|---|---|---|
+| 1 — halothane WT calibration | 317 µM (1.07× off published 340) | 361 µM (**1.06×** off published 340) |
+| 2 — isoflurane WT held-out | 291 µM (1.002× off published 290) | 323 µM (**1.11×** off published 290) |
+| 3 — mutant directional accuracy | 9 / 9 (100%) | **13 / 13 (100%)** |
+| 4 — Eger non-immobilizer specificity | 3 / 3 | **3 / 3** |
+| α (free parameter, calibrated on one anchor) | 0.13 | 0.060 |
+
+The same Hill-curve perturbation table (mammalian-receptor electrophys EC50s) extrapolates to fly orthologs (Syx1A / Sandman / ND-49 / Goα47A / Rdl / GluClα / Dα-Dβ) the same way it extrapolates to worm orthologs. Compounds that immobilize *C. elegans* immobilize *Drosophila larva* in the model. Compounds that fail in worm (Eger non-immobilizers) fail in fly. The conserved-substrate hypothesis is dispositive across two organisms with ~10× different neuron counts and ~30× different edge counts.
+
+Use the **Cross-Species** tab in the interactive above to compare the worm and fly halothane / isoflurane curves side-by-side.
+
 ## Status
 
-- **V3 ensemble shipped** (commit pending). All four gates pass at canonical 60 s × 5 seeds.
+- **V3 worm ensemble shipped + V4 fly cross-species ensemble shipped.** All four gates pass in both organisms.
 - **Repo**: [`AnestheticSimulator/`](https://github.com/rohit-ravi2/personalwebsite/tree/main/AnestheticSimulator) (public). Built at $0 external spend on an RTX 4060 Ti.
-- **Open work**: cross-species validation on the FlyWire connectome (same conserved targets, same architecture, different organism) is the natural next test of the conserved-substrate framing. Per-mutant Complex I factor refinement (currently *nduf-6 / ndus-8 / nuo-1* share an estimate; per-gene primary-literature factors would differentiate them).
+- **Open work**: per-mutant Complex I factor refinement (currently *nduf-6 / ndus-8 / nuo-1* share an estimate; per-gene primary-literature factors would differentiate them); FlyBase driver-line NT data integration to replace V1's cell-type heuristic; full adult Drosophila (FlyWire ~140K neurons) substrate as a follow-on.
 
 <details>
 <summary className="cursor-pointer text-sm font-medium text-zinc-700 mt-6">Sources & attribution</summary>
