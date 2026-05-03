@@ -1,0 +1,29 @@
+# mouse_mutant_baseline_perturbations.csv — V6 mouse mutant LIF entry-points
+#
+# Same schema as worm V3 / fly V4. Two-type mutant model:
+#   Type A — baseline shift (existing fields suffice):
+#     NDUFS4 cKO: complex_i_factor < 1 (HYPER via reduced ATP)
+#     Stx1A, Vamp2 LoF: wsyn_global_factor < 1 (HYPER via reduced release)
+#
+#   Type B — receptor insensitivity (V1 approximated via wsyn_global_factor > 1):
+#     β3(N265M), α1(H101R): receptor-binding-site mutations
+#     TREK1, TASK1, TASK3, GIRK2 KOs: K2P/GIRK channel knockouts
+#     The HONEST model would be per-mechanism-class engagement → 0; for V1 we
+#     approximate via "more excitable baseline → harder to silence → RESIST."
+#     This V1 simplification predicts RESIST direction directionally but not
+#     the per-anesthetic specificity (β3 is etomidate-specific in reality).
+#     Documented limitation; V2 schema extension would add per-class engagement
+#     factors per mutant.
+#
+gene,direction,complex_i_factor,nca_leak_factor,wsyn_global_factor,wsyn_excitatory_factor,k2p_baseline_factor,literature_ratio,source_paper,source_PMID,notes
+β3_N265M,RESISTANT,1.0,1.0,1.4,1.0,1.0,1.5-3,Jurd 2003 FASEB J,12521989,"GABA-A β3 N265M knock-in; etomidate/propofol-binding site mutation; V1 approx via baseline excitability"
+α1_H101R,RESISTANT,1.0,1.0,1.2,1.0,1.0,1.2-1.5,Reynolds 2003,14563696,"GABA-A α1 H101R; partial RESIST"
+TREK1_KO,RESISTANT,1.0,1.0,1.3,1.0,0.0,1.5-2.5,Heurteaux 2004 EMBO J,15212942,"K2P channel KO; both engagement gone AND baseline leak gone"
+TASK1_KO,RESISTANT,1.0,1.0,1.2,1.0,0.5,1.3-2.0,Linden 2007,17215344,"Single K2P KO; partial baseline leak loss"
+TASK3_KO,RESISTANT,1.0,1.0,1.15,1.0,0.7,1.2-1.5,Linden 2008,18503019,"Smaller effect than TASK1 alone"
+TASK13_dKO,RESISTANT,1.0,1.0,1.4,1.0,0.0,2-3,Linden 2008,18503019,"Double KO; strong RESIST"
+GIRK2_KO,RESISTANT,1.0,1.0,1.3,1.0,0.5,1.3-2.5,Bayliss lab; Lazarenko 2010,,"GIRK family — analog modeled as K2P-like"
+NDUFS4_cKO,HYPER,0.4,1.0,1.0,1.0,1.0,0.4-0.7,Quintana 2010,20847272,"Complex I cKO; mammalian gas-1 analog"
+Stx1A_hypo,HYPER,1.0,1.0,0.6,1.0,1.0,0.5-0.8,Jung 2011 (partial),,"Syntaxin1A hypomorph; reduced SNARE"
+Vamp2_cKO,HYPER,1.0,1.0,0.5,1.0,1.0,0.4-0.7,Wölfel 2008,,"VAMP2 cKO; reduced release"
+WT,WT,1.0,1.0,1.0,1.0,1.0,1.0,,,reference

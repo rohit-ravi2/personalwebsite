@@ -1,0 +1,19 @@
+# mouse_immobilization_anchors.csv — V6 mammalian behavioral EC50 anchors
+#
+# Halothane MAC mouse ~1.0 vol% inhaled = ~350 µM aqueous (Kp_water=0.78 at 37°C).
+# This is essentially the SAME calibration anchor as worm Crowder 1996 (340 µM)
+# and fly van Swinderen 1999 (340 µM) — striking conservation of MAC across phyla.
+#
+# Mouse mutant panel + behavioral readout (LRR / immobilization) is the gold
+# standard for mammalian anesthesia; these anchors are higher quality than
+# worm or fly equivalents.
+#
+anesthetic,mouse_immob_EC50_uM,anchor_quality,source_paper,source_PMID,assay,notes
+halothane,350,PRIMARY,Sonner 1999 Anesthesiology / Eger 2002,9856681,Loss-of-righting-reflex,"~1.0 vol% MAC; calibration anchor for V6 Gate 1; SAME as worm/fly halothane MAC"
+isoflurane,290,PRIMARY,Sonner 1999 / Eger 2002,9856681,LRR,"~1.35 vol% MAC; held-out test for Gate 2"
+sevoflurane,270,PRIMARY,Sonner 1999 / Eger 2002,9856681,LRR,"~2.6 vol% MAC"
+desflurane,290,PRIMARY,Eger 2002,,LRR,"~6.5 vol% MAC"
+propofol,12,PRIMARY,Belelli 1997 Br J Pharmacol; Antognini lab,9298537,LRR,"~10-15 µM in mouse"
+etomidate,2,PRIMARY,Belelli 1997 Br J Pharmacol,9298537,LRR,"~1.5-2.5 µM"
+ketamine,30,SECONDARY,(Mott / Drummond comparative lit),,LRR,"~25-40 µM"
+diethyl_ether,3000,SECONDARY,Eger 2002,,LRR,"~3.2 vol%; high-mM range"

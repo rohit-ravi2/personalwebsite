@@ -1,0 +1,87 @@
+# mouse_anesthetic_perturbation_table.csv — V6 mammalian perturbation profiles
+#
+# The Hill-curve EC50/IC50 anchors are MAMMALIAN ELECTROPHYS to begin with —
+# they're not "transferred" to mouse, they ARE mouse/rat data.
+#   Mihic 1997 — rat α1β2γ2 GABA-A
+#   Patel & Honoré 1999 — mouse TREK-1
+#   Forman 1996 — rat α4β2 nAChR
+#   Hanley 2002 — rat liver Complex I
+#   Stewart 2000 — rat NMJ
+#   Lu 2007 — mouse NALCN
+#
+# Differences from worm/fly tables:
+#   - GluCl class DROPPED (mammals don't have glutamate-gated chloride receptors)
+#   - Otherwise structurally identical to worm V3 / fly V4 tables
+#
+# Same evidence-grade convention.
+anesthetic,mechanism_class,target_EC50_uM,max_effect_factor,hill_n,source_paper,source_PMID,evidence_grade,notes
+halothane,gaba_potentiation,330,3.0,1.0,Mihic 1997 Nature,9311785,LITERATURE,"α1β2γ2 GABA-A τ_decay potentiation; native mammalian receptor"
+halothane,k2p_potentiation,250,3.0,1.0,Patel & Honoré 1999 Nat Neurosci,10321245,LITERATURE,"TREK-1 EC50; mouse receptor"
+halothane,nachr_antagonism,280,0.30,1.0,Forman 1996 Mol Pharmacol,8633440,LITERATURE,"α4β2 IC50; max block ~70%"
+halothane,complex_i_block,240,0.70,1.0,Hanley 2002 Anesthesiology,12411414,LITERATURE,"Complex I IC50 in submitochondrial particles"
+halothane,snare_cooperativity,340,0.50,1.0,Stewart 2000 J Physiol,11095753,LITERATURE,"Mammalian NMJ release-p reduction"
+halothane,nca_block,300,0.20,1.0,Lu 2007 Cell,17972040,LITERATURE,"Mouse NALCN block"
+halothane,complex_ii_block,400,0.90,1.0,Kayser 2003 Anesthesiology,12878724,CONSERVATIVE,"Small effect"
+isoflurane,gaba_potentiation,250,3.0,1.0,Mihic 1997 Nature,9311785,LITERATURE,
+isoflurane,k2p_potentiation,200,3.0,1.0,Patel & Honoré 1999 Nat Neurosci,10321245,LITERATURE,
+isoflurane,nachr_antagonism,250,0.30,1.0,Forman 1996 Mol Pharmacol,8633440,LITERATURE,
+isoflurane,complex_i_block,250,0.75,1.0,Hanley 2002 Anesthesiology,12411414,LITERATURE,
+isoflurane,snare_cooperativity,290,0.55,1.0,Stewart 2000 J Physiol,11095753,LITERATURE,
+isoflurane,nca_block,250,0.25,1.0,Lu 2007 Cell,17972040,LITERATURE,
+isoflurane,complex_ii_block,400,0.90,1.0,Kayser 2003 Anesthesiology,12878724,CONSERVATIVE,
+sevoflurane,gaba_potentiation,200,3.0,1.0,Krasowski 1999 review,10454514,LITERATURE,
+sevoflurane,k2p_potentiation,180,3.0,1.0,Patel & Honoré 1999 Nat Neurosci,10321245,LITERATURE,
+sevoflurane,nachr_antagonism,250,0.40,1.0,Forman 1996 Mol Pharmacol,8633440,HOMOLOG,
+sevoflurane,complex_i_block,300,0.80,1.0,Hanley 2002 Anesthesiology,12411414,LITERATURE,
+sevoflurane,snare_cooperativity,230,0.60,1.0,Stewart 2000 J Physiol,11095753,HOMOLOG,
+sevoflurane,nca_block,250,0.30,1.0,Lu 2007 Cell,17972040,HOMOLOG,
+sevoflurane,complex_ii_block,400,0.95,1.0,Kayser 2003 Anesthesiology,12878724,CONSERVATIVE,
+desflurane,gaba_potentiation,290,3.0,1.0,Krasowski 1999 review,10454514,HOMOLOG,"Less potent than iso/sevo on GABA-A; MAC ~6.5%"
+desflurane,k2p_potentiation,250,3.0,1.0,Patel & Honoré 1999 Nat Neurosci,10321245,HOMOLOG,
+desflurane,nachr_antagonism,300,0.40,1.0,Forman 1996 Mol Pharmacol,8633440,HOMOLOG,
+desflurane,complex_i_block,300,0.80,1.0,Hanley 2002 Anesthesiology,12411414,HOMOLOG,
+desflurane,snare_cooperativity,290,0.60,1.0,Stewart 2000 J Physiol,11095753,HOMOLOG,
+desflurane,nca_block,290,0.30,1.0,Lu 2007 Cell,17972040,HOMOLOG,
+desflurane,complex_ii_block,400,0.95,1.0,Kayser 2003 Anesthesiology,12878724,CONSERVATIVE,
+propofol,gaba_potentiation,1.0,10.0,1.5,Belelli 1997 Br J Pharmacol,9298537,LITERATURE,"β-specific; native mammalian"
+propofol,k2p_potentiation,5.0,2.0,1.0,Patel & Honoré 1999 Nat Neurosci,10321245,LITERATURE,"Weak K2P"
+propofol,nachr_antagonism,10.0,0.50,1.0,Flood 1997 Br J Anaesth,9135360,LITERATURE,"Weak nAChR"
+propofol,complex_i_block,,,,,,DEFERRED,"Not a propofol target"
+propofol,complex_ii_block,,,,,,DEFERRED,
+propofol,snare_cooperativity,,,,,,DEFERRED,
+propofol,nca_block,,,,,,DEFERRED,
+ketamine,nachr_antagonism,30,0.50,1.0,Flood 1997 Br J Anaesth,9135360,LITERATURE,"nAChR block"
+ketamine,k2p_potentiation,200,1.5,1.0,Patel & Honoré 1999 Nat Neurosci,10321245,LITERATURE,"Mild K2P"
+ketamine,gaba_potentiation,,,,,,DEFERRED,
+ketamine,complex_i_block,,,,,,DEFERRED,
+ketamine,complex_ii_block,,,,,,DEFERRED,
+ketamine,snare_cooperativity,,,,,,DEFERRED,
+ketamine,nca_block,,,,,,DEFERRED,
+etomidate,gaba_potentiation,0.3,12.0,1.5,Belelli 1997 Br J Pharmacol,9298537,LITERATURE,"β-specific; sub-µM EC50"
+etomidate,k2p_potentiation,,,,,,DEFERRED,
+etomidate,nachr_antagonism,,,,,,DEFERRED,
+etomidate,complex_i_block,,,,,,DEFERRED,
+etomidate,complex_ii_block,,,,,,DEFERRED,
+etomidate,snare_cooperativity,,,,,,DEFERRED,
+etomidate,nca_block,,,,,,DEFERRED,
+hexafluoroethane,gaba_potentiation,,,,,,DEFERRED,"Eger non-immobilizer; minimal engagement"
+hexafluoroethane,k2p_potentiation,5000,1.5,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,"Very weak"
+hexafluoroethane,nachr_antagonism,,,,,,DEFERRED,
+hexafluoroethane,complex_i_block,,,,,,DEFERRED,
+hexafluoroethane,snare_cooperativity,,,,,,DEFERRED,
+hexafluoroethane,nca_block,,,,,,DEFERRED,
+hexafluoroethane,complex_ii_block,,,,,,DEFERRED,
+trans_12_dichloroethylene,gaba_potentiation,,,,,,DEFERRED,
+trans_12_dichloroethylene,k2p_potentiation,3000,1.5,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+trans_12_dichloroethylene,nachr_antagonism,,,,,,DEFERRED,
+trans_12_dichloroethylene,complex_i_block,,,,,,DEFERRED,
+trans_12_dichloroethylene,snare_cooperativity,,,,,,DEFERRED,
+trans_12_dichloroethylene,nca_block,,,,,,DEFERRED,
+trans_12_dichloroethylene,complex_ii_block,,,,,,DEFERRED,
+cis_12_dichloroethylene,gaba_potentiation,800,2.5,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+cis_12_dichloroethylene,k2p_potentiation,500,2.5,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+cis_12_dichloroethylene,nachr_antagonism,800,0.50,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+cis_12_dichloroethylene,complex_i_block,800,0.85,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+cis_12_dichloroethylene,snare_cooperativity,800,0.70,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+cis_12_dichloroethylene,nca_block,800,0.40,1.0,Eger 2001 Anesth Analg,11375814,CONSERVATIVE,
+cis_12_dichloroethylene,complex_ii_block,,,,,,DEFERRED,
