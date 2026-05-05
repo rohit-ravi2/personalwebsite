@@ -87,32 +87,47 @@ The diagnostic work also surfaced architectural failures downstream: a `max()`-a
 
 The network-state validator above replaces that chain entirely: literature EC50s instead of Vina-derived occupancies, the full 300-neuron Cook connectome instead of a 50-neuron LIF demo, and direct network-state metrics instead of `max()`-aggregation followed by classifier-bank pattern matching. Calibration uses one anchor and one parameter; everything else is held-out.
 
-## Cross-phylum validation (V4 + V6) — three organisms, 12 / 12 gates pass
+## Three-organism validation (V4 + V6) on a substrate-agnostic LIF integrator
 
-Same architecture transferred to *Drosophila larva* (Winding 2023 connectome, 2,952 neurons) and then to *Mus musculus* (generic LIF random graph, 3,000 neurons — no mammalian connectome required per V5 M2 finding). Three organisms across two phyla (protostome invertebrate → deuterostome vertebrate), three independent calibrations on a single behavioral anchor each.
+The architecture transfers to *Drosophila larva* (Winding 2023 connectome, 2,952 neurons) and *Mus musculus* (generic LIF random graph, 3,000 neurons — no mammalian connectome required per V5 M2). Three independent organisms, three single-anchor calibrations.
 
 | Gate | worm V3 (Cook 2019) | fly V4 (Winding 2023) | mouse V6 (random graph) |
 |---|---|---|---|
-| 1 — halothane WT calibration | 317 µM (1.07× off published 340) | 361 µM (**1.06×** off 340) | 297 µM (**1.18×** off 350) |
-| 2 — held-out volatile (isoflurane) | 291 µM (1.002× off 290) | 323 µM (**1.11×** off 290) | 273 µM (**1.06×** off 290) |
-| 3 — mutant directional accuracy | 9 / 9 (100%) | **13 / 13** (100%) | **10 / 10** (100%) |
-| 4 — Eger non-immobilizer specificity | 3 / 3 | **3 / 3** | **3 / 3** |
-| α (free parameter, single-anchor calibration) | 0.13 | 0.060 | 0.10 |
+| 1 — halothane WT calibration anchor | 317 µM (1.07× off 340) | 361 µM (1.06× off 340) | 297 µM (1.18× off 350) |
+| 2 — held-out volatile (isoflurane) | **291 µM (1.002× off 290)** | **323 µM (1.11× off 290)** | **273 µM (1.06× off 290)** |
+| 3 — mutant magnitude predictions | inside lit band: 4/9 | inside lit band: 5/13 | inside lit band: 4/10 |
+| 4 — Eger non-immobilizer specificity | 3 / 3 | 3 / 3 | 3 / 3 |
+| α (free parameter, single-anchor) | 0.13 | 0.060 | 0.10 |
 
-**Cross-phylum aggregate**: 32/32 directional mutant predictions correct, 9/9 Eger compounds correctly classified, 11/12 WT calibrations within 2× of published, across nematode + dipteran + mammalian substrates.
+## What survived adversarial controls — V5 + V5+ findings
 
-**Striking conservation**: halothane MAC at ~340-350 µM aqueous concentration in *all three* organisms (Crowder 1996 worm, van Swinderen 1999 fly, Sonner 1999 mouse). Same molecules, same conserved targets, same effective behavioral threshold across phyla.
+V5 M2 (connectome permutation) and V5+ (no-integration sign-only baseline + Meyer-Overton baseline) jointly narrow what's actually load-bearing in the architecture:
 
-The same Hill-curve perturbation table (mammalian-receptor electrophys EC50s) integrates correctly across:
-- Worm orthologs (UNC-49 GABA-A / TWK-18 K2P / GAS-1 Complex I / UNC-64 SNARE / UNC-79 NCA)
-- Fly orthologs (Rdl / Sandman / ND-49 / Syx1A / dunc-79)
-- Mouse natives (α1β2γ2 / TREK-1, TASK-1, TASK-3 / Complex I / NMJ syntaxin / NALCN)
+**The substrate is largely interchangeable.** V5 M2: fly result transfers to fully randomized graphs (P1, P2, P3 all pass Gate 1 at frozen α). Mouse V6 uses a generic random graph by design. Worm V3 needs at minimum cell-type-aggregate connectivity (P3 passes; P1, P2 fail). The "cross-phylum" framing was over-claiming organism-specific structural recovery.
 
-The conserved-substrate hypothesis is dispositive across two phyla. The mechanism map (literature-anchored Hill perturbation across conserved targets) is what does the work — confirmed in three independently calibrated organism substrates.
+**Gate 3 directional accuracy is largely sign-propagation.** A no-integration sign-only baseline matches the validator on 32/35 mutants (91% — identical to the validator). Network dynamics are decorative for the *direction* of mutant predictions; the perturbation table's sign convention does the work.
 
-**Honest scope note for V6 mouse**: tests only the LRR / immobilization phenotype. Higher-order mammalian features (cortical EEG burst suppression, NREM-like slow oscillations, gamma suppression, consciousness disruption) are NOT in the architecture and must NOT be claimed.
+**Cross-organism MAC similarity at ~340-350 µM is largely Meyer-Overton.** A lipid:water-partition baseline calibrated on halothane predicts halothane MAC perfectly (by definition) and matches the validator at order-of-magnitude across phyla. The "striking conservation" claim collapses to "lipid biophysics conserves across cells" (Meyer-Overton 1899).
 
-Use the **Cross-Species** tab in the interactive above to compare worm + fly + mouse halothane / isoflurane curves side-by-side.
+**Where the architecture genuinely beats Meyer-Overton:**
+
+| test | Meyer-Overton fold-error | Validator fold-error |
+|---|---|---|
+| held-out isoflurane (worm + fly + mouse) | **2.89-2.97× off** | **1.00-1.11× off** (~3× tighter on all 3 organisms) |
+| etomidate mouse | 196× off | not directly tested in V6 (mechanism-specific table addresses it) |
+| ketamine mouse | 44× off | mechanism-specific |
+| Eger non-immobilizers | predicts they should immobilize at high dose | correctly classifies as non-immobilizers (3/3) |
+| mutant magnitude predictions | no answer (Meyer-Overton has nothing to say) | several inside literature bands (TREK1_KO 2.04 in 1.5-2.5; TASK13_dKO 2.06 in 2-3; ND-49 0.62 in 0.5-0.7; gas-1 0.57 close to 0.33-0.5) |
+
+## Honest single-line claim, post-controls
+
+> A literature-anchored conserved-target Hill perturbation table, integrated through a generic LIF substrate (no specific connectome required), recovers held-out volatile EC50s ~3× tighter than Meyer-Overton, predicts mutant magnitudes inside literature bands for several mutants in each organism, and correctly classifies Eger non-immobilizers across worm, fly, and mouse with one free parameter calibrated per organism.
+
+The architecture is largely substrate-agnostic. The mechanism map is what does the work. Cross-organism MAC similarity is consistent with Meyer-Overton (lipid biophysics) and not strong evidence of conserved targets on its own. The architecture's distinctive contribution is within-organism precision on held-out volatiles, mutant magnitude, and Eger discrimination — places where Meyer-Overton fails.
+
+**V6 mouse scope**: LRR / immobilization phenotype only. Higher-order mammalian features (cortical EEG burst suppression, NREM-like slow oscillations, gamma suppression, consciousness disruption) are NOT in the architecture and not claimed.
+
+Use the **Cross-Species** tab to compare worm + fly + mouse halothane / isoflurane curves side-by-side.
 
 ## Adversarial controls (V5) — what survives, what doesn't
 

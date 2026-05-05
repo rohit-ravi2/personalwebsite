@@ -1,0 +1,170 @@
+{
+  "method": "Meyer-Overton (MAC \u00d7 Kp_oil_water = const) calibrated on halothane per organism",
+  "kp_oil_water_table": {
+    "halothane": 224.0,
+    "isoflurane": 91.0,
+    "sevoflurane": 47.0,
+    "desflurane": 18.7,
+    "propofol": 6300.0,
+    "ketamine": 60.0,
+    "etomidate": 200.0,
+    "diethyl_ether": 3.2,
+    "cis_12_dichloroethylene": 35.0,
+    "trans_12_dichloroethylene": 53.0,
+    "hexafluoroethane": 1.7
+  },
+  "rows": [
+    {
+      "organism": "worm_V3",
+      "compound": "halothane",
+      "published_EC50_uM": 340,
+      "kp_oil_water": 224.0,
+      "meyer_overton_predicted_uM": 340.0,
+      "meyer_overton_fold_error": 1.0,
+      "validator_predicted_uM": 316.75,
+      "validator_fold_error": 1.0734017363851618
+    },
+    {
+      "organism": "worm_V3",
+      "compound": "isoflurane",
+      "published_EC50_uM": 290,
+      "kp_oil_water": 91.0,
+      "meyer_overton_predicted_uM": 836.9230769230769,
+      "meyer_overton_fold_error": 2.885941644562334,
+      "validator_predicted_uM": 290.68,
+      "validator_fold_error": 1.002344827586207
+    },
+    {
+      "organism": "worm_V3",
+      "compound": "sevoflurane",
+      "published_EC50_uM": 230,
+      "kp_oil_water": 47.0,
+      "meyer_overton_predicted_uM": 1620.4255319148936,
+      "meyer_overton_fold_error": 7.045328399629972,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "worm_V3",
+      "compound": "ketamine",
+      "published_EC50_uM": 5000,
+      "kp_oil_water": 60.0,
+      "meyer_overton_predicted_uM": 1269.3333333333333,
+      "meyer_overton_fold_error": 3.939075630252101,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "fly_V4",
+      "compound": "halothane",
+      "published_EC50_uM": 340,
+      "kp_oil_water": 224.0,
+      "meyer_overton_predicted_uM": 340.0,
+      "meyer_overton_fold_error": 1.0,
+      "validator_predicted_uM": 361.03,
+      "validator_fold_error": 1.0618529411764706
+    },
+    {
+      "organism": "fly_V4",
+      "compound": "isoflurane",
+      "published_EC50_uM": 290,
+      "kp_oil_water": 91.0,
+      "meyer_overton_predicted_uM": 836.9230769230769,
+      "meyer_overton_fold_error": 2.885941644562334,
+      "validator_predicted_uM": 322.66,
+      "validator_fold_error": 1.1126206896551725
+    },
+    {
+      "organism": "fly_V4",
+      "compound": "sevoflurane",
+      "published_EC50_uM": 230,
+      "kp_oil_water": 47.0,
+      "meyer_overton_predicted_uM": 1620.4255319148936,
+      "meyer_overton_fold_error": 7.045328399629972,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "halothane",
+      "published_EC50_uM": 350,
+      "kp_oil_water": 224.0,
+      "meyer_overton_predicted_uM": 350.0,
+      "meyer_overton_fold_error": 1.0,
+      "validator_predicted_uM": 297.22,
+      "validator_fold_error": 1.1775788977861517
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "isoflurane",
+      "published_EC50_uM": 290,
+      "kp_oil_water": 91.0,
+      "meyer_overton_predicted_uM": 861.5384615384615,
+      "meyer_overton_fold_error": 2.970822281167109,
+      "validator_predicted_uM": 273.17,
+      "validator_fold_error": 1.0616099864553208
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "sevoflurane",
+      "published_EC50_uM": 270,
+      "kp_oil_water": 47.0,
+      "meyer_overton_predicted_uM": 1668.0851063829787,
+      "meyer_overton_fold_error": 6.178092986603625,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "desflurane",
+      "published_EC50_uM": 290,
+      "kp_oil_water": 18.7,
+      "meyer_overton_predicted_uM": 4192.513368983958,
+      "meyer_overton_fold_error": 14.45694265166882,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "propofol",
+      "published_EC50_uM": 12,
+      "kp_oil_water": 6300.0,
+      "meyer_overton_predicted_uM": 12.444444444444445,
+      "meyer_overton_fold_error": 1.037037037037037,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "etomidate",
+      "published_EC50_uM": 2,
+      "kp_oil_water": 200.0,
+      "meyer_overton_predicted_uM": 392.0,
+      "meyer_overton_fold_error": 196.0,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "ketamine",
+      "published_EC50_uM": 30,
+      "kp_oil_water": 60.0,
+      "meyer_overton_predicted_uM": 1306.6666666666667,
+      "meyer_overton_fold_error": 43.55555555555556,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    },
+    {
+      "organism": "mouse_V6",
+      "compound": "diethyl_ether",
+      "published_EC50_uM": 3000,
+      "kp_oil_water": 3.2,
+      "meyer_overton_predicted_uM": 24500.0,
+      "meyer_overton_fold_error": 8.166666666666666,
+      "validator_predicted_uM": null,
+      "validator_fold_error": null
+    }
+  ],
+  "validator_beats_mo_count": 3,
+  "validator_beats_mo_total": 6
+}

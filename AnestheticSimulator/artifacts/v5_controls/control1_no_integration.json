@@ -1,0 +1,360 @@
+{
+  "method": "sign-only directional predictor compared to V3/V4/V6 validator outputs",
+  "n_mutants_total": 35,
+  "sign_only_correct": 32,
+  "validator_correct": 32,
+  "magnitude_in_literature_band_validator_only": 0,
+  "magnitude_total_with_lit_band": 0,
+  "per_mutant_results": [
+    {
+      "organism": "worm_V3",
+      "gene": "gas-1",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.6991988470868447,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "gas-2",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.796300148157772,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "nduf-6",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7522240550991897,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "ndus-8",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7522240550991897,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "nuo-1",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7522240550991897,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "unc-79",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7134233935511536,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "unc-80",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7134233935511536,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "goa-1",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 2.7150744850081256,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "dgk-1",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.9575496099217469,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "eat-16",
+      "expected": "DEFERRED",
+      "sign_only_prediction": "NEUTRAL",
+      "sign_only_correct": false,
+      "validator_correct": null,
+      "validator_ratio": null,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "egl-10",
+      "expected": "DEFERRED",
+      "sign_only_prediction": "NEUTRAL",
+      "sign_only_correct": false,
+      "validator_correct": null,
+      "validator_ratio": null,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "worm_V3",
+      "gene": "ocrl-1",
+      "expected": "DEFERRED",
+      "sign_only_prediction": "NEUTRAL",
+      "sign_only_correct": false,
+      "validator_correct": null,
+      "validator_ratio": null,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "Syx1A",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7724382401910217,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "unc-13",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.8128967915529616,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "syt1",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.8128967915529616,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "nSyb",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.7724382401910217,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "Sandman",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.7695546552921344,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "ORK1",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.7695546552921344,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "na",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.6360452988884766,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "dunc-79",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.6360452988884766,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "dunc-80",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.6360452988884766,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "Go\u03b147A",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.3661896328822976,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "rdgA",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.174315197483979,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "ND-49",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.620194597689307,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "fly_V4",
+      "gene": "ND-75",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.6644125079400404,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "\u03b23_N265M",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.0224107201417865,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "\u03b11_H101R",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.0132123537313,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "TREK1_KO",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 2.0414480429961968,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "TASK1_KO",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.408502375809722,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "TASK3_KO",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.2698053153264799,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "TASK13_dKO",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 2.0623679989129067,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "GIRK2_KO",
+      "expected": "RESISTANT",
+      "sign_only_prediction": "RESISTANT",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 1.416778885977373,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "NDUFS4_cKO",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.5491958451985278,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "Stx1A_hypo",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.9858054419731039,
+      "lit_ratio": ""
+    },
+    {
+      "organism": "mouse_V6",
+      "gene": "Vamp2_cKO",
+      "expected": "HYPER",
+      "sign_only_prediction": "HYPER",
+      "sign_only_correct": true,
+      "validator_correct": true,
+      "validator_ratio": 0.9829548068478308,
+      "lit_ratio": ""
+    }
+  ]
+}
