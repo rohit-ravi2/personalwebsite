@@ -476,8 +476,7 @@ if __name__ == '__main__':
             v = main_match_level(2)
             print(json.dumps(v, indent=2, default=str))
         elif cmd == 'smoke':
-            # Tiny: 2 ensembles × 1 organism × 2 doses × 1 seed
-            global N_RANDOM_ENSEMBLES, DOSES_HALOTHANE, SEEDS_RANDOM
+            # Tiny: 2 ensembles, 2 doses, 1 seed (override module globals at top level)
             N_RANDOM_ENSEMBLES = 2
             DOSES_HALOTHANE = [200.0, 1000.0]
             SEEDS_RANDOM = [42]
