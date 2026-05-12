@@ -4,12 +4,14 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 6 SHIPPED under §8.6 reframed criteria;
-**0/4 cells PASS — catastrophic homeostasis failure**; dominant cause is
-Path 2 deploying channels Nicoletti's fit omitted (NCA in AVAL where
-Nicoletti g=0 but CeNGEN nca-2 = 153.2 TPM); routes to Option β; THIRD
-methodology lesson surfaced — "channel-inclusion audit" alongside state-
-variable and uniqueness audits)
+**Last updated:** 2026-05-12 (Path 2 v2 SHIPPED — partial success:
+AVAL+AIY V_rest in published range under per-family C_global = 1.0e4;
+AVAR + RIM fail with diagnosable cell-specific substrate issues; Tier D
+cross-cell consistency PASS demonstrating biology emergence from gene
+expression; FOUR standing methodology contributions transferred to
+Layers 2-7: state-variable, uniqueness, channel-inclusion, measurement-
+vs-fit audits + machine-code-up principle; v3 routing for AVAR/RIM
+documented)
 
 ---
 
@@ -24,7 +26,12 @@ variable and uniqueness audits)
 | 4 | `C_global` calibration | ✓ SHIPPED | `docs/channel_calibration_protocol.md` | 2026-05-12 |
 | 5 | Derivation + per-channel validation | ✓ SHIPPED + **HARD STOP** | derived_channel_parameters.py + path2_channel_validation.md + HARD_STOP file | 2026-05-12 |
 | 6 | Cell validation under §8.6 reframed criteria | ✓ SHIPPED + **OPTION β ROUTING** | validate_path2_cells.py + path2_cell_validation.md | 2026-05-12 |
-| 7 | Documentation + commit + push | **BLOCKED** pending Option β outcome | (gated) | — |
+| **v2 reorientation** | Machine-code-up + 4 audits | ✓ SHIPPED | design doc §2.9, §8.10-8.12 + methodology doc §3.0, §4.0 | 2026-05-12 |
+| v2 Group A | Methodology doc updates | ✓ SHIPPED | commit `d36041f` | 2026-05-12 |
+| v2 Group B | V_rest targets + γ refinements | ✓ SHIPPED | v_rest_targets.md + γ inventory v2 + commit `edb44f4` | 2026-05-12 |
+| v2 Group C | Per-family C_global calibration | ✓ SHIPPED (2/3 success) | c_global_per_family_calibration.md + commit `9925b52` | 2026-05-12 |
+| v2 Group D | 4-tier validation | ✓ SHIPPED (partial) | path2_v2_validation.md + commit `9812a49` | 2026-05-12 |
+| 7 | Documentation + commit + push | ✓ SHIPPED (commits-as-you-go pattern) | per-phase commits across session | 2026-05-12 |
 
 ---
 

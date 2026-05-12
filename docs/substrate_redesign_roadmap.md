@@ -76,8 +76,11 @@ inserted §7.3.5 adds 3-5 blocks for channel audit + refit + validation).
 
 ## §7.3.5 (Layer 1.5) — Channel-Substrate Consistency: Path 2 (gene-expression-derived parameterization)
 
-**Status:** Phase 1 in progress (methodology document SHIPPED 2026-05-12).
-BLOCKS §7.4 and downstream work until all 7 phases complete.
+**Status:** Path 2 v1 + v2 SHIPPED 2026-05-12. v2 partial success
+(AVAL + AIY V_rest match published targets; AVAR + RIM fail with
+diagnosable cell-specific substrate issues). Standing methodology
+contributions shipped (machine-code-up + four audits). BLOCKS §7.4
+until v3 refinements or alternative routing chosen.
 
 **Motivation:** §7.3 integration surfaced that Nicoletti 2024's channel
 parameterization assumes fixed `E_Ca = 60 mV` (implying `[Ca]_in ≈ 17 μM`,
