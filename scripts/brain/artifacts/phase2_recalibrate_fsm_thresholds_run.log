@@ -1,0 +1,66 @@
+==============================================================================
+  Phase 2 sub-tasks 2.4 — FSM threshold recalibration under M2-pure
+==============================================================================
+  bank: classifier_bank_v2_a2balanced.npz
+  calibration: calibration_m2pure.npz
+  scenarios: ['spontaneous', 'touch', 'osmotic_shock', 'food']
+  n_seeds × duration: 3 × 30.0 s
+
+>>> Sub-task 2.4a: behavioral_fsm threshold recalibration
+>>> Approach: run closed loop under varied stim; collect classifier
+>>> output distribution per event; set thresholds at chosen percentile.
+
+  collecting classifier outputs over 12 runs...
+    run 1/12: spontaneous seed=42
+    run 2/12: spontaneous seed=43
+    run 3/12: spontaneous seed=44
+    run 4/12: touch seed=42
+    run 5/12: touch seed=43
+    run 6/12: touch seed=44
+    run 7/12: osmotic_shock seed=42
+    run 8/12: osmotic_shock seed=43
+    run 9/12: osmotic_shock seed=44
+    run 10/12: food seed=42
+    run 11/12: food seed=43
+    run 12/12: food seed=44
+
+  event                     n_obs      p50      p90      p95      p99  recommended
+  reversal_onset              600    0.852    0.960    0.973    0.994        0.973
+  reversal_offset             600    0.076    0.364    0.451    0.638        0.451
+  forward_run_onset           600    0.550    0.996    0.998    1.000        0.998
+  forward_run_offset          600    0.955    1.000    1.000    1.000        1.000
+  omega_onset                 600    0.143    0.595    0.706    0.839        0.706
+  pirouette_entry             600    0.251    0.789    0.860    0.938        0.860
+  quiescence_onset            600    0.315    0.478    0.508    0.593        0.508
+  speed_burst_onset           600    0.659    0.989    0.992    0.997        0.992
+  wrote /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_fsm_thresholds_behavioral_m2pure.json
+
+>>> Sub-task 2.4b: activity_fsm threshold recalibration
+>>> Approach: collect per-role max-rate-across-cells over scenarios;
+>>> set z-score threshold separating stim activation from baseline noise.
+
+  collecting role rate distributions over 12 runs...
+    run 1/12: spontaneous seed=42
+    run 2/12: spontaneous seed=43
+    run 3/12: spontaneous seed=44
+    run 4/12: touch seed=42
+    run 5/12: touch seed=43
+    run 6/12: touch seed=44
+    run 7/12: osmotic_shock seed=42
+    run 8/12: osmotic_shock seed=43
+    run 9/12: osmotic_shock seed=44
+    run 10/12: food seed=42
+    run 11/12: food seed=43
+    run 12/12: food seed=44
+
+  role                baseline μ  baseline σ  stim peak   z stim  recommended
+  reverse_cmd             64.115      39.795    175.000     2.79         2.50
+  forward_cmd             63.703      40.715    172.500     2.67         2.50
+  omega_cmd               20.029       7.594     40.000     2.63         2.50
+  quiescent_cmd            0.897       1.454      2.500     1.10         2.50
+  feeding_dwell            2.669       2.077      7.500     2.33         2.50
+  wrote /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_fsm_thresholds_activity_m2pure.json
+
+==============================================================================
+  Phase 2 sub-tasks 2.4 complete
+==============================================================================

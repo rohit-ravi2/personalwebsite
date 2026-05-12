@@ -1,0 +1,63 @@
+========================================================================
+Phase 2 classifier training — A2-balanced readout (21 cells)
+========================================================================
+Readout cells (21):
+  AIBL: 10/10 worms  ★ legacy18
+  ASEL: 10/10 worms  ★ legacy18
+  AUAL: 10/10 worms  ★ legacy18
+  AVAL: 9/10 worms  + command
+  AVAR: 8/10 worms  + command
+  AVDL: 9/10 worms  + command
+  AVEL: 10/10 worms  ★ legacy18
+  AVER: 10/10 worms  ★ legacy18
+  CEPDL: 10/10 worms  ★ legacy18
+  I3: 10/10 worms  ★ legacy18
+  IL2DL: 10/10 worms  ★ legacy18
+  M3L: 10/10 worms  ★ legacy18
+  M3R: 10/10 worms  ★ legacy18
+  NSML: 10/10 worms  ★ legacy18
+  NSMR: 10/10 worms  ★ legacy18
+  OLQDL: 10/10 worms  ★ legacy18
+  OLQDR: 10/10 worms  ★ legacy18
+  OLQVL: 10/10 worms  ★ legacy18
+  RMER: 10/10 worms  ★ legacy18
+  SMDVL: 10/10 worms  ★ legacy18
+  URXL: 10/10 worms  ★ legacy18
+
+Events (8): ['reversal_onset', 'reversal_offset', 'forward_run_onset', 'forward_run_offset', 'omega_onset', 'pirouette_entry', 'quiescence_onset', 'speed_burst_onset']
+CV: leave-one-worm-out 10-fold
+C grid: (0.01, 0.1, 1.0, 10.0)
+
+Loading 10 worms...
+Loaded. Each worm shape: (1600, 21)
+
+event                    h feat      best C   CV AUC mean    ± SEM   CV Brier
+--------------------------------------------------------------------------------
+reversal_onset           1 derivs      1.00         0.734    0.028     0.2305
+reversal_offset          1 derivs      1.00         0.822    0.013     0.1740
+forward_run_onset        1 derivs     10.00         0.807    0.015     0.1969
+forward_run_offset       3 derivs     10.00         0.771    0.011     0.2048
+omega_onset              1 derivs      0.10         0.880    0.020     0.1308
+pirouette_entry          3 lags        1.00         0.693    0.022     0.2450
+quiescence_onset         3 lags        0.01         0.619    0.061     0.2390
+speed_burst_onset        1 derivs      1.00         0.750    0.019     0.2214
+
+Bank written: /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/classifier_bank_v2_a2balanced.npz (11.1 KB)
+Metadata:     /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/classifier_bank_v2_a2balanced.json
+
+========================================================================
+Summary — CV AUC vs legacy classifier
+========================================================================
+event                  legacy train_auc    v2 CV mean   v2 CV SEM   Δ vs legacy
+reversal_onset                    0.760         0.734       0.028        -0.026
+reversal_offset                   0.849         0.822       0.013        -0.027
+forward_run_onset                 0.834         0.807       0.015        -0.027
+forward_run_offset                0.791         0.771       0.011        -0.020
+omega_onset                       0.900         0.880       0.020        -0.020
+pirouette_entry                   0.754         0.693       0.022        -0.061
+quiescence_onset                  0.774         0.619       0.061        -0.155
+speed_burst_onset                 0.812         0.750       0.019        -0.063
+
+Caveat: legacy 'train_auc' is fit on training set (overfits);
+v2 'CV AUC' is mean held-out worm AUC. Direct comparison is biased
+toward legacy looking better than it would on held-out data.

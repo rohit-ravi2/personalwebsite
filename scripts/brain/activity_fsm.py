@@ -127,6 +127,9 @@ class ActivityFSM:
         self.state = initial_state
         self.entered_t = 0.0
         self.trace = FSMTrace()
+        # Phase 2: per-instance threshold copy so external overrides
+        # (closed_loop_env fsm_thresholds_path) don't mutate global state.
+        self.role_thresholds = dict(ROLE_Z_THRESHOLD)
 
         # Resolve which role neurons are present in this brain.
         name_set = set(brain.names)
@@ -245,13 +248,13 @@ class ActivityFSM:
 
         # Quiescence trigger — RIS sustained, overrides everything
         # except pirouette-in-progress
-        if (z_qui >= ROLE_Z_THRESHOLD["quiescent_cmd"]
+        if (z_qui >= self.role_thresholds["quiescent_cmd"]
                 and self.state != State.QUIESCENT):
             self._transition(State.QUIESCENT, t, f"RIS z={z_qui:.1f}")
             return self.state
 
         # Omega — head-curl circuit co-active
-        if (z_omg >= ROLE_Z_THRESHOLD["omega_cmd"]
+        if (z_omg >= self.role_thresholds["omega_cmd"]
                 and self.state not in (State.OMEGA, State.PIROUETTE)):
             # If reverse just happened, this is a pirouette
             if (self._last_reverse_onset_t is not None
@@ -265,10 +268,10 @@ class ActivityFSM:
         # State-specific transitions
         if self.state == State.FORWARD:
             if (self._can_exit(t)
-                    and z_rev >= ROLE_Z_THRESHOLD["reverse_cmd"]):
+                    and z_rev >= self.role_thresholds["reverse_cmd"]):
                 self._transition(State.REVERSE, t, f"AVA z={z_rev:.1f}")
             elif (self._can_exit(t)
-                  and z_dwell >= ROLE_Z_THRESHOLD["feeding_dwell"]):
+                  and z_dwell >= self.role_thresholds["feeding_dwell"]):
                 self._transition(State.QUIESCENT, t, f"NSM z={z_dwell:.1f}")
 
         elif self.state == State.REVERSE:
@@ -278,7 +281,7 @@ class ActivityFSM:
             if self._can_exit(t):
                 if z_rev < 0.5:
                     # AVA activity subsided
-                    if z_fwd >= ROLE_Z_THRESHOLD["forward_cmd"]:
+                    if z_fwd >= self.role_thresholds["forward_cmd"]:
                         self._transition(State.FORWARD, t,
                                          f"AVB z={z_fwd:.1f}")
                     else:
@@ -297,7 +300,7 @@ class ActivityFSM:
             # Exit quiescence when RIS drops and forward command
             # picks up, or when the hold timer expires.
             if (self._can_exit(t) and z_qui < 0.8
-                    and z_fwd >= ROLE_Z_THRESHOLD["forward_cmd"]):
+                    and z_fwd >= self.role_thresholds["forward_cmd"]):
                 self._transition(State.FORWARD, t,
                                  f"exit-QUI AVB z={z_fwd:.1f}")
 
@@ -319,7 +322,7 @@ class ActivityFSM:
                 "baseline_sd": round(stats.baseline_std, 2),
                 "z": round(stats.z(recent), 2),
                 "neurons_present": stats.present,
-                "threshold_z": ROLE_Z_THRESHOLD[role],
+                "threshold_z": self.role_thresholds[role],
             }
         return out
 

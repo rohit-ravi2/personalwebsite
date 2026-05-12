@@ -1,0 +1,57 @@
+{
+  "method": "baseline \u03bc/\u03c3 from first 30% of run; stim peak from 50-70%; z-threshold = max(2.5, z_stim * 0.7)",
+  "bank": "classifier_bank_v2_a2balanced.npz",
+  "cal": "calibration_m2pure.npz",
+  "scenarios": [
+    "spontaneous",
+    "touch",
+    "osmotic_shock",
+    "food"
+  ],
+  "n_seeds": 3,
+  "duration_s": 30.0,
+  "baseline_tau_s": 20.0,
+  "window_s": 0.4,
+  "thresholds": {
+    "reverse_cmd": {
+      "baseline_mean_hz": 64.11487579345703,
+      "baseline_std_hz": 39.795326232910156,
+      "stim_peak_hz_p95": 175.0,
+      "z_stim_observed": 2.786385606127852,
+      "recommended_z_threshold": 2.5,
+      "n_traces": 12
+    },
+    "forward_cmd": {
+      "baseline_mean_hz": 63.702919006347656,
+      "baseline_std_hz": 40.71534729003906,
+      "stim_peak_hz_p95": 172.5,
+      "z_stim_observed": 2.672139334060632,
+      "recommended_z_threshold": 2.5,
+      "n_traces": 12
+    },
+    "omega_cmd": {
+      "baseline_mean_hz": 20.0294246673584,
+      "baseline_std_hz": 7.59410285949707,
+      "stim_peak_hz_p95": 40.0,
+      "z_stim_observed": 2.629747805913203,
+      "recommended_z_threshold": 2.5,
+      "n_traces": 12
+    },
+    "quiescent_cmd": {
+      "baseline_mean_hz": 0.8968926668167114,
+      "baseline_std_hz": 1.4541689157485962,
+      "stim_peak_hz_p95": 2.5,
+      "z_stim_observed": 1.1024216759289067,
+      "recommended_z_threshold": 2.5,
+      "n_traces": 12
+    },
+    "feeding_dwell": {
+      "baseline_mean_hz": 2.6694915294647217,
+      "baseline_std_hz": 2.077136754989624,
+      "stim_peak_hz_p95": 7.5,
+      "z_stim_observed": 2.3255611162488954,
+      "recommended_z_threshold": 2.5,
+      "n_traces": 12
+    }
+  }
+}

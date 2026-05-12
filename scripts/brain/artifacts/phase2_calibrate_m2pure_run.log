@@ -1,0 +1,87 @@
+Calibrating 21 readout neurons (A2-balanced).
+  Cells: ['AIBL', 'ASEL', 'AUAL', 'AVAL', 'AVAR', 'AVDL', 'AVEL', 'AVER', 'CEPDL', 'I3', 'IL2DL', 'M3L', 'M3R', 'NSML', 'NSMR', 'OLQDL', 'OLQDR', 'OLQVL', 'RMER', 'SMDVL', 'URXL']
+
+[1] Atanas ΔF/F stats (pooled across all worms with each neuron)...
+  neuron     cov   μ_atanas   σ_atanas
+  AIBL      10/10     0.6185     0.2359
+  ASEL      10/10     0.5254     0.1864
+  AUAL      10/10     0.6469     0.1945
+  AVAL       9/10     1.0463     0.5237
+  AVAR       8/10     0.9227     0.3783
+  AVDL       9/10     0.3435     0.0546
+  AVEL      10/10     0.4913     0.2232
+  AVER      10/10     0.4676     0.2164
+  CEPDL     10/10     0.3549     0.0741
+  I3        10/10     0.2307     0.0999
+  IL2DL     10/10     0.1118     0.0285
+  M3L       10/10     0.1206     0.0416
+  M3R       10/10     0.1137     0.0429
+  NSML      10/10     0.4165     0.1627
+  NSMR      10/10     0.3666     0.1348
+  OLQDL     10/10     0.5514     0.2322
+  OLQDR     10/10     0.4531     0.2068
+  OLQVL     10/10     0.5059     0.2432
+  RMER      10/10     0.1353     0.0514
+  SMDVL     10/10     0.4998     0.1926
+  URXL      10/10     0.3274     0.1538
+
+[2] Brian2 M2-pure baseline run...
+  Brain mode: M2-pure (0 exceptions, 0 sign overrides applied)
+  running brain baseline for 60 s (1200 sync steps, 5 stimuli)...
+    step 200/1200 (t=10s)
+    step 400/1200 (t=20s)
+    step 600/1200 (t=30s)
+    step 800/1200 (t=40s)
+    step 1000/1200 (t=50s)
+    step 1200/1200 (t=60s)
+
+   Brian2 M2-pure synthetic calcium stats (100 samples):
+  neuron      μ_brain    σ_brain
+  AIBL         3.2548     2.4716
+  ASEL         0.0322     0.0416
+  AUAL         0.4246     0.2001
+  AVAL         7.7179     3.6372
+  AVAR         7.7230     3.6202
+  AVDL         7.6988     3.6248
+  AVEL         5.4773     2.2552
+  AVER         5.8749     2.5193
+  CEPDL        0.0683     0.0475
+  I3           0.0790     0.0599
+  IL2DL        0.0723     0.0596
+  M3L          0.0946     0.0601
+  M3R          0.0862     0.0547
+  NSML         0.0647     0.0503
+  NSMR         0.0530     0.0526
+  OLQDL        0.0866     0.0604
+  OLQDR        0.0675     0.0569
+  OLQVL        0.0750     0.0566
+  RMER         0.1827     0.0855
+  SMDVL        0.0033     0.0129
+  URXL         0.1041     0.0778
+
+[3] Saving calibration parameters...
+   wrote /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/calibration_m2pure.npz (2.2 KB)
+
+[4] Per-neuron calibration preview:
+   neuron     cov    scale   offset  Δ vs legacy?
+   AIBL      10/10    0.095   +0.308   legacy_scale=0.073  Δ=+0.023
+   ASEL      10/10    4.479   +0.381   legacy_scale=0.116  Δ=+4.362
+   AUAL      10/10    0.972   +0.234   legacy_scale=0.100  Δ=+0.872
+   AVAL       9/10    0.144   -0.065   (new in A2-balanced)
+   AVAR       8/10    0.104   +0.116   (new in A2-balanced)
+   AVDL       9/10    0.015   +0.228   (new in A2-balanced)
+   AVEL      10/10    0.099   -0.051   legacy_scale=0.119  Δ=-0.020
+   AVER      10/10    0.086   -0.037   legacy_scale=0.075  Δ=+0.011
+   CEPDL     10/10    1.561   +0.248   legacy_scale=0.364  Δ=+1.197
+   I3        10/10    1.667   +0.099   legacy_scale=1.933  Δ=-0.265
+   IL2DL     10/10    0.478   +0.077   legacy_scale=0.587  Δ=-0.109
+   M3L       10/10    0.692   +0.055   legacy_scale=0.805  Δ=-0.113
+   M3R       10/10    0.783   +0.046   legacy_scale=0.749  Δ=+0.035
+   NSML      10/10    3.236   +0.207   legacy_scale=3.438  Δ=-0.202
+   NSMR      10/10    2.562   +0.231   legacy_scale=3.284  Δ=-0.722
+   OLQDL     10/10    3.847   +0.218   legacy_scale=0.816  Δ=+3.031
+   OLQDR     10/10    3.632   +0.208   legacy_scale=2.034  Δ=+1.598
+   OLQVL     10/10    4.300   +0.184   legacy_scale=0.480  Δ=+3.820
+   RMER      10/10    0.600   +0.026   legacy_scale=0.251  Δ=+0.350
+   SMDVL     10/10   14.881   +0.450   legacy_scale=0.052  Δ=+14.830
+   URXL      10/10    1.978   +0.122   legacy_scale=0.160  Δ=+1.817

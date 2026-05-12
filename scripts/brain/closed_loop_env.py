@@ -105,7 +105,10 @@ class ClosedLoopEnv:
                  fsm_mode: str = "classifier",
                  sensory_mode: str = "injection",
                  g_gap_ns: float | None = None,
-                 sign_exceptions: dict[tuple[str, str], int] | None = None):
+                 sign_exceptions: dict[tuple[str, str], int] | None = None,
+                 bank_path: Path | None = None,
+                 cal_path: Path | None = None,
+                 fsm_thresholds_path: Path | None = None):
         """
         fsm_mode:
           - 'classifier' (default): 8-event Atanas-trained classifier
@@ -172,12 +175,43 @@ class ClosedLoopEnv:
             LIFBrain.__init__(brain_instance, **lif_kwargs)
         self.brain = brain_instance
 
-        self.bank = ClassifierBank()
+        # Phase 2: bank_path override allows opt-in use of v2 classifiers
+        # (classifier_bank_v2_a2balanced.npz under M2-pure) without changing
+        # production default. Defaults to legacy classifier_bank.npz.
+        if bank_path is not None:
+            self.bank = ClassifierBank(bank_npz=Path(bank_path))
+        else:
+            self.bank = ClassifierBank()
+        # Phase 2: optional fsm_thresholds_path overrides FSM module-level
+        # constants for behavioral_fsm.TRANSITION_THRESHOLDS or
+        # activity_fsm.ROLE_Z_THRESHOLD.
         self.fsm_mode = fsm_mode
+        self._fsm_threshold_overrides = None
+        if fsm_thresholds_path is not None:
+            import json as _json
+            self._fsm_threshold_overrides = _json.loads(
+                Path(fsm_thresholds_path).read_text()
+            )
         if fsm_mode == "activity":
             self.fsm = ActivityFSM(self.brain, initial_state=State.FORWARD)
+            # Apply z-threshold overrides if provided (activity FSM)
+            if self._fsm_threshold_overrides:
+                ts = self._fsm_threshold_overrides.get("thresholds", {})
+                for role, info in ts.items():
+                    if isinstance(info, dict) and "recommended_z_threshold" in info:
+                        self.fsm.role_thresholds[role] = float(
+                            info["recommended_z_threshold"]
+                        )
         else:
             self.fsm = BehavioralFSM(State.FORWARD)
+            # Apply transition-threshold overrides (behavioral FSM)
+            if self._fsm_threshold_overrides:
+                ts = self._fsm_threshold_overrides.get("thresholds", {})
+                for event, info in ts.items():
+                    if isinstance(info, dict) and "threshold_p95" in info:
+                        self.fsm.transition_thresholds[event] = float(
+                            info["threshold_p95"]
+                        )
 
         # P1 #8 — optional sensory-transduction cascade hub
         self.sensory_mode = sensory_mode
@@ -209,9 +243,12 @@ class ClosedLoopEnv:
         # Per-neuron affine distribution calibration (v1.5 fix):
         # maps Brian2 synthetic calcium moments onto the Atanas ΔF/F
         # moments the classifier was trained on. See calibrate_distribution.py.
-        cal_path = Path(__file__).resolve().parent / "artifacts" / "calibration.npz"
-        if cal_path.exists():
-            cal = np.load(cal_path, allow_pickle=True)
+        # Phase 2: cal_path override allows opt-in use of calibration_m2pure.npz
+        # without changing production default. Default = legacy calibration.npz.
+        _cal_default = Path(__file__).resolve().parent / "artifacts" / "calibration.npz"
+        cal_path_resolved = Path(cal_path) if cal_path is not None else _cal_default
+        if cal_path_resolved.exists():
+            cal = np.load(cal_path_resolved, allow_pickle=True)
             self.cal_mu_brain = cal["mu_brain"].astype(np.float32)
             self.cal_sd_brain = cal["sd_brain"].astype(np.float32)
             self.cal_mu_atanas = cal["mu_atanas"].astype(np.float32)

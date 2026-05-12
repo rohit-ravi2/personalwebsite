@@ -97,6 +97,9 @@ class BehavioralFSM:
         self.state = initial_state
         self.entered_t = 0.0
         self.trace = FSMTrace()
+        # Phase 2: per-instance copy so external overrides
+        # (closed_loop_env fsm_thresholds_path) don't mutate global state.
+        self.transition_thresholds = dict(TRANSITION_THRESHOLDS)
         self._log(0.0, "init")
 
     def _log(self, t: float, trigger: str):
@@ -126,21 +129,21 @@ class BehavioralFSM:
 
         # Pirouette entry (overrides most other states)
         if (event_probs.get("pirouette_entry", 0)
-                >= TRANSITION_THRESHOLDS["pirouette_entry"]
+                >= self.transition_thresholds["pirouette_entry"]
                 and self.state != State.PIROUETTE):
             self._transition(State.PIROUETTE, t, "pirouette_entry")
             return self.state
 
         # Omega (overrides forward/reverse if active)
         if (event_probs.get("omega_onset", 0)
-                >= TRANSITION_THRESHOLDS["omega_onset"]
+                >= self.transition_thresholds["omega_onset"]
                 and self.state not in (State.OMEGA, State.PIROUETTE)):
             self._transition(State.OMEGA, t, "omega_onset")
             return self.state
 
         # Quiescence (very rare, requires high probability)
         if (event_probs.get("quiescence_onset", 0)
-                >= TRANSITION_THRESHOLDS["quiescence_onset"]
+                >= self.transition_thresholds["quiescence_onset"]
                 and self.state == State.FORWARD):
             self._transition(State.QUIESCENT, t, "quiescence_onset")
             return self.state
@@ -148,17 +151,17 @@ class BehavioralFSM:
         # State-specific transitions
         if self.state == State.FORWARD:
             if self._can_exit(t) and (event_probs.get("reversal_onset", 0)
-                    >= TRANSITION_THRESHOLDS["reversal_onset"]):
+                    >= self.transition_thresholds["reversal_onset"]):
                 self._transition(State.REVERSE, t, "reversal_onset")
             elif (event_probs.get("forward_run_offset", 0)
-                  >= TRANSITION_THRESHOLDS["forward_run_offset"]
+                  >= self.transition_thresholds["forward_run_offset"]
                   and self._can_exit(t)):
                 # fwd ended but no reversal → go quiescent briefly
                 self._transition(State.QUIESCENT, t, "forward_run_offset")
 
         elif self.state == State.REVERSE:
             if self._can_exit(t) and (event_probs.get("reversal_offset", 0)
-                    >= TRANSITION_THRESHOLDS["reversal_offset"]):
+                    >= self.transition_thresholds["reversal_offset"]):
                 self._transition(State.FORWARD, t, "reversal_offset")
 
         elif self.state == State.OMEGA:
@@ -171,11 +174,11 @@ class BehavioralFSM:
 
         elif self.state == State.QUIESCENT:
             if (event_probs.get("forward_run_onset", 0)
-                    >= TRANSITION_THRESHOLDS["forward_run_onset"]
+                    >= self.transition_thresholds["forward_run_onset"]
                     and self._can_exit(t)):
                 self._transition(State.FORWARD, t, "forward_run_onset")
             elif (self._can_exit(t) and event_probs.get("speed_burst_onset", 0)
-                  >= TRANSITION_THRESHOLDS["speed_burst_onset"]):
+                  >= self.transition_thresholds["speed_burst_onset"]):
                 self._transition(State.FORWARD, t, "speed_burst_onset")
 
         return self.state
