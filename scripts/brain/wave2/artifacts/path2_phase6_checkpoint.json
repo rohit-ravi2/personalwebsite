@@ -1,0 +1,94 @@
+{
+  "phase": 6,
+  "phase_name": "Per-cell integration + cell-level validation under reframed criteria",
+  "status": "complete_with_option_beta_routing",
+  "started": "2026-05-12",
+  "completed": "2026-05-12",
+  "deliverables": {
+    "validation_script": {
+      "path": "scripts/brain/wave2/validate_path2_cells.py",
+      "status": "shipped"
+    },
+    "validation_document": {
+      "path": "docs/path2_cell_validation.md",
+      "status": "shipped"
+    }
+  },
+  "cell_results": {
+    "AVAL": {
+      "V_rest_mV": -3.46,
+      "V_rest_in_published_range": false,
+      "K_in_pct": -79.96,
+      "Na_in_pct": 381.51,
+      "Cl_in_pct": 38.53,
+      "Ca_in_pct": 1212473.38,
+      "overall_pass": false
+    },
+    "AVAR": {
+      "V_rest_mV": -4.85,
+      "V_rest_in_published_range": false,
+      "K_in_pct": -87.98,
+      "Na_in_pct": 706.56,
+      "Cl_in_pct": 54.37,
+      "Ca_in_pct": 1314763.70,
+      "overall_pass": false
+    },
+    "AIY": {
+      "V_rest_mV": 6.50,
+      "V_rest_in_published_range": false,
+      "K_in_pct": -97.77,
+      "Na_in_pct": 1598.25,
+      "Cl_in_pct": 9.77,
+      "Ca_in_pct": 126330.03,
+      "overall_pass": false
+    },
+    "RIM": {
+      "V_rest_mV": 7.43,
+      "V_rest_in_published_range": false,
+      "K_in_pct": -97.72,
+      "Na_in_pct": 728.19,
+      "Cl_in_pct": 85.87,
+      "Ca_in_pct": 1063557.49,
+      "overall_pass": false
+    }
+  },
+  "overall_outcome": "0/4 cells pass reframed criteria — catastrophic failure across all cells",
+  "dominant_failure_diagnosis": {
+    "primary": "Path 2 deploys channels Nicoletti's fit omitted (gbar=0); most prominently NCA in AVAL where Nicoletti set gbar=0 but CeNGEN reports nca-2 = 153.2 TPM",
+    "secondary": "AIY/RIM small-cell under-channeling (Phase 5 Pattern A) means insufficient K efflux to balance Na/Ca influx",
+    "tertiary": "AVAL/AVAR IRK over-channeling (Phase 5 Pattern B) provides more K efflux but doesn't compensate for NCA Na influx"
+  },
+  "third_methodology_lesson": {
+    "name": "Channel-inclusion audit",
+    "description": "Inherited fits encode IMPLICIT CHANNEL INCLUSION/EXCLUSION decisions (gbar=0 is an inclusion decision: 'functionally negligible'). Substrate methodology must decide whether to honor or override these decisions based on gene expression.",
+    "joins_with": ["state-variable audit (§7.3)", "uniqueness audit (§7.3.5 Phase 5)"],
+    "forward_looking": "Layer 2-7 inherit-and-compose work blocks should check for gbar=0 / parameter=0 entries in inherited models and explicitly authorize override-vs-honor decisions"
+  },
+  "option_beta_candidates": {
+    "beta_1_smallest": {
+      "name": "Per-channel E_translation respecting Nicoletti omissions",
+      "scope": "Set E_translation = 0 for channels Nicoletti omitted (e.g., NCA in AVAL)",
+      "methodology_cost": "Deviates from 'all channels from biology' contribution",
+      "fixes_pattern": "Nicoletti-omission issue (AVAL NCA primarily)"
+    },
+    "beta_2_medium": {
+      "name": "Refit gamma_NCA + gamma_IRK",
+      "scope": "gamma_NCA from 5 pS placeholder to ~0.5-1 pS (NALCN literature gap); gamma_IRK from 25 pS chord to ~12 pS slope-midpoint",
+      "methodology_cost": "Maintains 'all channels from CeNGEN' but adjusts per-channel intrinsic gamma",
+      "fixes_pattern": "Pattern B (IRK over) + indirectly Pattern A by reducing NCA contribution",
+      "recommended_first": true
+    },
+    "beta_3_full": {
+      "name": "Per-cell-family C_global",
+      "scope": "C_global_AVA (current 1.73e4); C_global_AIY (~5e5); C_global_RIM (~2e5)",
+      "methodology_cost": "Loses 'single global constant' contribution; adds 3 calibration anchors",
+      "fixes_pattern": "Pattern A (small-cell systematic)"
+    }
+  },
+  "recommended_order": "Deploy β-2 first (refit γ_NCA + γ_IRK); if AVAL/AVAR pass but AIY/RIM still fail, deploy β-3 (per-cell-family C_global); if all of β-2 + β-3 still fail, consider β-1 or Option γ (Path 1 fallback)",
+  "blocked_downstream": [
+    "Path 2 v1 Phase 7 commit (Option α ship — REJECTED)",
+    "§7.4 Phase F restructure (via §7.3.5 dependency)"
+  ],
+  "standing_by_for": "Rohit's authorization on Option β refinement order (β-2 first / direct β-3 / combination)"
+}

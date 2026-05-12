@@ -4,12 +4,12 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 5 SHIPPED + **TIER 3 HARD STOP**:
-75% of (channel, cell) combinations beyond 5× Nicoletti; two structured
-failure patterns documented (small-cell under-channeling 10/12; AVAL/AVAR
-IRK over-channeling 2/12); Nicoletti uncertainty pre-flight confirmed
-no-error-bars + non-uniqueness; 4 architectural-direction options drafted
-in HARD_STOP file; Phase 6 BLOCKED pending Rohit's decision)
+**Last updated:** 2026-05-12 (Phase 6 SHIPPED under §8.6 reframed criteria;
+**0/4 cells PASS — catastrophic homeostasis failure**; dominant cause is
+Path 2 deploying channels Nicoletti's fit omitted (NCA in AVAL where
+Nicoletti g=0 but CeNGEN nca-2 = 153.2 TPM); routes to Option β; THIRD
+methodology lesson surfaced — "channel-inclusion audit" alongside state-
+variable and uniqueness audits)
 
 ---
 
@@ -23,8 +23,8 @@ in HARD_STOP file; Phase 6 BLOCKED pending Rohit's decision)
 | 3.5 | SHL-1 + nca-1 disambiguation | ✓ SHIPPED | progress summary addendum | 2026-05-12 |
 | 4 | `C_global` calibration | ✓ SHIPPED | `docs/channel_calibration_protocol.md` | 2026-05-12 |
 | 5 | Derivation + per-channel validation | ✓ SHIPPED + **HARD STOP** | derived_channel_parameters.py + path2_channel_validation.md + HARD_STOP file | 2026-05-12 |
-| 6 | Per-cell integration | **BLOCKED** pending architectural direction | (gated) | — |
-| 7 | Documentation + commit + push | **BLOCKED** | (gated) | — |
+| 6 | Cell validation under §8.6 reframed criteria | ✓ SHIPPED + **OPTION β ROUTING** | validate_path2_cells.py + path2_cell_validation.md | 2026-05-12 |
+| 7 | Documentation + commit + push | **BLOCKED** pending Option β outcome | (gated) | — |
 
 ---
 
