@@ -1,0 +1,909 @@
+{
+  "_meta": {
+    "substrate": "production LIFBrain (M2-pure + Phase 2 recalibrated stack)",
+    "anesthetic": "halothane",
+    "primary_readout": "FWD state fraction",
+    "secondary_readout": "AVA/AVB command interneuron firing rates",
+    "reference": "Crowder 1996 PMID 8873562",
+    "doses_tested": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ],
+    "n_seeds": 5,
+    "duration_s": 30.0,
+    "scenario": "spontaneous",
+    "total_wall_min": 34.6
+  },
+  "baseline_unperturbed": {
+    "results": [
+      {
+        "seed": 42,
+        "fwd_fraction": 0.15166666666666667,
+        "mean_firing_rate_hz": 10.218688535520219,
+        "command_rates_hz": {
+          "AVAL": 45.13784711804514,
+          "AVAR": 45.77124379104577,
+          "AVBL": 37.03703703703704,
+          "AVBR": 41.9041904190419,
+          "AVDL": 44.97116378304497,
+          "AVDR": 44.97116378304497
+        },
+        "fsm_state_fractions": {
+          "FORWARD": 0.15166666666666667,
+          "REVERSE": 0.0,
+          "OMEGA": 0.17166666666666666,
+          "PIROUETTE": 0.0,
+          "QUIESCENT": 0.6766666666666666
+        },
+        "wall_s": 72.6
+      },
+      {
+        "seed": 43,
+        "fwd_fraction": 0.3383333333333333,
+        "mean_firing_rate_hz": 10.554970261115406,
+        "command_rates_hz": {
+          "AVAL": 46.07526738324487,
+          "AVAR": 46.708718960872694,
+          "AVBL": 38.20713199797295,
+          "AVBR": 43.041367721974765,
+          "AVDL": 45.808550929506836,
+          "AVDR": 45.808550929506836
+        },
+        "fsm_state_fractions": {
+          "FORWARD": 0.3383333333333333,
+          "REVERSE": 0.32166666666666666,
+          "OMEGA": 0.13833333333333334,
+          "PIROUETTE": 0.20166666666666666,
+          "QUIESCENT": 0.0
+        },
+        "wall_s": 71.2
+      },
+      {
+        "seed": 44,
+        "fwd_fraction": 0.4583333333333333,
+        "mean_firing_rate_hz": 9.784509674508941,
+        "command_rates_hz": {
+          "AVAL": 42.90028600190668,
+          "AVAR": 43.23362155747705,
+          "AVBL": 36.36690911272742,
+          "AVBR": 41.13360755738371,
+          "AVDL": 42.500283335222235,
+          "AVDR": 42.500283335222235
+        },
+        "fsm_state_fractions": {
+          "FORWARD": 0.4583333333333333,
+          "REVERSE": 0.0,
+          "OMEGA": 0.0,
+          "PIROUETTE": 0.0,
+          "QUIESCENT": 0.5416666666666666
+        },
+        "wall_s": 68.0
+      },
+      {
+        "seed": 45,
+        "fwd_fraction": 0.04833333333333333,
+        "mean_firing_rate_hz": 10.5747969376757,
+        "command_rates_hz": {
+          "AVAL": 46.60155338511284,
+          "AVAR": 46.6682222740758,
+          "AVBL": 38.93463115437181,
+          "AVBR": 43.834794493149765,
+          "AVDL": 46.06820227340911,
+          "AVDR": 46.06820227340911
+        },
+        "fsm_state_fractions": {
+          "FORWARD": 0.04833333333333333,
+          "REVERSE": 0.7416666666666667,
+          "OMEGA": 0.105,
+          "PIROUETTE": 0.10166666666666667,
+          "QUIESCENT": 0.0033333333333333335
+        },
+        "wall_s": 68.5
+      },
+      {
+        "seed": 46,
+        "fwd_fraction": 0.46166666666666667,
+        "mean_firing_rate_hz": 10.908369694565648,
+        "command_rates_hz": {
+          "AVAL": 48.000160000533334,
+          "AVAR": 48.80016266720889,
+          "AVBL": 40.533468444894815,
+          "AVBR": 44.86681622272074,
+          "AVDL": 47.566825222750744,
+          "AVDR": 47.53349177830593
+        },
+        "fsm_state_fractions": {
+          "FORWARD": 0.46166666666666667,
+          "REVERSE": 0.40166666666666667,
+          "OMEGA": 0.13666666666666666,
+          "PIROUETTE": 0.0,
+          "QUIESCENT": 0.0
+        },
+        "wall_s": 69.0
+      }
+    ],
+    "fwd_mean": 0.2916666666666667,
+    "fwd_sem": 0.08296585643102428,
+    "cmd_means_hz": {
+      "AVAL": 45.74302277776857,
+      "AVAR": 46.23639385013604,
+      "AVBL": 38.21583554940081,
+      "AVBR": 42.956155282854176
+    }
+  },
+  "halothane_dose_response": [
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.001,
+      "seed": 42,
+      "fwd_fraction": 0.15166666666666667,
+      "mean_firing_rate_hz": 10.218688535520219,
+      "command_rates_hz": {
+        "AVAL": 45.13784711804514,
+        "AVAR": 45.77124379104577,
+        "AVBL": 37.03703703703704,
+        "AVBR": 41.9041904190419,
+        "AVDL": 44.97116378304497,
+        "AVDR": 44.97116378304497
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.15166666666666667,
+        "REVERSE": 0.0,
+        "OMEGA": 0.17166666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.6766666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.26
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.001,
+      "seed": 43,
+      "fwd_fraction": 0.3383333333333333,
+      "mean_firing_rate_hz": 10.554859129259683,
+      "command_rates_hz": {
+        "AVAL": 46.07526738324487,
+        "AVAR": 46.708718960872694,
+        "AVBL": 38.20713199797295,
+        "AVBR": 43.041367721974765,
+        "AVDL": 45.808550929506836,
+        "AVDR": 45.808550929506836
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.3383333333333333,
+        "REVERSE": 0.32166666666666666,
+        "OMEGA": 0.13833333333333334,
+        "PIROUETTE": 0.20166666666666666,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.27
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.001,
+      "seed": 44,
+      "fwd_fraction": 0.4583333333333333,
+      "mean_firing_rate_hz": 9.784509674508941,
+      "command_rates_hz": {
+        "AVAL": 42.90028600190668,
+        "AVAR": 43.23362155747705,
+        "AVBL": 36.36690911272742,
+        "AVBR": 41.13360755738371,
+        "AVDL": 42.500283335222235,
+        "AVDR": 42.500283335222235
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.4583333333333333,
+        "REVERSE": 0.0,
+        "OMEGA": 0.0,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.5416666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.1
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.001,
+      "seed": 45,
+      "fwd_fraction": 0.04833333333333333,
+      "mean_firing_rate_hz": 10.573908019156192,
+      "command_rates_hz": {
+        "AVAL": 46.60155338511284,
+        "AVAR": 46.6682222740758,
+        "AVBL": 38.93463115437181,
+        "AVBR": 43.834794493149765,
+        "AVDL": 46.06820227340911,
+        "AVDR": 46.06820227340911
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.04833333333333333,
+        "REVERSE": 0.7416666666666667,
+        "OMEGA": 0.105,
+        "PIROUETTE": 0.10166666666666667,
+        "QUIESCENT": 0.0033333333333333335
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.89
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.001,
+      "seed": 46,
+      "fwd_fraction": 0.46166666666666667,
+      "mean_firing_rate_hz": 10.908369694565648,
+      "command_rates_hz": {
+        "AVAL": 48.000160000533334,
+        "AVAR": 48.80016266720889,
+        "AVBL": 40.533468444894815,
+        "AVBR": 44.86681622272074,
+        "AVDL": 47.566825222750744,
+        "AVDR": 47.53349177830593
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.46166666666666667,
+        "REVERSE": 0.40166666666666667,
+        "OMEGA": 0.13666666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 67.8
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.01,
+      "seed": 42,
+      "fwd_fraction": 0.15166666666666667,
+      "mean_firing_rate_hz": 10.218577413296885,
+      "command_rates_hz": {
+        "AVAL": 45.13784711804514,
+        "AVAR": 45.77124379104577,
+        "AVBL": 37.03703703703704,
+        "AVBR": 41.9041904190419,
+        "AVDL": 44.97116378304497,
+        "AVDR": 44.97116378304497
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.15166666666666667,
+        "REVERSE": 0.0,
+        "OMEGA": 0.17166666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.6766666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 67.26
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.01,
+      "seed": 43,
+      "fwd_fraction": 0.3383333333333333,
+      "mean_firing_rate_hz": 10.550080459463544,
+      "command_rates_hz": {
+        "AVAL": 46.07526738324487,
+        "AVAR": 46.60870029072093,
+        "AVBL": 38.14045288453845,
+        "AVBR": 43.07470727869202,
+        "AVDL": 45.775211372789585,
+        "AVDR": 45.775211372789585
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.3383333333333333,
+        "REVERSE": 0.32166666666666666,
+        "OMEGA": 0.13833333333333334,
+        "PIROUETTE": 0.20166666666666666,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.1
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.01,
+      "seed": 44,
+      "fwd_fraction": 0.4583333333333333,
+      "mean_firing_rate_hz": 9.819287684140116,
+      "command_rates_hz": {
+        "AVAL": 43.1002873352489,
+        "AVAR": 43.46695644637631,
+        "AVBL": 36.60024400162668,
+        "AVBR": 41.40027600184001,
+        "AVDL": 42.66695111300742,
+        "AVDR": 42.66695111300742
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.4583333333333333,
+        "REVERSE": 0.0,
+        "OMEGA": 0.0,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.5416666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.8
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.01,
+      "seed": 45,
+      "fwd_fraction": 0.04833333333333333,
+      "mean_firing_rate_hz": 10.568463393224219,
+      "command_rates_hz": {
+        "AVAL": 46.568218940631354,
+        "AVAR": 46.63488782959432,
+        "AVBL": 38.901296709890325,
+        "AVBR": 43.834794493149765,
+        "AVDL": 46.03486782892763,
+        "AVDR": 46.03486782892763
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.04833333333333333,
+        "REVERSE": 0.7416666666666667,
+        "OMEGA": 0.105,
+        "PIROUETTE": 0.10166666666666667,
+        "QUIESCENT": 0.0033333333333333335
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 69.28
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.01,
+      "seed": 46,
+      "fwd_fraction": 0.46166666666666667,
+      "mean_firing_rate_hz": 10.861591760861426,
+      "command_rates_hz": {
+        "AVAL": 47.76682588941963,
+        "AVAR": 48.433494778315925,
+        "AVBL": 40.266800889336295,
+        "AVBR": 44.66681555605185,
+        "AVDL": 47.33349111163704,
+        "AVDR": 47.300157667192224
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.46166666666666667,
+        "REVERSE": 0.40166666666666667,
+        "OMEGA": 0.13666666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.3
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.1,
+      "seed": 42,
+      "fwd_fraction": 0.15166666666666667,
+      "mean_firing_rate_hz": 10.227911680056895,
+      "command_rates_hz": {
+        "AVAL": 45.17118378504517,
+        "AVAR": 45.83791712504584,
+        "AVBL": 37.070373704037074,
+        "AVBR": 41.97086375304197,
+        "AVDL": 45.00450045004501,
+        "AVDR": 45.00450045004501
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.15166666666666667,
+        "REVERSE": 0.0,
+        "OMEGA": 0.17166666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.6766666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 69.48
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.1,
+      "seed": 43,
+      "fwd_fraction": 0.3383333333333333,
+      "mean_firing_rate_hz": 10.549858195752096,
+      "command_rates_hz": {
+        "AVAL": 46.07526738324487,
+        "AVAR": 46.60870029072093,
+        "AVBL": 38.14045288453845,
+        "AVBR": 43.07470727869202,
+        "AVDL": 45.775211372789585,
+        "AVDR": 45.775211372789585
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.3383333333333333,
+        "REVERSE": 0.32166666666666666,
+        "OMEGA": 0.13833333333333334,
+        "PIROUETTE": 0.20166666666666666,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.64
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.1,
+      "seed": 44,
+      "fwd_fraction": 0.4583333333333333,
+      "mean_firing_rate_hz": 9.80984317673229,
+      "command_rates_hz": {
+        "AVAL": 43.066953779691865,
+        "AVAR": 43.40028933526224,
+        "AVBL": 36.533576890512606,
+        "AVBR": 41.33360889072594,
+        "AVDL": 42.633617557450386,
+        "AVDR": 42.633617557450386
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.4583333333333333,
+        "REVERSE": 0.0,
+        "OMEGA": 0.0,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.5416666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.02
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.1,
+      "seed": 45,
+      "fwd_fraction": 0.04833333333333333,
+      "mean_firing_rate_hz": 10.568574508039157,
+      "command_rates_hz": {
+        "AVAL": 46.568218940631354,
+        "AVAR": 46.63488782959432,
+        "AVBL": 38.901296709890325,
+        "AVBR": 43.834794493149765,
+        "AVDL": 46.03486782892763,
+        "AVDR": 46.03486782892763
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.04833333333333333,
+        "REVERSE": 0.7416666666666667,
+        "OMEGA": 0.105,
+        "PIROUETTE": 0.10166666666666667,
+        "QUIESCENT": 0.0033333333333333335
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.67
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 0.1,
+      "seed": 46,
+      "fwd_fraction": 0.46166666666666667,
+      "mean_firing_rate_hz": 10.861369537898458,
+      "command_rates_hz": {
+        "AVAL": 47.76682588941963,
+        "AVAR": 48.433494778315925,
+        "AVBL": 40.266800889336295,
+        "AVBR": 44.66681555605185,
+        "AVDL": 47.33349111163704,
+        "AVDR": 47.300157667192224
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.46166666666666667,
+        "REVERSE": 0.40166666666666667,
+        "OMEGA": 0.13666666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 69.43
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 1.0,
+      "seed": 42,
+      "fwd_fraction": 0.15166666666666667,
+      "mean_firing_rate_hz": 10.227911680056895,
+      "command_rates_hz": {
+        "AVAL": 45.17118378504517,
+        "AVAR": 45.83791712504584,
+        "AVBL": 37.070373704037074,
+        "AVBR": 41.97086375304197,
+        "AVDL": 45.00450045004501,
+        "AVDR": 45.00450045004501
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.15166666666666667,
+        "REVERSE": 0.0,
+        "OMEGA": 0.17166666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.6766666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 71.05
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 1.0,
+      "seed": 43,
+      "fwd_fraction": 0.3383333333333333,
+      "mean_firing_rate_hz": 10.549969327607819,
+      "command_rates_hz": {
+        "AVAL": 46.07526738324487,
+        "AVAR": 46.60870029072093,
+        "AVBL": 38.14045288453845,
+        "AVBR": 43.07470727869202,
+        "AVDL": 45.775211372789585,
+        "AVDR": 45.775211372789585
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.3383333333333333,
+        "REVERSE": 0.32166666666666666,
+        "OMEGA": 0.13833333333333334,
+        "PIROUETTE": 0.20166666666666666,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.48
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 1.0,
+      "seed": 44,
+      "fwd_fraction": 0.4583333333333333,
+      "mean_firing_rate_hz": 9.808954281917435,
+      "command_rates_hz": {
+        "AVAL": 43.066953779691865,
+        "AVAR": 43.40028933526224,
+        "AVBL": 36.533576890512606,
+        "AVBR": 41.3002753351689,
+        "AVDL": 42.633617557450386,
+        "AVDR": 42.633617557450386
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.4583333333333333,
+        "REVERSE": 0.0,
+        "OMEGA": 0.0,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.5416666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.77
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 1.0,
+      "seed": 45,
+      "fwd_fraction": 0.04833333333333333,
+      "mean_firing_rate_hz": 10.568241163594342,
+      "command_rates_hz": {
+        "AVAL": 46.568218940631354,
+        "AVAR": 46.63488782959432,
+        "AVBL": 38.901296709890325,
+        "AVBR": 43.834794493149765,
+        "AVDL": 46.03486782892763,
+        "AVDR": 46.03486782892763
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.04833333333333333,
+        "REVERSE": 0.7416666666666667,
+        "OMEGA": 0.105,
+        "PIROUETTE": 0.10166666666666667,
+        "QUIESCENT": 0.0033333333333333335
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.22
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 1.0,
+      "seed": 46,
+      "fwd_fraction": 0.46166666666666667,
+      "mean_firing_rate_hz": 10.861369537898458,
+      "command_rates_hz": {
+        "AVAL": 47.76682588941963,
+        "AVAR": 48.433494778315925,
+        "AVBL": 40.266800889336295,
+        "AVBR": 44.66681555605185,
+        "AVDL": 47.33349111163704,
+        "AVDR": 47.300157667192224
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.46166666666666667,
+        "REVERSE": 0.40166666666666667,
+        "OMEGA": 0.13666666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.48
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 10.0,
+      "seed": 42,
+      "fwd_fraction": 0.15166666666666667,
+      "mean_firing_rate_hz": 10.227911680056895,
+      "command_rates_hz": {
+        "AVAL": 45.17118378504517,
+        "AVAR": 45.83791712504584,
+        "AVBL": 37.070373704037074,
+        "AVBR": 41.97086375304197,
+        "AVDL": 45.00450045004501,
+        "AVDR": 45.00450045004501
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.15166666666666667,
+        "REVERSE": 0.0,
+        "OMEGA": 0.17166666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.6766666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.47
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 10.0,
+      "seed": 43,
+      "fwd_fraction": 0.3383333333333333,
+      "mean_firing_rate_hz": 10.549969327607819,
+      "command_rates_hz": {
+        "AVAL": 46.07526738324487,
+        "AVAR": 46.60870029072093,
+        "AVBL": 38.14045288453845,
+        "AVBR": 43.07470727869202,
+        "AVDL": 45.775211372789585,
+        "AVDR": 45.775211372789585
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.3383333333333333,
+        "REVERSE": 0.32166666666666666,
+        "OMEGA": 0.13833333333333334,
+        "PIROUETTE": 0.20166666666666666,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 67.53
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 10.0,
+      "seed": 44,
+      "fwd_fraction": 0.4583333333333333,
+      "mean_firing_rate_hz": 9.808954281917435,
+      "command_rates_hz": {
+        "AVAL": 43.066953779691865,
+        "AVAR": 43.40028933526224,
+        "AVBL": 36.533576890512606,
+        "AVBR": 41.3002753351689,
+        "AVDL": 42.633617557450386,
+        "AVDR": 42.633617557450386
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.4583333333333333,
+        "REVERSE": 0.0,
+        "OMEGA": 0.0,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.5416666666666666
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 68.68
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 10.0,
+      "seed": 45,
+      "fwd_fraction": 0.04833333333333333,
+      "mean_firing_rate_hz": 10.568241163594342,
+      "command_rates_hz": {
+        "AVAL": 46.568218940631354,
+        "AVAR": 46.63488782959432,
+        "AVBL": 38.901296709890325,
+        "AVBR": 43.834794493149765,
+        "AVDL": 46.03486782892763,
+        "AVDR": 46.03486782892763
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.04833333333333333,
+        "REVERSE": 0.7416666666666667,
+        "OMEGA": 0.105,
+        "PIROUETTE": 0.10166666666666667,
+        "QUIESCENT": 0.0033333333333333335
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 70.28
+    },
+    {
+      "anesthetic": "halothane",
+      "dose_multiplier": 10.0,
+      "seed": 46,
+      "fwd_fraction": 0.46166666666666667,
+      "mean_firing_rate_hz": 10.861369537898458,
+      "command_rates_hz": {
+        "AVAL": 47.76682588941963,
+        "AVAR": 48.433494778315925,
+        "AVBL": 40.266800889336295,
+        "AVBR": 44.66681555605185,
+        "AVDL": 47.33349111163704,
+        "AVDR": 47.300157667192224
+      },
+      "fsm_state_fractions": {
+        "FORWARD": 0.46166666666666667,
+        "REVERSE": 0.40166666666666667,
+        "OMEGA": 0.13666666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.0
+      },
+      "perturbation_summary": {
+        "n_classes_engaged": 8,
+        "max_class_occupancy": 0.9984000542804112,
+        "mean_class_occupancy": 0.9133711436335656,
+        "n_targets_engaged": 30
+      },
+      "wall_s": 63.85
+    }
+  ],
+  "per_dose_aggregate": {
+    "0.001": {
+      "fwd_mean": 0.2916666666666667,
+      "fwd_sem": 0.08296585643102428
+    },
+    "0.01": {
+      "fwd_mean": 0.2916666666666667,
+      "fwd_sem": 0.08296585643102428
+    },
+    "0.1": {
+      "fwd_mean": 0.2916666666666667,
+      "fwd_sem": 0.08296585643102428
+    },
+    "1.0": {
+      "fwd_mean": 0.2916666666666667,
+      "fwd_sem": 0.08296585643102428
+    },
+    "10.0": {
+      "fwd_mean": 0.2916666666666667,
+      "fwd_sem": 0.08296585643102428
+    }
+  },
+  "ec50_analysis": {
+    "baseline_fwd_fraction": 0.2916666666666667,
+    "target_fwd_for_50pct_suppression": 0.14583333333333334,
+    "doses_tested": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0
+    ],
+    "fwd_at_each_dose": [
+      0.2916666666666667,
+      0.2916666666666667,
+      0.2916666666666667,
+      0.2916666666666667,
+      0.2916666666666667
+    ],
+    "is_monotonic_suppression": true,
+    "ec50_simulator": null,
+    "ec50_clinical_reference": 1.0,
+    "fold_off_clinical": null,
+    "verdict": "EC50 above highest tested dose (insufficient suppression)"
+  }
+}

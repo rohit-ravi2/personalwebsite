@@ -1,0 +1,81 @@
+==============================================================================
+  Phase G CP2 — behavioral threshold calibration vs Crowder 1996
+  Substrate: production LIFBrain (M2-pure + recalibrated stack)
+  Anesthetic: halothane
+  Doses: (0.001, 0.01, 0.1, 1.0, 10.0)× clinical EC50
+  n_seeds × duration: 5 × 30.0s
+  Primary readout: FWD state fraction (Crowder swimming-behavior analog)
+==============================================================================
+
+  Baseline (no perturbation), 5 seeds × 30.0s:
+    seed=42: FWD=0.152 mean_rate=10.22 Hz (72.6s wall)
+    seed=43: FWD=0.338 mean_rate=10.55 Hz (71.2s wall)
+    seed=44: FWD=0.458 mean_rate=9.78 Hz (68.0s wall)
+    seed=45: FWD=0.048 mean_rate=10.57 Hz (68.5s wall)
+    seed=46: FWD=0.462 mean_rate=10.91 Hz (69.0s wall)
+
+  Baseline FWD fraction (no perturbation): 0.292 ± 0.083
+
+  Halothane dose=0.001× clinical EC50, 5 seeds:
+    seed=42: FWD=0.152 mean_rate=10.22 Hz (68.3s wall)
+    seed=43: FWD=0.338 mean_rate=10.55 Hz (68.3s wall)
+    seed=44: FWD=0.458 mean_rate=9.78 Hz (68.1s wall)
+    seed=45: FWD=0.048 mean_rate=10.57 Hz (68.9s wall)
+    seed=46: FWD=0.462 mean_rate=10.91 Hz (67.8s wall)
+
+  Halothane dose=0.01× clinical EC50, 5 seeds:
+    seed=42: FWD=0.152 mean_rate=10.22 Hz (67.3s wall)
+    seed=43: FWD=0.338 mean_rate=10.55 Hz (68.1s wall)
+    seed=44: FWD=0.458 mean_rate=9.82 Hz (68.8s wall)
+    seed=45: FWD=0.048 mean_rate=10.57 Hz (69.3s wall)
+    seed=46: FWD=0.462 mean_rate=10.86 Hz (68.3s wall)
+
+  Halothane dose=0.1× clinical EC50, 5 seeds:
+    seed=42: FWD=0.152 mean_rate=10.23 Hz (69.5s wall)
+    seed=43: FWD=0.338 mean_rate=10.55 Hz (70.6s wall)
+    seed=44: FWD=0.458 mean_rate=9.81 Hz (70.0s wall)
+    seed=45: FWD=0.048 mean_rate=10.57 Hz (70.7s wall)
+    seed=46: FWD=0.462 mean_rate=10.86 Hz (69.4s wall)
+
+  Halothane dose=1.0× clinical EC50, 5 seeds:
+    seed=42: FWD=0.152 mean_rate=10.23 Hz (71.0s wall)
+    seed=43: FWD=0.338 mean_rate=10.55 Hz (70.5s wall)
+    seed=44: FWD=0.458 mean_rate=9.81 Hz (68.8s wall)
+    seed=45: FWD=0.048 mean_rate=10.57 Hz (70.2s wall)
+    seed=46: FWD=0.462 mean_rate=10.86 Hz (70.5s wall)
+
+  Halothane dose=10.0× clinical EC50, 5 seeds:
+    seed=42: FWD=0.152 mean_rate=10.23 Hz (70.5s wall)
+    seed=43: FWD=0.338 mean_rate=10.55 Hz (67.5s wall)
+    seed=44: FWD=0.458 mean_rate=9.81 Hz (68.7s wall)
+    seed=45: FWD=0.048 mean_rate=10.57 Hz (70.3s wall)
+    seed=46: FWD=0.462 mean_rate=10.86 Hz (63.9s wall)
+
+  Per-dose FWD fraction (mean ± SEM):
+        dose    FWD_mean     FWD_sem   suppression
+       0.001x       0.292       0.083         0.0%
+        0.01x       0.292       0.083         0.0%
+         0.1x       0.292       0.083         0.0%
+         1.0x       0.292       0.083         0.0%
+        10.0x       0.292       0.083         0.0%
+
+  EC50 analysis:
+    Target FWD (50% suppression): 0.146
+    Simulator EC50: None
+    Fold-off from clinical: None
+    Monotonic suppression: True
+    Verdict: EC50 above highest tested dose (insufficient suppression)
+
+  Secondary diagnostic — AVA/AVB at each dose:
+        dose      AVAL      AVAR      AVBL      AVBR
+       0.001x      45.7      46.2      38.2      43.0
+        0.01x      45.7      46.2      38.2      43.0
+         0.1x      45.7      46.2      38.2      43.0
+         1.0x      45.7      46.2      38.2      43.0
+        10.0x      45.7      46.2      38.2      43.0
+    baseline      45.7      46.2      38.2      43.0
+
+  CP2 results JSON: /mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/phase_g/phase_g_lifbrain_cp2_calibration.json
+  CP2 markdown: /mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/phase_g/phase_g_lifbrain_cp2_calibration.md
+
+  Total wall time: 34.6 min

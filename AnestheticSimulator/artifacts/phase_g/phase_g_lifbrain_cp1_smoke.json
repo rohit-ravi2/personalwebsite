@@ -1,0 +1,49 @@
+{
+  "result": {
+    "anesthetic": "halothane",
+    "dose_multiplier": 1.0,
+    "seed": 42,
+    "duration_s": 30.0,
+    "scenario": "spontaneous",
+    "readout": {
+      "fsm_state_fractions": {
+        "FORWARD": 0.15166666666666667,
+        "REVERSE": 0.0,
+        "OMEGA": 0.17166666666666666,
+        "PIROUETTE": 0.0,
+        "QUIESCENT": 0.6766666666666666
+      },
+      "n_fsm_states": 600,
+      "fwd_fraction": 0.15166666666666667,
+      "command_interneuron_rates_hz": {
+        "AVAL": 45.17118378504517,
+        "AVAR": 45.83791712504584,
+        "AVBL": 37.070373704037074,
+        "AVBR": 41.97086375304197,
+        "AVDL": 45.00450045004501,
+        "AVDR": 45.00450045004501
+      },
+      "mean_firing_rate_hz": 10.227911680056895,
+      "n_spikes": 92042
+    },
+    "perturbation_summary": {
+      "n_classes_engaged": 8,
+      "max_class_occupancy": 0.9984000542804112,
+      "mean_class_occupancy": 0.9133711436335656,
+      "n_targets_engaged": 30
+    },
+    "wall_clock": {
+      "construct_s": 1.53,
+      "perturb_s": 0.0,
+      "run_s": 68.16,
+      "total_s": 69.7
+    }
+  },
+  "checks": {
+    "env_loads": true,
+    "fsm_output_interpretable": true,
+    "firing_rate_biological": true,
+    "perturbation_engaged": true
+  },
+  "all_pass": true
+}
