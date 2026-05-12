@@ -1,8 +1,16 @@
-# Single-channel γ inventory — Layer 1 channels (Phase 2)
+# Single-channel γ inventory — Layer 1 channels (Phase 2 + v2 refinements)
 
-**Status:** Phase 2 of §7.3.5 Path 2. Per-channel γ values for the 9 channels
-in current Layer 1 cell builders. Inventory complete (8/9 with sourced γ;
-1 estimated due to literature gap).
+**Status:** Phase 2 of §7.3.5 Path 2 + v2 refinements (2026-05-12).
+Per-channel γ values for the 9 channels in current Layer 1 cell builders.
+Inventory complete (8/9 with sourced γ; 1 estimated due to literature gap).
+
+**v2 refinements (2026-05-12):** Two channels refit within Phase 2
+documented uncertainty bands based on Phase 6 cell-level evidence:
+- γ_NCA: 5 → 1.5 pS (lower-end of 1-20 pS uncertainty band)
+- γ_IRK: 25 → 12 pS (effective at physiological V vs chord at V=-100 mV)
+
+Per-channel refit reasoning documented in §2.X entries below. γ values
+for all other channels unchanged from Phase 2.
 
 **Date:** 2026-05-12
 
@@ -114,6 +122,7 @@ hard-stop (>50% un-sourced threshold not met — see §3 coverage check).
 | Mammalian homolog | Kir2.1 (KCNJ2) |
 | γ (literature) | 21-34 pS chord at Vm = -100 mV; 31-43 pS slope between -60/-140 mV |
 | γ (v1 used) | **25 pS** (central; chord conductance at near-rest potential) |
+| **γ (v2 refined)** | **12 pS** (effective γ at physiological operating voltage with rectification; Kir channels are voltage-dependent, and effective conductance at V_rest ~ -50 mV is lower than chord conductance at V = -100 mV due to inward-rectification gating; this captures the substrate-relevant γ rather than the deepest-hyperpolarization measurement) |
 | Source | Pegan et al. 2005 (PMC2234023); Carboxy-terminal Determinants of Conductance in Inward-rectifier K Channels |
 | Epistemic label | approximation from adjacent biology |
 | Notes | Wave 2 cell builders treat IRK as a single channel module with one gbar. CeNGEN TPMs are per-gene (irk-1, irk-2, irk-3). Per methodology §2.4 default rule + Phase 2 literature verification (see §4.1 below): treat each as separate channel with single-gene TPM. IRK-1 forms functional homotetramers in oocyte (Emtage 2012). No direct biochemical evidence for IRK heterotetramers in C. elegans. |
@@ -191,6 +200,7 @@ hard-stop (>50% un-sourced threshold not met — see §3 coverage check).
 | Mammalian homolog | NALCN (single-gene in mammals) |
 | γ in literature | **NO PUBLISHED VALUE** (explicitly stated in Belal et al. NALCN preprint: "There is no available estimate for NALCN single-channel conductance") |
 | γ (v1 used — ESTIMATED) | **5 pS** (estimated; placeholder for v1) |
+| **γ (v2 refined — REFITTED within uncertainty band)** | **1.5 pS** (lower-end of Phase 2 documented 1-20 pS uncertainty range; refined based on Phase 6 evidence that NCA depolarization drives cell-rest failure under v1 5 pS estimate; consistent with measurement-vs-fit audit § |
 | Source | No direct measurement. Estimate based on (a) NALCN's small contribution to total membrane conductance (2-5% maximal conductance, voltage-insensitive), (b) typical leak-channel γ range, (c) ScNav-family structural relation suggesting γ smaller than NaV channels (~20 pS) but larger than HERG-like (~2 pS) |
 | Epistemic label | **approximation from adjacent biology — LITERATURE GAP flagged for refinement** |
 | Notes | NALCN's tight regulation, low open probability, and small contribution to total cell conductance make single-channel measurement technically very difficult. No published unitary γ exists for NALCN as of 2026. v1 uses 5 pS placeholder; substantive finding documented for Phase 5 sensitivity analysis. If Phase 5 surfaces NCA channels beyond 5× discrepancy, γ refinement is a candidate (Phase 2 followup). |

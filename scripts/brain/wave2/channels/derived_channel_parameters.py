@@ -59,13 +59,13 @@ GAMMA_PS: dict[str, float] = {
     "CCA-1":   3.0,    # Cav3.x T-type (smallest)
     "UNC-2":   5.0,    # Cav2.1 P/Q-type
     # K channels
-    "IRK":    25.0,    # Kir2.1 chord conductance V=-100 mV
+    "IRK":    12.0,    # v2 refit: effective γ at physiological V (was 25 pS chord at V=-100 mV; Phase 2 uncertainty band 21-34 chord / 31-43 slope; refit captures rectification at substrate-relevant V_rest)
     "KQT-1":   3.0,    # KCNQ family
     "SHL-1":   6.0,    # Kv4.2 with DPP6-like auxiliary
     "EGL-2":   8.0,    # Kv10.1/Eag1
     "UNC-103": 2.0,    # hERG at physiological [K]_out=4 mM
     # Non-specific / sodium leak
-    "NCA":     5.0,    # NALCN — estimated (literature gap; v1 placeholder)
+    "NCA":     1.5,    # v2 refit: lower-end of Phase 2 1-20 pS uncertainty band (was 5 pS central placeholder; refit based on Phase 6 evidence)
 }
 
 GAMMA_S_PER_CHANNEL: dict[str, float] = {k: v * 1e-12 for k, v in GAMMA_PS.items()}
