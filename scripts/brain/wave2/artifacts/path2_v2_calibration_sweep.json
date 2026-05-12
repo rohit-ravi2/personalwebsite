@@ -1,0 +1,176 @@
+{
+  "AVA": {
+    "family": "AVA",
+    "calibrated": 10000.0,
+    "v_rest_achieved": -47.73691604385467,
+    "in_range": true,
+    "sweep_results": [
+      {
+        "C_global": 1000.0,
+        "v_rest": -51.349182610152795,
+        "in_range": false,
+        "K_pct": -13.790421891174098,
+        "Na_pct": 59.744682759742275,
+        "Ca_in_nM": 96.42573950208703,
+        "distance_from_central": 19.349182610152795,
+        "status": "ok"
+      },
+      {
+        "C_global": 10000.0,
+        "v_rest": -47.73691604385467,
+        "in_range": true,
+        "K_pct": -19.900937137839602,
+        "Na_pct": 168.21199230804115,
+        "Ca_in_nM": 3468.5901525551144,
+        "distance_from_central": 15.73691604385467,
+        "status": "ok"
+      },
+      {
+        "C_global": 100000.0,
+        "v_rest": 10.670654497552102,
+        "in_range": false,
+        "K_pct": -88.88280570881281,
+        "Na_pct": 175.30473963372782,
+        "Ca_in_nM": 786277.8297405861,
+        "distance_from_central": 42.6706544975521,
+        "status": "ok"
+      },
+      {
+        "C_global": 1000000.0,
+        "v_rest": 26.641297378391545,
+        "in_range": false,
+        "K_pct": -93.71876977852341,
+        "Na_pct": 1523.0771893951232,
+        "Ca_in_nM": 242514.02974299405,
+        "distance_from_central": 58.64129737839154,
+        "status": "ok"
+      },
+      {
+        "C_global": 10000000.0,
+        "v_rest": 29.647212885191546,
+        "in_range": false,
+        "K_pct": -96.43726973493139,
+        "Na_pct": 1826.4251924421014,
+        "Ca_in_nM": 191241.09813272647,
+        "distance_from_central": 61.64721288519155,
+        "status": "ok"
+      }
+    ]
+  },
+  "AIY": {
+    "family": "AIY",
+    "calibrated": 10000.0,
+    "v_rest_achieved": -85.3779658120668,
+    "in_range": true,
+    "sweep_results": [
+      {
+        "C_global": 1000.0,
+        "v_rest": -88.84804611850171,
+        "in_range": true,
+        "K_pct": -3.0933942609665976,
+        "Na_pct": 42.00855430387844,
+        "Ca_in_nM": 50.55882852907667,
+        "distance_from_central": 13.848046118501713,
+        "status": "ok"
+      },
+      {
+        "C_global": 10000.0,
+        "v_rest": -85.3779658120668,
+        "in_range": true,
+        "K_pct": -15.04769777775704,
+        "Na_pct": 222.38846629959602,
+        "Ca_in_nM": 57.855361336391226,
+        "distance_from_central": 10.377965812066805,
+        "status": "ok"
+      },
+      {
+        "C_global": 100000.0,
+        "v_rest": 26.308844506518177,
+        "in_range": false,
+        "K_pct": -98.98299979549641,
+        "Na_pct": 1457.4336397410216,
+        "Ca_in_nM": 174542.562650782,
+        "distance_from_central": 101.30884450651817,
+        "status": "ok"
+      },
+      {
+        "C_global": 1000000.0,
+        "v_rest": 28.140975912245825,
+        "in_range": false,
+        "K_pct": -99.05708629258207,
+        "Na_pct": 1390.3165548272189,
+        "Ca_in_nM": 215358.33509368784,
+        "distance_from_central": 103.14097591224582,
+        "status": "ok"
+      },
+      {
+        "C_global": 10000000.0,
+        "v_rest": 29.8108346347963,
+        "in_range": false,
+        "K_pct": -99.12118007065158,
+        "Na_pct": 1451.6451027549128,
+        "Ca_in_nM": 188782.7617730773,
+        "distance_from_central": 104.8108346347963,
+        "status": "ok"
+      }
+    ]
+  },
+  "RIM": {
+    "family": "RIM",
+    "calibrated": null,
+    "v_rest_achieved": null,
+    "in_range": false,
+    "sweep_results": [
+      {
+        "C_global": 1000.0,
+        "v_rest": -11.326768477155257,
+        "in_range": false,
+        "K_pct": -95.18939261520785,
+        "Na_pct": 1536.242574971908,
+        "Ca_in_nM": 27413.795623234848,
+        "distance_from_central": 40.673231522844745,
+        "status": "ok"
+      },
+      {
+        "C_global": 10000.0,
+        "v_rest": -2.976949143581088,
+        "in_range": false,
+        "K_pct": -96.54719687228034,
+        "Na_pct": 1173.3325552245806,
+        "Ca_in_nM": 234009.2912752503,
+        "distance_from_central": 49.02305085641891,
+        "status": "ok"
+      },
+      {
+        "C_global": 100000.0,
+        "v_rest": 14.312454096635852,
+        "in_range": false,
+        "K_pct": -98.30080540262983,
+        "Na_pct": 505.80448309301164,
+        "Ca_in_nM": 614394.4810582433,
+        "distance_from_central": 66.31245409663585,
+        "status": "ok"
+      },
+      {
+        "C_global": 1000000.0,
+        "v_rest": 14.6350072262098,
+        "in_range": false,
+        "K_pct": -98.38191959834901,
+        "Na_pct": 491.9286157056678,
+        "Ca_in_nM": 625627.6324467768,
+        "distance_from_central": 66.6350072262098,
+        "status": "ok"
+      },
+      {
+        "C_global": 10000000.0,
+        "v_rest": 14.629118219981002,
+        "in_range": false,
+        "K_pct": -98.39691560941529,
+        "Na_pct": 491.86563709319245,
+        "Ca_in_nM": 627848.5782263954,
+        "distance_from_central": 66.629118219981,
+        "status": "ok"
+      }
+    ]
+  }
+}

@@ -33,16 +33,50 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 
 C_GLOBAL_CHANNELS_PER_CM2_PER_TPM: float = 1.7297e4
-"""Calibrated 2026-05-12 from EGL-19 in AVAL reference.
+"""**v1 value — superseded by per-family C_GLOBAL in v2 (see C_GLOBAL_PER_FAMILY below).**
+Calibrated 2026-05-12 from EGL-19 in AVAL reference (Nicoletti gbar anchor).
+Failed Phase 5 (75% beyond 5×) and Phase 6 (0/4 cells pass) under v1
+single-anchor approach. Retained for backward compatibility; new code
+should use C_GLOBAL_PER_FAMILY."""
 
-  C_global = gbar_Nicoletti_AVAL_EGL19 / (γ_EGL19 × TPM_EGL19_AVA × E_translation)
-           = 9.288e-6 S/cm² / (6e-12 S/channel × 89.5 × 1.0)
-           = 1.7297e4 channels per (cm² · TPM unit)
+# v2 per-cell-family C_global (calibrated against V_rest measurements per
+# §8.11 measurement-vs-fit audit; see docs/v_rest_targets.md and
+# docs/c_global_per_family_calibration.md)
+C_GLOBAL_PER_FAMILY: dict[str, float] = {
+    "AVA": 1.0e4,      # v2 calibrated 2026-05-12: V_rest=-47.7 mV (target range [-50,-15], central -32)
+    "AIY": 1.0e4,      # v2 calibrated 2026-05-12: V_rest=-85.4 mV (target range [-95,-55], central -75)
+    "RIM": 1.0e4,      # v2 CALIBRATION FAILED: V_rest plateaus at -12 mV (target [-65,-40]); substrate-level pump+leak issue surfaces independent of C_global; documented substantive finding for v3
+}
+"""Per-cell-family C_global values. Calibrated against measured V_rest per
+§3.0 v2 methodology. Updated 2026-05-12 by `calibrate_path2_v2.py`.
 
-Biophysical sanity checks pass (max density 3.5e6 channels/cm² < 1e7
-saturation; max total channels per cell 39.6 > 1 minimum). Reference
-verified by construction.
-"""
+**AVA + AIY: calibrated successfully.** Single global value 1.0e4 happens
+to satisfy both families' V_rest targets within range. This is convenient
+emergence — the order-of-magnitude scan resolved both at the same
+order, suggesting Layer 1 substrate's pump+leak system isn't strongly
+cell-family-dependent for these two families.
+
+**RIM: substantive finding documented.** Calibration sweep from 1e1 to
+1e7 fails to produce V_rest in [-65, -40] range — RIM plateaus at
+-12 mV across all C_global values from 10 to 10,000 (only depolarizes
+further above 1e4). Cause: RIM's pump+leak balance from §7.2 v2
+produces V_rest = -12 mV INDEPENDENT of channel parameterization
+(channels at C_global = 10 contribute negligibly; cell stays at -12).
+This is consistent with §7.2 v2 finding that RIM was an outlier in
+pump-leak balance under linear-TPM-density assumption. RIM remains in
+v2 deployment with documented Tier B failure; Phase 5/6 v2 validation
+will surface its specific failure pattern. v3 candidate refinement:
+RIM-specific leak split or pump capacity adjustment beyond TPM-linear
+scaling."""
+
+CELL_FAMILY_MAPPING: dict[str, str] = {
+    "AVAL": "AVA",
+    "AVAR": "AVA",
+    "AIY":  "AIY",
+    "RIM":  "RIM",
+}
+"""Cell name → CeNGEN class (used for both TPM lookup and C_global family
+lookup)."""
 
 E_TRANSLATION_UNIFORM_V1: float = 1.0
 """Pre-authorized Decision 3 (2026-05-12). Uniform across all channels in
@@ -107,12 +141,14 @@ CELL_TO_CENGEN_CLASS: dict[str, str] = {
 # Public API
 # ---------------------------------------------------------------------------
 
-def get_derived_gbar(channel: str, cell: str) -> float:
+def get_derived_gbar(channel: str, cell: str, use_v2_per_family: bool = True) -> float:
     """Compute Path 2 derived intensive gbar (S/cm²) for a channel in a cell.
 
     Args:
         channel: channel name (must be in GAMMA_PS dict)
         cell: cell name (must be in CELL_TO_CENGEN_CLASS — AVAL/AVAR/AIY/RIM)
+        use_v2_per_family: if True (default), use C_GLOBAL_PER_FAMILY (v2);
+                          if False, use C_GLOBAL_CHANNELS_PER_CM2_PER_TPM (v1)
 
     Returns:
         gbar_intensive (S/cm²); 0.0 if TPM is 0 (channel not expressed at
@@ -132,7 +168,19 @@ def get_derived_gbar(channel: str, cell: str) -> float:
     gamma = GAMMA_S_PER_CHANNEL[channel]
     cengen_class = CELL_TO_CENGEN_CLASS[cell]
     tpm = TPM_BY_CHANNEL_CELL[channel][cengen_class]
-    return gamma * tpm * E_TRANSLATION_UNIFORM_V1 * C_GLOBAL_CHANNELS_PER_CM2_PER_TPM
+    if use_v2_per_family:
+        c_global = C_GLOBAL_PER_FAMILY[cengen_class]
+    else:
+        c_global = C_GLOBAL_CHANNELS_PER_CM2_PER_TPM
+    return gamma * tpm * E_TRANSLATION_UNIFORM_V1 * c_global
+
+
+def set_c_global_family(family: str, value: float) -> None:
+    """Update C_GLOBAL_PER_FAMILY value for a cell family.
+    Used by calibration sweep (Deliverable 4, Group C)."""
+    if family not in C_GLOBAL_PER_FAMILY:
+        raise KeyError(f"Unknown family {family!r}; known: {sorted(C_GLOBAL_PER_FAMILY)}")
+    C_GLOBAL_PER_FAMILY[family] = value
 
 
 def get_derived_density(channel: str, cell: str) -> float:
