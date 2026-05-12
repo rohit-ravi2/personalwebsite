@@ -536,3 +536,55 @@ Companion documents:
   this work block.
 - `docs/claude-chat-context.md` — §3, §4, §5, §6 updated to
   reflect per-edge findings.
+
+---
+
+## Postscript — horizontal rebase 2026-05-08
+
+After this April 25 resolution work, a horizontal rebase ran Phase 0
+(state-of-claims catalog) → Phase 1 (sign-mode decision gauntlet across
+4 candidates: M1 default, M2-pure, M2-current per-edge + DOCUMENTED_SIGN_EXCEPTIONS,
+M3a per-edge + AIY-only exceptions) → Phase 2 (fresh CV-trained classifier
+under A2-balanced 21-cell readout + M2-pure calibration + recalibrated FSM
+thresholds) → Phase 2.5 gauntlet validation. Two findings from that rebase
+update this report:
+
+**1. The DOCUMENTED_SIGN_EXCEPTIONS registry (commit aea4c79, added 2026-04-25
+after this report) collapses the per-edge cascade.** Per the Phase 1
+gauntlet: under per-edge + 7 DOCUMENTED_SIGN_EXCEPTIONS (the production
+default at time of writing), AVDL Δ peri-touch = −2.50 Hz instead of the
++60.2 Hz this report measured under pure per-edge (no exceptions). The
+5 ALM/AVM → PVC entries in the registry sign-flip the cascade-initiating
+edges, suppressing the cascade upstream of AVA. Phase 1 of the rebase
+locked the brain at M2-pure (per-edge + `sign_exceptions={}`) as the only
+sign mode firing the cascade.
+
+**2. The §5 dPIR channel-shift finding (mean −0.117, 9/10 negative seeds at
+n=10×60s) is REFUTED under the recalibrated stack.** Phase 2.5 default tier
+re-ran the same n=10×60s phenotype protocol under M2-pure with the new
+classifier (`classifier_bank_v2_a2balanced.npz`) + new calibration
+(`calibration_m2pure.npz`) + new FSM thresholds. AVA → dPIR = −0.005 ± 0.005
+(1/10 negative) — essentially zero. The original dPIR finding was a
+legacy-stack artifact (legacy 18-readout classifier + legacy calibration +
+legacy FSM thresholds), not a real channel-shifted phenotype. Catalog claim
+C-21 reclassified from Direct → Falsified-but-cited.
+
+**The §5 "behavioral effect persists in dPIR channel" claim should be
+read as: that effect was an artifact of the legacy readout stack, not a
+real biological signal.** Under correct cascade dynamics + recalibrated
+readout, the Chalfie 1985 phenotype is not reproduced on dREV or dPIR.
+
+**Alternative phenotype finding (Direct, awaiting literature precedent):**
+under M2-pure with recalibrated stack, AVA → dFWD = −0.302 ± 0.102 (7/10
+negative, Cohen's d ≈ 0.93). Forward-locomotion suppression rather than
+reversal abolition. Biologically interpretable via AVA-AVB gap-junction
+coupling (Wang/Liu/Chen 2020, Nat Commun 11:5076) but not the textbook
+Chalfie 1985 phenotype.
+
+**Companion rebase documents:**
+- `docs/state_of_claims_2026-05-02.md` — full state-of-claims catalog
+- `docs/brain_v3.5_locked.md` — M2-pure brain spec (Phase 1 lock)
+- `docs/phase2_preflight.md` — Phase 2 architecture sign-off
+- `scripts/brain/artifacts/phase1_gauntlet_screen_decision_matrix.md` — Phase 1 results
+- `scripts/brain/artifacts/phase2_gauntlet_default_decision_matrix.md` — Phase 2.5 default tier
+- `scripts/brain/wave2/artifacts/phase_delta_wb3_findings.md` — WB3 findings (with D7-followup postscript + C-37 resolution)

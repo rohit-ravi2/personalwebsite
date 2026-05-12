@@ -68,8 +68,8 @@ Four layers, each with a 'legacy' and an 'upgraded' path:
   Nicoletti 2024 PDF; raw recordings shared informally with
   Nicoletti per her acknowledgments). Wave 2 cellular layer (below)
   supersedes the v4 sandbox scaffold for AVA-class cells.
-- **Wave 2 cellular layer (production-grade, isolated)**: 4 Brian2
-  cell builders matching Nicoletti 2024 published phenotypes to
+- **Wave 2 cellular layer (production-grade)**: 4 Brian2 cell
+  builders matching Nicoletti 2024 published phenotypes to
   5-decimal-place agreement on full VC + CC validation panels.
   AVAL (4 channels: IRK/LEAK/EGL19/NCA), AIY (7 channels including
   SLO1+EGL19, KQT1, SHL1; eca=127.59 mV per F18 multi-USEION-ca
@@ -77,14 +77,25 @@ Four layers, each with a 'legacy' and an 'upgraded' path:
   EGL2, UNC2; eca=60 mV symmetric), AVAR (5 channels = AVAL +
   UNC103). 14 NMODL channel translations + F1-F18 gotcha catalog +
   cython codegen baseline (22.71× aggregate speedup over numpy).
-  Wave2HybridBrain integration scaffold runs cleanly in
-  `cross_coupling="off"` mode but the cross-coupling biology
-  question (capacitance mismatch — Wave 2 cm ~0.86 pF vs LIF cm
-  100 pF — makes naive `v += W_syn * w` structurally unstable;
-  3 biology questions documented for review before release-event
-  rule implementation, WB3-paused). Wave 2 cellular layer is
-  isolated production-grade; full network integration pending
-  WB3 biology adjudication.
+- **Wave2HybridBrain integration — production-grade under M2-pure**
+  (C-37 resolved per rebase Phase 2). The original CP2 D7-followup
+  inferred that Wave 2 cellular substitution itself broke the
+  recurrent-feedback dynamics that produce §5's +60 Hz cascade.
+  The W2 investigation (`scripts/brain/wave2/integration/run_wb_investigation_w2_m2pure.py`)
+  refuted that inference: under M2-pure (per-edge +
+  `sign_exceptions={}`), Wave2HybridBrain fires the cascade
+  identically to pure LIFBrain M2-pure (AVDL Δ +60.5 Hz vs pure
+  LIF +60.4 Hz; AVAL σ Δ +0.1005 peri-touch with ~zero post-touch
+  drift). The CP2 finding (AVA σ slightly negative under per-edge +
+  DOCUMENTED_SIGN_EXCEPTIONS) was a sign-mode question, not a
+  cellular-substitution question — the 7-entry exceptions registry
+  flips ALM/AVM→PVC edges and collapses the cascade upstream of
+  Wave 2 cells, just as it does in pure LIF under the same
+  exceptions. Wave2HybridBrain + M2-pure adds biophysical
+  resolution beyond LIF without breaking cascade dynamics. WB3
+  findings amendment in `scripts/brain/wave2/artifacts/phase_delta_wb3_findings.md`
+  postscript records the corrected interpretation; original CP2
+  measurement preserved as historical record.
 - **Sign-convention mode** (constructor flag
   `use_per_edge_glu_signs`): two glutamate sign-assignment modes
   exist in the codebase.
@@ -174,33 +185,47 @@ Built in React + Astro + Tailwind. Lives at
 
 ## 4 · What's validated (honest)
 
-**AVA ablation abolishes reversal under touch — under default sign
-convention only.** Original April 21 finding: ΔREV = −0.57 ± 0.37
-across 3 seeds, all three negative; later refined to ΔREV = −0.49
-± 0.10 at n=10 × 60s, 10/10 negative seeds. **However:** today's
-T0 resolution work (2026-04-25, see §5) established that this
-phenotype passes via a Mode 3 tonic-shift mechanism on a broken
-sign convention, not via circuit cascade dynamics.
+**AVA / Chalfie 1985 reproduction — Falsified-but-cited per horizontal
+rebase (2026-05-08).** The originally-cited reproduction ("AVA ablation
+abolishes reversal under touch, ΔREV = −0.49 ± 0.10 at n=10 × 60s, 10/10
+negative seeds, default sign mode") was real as a statistical result but
+ran via a Mode 3 tonic-shift mechanism on the broken default sign convention,
+not via circuit cascade dynamics. Phase 1 of the rebase locked the brain
+at M2-pure (per-edge, sign_exceptions={}) — the only sign mode firing the
++60 Hz touch cascade — and Phase 2 retrained the full readout stack
+(A2-balanced 21-cell classifier with leave-one-worm-out CV, M2-pure
+calibration, recalibrated FSM thresholds). Under the recalibrated stack at
+default tier (n=10×60s), AVA → dREV = +0.229 ± 0.137 (2/10 negative) under
+M2-pure — wrong direction, no Chalfie reproduction.
 
-Under per-edge sign convention (with cascade firing correctly),
-ΔREV regresses to +0.04 (2/10 negative seeds) — but the AVA-
-ablation behavioral effect persists in a different FSM channel
-(dPIR, mean −0.117, 9/10 negative). The Chalfie 1985 phenotype's
-behavioral expression in this simulator is currently channel-
-dependent in a way the original audit did not anticipate.
-Recalibration of the FSM/classifier under per-edge dynamics is
-an open question.
+The "dPIR channel-shift" hypothesis (T0 §5 originally reported dPIR =
+−0.117, 9/10 negative seeds at n=10×60s under legacy stack) is **refuted**
+under the recalibrated stack: dPIR = −0.005 ± 0.005 (1/10 negative) at the
+same statistical power. The legacy dPIR finding was a stack-dependent
+artifact, not a real channel-shifted phenotype. The Chalfie 1985 phenotype
+is currently NOT reproduced by this simulator under correct cascade
+dynamics. See `docs/brain_v3.5_locked.md` and the catalog at
+`docs/state_of_claims_2026-05-02.md` (C-21, C-22).
 
-**RIS / Turek 2016 quiescence pathway.** Original finding under
-default sign convention: ΔQUI = −0.24 ± 0.33 across 3 seeds
-(2/3 negative). Directionally consistent but not statistically
-robust at 20 s runs. **Note:** RIS is silenced under per-edge
-mode (0.8 Hz tonic vs 21.8 Hz under default) — the default-mode
-finding does not transfer. The April 21 RIS molecular audit
-(FLP-11 release fires correctly, peptidergic targets show ~22%
-disinhibition) was also conducted under default mode and needs
-re-running under per-edge before any conclusions about RIS
-mechanism in this simulator.
+**Alternative finding under M2-pure (Direct, awaiting literature precedent
+verification):** AVA-ablation produces a robust dFWD signal at −0.302 ±
+0.102 (7/10 negative seeds, Cohen's d ≈ 0.93) at n=10×60s. Forward-locomotion
+suppression rather than reversal abolition. Biologically interpretable via
+AVA-AVB gap-junction coupling (Wang 2020) but not the textbook Chalfie 1985
+phenotype. Headline-result decision deferred pending literature precedent
+verification.
+
+**RIS / Turek 2016 quiescence pathway — Falsified-but-cited per horizontal
+rebase.** Original default-mode finding ΔQUI = −0.24 ± 0.33 across 3 seeds
+(2/3 negative) was directionally consistent but underpowered. Under M2-pure
+RIS is silenced at 1 Hz (vs 21 Hz default), and Phase 2.5 default-tier
+gauntlet measured RIS → dQUI = −0.007 ± 0.026 (4/10 negative) — null at
+full power. The recalibrated activity_fsm thresholds further confirm
+quiescent-state detection is structurally compromised under M2-pure
+(RIS at 1 Hz baseline / 2.5 Hz stim peak gives z_stim = 1.10, below the
+2.5 threshold). The April 21 RIS molecular audit (FLP-11 release fires
+correctly, peptidergic targets show ~22% disinhibition) was conducted under
+default mode and does not transfer to M2-pure.
 
 **Three-mode readout failure-mode taxonomy** (validated across 9
 v3 modulators in overnight v1 + v2 runs): Mode 1 readout-blind ×5
@@ -292,13 +317,30 @@ under default mode (AVA ablation → reduced reversal). It did so
 through a Mode 3 tonic-shift mechanism on the broken sign
 convention's elevated AVA baseline, not through circuit cascade
 firing. Under per-edge mode (correct cascade), the AVA-ablation
-effect on dREV regresses to null but persists on dPIR (mean
-−0.117, 9/10 negative seeds).
+effect on dREV regresses to null.
+
+The originally-reported dPIR channel-shift escape hatch (T0 §5
+text said "persists on dPIR, mean −0.117, 9/10 negative seeds")
+was **refuted by the horizontal rebase Phase 2.5 default tier**:
+under recalibrated stack at n=10×60s, dPIR = −0.005 ± 0.005
+(1/10 negative). That finding was a legacy-stack artifact. See
+the rebase deliverables at `docs/state_of_claims_2026-05-02.md`
+(C-21 reclassified Direct → Falsified-but-cited) and
+`docs/brain_v3.5_locked.md`. The Chalfie 1985 phenotype is
+currently NOT reproduced by this simulator under correct cascade
+dynamics.
 
 The reproduction was technically valid as a statistical result
 under default mode. It was mechanistically misleading as a
 biology claim. Statistical robustness (10/10 seeds at n=10) is
 not the same as mechanistic validity.
+
+**Alternative finding under M2-pure (Direct, awaiting literature
+verification):** AVA → dFWD = −0.302 ± 0.102 (7/10 negative,
+Cohen's d ≈ 0.93) at n=10×60s. Forward-locomotion suppression
+rather than reversal abolition. Biologically interpretable via
+AVA-AVB gap-junction coupling but not the textbook Chalfie 1985
+phenotype.
 
 ### What's open after the resolution
 
