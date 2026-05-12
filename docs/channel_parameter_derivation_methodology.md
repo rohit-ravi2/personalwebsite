@@ -271,6 +271,43 @@ For each (channel, cell) where Nicoletti measured published gbar:
     document residual without retuning
   - **Beyond 5×** (substantive finding): investigate per §5
 
+#### 4.1.1 Justification for 2×/5× bands — combined uncertainty grounding
+
+The 2× / 5× bands are pragmatic thresholds reflecting combined uncertainty
+from two distinct sources:
+
+- **Single-channel γ measurement variance** (~1.5-2× spread). Literature
+  γ values typically range 1.5-2× across studies for the same channel
+  type, reflecting differences in expression system, ionic composition,
+  temperature, and recording method. This is the lower bound on derived-
+  gbar uncertainty — even with perfect TPM scaling, γ alone introduces
+  this much spread.
+- **Linear-TPM-scaling residual** (~3.6×). Equation-validation overnight
+  work surfaced a residual of this magnitude when TPM is used as a
+  linear proxy for channel density across cells. This reflects regulation
+  beyond transcription: translation efficiency variation, post-
+  translational modification, trafficking and membrane targeting, and
+  channel-protein turnover rates differ across channel families.
+
+Combined: ~1.5-2× (γ variance) × ~3.6× (TPM-scaling residual) ≈ ~5× total
+acceptable residual under v1 methodology.
+
+Interpretation:
+
+- **Within 2×** — derived methodology reproduces Nicoletti precisely; both
+  uncertainty sources happen to align well for that channel
+- **Within 5×** — approximate match within combined uncertainties; residual
+  consistent with v1 methodology limits; document as substrate uncertainty
+  quantification without retuning
+- **Beyond 5×** — residual exceeds combined-uncertainty envelope;
+  methodology assumptions (γ, aggregation rule, E_translation, or
+  C_global) likely incorrect for that channel; investigate per §5
+
+These thresholds are **uncertainty-grounded**, not arbitrary cutoffs.
+v2 methodology refinement (Hill E_translation, per-channel-family
+C_global, per-channel-family E_translation) targets the 3.6× TPM-scaling
+component specifically.
+
 For (channel, cell) where Nicoletti's published I-V data exists:
 
 - Run voltage-clamp simulation with derived channel
@@ -325,21 +362,70 @@ Possible causes, in order of investigation:
 4. **Hill function E_translation needed** — TPM-to-density scaling is
    non-linear. Surface as v2 refinement candidate.
 
-### 5.2 Many channels discrepant (>30% beyond 5×) — Phase 5 critical decision point
+### 5.2 Cross-channel methodology adequacy — three-tier triggers
 
-Methodology adequacy in question. Pause and surface to Rohit with
-diagnostic information (per-channel discrepancy table, suspected causes,
-candidate refinements). Possible outcomes:
+After Phase 5 derivation completes, tally the percentage of (channel, cell)
+combinations falling into each §4.1 band. Apply per the following tiers
+(this makes pre-Phase-1 Decision 5 explicit rather than requiring in-flight
+Phase 5 judgment):
 
-- Refine in-scope (γ updates per Phase 2 followup): proceed with
-  refinement
-- Refine methodology v2 (Hill E_translation, per-family C_global):
-  schedule as separate work block; document Path 2 v1 as foundational
-  but incomplete
-- Methodology fundamentally wrong: substantive finding. Document and
-  return to higher-level architectural discussion.
+#### Tier 1: <30% of (channel, cell) combinations beyond 5×
 
-### 5.3 Cell-level failure despite acceptable channel-level (Phase 6)
+**Methodology working adequately.** Combined-uncertainty bounds (§4.1.1)
+suggest most channels should land within 5×. <30% beyond is consistent
+with normal variance across channel families. Action:
+
+- Document outliers as substrate uncertainty quantification per §2.8
+  epistemic labeling (the affected channels carry "biophysically derived
+  with documented residual" label going forward)
+- Proceed to Phase 6 cell integration with documented limitations
+- Outliers may inform v2 refinement candidates but don't block Path 2 v1
+  shipping
+
+#### Tier 2: 30-50% of combinations beyond 5×
+
+**Methodology refinement required.** Systematic residual beyond what
+combined uncertainty bounds alone explain; v1 simplifications (uniform
+E_translation, single global C_global, linear TPM scaling) are
+inadequate. Action:
+
+- **Pause and surface diagnostic table** to Rohit with per-channel
+  residuals + suspected causes
+- Decide which v2 refinement(s) to deploy:
+  - Hill function for E_translation (addresses linear-TPM-scaling
+    inadequacy)
+  - Per-channel-family C_global (addresses uniform-global hypothesis
+    violation)
+  - Per-channel-family E_translation (addresses systematic translation-
+    efficiency variation by family)
+- v2 deployment is a separate work block; Path 2 v1 documented as
+  foundational but incomplete; proceed to v2 work block before declaring
+  §7.3.5 complete
+
+#### Tier 3: >50% of combinations beyond 5× — HARD STOP
+
+**Methodology fundamentally inadequate at the formula level**, not just
+parameter refinement. The γ × TPM × E_translation × C_global framework
+itself fails for the majority of channels — refinements within this
+framework won't recover acceptable validation. Action:
+
+- Write `HARD_STOP.txt` in artifacts with diagnostic data
+- Surface for direction; possible outcomes:
+  - Return to higher-level architectural discussion about substrate
+    parameterization methodology
+  - Reconsider Path 1 (refit Nicoletti under physiological Nernst) as
+    fallback for v1 Layer 1
+  - Restructure derivation framework (e.g., per-channel γ becomes a
+    free parameter calibrated against published I-V curves, retaining
+    only TPM × E_translation × surface-area as the cross-cell scaling)
+- Path 2 v1 does not ship until architectural-level decision lands
+
+### 5.3 Other failure modes (independent of tier triggers)
+
+Channel-level discrepancy > 5× for individual channels (within Tier 1
+overall):
+
+### 5.4 Cell-level failure despite acceptable channel-level (Phase 6)
 
 Indicates **kinetic parameter inheritance** also has implicit assumptions
 (not just gbar). Possible causes:
@@ -354,7 +440,7 @@ Indicates **kinetic parameter inheritance** also has implicit assumptions
 Surface as substantive finding. Path 2 v1 ships channel gbar derivation;
 kinetic-parameter audit defers to Layer 2 or Path 2 v2.
 
-### 5.4 Heteromeric assumption wrong
+### 5.5 Heteromeric assumption wrong
 
 If a channel was treated as paralog-separate but is actually heteromeric:
 gbar values may be 2-4× too high (because separate paralogs were summing
@@ -364,7 +450,7 @@ level validation; refine §2.4 per-family table.
 If treated as heteromer but actually paralogs: gbar values may be too low
 (min-across-pore-forming under-counts). Same surfacing mechanism.
 
-### 5.5 C_global mis-calibrated
+### 5.6 C_global mis-calibrated
 
 If reference choice (EGL-19 in AVAL) doesn't represent the channel
 population well, C_global is biased. Phase 4 surfaces this via biophysical
@@ -396,78 +482,153 @@ gbar derivation falls in scope. Kinetic audit is Layer 2 or v2.
 
 ## 7 · Forward-looking application to Layers 2-7
 
-Path 2 methodology becomes step zero of any inherit-and-compose work block
-in subsequent substrate redesign layers. The pattern:
+### 7.0 What transfers vs what requires methodology extension
 
-1. Identify inherited parameter set (channel gbars, receptor densities,
-   release kinetics, etc.)
-2. Audit implicit state-variable assumptions in the fit (`docs/layer1_design_decisions.md`
-   §2.8 framing)
-3. If inconsistent with substrate: replace fit with derivation
-   (γ-equivalent × TPM × E_translation × C_global)
-4. Calibrate ONE global constant against a well-characterized reference
-5. Validate against original published data as TARGETS (not anchors)
-6. Surface discrepancies as substantive findings per §5
+Path 2 establishes two distinct things that get conflated if not
+distinguished:
 
-Specific candidates for Layer 2-7 application:
+1. **The methodology PATTERN** — transferable to any inherited
+   parameter set:
+   - Audit inherited fits → identify implicit state-variable assumptions
+   - Check consistency with current substrate state
+   - If inconsistent: derive from biology + minimal calibration
+   - Validate against original published data as TARGETS, not anchors
+   - Surface discrepancies as substantive findings rather than retuning
 
-### 7.1 Layer 2 — Channel kinetic parameter audit
+2. **The specific FORMULA** (`γ × TPM × E_translation × C_global`) — **gbar-
+   specific**. This math derives membrane conductance density from
+   per-channel single-channel conductance and per-cell mRNA abundance.
 
-Channel V_half, k, τ values inherited from Nicoletti's fit. Each channel's
-fit assumes a specific E_X for the ion it carries. Under physiological
-E_X (Layer 1 substrate), kinetic parameters may need re-fitting. Layer 2
-audit + refit (analogous to Path 2 but for kinetics) becomes standing
-methodology pattern.
+   The formula transfers directly **only to other conductance-density
+   parameters**. Channel kinetics, receptor binding kinetics, release rate
+   constants, and other parameter types require **different derivation math
+   even when applying the same pattern**.
 
-### 7.2 Layer 3 — Wicks 1996 graded release Boltzmann parameters
+The forward-looking applications below note which case each falls into.
 
-Wicks 1996 derived σ-V_half graded release parameters from Ascaris ventral
-cord recordings. Implicit assumptions: intracellular Cl, Mg, ATP, resting V
-specific to Ascaris saline conditions. WB3 cross-coupling used these
-parameters directly. Layer 3+ requires audit before any WB3-equivalent
-reuse:
+### 7.1 Where the formula transfers directly (PATTERN + FORMULA)
 
-- Identify the implicit ionic state under which Wicks fit
-- Verify consistency with Layer 1 substrate state
-- If inconsistent: derive σ-V_half from underlying receptor biology
-  (Cl reversal under substrate state + receptor desensitization
-  kinetics) rather than inherit
+Future inherited parameter sets that are themselves gbar/conductance-
+density parameters take Path 2's formula with only the γ-equivalent and
+TPM source changing. Anticipated examples:
 
-### 7.3 Layer 4 — Nicoletti Ca pool dynamics
+- **Layer 3 explicit GABA-A / GluCl receptor conductance densities** —
+  if Layer 3 instantiates these as explicit channels (rather than just
+  modulated via Phase G hooks), their gbar derives from γ_receptor ×
+  TPM_receptor-gene × E_translation × C_global with the same formula
+  structure. Reference channel/cell may need updating; calibration
+  protocol is otherwise identical.
+- **Layer 5+ gap junction conductances** — gap junction density derives
+  from γ_innexin × TPM_innexin-gene × E_translation × C_global, with γ
+  being the unitary innexin channel conductance. Same formula structure.
+
+For these, Path 2's full methodology applies and the formula transfers
+directly.
+
+### 7.2 Where the pattern transfers but the formula doesn't (PATTERN only)
+
+The following applications inherit Path 2's PATTERN (audit + derive-not-
+inherit + validate-against-targets) but require **methodology extension** —
+new derivation math specific to the parameter type.
+
+#### 7.2a Layer 2 — Channel kinetic parameter audit (kinetic, not gbar)
+
+Channel V_half, k, time constants inherited from Nicoletti. Each fit
+assumes a specific E_X for the ion the channel carries. Under physiological
+E_X (Layer 1 substrate), kinetic parameters may need re-fitting.
+
+**Pattern applies:** audit Nicoletti's kinetic fits for implicit ionic
+state assumptions; identify discrepancies; derive new kinetics or refit.
+
+**Formula does NOT apply:** kinetic parameters don't decompose into γ ×
+TPM × E_translation × C_global. They derive from underlying gating
+biophysics — state-transition rates between channel conformations, energy
+barriers, voltage-dependence of activation/inactivation gates.
+
+**Methodology extension TBD:** Layer 2 work block requires deliberate
+scoping of how to derive (or refit) kinetic parameters under physiological
+state. Two candidate approaches: (a) refit kinetics against Nicoletti's
+published I-V curves under physiological E_X (Path-1-like for kinetics);
+(b) derive from explicit gating models for each channel family
+(channel-biophysics-from-first-principles, much harder).
+
+#### 7.2b Layer 3 — Wicks 1996 graded release Boltzmann parameters (kinetic-like, not gbar)
+
+Wicks 1996 derived σ-V_half Boltzmann parameters for graded release from
+Ascaris ventral cord recordings. The parameters describe the σ-shaped
+release function: presynaptic V_pre → release probability. **σ and V_half
+are kinetic-like parameters, not gbar-like.**
+
+**Pattern applies:** audit Wicks' fit for implicit ionic state assumptions
+(intracellular Cl, Mg, ATP, resting V under Ascaris saline); check
+consistency with Layer 1 substrate state; if inconsistent, derive new
+σ-V_half or refit under physiological state.
+
+**Formula does NOT apply:** σ and V_half don't derive from γ × TPM ×
+E_translation × C_global. They describe the voltage-dependence of release
+machinery, not the density of channels at the membrane. Derivation would
+come from underlying release biophysics — vesicle pool dynamics, calcium
+sensor (synaptotagmin) Boltzmann response, presynaptic-Ca-channel-to-
+vesicle coupling distance.
+
+**Methodology extension TBD:** Layer 3+ work block requires scoping of
+how to derive (or refit) σ-V_half under physiological state. This is **not**
+a direct Path 2 application; setting expectations correctly downstream
+prevents Layer 3 from inheriting Path 2's gbar formula inappropriately.
+
+#### 7.2c Layer 4 — Nicoletti Ca pool dynamics (rate-constant-like, not gbar)
 
 Nicoletti's calcium pool model (cadiff, caintra1) assumes specific buffer
-kinetics + ER coupling. Layer 4 ER compartment integration requires audit
-of these inherited parameters. Same methodology: derive buffer kinetics
-from explicit buffer densities (calbindin, calmodulin TPMs from CeNGEN)
-rather than inherit Nicoletti's lumped fit.
+kinetics + ER coupling. Parameters are rate constants for buffer binding/
+unbinding + ER Ca uptake/release, not conductance densities.
 
-### 7.4 Layer 5+ — Peptide release rate-coupling
+**Pattern applies:** audit Nicoletti's Ca pool fit for implicit state
+assumptions ([Ca]_in operating range, buffer concentrations, ER membrane
+state); check consistency with Layer 1+4 substrate; if inconsistent,
+derive from explicit buffer biology.
 
-Peptide release rate constants (peptide neurons → diffusion field) fit
-under specific calcium-imaging conditions. Audit before Layer 5+
-neuromodulation reuse. Derivation: release rate scales with intracellular
-Ca dynamics (Layer 1 substrate) × peptide-specific docking kinetics
-(literature) rather than inherit.
+**Formula partially applies:** if Layer 4 derives buffer **densities** from
+calbindin / calmodulin TPMs (gbar-like), Path 2 formula applies for the
+density. But buffer **kinetics** (binding rates, dissociation rates) are
+kinetic-like and require methodology extension as in 7.2a.
 
-### 7.5 Standing pattern
+#### 7.2d Layer 5+ — Peptide release rate-coupling (rate-constant-like, not gbar)
+
+Peptide release rate constants fit under specific calcium-imaging
+conditions. Parameters are: peptide-vesicle-pool size, Ca-triggered
+release rate, peptide-diffusion-field decay.
+
+**Pattern applies:** audit for implicit Ca operating-range assumptions;
+derive under Layer 1 substrate.
+
+**Formula does NOT apply:** these are kinetic rates, not conductance
+densities.
+
+### 7.3 Standing methodology step
 
 For every inherited parameter set, before composing into substrate:
 
 1. **What state variables does the fit implicitly assume?** Reverse-
-   engineer from the original paper's methods section, control
-   conditions, and reference saline composition.
+   engineer from the original paper's methods section, control conditions,
+   and reference saline composition.
 2. **Are those assumptions consistent with the current substrate state?**
-   Compare to Layer 1 ionic concentrations, [ATP], Mg, pH, temperature.
-3. **If inconsistent: derive or refit.** Path 2 establishes the derive-
-   from-biology + minimal-calibration pattern. Refit (Path 1 equivalent)
-   remains an alternative for parameter sets where derivation isn't
-   feasible.
-4. **Document the audit outcome** in the layer's design decisions doc
-   and in `docs/substrate_redesign_roadmap.md` cross-cutting tracks.
+   Compare to Layer 1+ ionic concentrations, [ATP], Mg, pH, temperature.
+3. **Determine parameter type:** gbar-like (conductance density) or
+   kinetic-like (rates, voltage-dependence parameters, binding constants).
+4. **If gbar-like and inconsistent:** apply Path 2 formula directly with
+   appropriate γ-equivalent + TPM source.
+5. **If kinetic-like and inconsistent:** apply Path 2 PATTERN with
+   parameter-type-specific derivation math; treat as methodology
+   extension requiring its own work block.
+6. **If consistent:** inherit with documented consistency check.
+7. **Document the audit outcome** in the layer's design decisions doc
+   + `docs/substrate_redesign_roadmap.md` cross-cutting tracks.
 
 This is "parameter audit before integration" as a standing methodology
 step — see `docs/substrate_redesign_roadmap.md` cross-cutting tracks +
-`docs/layer1_design_decisions.md` §2.8.
+`docs/layer1_design_decisions.md` §2.8. The pattern-vs-formula distinction
+in §7.0 prevents the wrong tool from being applied to the wrong parameter
+type downstream.
 
 ---
 

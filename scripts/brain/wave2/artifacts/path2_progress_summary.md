@@ -4,7 +4,9 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 1 SHIPPED)
+**Last updated:** 2026-05-12 (Phase 1 SHIPPED + methodology doc revised
+per Rohit review — §4.1.1 combined-uncertainty justification, §5.2
+three-tier explicit triggers, §7 pattern-vs-formula distinction)
 
 ---
 
@@ -55,14 +57,42 @@ surfaced 4 items before methodology doc write. All four resolved
 
 **Time spent on Phase 1:** ~1 work block (per estimate)
 
-**Next phase:** Phase 2 — γ literature scoping. Per-channel inventory
-covering EGL-19, CCA-1, UNC-2, SHL-1, SHK-1, EGL-36, EXP-2, UNC-103,
-EGL-2, NCA channels (nca-1, nca-2), IRK channels (irk-1, -2, -3),
-KQT channels (kqt-1, -2, -3), TWK family (twk-*), SLO channels (slo-1,
-slo-2). For each: γ value (pS), source citation, epistemic label,
-uncertainty range, conditions for the measurement. Also: per-family
-heteromer-vs-paralog literature scoping (refines methodology §2.4 per-
-family table).
+**Next phase:** Phase 2 — γ literature scoping.
+
+**Phase 2 Step 0 (added per Rohit's review note):** Per-cell channel
+inventory before γ scoping, to bound Phase 2 effort to channels actually
+appearing in current Layer 1 cells:
+
+| cell | channels used |
+|---|---|
+| AVAL | EGL-19, IRK, (NCA with g=0; treat as no-op for v1) |
+| AVAR | EGL-19, IRK, NCA, UNC-103 |
+| AIY (v1) | EGL-19, KQT-1, SHL-1, NCA |
+| RIM | EGL-19, SHL-1, IRK, CCA-1, UNC-2, EGL-2 |
+
+**Union of channels in scope for Phase 2 v1:** EGL-19, IRK, NCA, UNC-103,
+KQT-1, SHL-1, EGL-2, CCA-1, UNC-2 (9 channels).
+
+**Channels NOT in Phase 2 v1 (channel modules exist but not in current
+Layer 1 cells):** SHK-1, EGL-36, KQT-3, TWK family. Skip γ scoping.
+
+**Channels DEFERRED to Phase 2 v2 (AIY full channel set):** SLO-1 isolated
+(slo1iso), SLO-1+EGL-19 coupled (slo1egl19). AIY v1 in Layer 1 §7.3 is
+explicitly simplified; full AIY with SLO family is v2 substrate work.
+
+**Per-channel scoping outputs:**
+- γ value (pS)
+- Source citation
+- Epistemic label (empirically grounded / biophysically derived /
+  approximation from adjacent biology)
+- Uncertainty range (if multiple sources give different values)
+- Measurement conditions (temperature, ionic composition)
+- Heteromer-vs-paralog decision for multi-gene families (default per
+  methodology §2.4 unless literature indicates exception)
+
+**Phase 2 Step 1 onwards:** literature scoping per scoping hierarchy
+(C. elegans direct → C. elegans heterologous → mammalian/Drosophila
+homolog fallback) for each of the 9 in-scope channels.
 
 ---
 

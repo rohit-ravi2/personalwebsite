@@ -51,15 +51,21 @@
     "number": 2,
     "name": "Single-channel gamma literature scoping",
     "deliverable": "docs/channel_gamma_inventory.md",
-    "channels_to_scope": [
-      "EGL-19", "CCA-1", "UNC-2",
-      "SHL-1", "SHK-1", "EGL-36", "EXP-2", "UNC-103", "EGL-2",
-      "NCA channels (nca-1, nca-2)",
-      "IRK channels (irk-1, -2, -3)",
-      "KQT channels (kqt-1, -2, -3)",
-      "TWK family (twk-*)",
-      "SLO channels (slo-1, slo-2)"
+    "step_0_per_cell_channel_inventory": {
+      "AVAL": ["EGL-19", "IRK", "NCA (g=0 no-op v1)"],
+      "AVAR": ["EGL-19", "IRK", "NCA", "UNC-103"],
+      "AIY_v1": ["EGL-19", "KQT-1", "SHL-1", "NCA"],
+      "RIM": ["EGL-19", "SHL-1", "IRK", "CCA-1", "UNC-2", "EGL-2"]
+    },
+    "channels_in_scope_v1": [
+      "EGL-19", "IRK", "NCA", "UNC-103",
+      "KQT-1", "SHL-1", "EGL-2",
+      "CCA-1", "UNC-2"
     ],
+    "channels_out_of_scope_v1": {
+      "not_in_current_cells": ["SHK-1", "EGL-36", "KQT-3", "TWK family"],
+      "deferred_to_v2_AIY_full": ["SLO-1 isolated", "SLO-1+EGL-19 coupled"]
+    },
     "scoping_hierarchy": [
       "1. Direct C. elegans single-channel patch-clamp measurements",
       "2. Heterologous expression of C. elegans gene (oocyte/HEK293)",
@@ -73,6 +79,11 @@
       "measurement_conditions",
       "heteromer_vs_paralog_decision (for multi-gene families)"
     ]
+  },
+  "methodology_doc_revisions_2026_05_12": {
+    "section_4_1_1": "Combined-uncertainty justification for 2x/5x bands (gamma variance ~1.5-2x x TPM-scaling residual ~3.6x = ~5x total acceptable). Uncertainty-grounded, not arbitrary cutoffs.",
+    "section_5_2": "Three-tier explicit triggers for Decision 5 (deferred from pre-Phase-1 scoping): <30% accept with documentation; 30-50% methodology refinement required (v2 work block); >50% HARD STOP architectural-level decision.",
+    "section_7_0_7_3": "Pattern-vs-formula distinction. PATTERN (audit + derive-not-inherit + validate-against-targets) transfers to all inherited parameter sets. FORMULA (gamma x TPM x E_translation x C_global) is gbar-specific; kinetic/receptor/rate-constant parameters require methodology extension. Sets correct expectations for Layer 2 (kinetic audit), Layer 3 (Wicks 1996), Layer 4 (Ca pool), Layer 5+ (peptide release)."
   },
   "out_of_scope": [
     "Refitting kinetic parameters (V_half, k, time constants)",
