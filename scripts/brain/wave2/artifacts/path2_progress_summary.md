@@ -4,9 +4,10 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 1 SHIPPED + methodology doc revised
-per Rohit review — §4.1.1 combined-uncertainty justification, §5.2
-three-tier explicit triggers, §7 pattern-vs-formula distinction)
+**Last updated:** 2026-05-12 (Phase 2 SHIPPED — γ inventory complete
+for 9 channels; 8/9 sourced from mammalian homolog literature, 1 (NCA)
+estimated due to documented literature gap; coverage 89% well above 50%
+hard-stop threshold)
 
 ---
 
@@ -15,7 +16,7 @@ three-tier explicit triggers, §7 pattern-vs-formula distinction)
 | phase | name | status | deliverable | date |
 |---|---|---|---|---|
 | 1 | Methodology document | ✓ SHIPPED | `docs/channel_parameter_derivation_methodology.md` | 2026-05-12 |
-| 2 | γ literature scoping | pending | `docs/channel_gamma_inventory.md` | — |
+| 2 | γ literature scoping | ✓ SHIPPED | `docs/channel_gamma_inventory.md` | 2026-05-12 |
 | 3 | CeNGEN TPM extension | pending | `docs/channel_tpm_inventory.md` | — |
 | 4 | `C_global` calibration | pending | `docs/channel_calibration_protocol.md` | — |
 | 5 | Derivation + per-channel validation | pending | `scripts/brain/wave2/channels/derived_channel_parameters.py` + `path2_channel_validation.md` | — |
@@ -141,7 +142,45 @@ this summary, terminate cleanly.
 
 ## Substantive findings log (populated as discovered)
 
-*No findings yet — Phase 1 is methodology document only; no implementation.*
+### Phase 2 — 2026-05-12 — NCA single-channel γ literature gap
+
+**Observation:** No published unitary single-channel conductance value for
+NALCN-family channels exists in literature (explicitly stated in Belal et
+al. NALCN preprint: "There is no available estimate for NALCN single-
+channel conductance"). NCA is one of 9 channels in Phase 2 scope.
+
+**Diagnosis:** NALCN's tight regulation, low open probability, and small
+contribution to total cell conductance make single-channel measurement
+technically very difficult. Macroscopic NALCN current is well-characterized;
+unitary γ is not.
+
+**Resolution (v1):** γ_NCA = 5 pS placeholder estimate based on (a) NALCN's
+~2-5% maximal conductance voltage-insensitive behavior, (b) typical leak-
+channel γ range, (c) NaV-family structural relation suggesting γ < NaV
+(~20 pS) but > HERG-like (~2 pS). Epistemic label: "approximation from
+adjacent biology — LITERATURE GAP."
+
+**Phase 5 sensitivity candidate:** If derived NCA channels surface beyond
+5× discrepancy with Nicoletti, γ refinement is a candidate (could test
+γ = 1, 5, 20 pS as sensitivity sweep). Layer 1 v1 ships with the 5 pS
+estimate; refinement explicitly deferred.
+
+### Phase 2 — 2026-05-12 — KQT-1/KQT-3 heteromer hypothesis flagged
+
+**Observation:** Mammalian KCNQ2 + KCNQ3 form heterotetrameric M-current
+channels (well-established). C. elegans KQT-1 groups phylogenetically
+with KCNQ2-5. KQT-2 + KQT-3 heteromer hypothesized in C. elegans (Okahata
+2019) but not biochemically confirmed. KQT-1's potential heteromerization
+with KQT-3 in C. elegans neurons (e.g., AIY) is an open question.
+
+**v1 treatment:** Paralog-separate (default rule) for KQT-1 with single-
+gene TPM.
+
+**Phase 3 action:** Pull both KQT-1 and KQT-3 TPMs for AIY. If both
+expressed at comparable levels, **Phase 5 sensitivity analysis tests
+heteromer aggregation** (min-across-pore-forming TPM as alternative).
+If only KQT-1 expressed meaningfully (KQT-3 below threshold or much
+lower), default paralog-separate is correct.
 
 Findings template (to be filled by subsequent phases):
 

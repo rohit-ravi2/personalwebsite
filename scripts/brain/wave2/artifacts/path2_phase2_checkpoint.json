@@ -1,0 +1,71 @@
+{
+  "phase": 2,
+  "phase_name": "Single-channel gamma literature scoping",
+  "status": "complete",
+  "started": "2026-05-12",
+  "completed": "2026-05-12",
+  "deliverables": {
+    "gamma_inventory": {
+      "path": "docs/channel_gamma_inventory.md",
+      "status": "shipped",
+      "channels_documented": 9,
+      "channels_sourced": 8,
+      "channels_estimated": 1,
+      "coverage_pct": 88.9
+    },
+    "heteromer_paralog_verification": {
+      "IRK_family": {
+        "decision": "paralog-separate (default)",
+        "evidence": "IRK-1 homotetramer in Xenopus oocyte (Emtage 2012); no heteromer evidence found"
+      },
+      "KQT_family": {
+        "decision": "paralog-separate (default) with HETEROMER FLAG for KQT-1/KQT-3 hypothesis",
+        "evidence": "KQT-1 oocyte homomeric current (Wei 2005); mammalian KCNQ2/3 heteromer precedent; KQT-2/3 heteromer hypothesized but not biochemically confirmed (Okahata 2019)",
+        "phase_3_action": "pull KQT-1 + KQT-3 TPMs in AIY; if comparable, Phase 5 sensitivity analysis tests min-across-pore-forming aggregation"
+      },
+      "NCA_family": {
+        "decision": "paralog-separate (default); auxiliary unc-77/unc-80 EXCLUDED from density",
+        "evidence": "nca-1 and nca-2 are pore-forming paralogs; unc-77/unc-80 are channelosome regulators per Lu 2009"
+      }
+    }
+  },
+  "per_channel_gamma_values": {
+    "EGL-19": {"gamma_pS": 6, "range_pS": [4, 8], "homolog": "Cav1.2", "label": "approximation from adjacent biology", "notes": "physiological Ca; literature Ba=25 pS"},
+    "CCA-1": {"gamma_pS": 3, "range_pS": [2, 5], "homolog": "Cav3.1", "label": "approximation from adjacent biology", "notes": "T-type smallest gamma; physiological Ca"},
+    "UNC-2": {"gamma_pS": 5, "range_pS": [3, 7], "homolog": "Cav2.1", "label": "approximation from adjacent biology", "notes": "P/Q-type; Ba=20pS, physiological Ca adjusted"},
+    "IRK": {"gamma_pS": 25, "range_pS": [21, 34], "homolog": "Kir2.1", "label": "approximation from adjacent biology", "notes": "chord conductance Vm=-100mV"},
+    "KQT-1": {"gamma_pS": 3, "range_pS": [2, 5], "homolog": "KCNQ2-5 family", "label": "approximation from adjacent biology"},
+    "SHL-1": {"gamma_pS": 6, "range_pS": [4, 7.5], "homolog": "Kv4.2", "label": "approximation from adjacent biology", "notes": "assumes DPPX-like auxiliary"},
+    "EGL-2": {"gamma_pS": 8, "range_pS": [6, 10], "homolog": "Kv10.1/Eag1", "label": "approximation from adjacent biology"},
+    "UNC-103": {"gamma_pS": 2, "range_pS": [1, 3], "homolog": "hERG/Kv11.1", "label": "approximation from adjacent biology", "notes": "physiological [K]_out=4mM"},
+    "NCA": {"gamma_pS": 5, "range_pS": [1, 20], "homolog": "NALCN", "label": "approximation from adjacent biology - LITERATURE GAP - estimated", "notes": "NO published unitary gamma; v1 placeholder; Phase 5 sensitivity candidate"}
+  },
+  "hard_stop_check": {
+    "threshold": "channels_sourced > 50%",
+    "actual_coverage_pct": 88.9,
+    "triggered": false
+  },
+  "methodology_section_2_4_refinements": {
+    "IRK_paralog_separate": "confirmed",
+    "KQT_paralog_separate_with_heteromer_flag": "phase_3_+_phase_5_should_check_kqt1_kqt3_heteromer_in_AIY",
+    "NCA_paralog_separate_aux_ignored": "confirmed"
+  },
+  "uncertainty_summary": {
+    "per_channel_typical_uncertainty_factor": "~1.5-2x (factor)",
+    "nca_uncertainty_factor": "~20x (much wider; literature gap)",
+    "consistent_with_methodology_4_1_1": "yes — combined uncertainty of ~1.5-2x gamma + ~3.6x TPM-scaling = ~5x total acceptable in Phase 5 bands"
+  },
+  "next_phase": {
+    "number": 3,
+    "name": "CeNGEN TPM extension + translation efficiency",
+    "deliverable": "docs/channel_tpm_inventory.md",
+    "tasks": [
+      "Audit local CeNGEN panel (public/data/cengen-panel.json) for channel gene coverage",
+      "Pull missing TPMs from cengen.org/downloads (021821_medium_threshold2.csv if not cached)",
+      "Per (gene, cell) inventory for: egl-19, cca-1, unc-2, irk-1/-2/-3, kqt-1/kqt-3 (kqt-3 added for heteromer flag), shl-1, egl-2, unc-103, nca-1, nca-2",
+      "Cells in scope: AVA (=AVAL+AVAR class), AIY, RIM",
+      "Document E_translation = 1.0 v1 assumption",
+      "Verify per-cell surface area against ion_dynamics.py from Layer 1 §7.1"
+    ]
+  }
+}
