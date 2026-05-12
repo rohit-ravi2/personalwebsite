@@ -153,13 +153,101 @@ This framing is load-bearing across all subsequent §6 resolutions: §6.1
 trigger), §6.4 (ABTS-1 pH-coupling approximation), §6.5 (mammalian-Cl
 default). Each is a deliberate epistemic-honesty choice, not a corner cut.
 
-**Recurring methodology step — parameter audit before integration.** §7.3
-surfaced that inherited fits (Nicoletti channels) encode implicit ion-state
-assumptions invisible until the substrate is composed. The transferable
-lesson: **before integrating an inherited parameter set into the substrate,
-audit what state variables and reversal potentials its fit assumed; verify
-those assumptions are consistent with the current substrate state; if not,
-flag for refit before composition.** This applies recurringly across layers:
+### 2.9 Machine-code up — foundational principle for Layers 1-7
+
+**Committed 2026-05-12 (Rohit, post-Phase-6 reorientation).**
+
+**Principle:**
+
+> Biological validity arises from accurate biophysical modeling of the
+> underlying structure, not from injection of measurement-matched
+> parameters. Each layer of the substrate (ion dynamics, channel
+> biophysics, synaptic dynamics, compartmentalization, network
+> integration, body coupling, validation) is built with full mechanistic
+> sophistication appropriate to its level. Cell-level, network-level, and
+> behavior-level phenomena are emergent consequences of the biophysics,
+> not calibration targets. Validation occurs against measured biology at
+> multiple scales, but parameters are derived from biology (gene
+> expression, biophysics literature, geometry) with minimal explicit
+> calibration. Where inherited parameter sets exist, the underlying
+> measurements are consumed where accessible; derived fits are not
+> treated as ground truth.
+
+**Three explicit implications:**
+
+1. **Intracellular sophistication is non-negotiable.** Ion concentration
+   state variables, dynamic Nernst, electrogenic pumps, KCC-2/ABTS-1
+   thermodynamics, Ca buffering, ATP coupling — all stay regardless of
+   whether cell-level V_rest validation could be approximated with
+   simpler representations. We cannot accurately predict Phase G
+   mechanism effects (anesthetic-driven Cl shifts feeding back into V
+   via E_Cl) without the underlying state-variable machinery.
+
+2. **Validation targets are downstream emergence, not upstream
+   substitution.** V_rest in published range is what we EXPECT to see
+   when the substrate is correct — not what we TUNE the substrate to
+   produce. Phenotype envelopes (AVA plateau, AIY graded, RIM
+   intermediate) are PREDICTIONS from biophysics + gene expression,
+   not constraints we calibrate against.
+
+3. **Calibration is minimal and explicit about what it is.** Some
+   calibration is unavoidable (C_global, single-channel γ where
+   literature is silent). Each calibration anchor is documented as such.
+   Calibration footprint stays minimal; validation footprint expands to
+   encompass emergence checks at multiple levels (first-principles +
+   cell-level + phenotype + cross-cell consistency).
+
+**Forward propagation:**
+
+Each Layer 2-7 work block applies this principle to its scope:
+- **Layer 2** (channel kinetics audit): refit kinetic parameters from
+  Nicoletti's measurements under physiological substrate; do not inherit
+  Nicoletti's derived kinetic fits as anchors
+- **Layer 3** (receptor dynamics, peptide release): derive receptor
+  conductance densities + release rates from gene expression + biophysics
+  where possible; consume underlying measurements for kinetics
+- **Layer 4** (compartmentalization): derive compartment dimensions
+  from morphological reconstruction (WormAtlas vEM); calibrate diffusion
+  coefficients minimally against measured spatial dynamics
+- **Layer 5** (network integration): connectome topology empirically
+  grounded (Cook 2019); release rules emergent from Layer 1-4 substrate
+- **Layer 6** (body coupling): muscle activation emergent from motor
+  neuron firing × innervation pattern × biomechanics
+- **Layer 7** (validation): integrated phenotype predictions against
+  published behavior data (chemotaxis, locomotion, etc.) as emergent
+  consequence of Layer 1-6 substrate
+
+**§8.10-8.12 below document the §7.3.5 Phase 6 findings that triggered
+this principle's explicit articulation.**
+
+**Recurring methodology step — parameter audit before integration (FOUR
+AUDITS REQUIRED).** §7.3, §7.3.5 Phase 5, §7.3.5 Phase 6, and §7.3.5 v2
+reorientation collectively established four distinct audit dimensions for
+any inherited parameter set:
+
+1. **State-variable audit** (§7.3): does the fit's implicit ionic state
+   match the current substrate?
+2. **Uniqueness audit** (§7.3.5 Phase 5): does the paper report error
+   bars / sensitivity analyses / uniqueness evidence?
+3. **Channel-inclusion audit** (§7.3.5 Phase 6): does the inherited model
+   set parameters to zero, implicitly making channel inclusion/exclusion
+   decisions?
+4. **Measurement-vs-fit audit** (§7.3.5 v2 reorientation): does the
+   paper publish underlying measurements (raw traces, protocols, I-V
+   data with SEM) in addition to derived fits? Use measurements; ignore
+   inherited fits.
+
+Failing ANY audit weakens the case for using specific values as validation
+anchors. Failing all four (Nicoletti channels) requires fundamental
+reframing: validate against underlying measured data, not against
+inherited derived parameters.
+
+The transferable lesson: **before integrating an inherited parameter set
+into the substrate, run all four audits; consume measurements where
+accessible; derive parameters from biology with minimal explicit
+calibration; treat inherited fits as one of multiple valid solutions in
+degenerate parameter space, not as ground truth.** This applies
+recurringly across layers:
 
 - Layer 1: Nicoletti channel fits assume E_Ca = 60 mV (= [Ca]_in ≈ 17 μM).
   Inconsistent with physiological [Ca]_in = 50 nM. Layer 1.5 / §7.3.5
@@ -963,6 +1051,155 @@ informs Option β targeted refinement (per-cell-family C_global,
 
 §7.3.5 BLOCKS §7.4 (Phase F restructure depends on correct Ca dynamics
 feeding back into ATP consumption via Ca-ATPase load).
+
+### 8.10 Channel-inclusion audit (third standing methodology lesson)
+
+**Surfaced from §7.3.5 Phase 6 (2026-05-12).**
+
+Phase 6 Path 2 v1 cell validation revealed a distinct methodology
+dimension beyond state-variable (§8.5) and uniqueness (§8.6) audits:
+
+**Observation:** Wave 2 AVAL cell builder has `g_NCA = 0` explicit in
+Nicoletti's parameterization. CeNGEN T2 reports `nca-2 = 153.2 TPM` in
+AVA. Path 2 derives `gbar_NCA_AVAL = 1.33e-5 S/cm²` (non-zero) based on
+gene expression. Under physiological Nernst with NCA's `e_NCA = +30 mV`,
+this non-zero NCA produces strong inward Na current that drives massive
+depolarization, crashing cell rest homeostasis.
+
+**Diagnosis:** Inherited fits encode IMPLICIT CHANNEL INCLUSION/EXCLUSION
+decisions. `gbar = 0` is itself a decision: "this channel is functionally
+negligible in this cell." Substrate methodology must decide whether to
+**honor or override** these decisions based on gene expression evidence.
+
+**Methodology contribution (third audit):**
+
+Before composing any inherited parameter set into the substrate, check
+for parameter = 0 entries. These represent implicit inclusion decisions.
+Three resolution patterns:
+
+- **Honor inherited omission:** treat `E_translation = 0` for that
+  channel in that cell; effectively defer to Nicoletti's inclusion
+  decision. Reasonable if there's independent evidence the channel is
+  functionally silenced (post-translational regulation, trafficking).
+- **Override based on expression:** trust CeNGEN gene expression
+  evidence; derive non-zero gbar; accept that cell biology under
+  Path 2 will differ from inherited model. Reasonable if uniqueness
+  audit (§8.6) shows the inherited fit was non-unique anyway.
+- **Document and surface:** if neither honor nor override is clearly
+  justified, surface as substantive finding for Phase 5/6 evidence-
+  based decision.
+
+**Forward-looking application:**
+
+Layer 2-7 inherit-and-compose work blocks must check for parameter = 0
+entries in inherited models and explicitly authorize override-vs-honor
+decisions. This applies to:
+- Nicoletti channel inventories (per-cell gbar tables with gbar = 0
+  entries)
+- Wicks 1996 receptor inventories (similar pattern likely)
+- Loer & Rand 2022 neurotransmitter table (per-neuron NT assignments;
+  "no NT identified" is an implicit zero)
+
+The audit is bounded: just enumerate parameter = 0 entries in inherited
+sources and document each decision. Not a substantial scoping effort
+once flagged.
+
+### 8.11 Measurement-vs-fit audit (fourth standing methodology lesson)
+
+**Surfaced from §7.3.5 v2 reorientation (2026-05-12).**
+
+Phase 6 failure under "Path 2 cells validated against Nicoletti's gbar
+values" plus the §8.6 uniqueness audit finding together motivated a
+deeper methodology shift: inherited parameter sets typically include
+BOTH (a) raw measurements (voltage-clamp protocols, raw I-V data with
+SEM, capacitance values) AND (b) derived fits (gbar values fit to those
+measurements via under-constrained optimization). These are not
+equivalent.
+
+**Observation:** Nicoletti 2024 published:
+- (a) Voltage-clamp protocols + I-V data for AVAL, AVAR, AIY, RIM
+  (measurements with intrinsic experimental uncertainty)
+- (b) Specific gbar values from least-squares optimization on (a)
+  (derived fits, non-unique per §8.6)
+
+Path 2 v1 validated against (b). Phase 6 failed because (b) is
+degenerate; multiple Path 2 parameter combinations could reproduce (a)
+with different gbar values.
+
+**Diagnosis:** Treating inherited fits as ground truth conflates
+measurements with derived parameters. The right validation target is
+(a) — the measurements themselves — with their experimental uncertainty.
+(b) is one of many parameter sets that fit (a); not biophysical ground
+truth.
+
+**Methodology contribution (fourth audit):**
+
+For any inherited parameter set:
+1. Identify what underlying measurements were taken (voltage-clamp
+   protocols, raw I-V traces, capacitance values, etc.)
+2. Identify what derived parameters were fit to those measurements
+3. Where measurements are accessible (published figures, supplementary
+   data, raw-data depositories): consume measurements directly
+4. Where only fits are published: treat as one possible parameterization
+   to compare against, NOT as anchor
+
+This is the fourth standing methodology audit. It deepens the validation
+framework: validate against measured biology at multiple scales (Tier B
+in v2 validation hierarchy), not against fitted point estimates that
+the original paper itself acknowledges as non-unique.
+
+**Forward-looking application to all inherited sources in Layers 2-7:**
+- Nicoletti 2024 (channels): measurements = voltage-clamp protocols + I-V
+  data; fits = per-cell gbar tables. Path 2 v2 consumes measurements
+  (V_rest targets per cell, I-V envelopes for phenotype comparison) and
+  ignores fits (per-cell gbars).
+- Liu 2020 (AVA): measurements = AVA voltage-clamp and current-clamp;
+  acceptable as direct anchor.
+- Wicks 1996 (graded release): measurements + derived σ-V_half Boltzmann
+  fits. Layer 3+ Wicks audit applies measurement-vs-fit treatment.
+- Mellem 2008 (RMD): direct measurements of RMD plateau dynamics;
+  acceptable measurements if relevant Layer 2/3 work involves RMD.
+
+### 8.12 Reorientation summary — four audits + machine-code-up
+
+Path 2 v2 (and forward Layers 2-7) operates under:
+
+1. **Foundational principle (§2.9):** Machine-code up. Build substrate
+   with full mechanistic sophistication; validate emergence; derive
+   parameters from biology with minimal calibration.
+
+2. **Four standing audits applied to every inherited parameter set:**
+   - State-variable (§8.1-8.5)
+   - Uniqueness (§8.6)
+   - Channel-inclusion (§8.10)
+   - Measurement-vs-fit (§8.11)
+
+3. **Validation hierarchy expanded to four tiers:**
+   - **Tier A — First-principles consistency:** mass conservation, Nernst
+     self-consistency, no runaway dynamics, ion concentrations
+     physiological at rest
+   - **Tier B — Cell-level measurements:** V_rest within published range
+     per cell class (measurements, not derived parameters); recovery from
+     perturbation on biological timescales
+   - **Tier C — Phenotype categories:** plateau/graded/spiking
+     distinctions emerge from biophysics + gene expression
+   - **Tier D — Cross-cell consistency:** cells with similar gene
+     expression show similar behavior; differential biology emerges
+     from differential expression
+
+4. **Calibration anchored against measurements at minimal footprint:**
+   - Per-cell-family C_global calibrated against V_rest measurements
+     (not against derived gbar fits)
+   - Per-channel γ from biophysics literature with documented uncertainty
+   - Single-anchor calibration replaced with three-anchor (one per cell
+     family) where required by biology
+
+5. **Forward-looking deferrals documented explicitly:**
+   - Kinetic parameter audit (V_half, k, time constants): Layer 1.5 v3
+     or Layer 2 work block; same measurement-vs-fit + state-variable +
+     uniqueness audits to apply
+
+This is the substrate redesign's methodological state as of v2.
 
 ---
 

@@ -173,7 +173,46 @@ Resolution path documented in §5.
 
 ## 3 · Calibration protocol
 
-### 3.1 Reference choice — EGL-19 in AVAL
+### 3.0 v2 reorientation — calibration anchored against measured V_rest
+
+**Updated 2026-05-12 per machine-code-up reorientation (`docs/layer1_design_decisions.md`
+§2.9).** Path 2 v2 replaces the v1 calibration anchor (Nicoletti's
+derived EGL-19/AVAL gbar value, which is non-unique per §8.6 uniqueness
+audit) with **per-cell-family C_global calibrated against measured
+V_rest** for each cell class:
+
+```
+C_global_AVA-class:  calibrated against measured V_rest (Liu 2020 AVAL/AVAR)
+C_global_AIY-class:  calibrated against measured V_rest (published AIY data)
+C_global_RIM-class:  calibrated against measured V_rest (published RIM data)
+```
+
+This is the **measurement-vs-fit audit** (§8.11) applied to calibration
+itself. Targets are measurements (V_rest with experimental uncertainty),
+not derived parameters (Nicoletti's gbar fits).
+
+**Calibration procedure per cell family:**
+
+1. With all other parameters fixed (γ from Phase 2 inventory possibly
+   with v2 refinements; TPM from Phase 3 inventory; E_translation = 1.0;
+   full Layer 1 substrate machinery preserved)
+2. For target cell family, sweep C_global value
+3. Run cell at rest; measure emergent V_rest
+4. Find C_global value at which V_rest lands within published range for
+   that cell family
+5. Verify rest stability at that C_global (all ions stable, no runaway)
+6. Document C_global value per family with measurement source and
+   calibration path
+
+If V_rest target is achievable with C_global in plausible range (1e1 to
+1e7 channels/cm²/TPM), calibration succeeds for that family. If not,
+surface as substantive finding (potential failure of v2; route to v3
+refinement or Option γ Path 1 fallback).
+
+**v1 single-anchor approach retained for historical reference but
+superseded by v2:**
+
+### 3.1 Reference choice — EGL-19 in AVAL (v1; SUPERSEDED by §3.0)
 
 Pre-authorized Decision 4 (Rohit, 2026-05-12). Justification:
 
@@ -257,9 +296,64 @@ value. Phase 4 confirms this in code with explicit assertion.
 
 ## 4 · Validation hierarchy
 
-Three levels of validation, applied at different phases:
+### 4.0 v2 reorientation — four-tier validation under machine-code-up
 
-### 4.1 Channel-level (Phase 5)
+**Updated 2026-05-12.** Path 2 v2 expands validation to four tiers per
+`docs/layer1_design_decisions.md` §8.12 reorientation summary. Cell-level
+behavior is **emergent consequence** of biophysics, not a calibration
+target. Validation occurs at multiple scales of biological organization:
+
+**Tier A — First-principles consistency**
+- Mass conservation across simulation (ion totals conserved modulo
+  membrane current integrals)
+- Nernst self-consistency (E_X computed from current concentrations
+  matches observed equilibrium behavior)
+- Ion concentrations physiological at rest:
+  - [K]_in: 100-140 mM
+  - [Na]_in: 5-15 mM
+  - [Cl]_in: 3-10 mM
+  - [Ca]_in: 50-200 nM
+- No runaway dynamics over 5s rest simulation
+
+**Tier B — Cell-level measurements (consume measurements, not fits)**
+- V_rest within published range per cell class (target ±5 mV)
+  - AVA-class: published V_rest from Liu 2020 + Mellem 2008 envelope
+  - AIY-class: published V_rest from Nicoletti 2024 underlying
+    measurements
+  - RIM-class: published V_rest from Nicoletti 2024 underlying
+    measurements
+- Recovery from current injection on biological timescales
+- Ion homeostasis maintained under perturbation
+
+**Tier C — Phenotype categories (qualitative emergence)**
+- AVA-class: plateau capability under sufficient depolarizing current
+  (sustained depolarization that doesn't immediately repolarize)
+- AIY-class: graded response without plateau (proportional to input
+  current)
+- RIM-class: intermediate dynamics (some plateau capability but less
+  pronounced than AVA)
+
+**Tier D — Cross-cell consistency (biological differentiation)**
+- Cells with similar gene expression (AVAL/AVAR) show similar behavior
+- Cells with different gene expression (AVA-class vs AIY-class) show
+  expected biological distinctions
+- Phenotype distinctions emerge from differential expression, not from
+  per-cell tuning
+
+**Acceptance criteria under v2:**
+
+v2 passes if all four cells satisfy Tier A + Tier B AND at least 2 of 4
+cells satisfy Tier C AND Tier D shows expected cell-class distinctions.
+Tier C partial pass acceptable because plateau capability depends on
+kinetic parameters which are still inherited from Nicoletti (kinetic
+audit deferred to Layer 1.5 v3 or Layer 2 work block).
+
+v2 fails if Tier A or Tier B fails for any cell. Failure pattern
+informs next refinement direction.
+
+**v1 hierarchy retained for historical reference but superseded:**
+
+### 4.1 Channel-level (v1; SUPERSEDED by §4.0 v2)
 
 For each (channel, cell) where Nicoletti measured published gbar:
 

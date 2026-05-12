@@ -353,31 +353,49 @@ layer:
   Honest scope labels per Layer's epistemic status.
 - **Citation discipline.** Wave 2's primary-source verification protocol
   applies to every new biology citation introduced in Layers 1-7.
-- **Parameter audit before integration (NEW, surfaced 2026-05-12 from
-  §7.3 + §7.3.5 Phase 5).** DUAL AUDIT now required before composing any
-  inherited parameter set into the substrate:
+- **Parameter audit before integration (FOUR AUDITS, surfaced
+  2026-05-12 across §7.3, §7.3.5 Phase 5/6, and v2 reorientation).**
+  All four audits required before composing any inherited parameter set:
 
     1. **State-variable audit** (introduced §7.3): does the fit's implicit
-       ionic state match the current substrate? If not → refit or replace.
-    2. **Uniqueness audit** (introduced §7.3.5 Phase 5): does the original
-       paper report error bars / sensitivity analyses / uniqueness
-       evidence? If not → reframe validation against measured data, not
-       fitted point estimates.
+       ionic state match the current substrate?
+    2. **Uniqueness audit** (introduced §7.3.5 Phase 5): does the paper
+       report error bars / sensitivity analyses / uniqueness evidence?
+    3. **Channel-inclusion audit** (introduced §7.3.5 Phase 6): does
+       the inherited model set parameters to zero, implicitly making
+       channel inclusion/exclusion decisions?
+    4. **Measurement-vs-fit audit** (introduced §7.3.5 v2 reorientation):
+       does the paper publish underlying measurements (raw traces,
+       protocols, I-V data with SEM)? Use measurements; treat
+       inherited fits as one of many possible parameterizations.
 
-  Standing methodology step applied to:
-    - Nicoletti 2024 channels → §7.3.5 Path 2 deployed; BOTH audits
-      failed (state inconsistency §7.3 + non-uniqueness §7.3.5 Phase 5)
-    - Wicks 1996 graded-release Boltzmann → BOTH audits required before
-      any Layer 3+ WB3-equivalent reuse
-    - Nicoletti calcium pool dynamics → BOTH audits required before
-      Layer 4 ER integration
-    - Peptide release rate-coupling → BOTH audits required before Layer
-      5+ neuromodulation
-  See design doc `docs/layer1_design_decisions.md` §8 (state-variable
-  audit) + §8.6 (uniqueness audit) for the methodology + per-set flag
-  rationale. Methodology doc `docs/channel_parameter_derivation_methodology.md`
-  §6.0.1 + §7.3 documents the new §2.8 epistemic label category
-  "biophysically derived under non-unique parameter fits."
+  Standing methodology applied to:
+    - **Nicoletti 2024 channels:** all four audits failed
+      (state inconsistency §7.3 + non-uniqueness §7.3.5 Phase 5 +
+      channel-inclusion ambiguity §7.3.5 Phase 6 + measurements
+      available so consume them §7.3.5 v2)
+    - **Wicks 1996 graded-release Boltzmann:** all four audits required
+      before any Layer 3+ WB3-equivalent reuse
+    - **Nicoletti calcium pool dynamics:** all four audits required
+      before Layer 4 ER integration
+    - **Peptide release rate-coupling:** all four audits required
+      before Layer 5+ neuromodulation
+
+  **Foundational methodology principle (§2.9 design doc, "machine-code up"):**
+  Biological validity arises from accurate biophysical modeling of the
+  underlying structure, not from injection of measurement-matched
+  parameters. Each layer of the substrate is built with full mechanistic
+  sophistication; cell-level, network-level, and behavior-level phenomena
+  are emergent consequences of the biophysics. Validation occurs against
+  measured biology at multiple scales; parameters derived from biology
+  with minimal explicit calibration.
+
+  See design doc `docs/layer1_design_decisions.md` §2.9 (foundational
+  principle) + §8.6 (uniqueness audit) + §8.10 (channel-inclusion audit)
+  + §8.11 (measurement-vs-fit audit) + §8.12 (reorientation summary)
+  for full methodology framework. Methodology doc
+  `docs/channel_parameter_derivation_methodology.md` §3.0 + §4.0
+  documents v2 calibration + validation framework under reorientation.
 
 ---
 
