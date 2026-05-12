@@ -74,83 +74,136 @@ inserted §7.3.5 adds 3-5 blocks for channel audit + refit + validation).
 
 ---
 
-## §7.3.5 (Layer 1.5) — Channel-Substrate Consistency Audit and Refit
+## §7.3.5 (Layer 1.5) — Channel-Substrate Consistency: Path 2 (gene-expression-derived parameterization)
 
-**Status:** Inserted 2026-05-12 from §7.3 finding. Not yet scoped (deliberate
-pre-flight required). BLOCKS §7.4 and downstream work.
+**Status:** Phase 1 in progress (methodology document SHIPPED 2026-05-12).
+BLOCKS §7.4 and downstream work until all 7 phases complete.
 
 **Motivation:** §7.3 integration surfaced that Nicoletti 2024's channel
-parameterization assumes fixed `E_Ca = 60 mV`, which under physiological
-`[Ca]_out = 2 mM` requires `[Ca]_in ≈ 17 μM` — 340× the mammalian-default
-50 nM. Under Layer 1's physiological `[Ca]_in = 50 nM` (E_Ca = 134 mV), the
-inherited gbar values produce ~70% larger Ca driving force than Nicoletti's
-fit assumed, causing runaway Ca accumulation in all four cells.
+parameterization assumes fixed `E_Ca = 60 mV` (implying `[Ca]_in ≈ 17 μM`,
+340× the physiological 50 nM). Under Layer 1's dynamic Nernst this
+inconsistency causes runaway Ca accumulation in all four cells. Two
+resolution paths considered:
+
+- **Path 1 (rejected):** Refit Nicoletti gbar values under physiological
+  Nernst. Preserves Nicoletti as calibration anchor; preserves the
+  inherited-fit dependency. Tractable but doesn't address the methodology
+  pattern.
+- **Path 2 (authorized 2026-05-12):** Replace inherited fits with
+  derivation from biology — γ × TPM × E_translation × C_global. One global
+  scaling constant calibrated once. Nicoletti's I-V curves become
+  validation targets, not anchors.
 
 Full finding documentation: `docs/layer1_design_decisions.md` §8,
-`scripts/brain/wave2/artifacts/layer1_7_3_findings.md`.
+`scripts/brain/wave2/artifacts/layer1_7_3_findings.md`. Path 2 methodology
+codified in `docs/channel_parameter_derivation_methodology.md`.
 
-**Scope (anticipated):**
+**Pre-authorized design decisions (Rohit, 2026-05-12):**
+- Single global `C_global` scaling constant for v1
+- Literature-fallback γ values with explicit epistemic labels
+- Uniform `E_translation = 1.0` for v1
+- Reference: EGL-19 in AVAL
+- Refinement triggers deferred to Phase 5 evidence
 
-1. **Methodology document.** Codify the "parameter audit before integration"
-   methodology surfaced in design doc §2.8 + §8. Include audit checklist
-   (state variables assumed, reference E_X values, fitting target). This
-   becomes a transferable pattern for Layers 2-7.
+**Phase 1 pushback resolutions (Rohit, 2026-05-12):**
+- **Unit pipeline:** Path B intensive formulation; surface area NOT in gbar
+  formula (enters only via cell-builder membrane equation downstream)
+- **Multi-gene channel aggregation:** default = paralog-separate (each gene
+  forms its own channel); exception = min-across-pore-forming for documented
+  heteromers; auxiliary subunits ignored in density estimation
+- **C_global plausibility:** sanity-check-based hard-stop (negative,
+  infinity, <1 channel/cell, >10^7 channels/cm²), not fixed numerical range
+- **AVA voltage anchor:** Liu/Chen/Wang 2020 *Nat Commun* 11:5076 (NOT
+  Mellem 2008; corrected per Wave 2 Mellem investigation)
 
-2. **Nicoletti audit.** Per-channel inventory of fitted gbar values + the
-   E_X assumed in their fit. For each Ca channel (EGL-19, CCA-1, UNC-2):
-   document the original Nicoletti fitting target (published I-V curves) +
-   the assumed E_Ca. Audit similarly for K channels (assumed E_K) where
-   relevant.
+**Scope — 7 phases:**
 
-3. **Channel re-fit under physiological Nernst.** For each Ca channel,
-   refit gbar to match Nicoletti's published voltage-clamp envelopes
-   under physiological E_Ca = 134 mV at rest. Expected outcome: gbar
-   values drop by factor ~0.45 (60/134 driving-force ratio); precise value
-   depends on per-channel kinetics. K channels likely need smaller
-   correction (E_K = −90 vs assumed −80 → ~10% driving-force change at
-   typical V_rest).
+1. **Phase 1 (SHIPPED 2026-05-12)** — Methodology document.
+   Deliverable: `docs/channel_parameter_derivation_methodology.md` with 7
+   sections (architectural principle, per-channel formula, calibration
+   protocol, validation hierarchy, failure modes, epistemic labeling,
+   forward-looking application). Pushback resolutions baked in. Reference
+   material for the entire substrate redesign trajectory.
 
-4. **Channel re-validation.** Each refit channel re-validated against
-   Nicoletti's published I-V envelopes (within SEM, per §2.2 acceptance
-   criteria). The refit cells should match Nicoletti's published phenotypes
-   AND maintain stable rest under Layer 1's physiological substrate.
+2. **Phase 2** — Single-channel γ literature scoping. Per-channel
+   inventory of γ (pS) values with citation + epistemic label
+   (empirically grounded / biophysically derived / approximation from
+   adjacent biology). Direct C. elegans → heterologous expression of the
+   C. elegans gene → mammalian/Drosophila homolog fallback hierarchy.
+   Deliverable: `docs/channel_gamma_inventory.md`.
 
-5. **Per-cell re-integration.** Re-run §7.3 with refit channels. Acceptance
-   criteria from §7.3 should now pass.
+3. **Phase 3** — CeNGEN TPM extension + translation efficiency. Audit
+   coverage of channel genes in local CeNGEN panel; pull missing TPMs;
+   document `E_translation = 1.0` v1 uniform assumption; verify per-cell
+   surface area from §7.1. Deliverable: `docs/channel_tpm_inventory.md`.
 
-6. **Forward-looking flags.** Document the parameter-audit step for other
-   inherited parameter sets known to be at risk (Wicks 1996 graded release,
-   Nicoletti Ca pool dynamics, peptide release constants — see design doc
-   §8.5).
+4. **Phase 4** — `C_global` calibration. Compute from EGL-19 in AVAL
+   reference with explicit unit pipeline; sanity-check biophysical
+   plausibility. Deliverable: `docs/channel_calibration_protocol.md`
+   + named constant in Layer 1 code.
 
-**Acceptance criteria:**
-- Refit channels reproduce Nicoletti's published voltage-clamp I-V curves
-  within SEM tolerance.
-- Each Layer 1 cell (AVAL, AVAR, AIY, RIM) achieves stable rest at
-  physiological [Ca]_in (50-200 nM steady-state range) with ±2% K stability.
-- V_rest in published range per cell (Mellem 2008 for AVA; Nicoletti 2024
-  envelopes for AIY/RIM).
-- Methodology document complete and reviewable.
+5. **Phase 5** — Derive all channel parameters + per-channel validation.
+   Build `scripts/brain/wave2/channels/derived_channel_parameters.py`.
+   Per-(channel, cell): compute derived gbar; compare to Nicoletti
+   (2× / 5× / beyond bands); run I-V validation against published
+   voltage-clamp envelopes. Critical decision point: assess methodology
+   adequacy. Deliverable: `scripts/brain/wave2/artifacts/path2_channel_validation.md`.
+
+6. **Phase 6** — Per-cell integration + cell-level validation. Replace
+   hardcoded Nicoletti gbar values in AVAL/AVAR/AIY/RIM with derived
+   values (kinetic parameters preserved). Re-run §7.3 acceptance:
+   rest stability (±2% on ions, [Cl]_in 3-7 mM, [Ca]_in near target),
+   V_rest in published range, voltage-clamp envelopes within tolerance,
+   cross-cell consistency.
+
+7. **Phase 7** — Documentation + commit + push. Update design doc §8.6 +
+   §8.7 with Path 2 outcomes + forward-looking application. Four commit
+   groups (A: methodology, B: inventories, C: calibration + derivation,
+   D: cell integration). Push to origin/main. Save memory.
+
+**Acceptance criteria (Path 2 work block as a whole):**
+- Methodology document peer-readable, reference-quality (Phase 1) ✓
+- γ inventory complete for every channel in Wave 2 builders with per-
+  entry citation + epistemic label (Phase 2)
+- TPM inventory complete for every (channel, cell) combination (Phase 3)
+- `C_global` computed; biophysically sensible; reference verified by
+  construction (Phase 4)
+- Per-channel validation: most channels within 2-5× of Nicoletti; >5×
+  outliers documented as substantive findings (Phase 5)
+- Per-cell validation: all four cells stable rest with physiological
+  [Ca]_in; V_rest in published range; voltage-clamp envelopes within
+  tolerance; cross-cell consistency (Phase 6)
+- All documented and committed cleanly (Phase 7)
 
 **Dependency chain:** §7.3.5 BLOCKS §7.4 (Phase F restructure depends on
-correct Ca dynamics feeding ATP consumption via Ca-ATPase). §7.3.5 also
-informs Layer 2 (channel-rewire-to-dynamic-Nernst), which would otherwise
-inherit the same inconsistency.
+correct Ca dynamics). Path 2 methodology also informs Layer 2 (kinetic
+parameter audit) and Layer 3+ (Wicks 1996 receptor parameter audit).
 
-**Estimate:** 3-5 work blocks. Substantial — channel re-fitting + per-channel
-re-validation is the bulk; methodology document is bounded; per-cell
-re-integration is straightforward once channels refit.
+**Estimate:** 8-12 work blocks total. Per-phase:
+- Phase 1: 1 (SHIPPED)
+- Phase 2: 1-2 (literature scoping, may need multiple passes)
+- Phase 3: 1 (CeNGEN extension is bounded)
+- Phase 4: 1 (calibration math + sanity check)
+- Phase 5: 2 (derivation + per-channel validation, possibly with refinement)
+- Phase 6: 1-2 (cell integration + validation, possibly with substantive findings)
+- Phase 7: 0.5 (documentation + commit)
 
-**Pre-flight scoping required before deployment:**
-- Define refit objective function precisely (match peak I, steady-state I,
-  inactivation timescale, or a weighted combination?)
-- Decide refit method (manual gradient + visual match against published
-  figures, or systematic least-squares against digitized I-V points?)
-- Decide whether to refit K channels or accept their smaller E_K shift
-- Decide validation tolerance (per-feature SEM, or relative L2 error against
-  digitized traces?)
+**Hard-stop conditions:**
+- CeNGEN data inaccessible or schema changed (Phase 3)
+- Single-channel γ values cannot be sourced for >50% of channels (Phase 2)
+- `C_global` biophysically nonsensical (Phase 4)
+- > 50% channels beyond 5× discrepancy (Phase 5)
+- Cells fail stable rest with derived parameters after acceptable channel-
+  level validation (Phase 6)
+- Brian2 codegen failures or repeated failure patterns
 
-Pre-flight design discussion is its own work block before implementation.
+Each hard stop writes `HARD_STOP.txt` with diagnosis + terminates cleanly.
+
+**Files of record (Phase 1):**
+- `docs/channel_parameter_derivation_methodology.md` (the methodology)
+- `docs/channel_parameter_derivation_methodology_pushback.md` (pre-flight)
+- `scripts/brain/wave2/artifacts/path2_progress_summary.md` (live tracking)
+- `scripts/brain/wave2/artifacts/path2_phase1_checkpoint.json` (resumability)
 
 ---
 

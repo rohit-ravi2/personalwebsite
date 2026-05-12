@@ -1,0 +1,93 @@
+{
+  "phase": 1,
+  "phase_name": "Methodology document and architectural design",
+  "status": "complete",
+  "started": "2026-05-12",
+  "completed": "2026-05-12",
+  "deliverables": {
+    "methodology_doc": {
+      "path": "docs/channel_parameter_derivation_methodology.md",
+      "status": "shipped",
+      "sections_complete": [
+        "1: Architectural principle",
+        "2: Per-channel derivation formula (Path B intensive)",
+        "3: Calibration protocol (EGL-19 in AVAL; Liu 2020 anchor)",
+        "4: Validation hierarchy (channel / cell / cross-cell)",
+        "5: Failure modes and what they mean",
+        "6: Epistemic labeling per design doc §2.8",
+        "7: Forward-looking application to Layers 2-7"
+      ]
+    },
+    "roadmap_update": {
+      "path": "docs/substrate_redesign_roadmap.md",
+      "status": "shipped",
+      "section": "§7.3.5",
+      "scope": "Path 2 (replaces Path 1 refit scope)"
+    },
+    "pushback_doc": {
+      "path": "docs/channel_parameter_derivation_methodology_pushback.md",
+      "status": "shipped",
+      "items_resolved": 4
+    },
+    "progress_summary": {
+      "path": "scripts/brain/wave2/artifacts/path2_progress_summary.md",
+      "status": "shipped"
+    }
+  },
+  "pushback_resolutions": {
+    "item_1_units": "Path B intensive formulation; A not in gbar formula",
+    "item_2_multi_gene": "default paralog-separate; exception min-across-pore-forming for heteromers; auxiliary subunits ignored",
+    "item_3_C_global_range": "sanity-check-based hard stop (negative, infinity, <1 channel/cell, >10^7 channels/cm^2); not fixed numerical range",
+    "item_4_AVA_anchor": "Liu/Chen/Wang 2020 Nat Commun 11:5076 (NOT Mellem 2008)"
+  },
+  "pre_authorized_decisions": {
+    "decision_1": "Single global C_global for v1",
+    "decision_2": "Literature-fallback gamma with explicit epistemic labels",
+    "decision_3": "Uniform E_translation = 1.0 for v1",
+    "decision_4": "EGL-19 in AVAL as calibration reference",
+    "decision_5": "Refinement triggers deferred to Phase 5 evidence"
+  },
+  "next_phase": {
+    "number": 2,
+    "name": "Single-channel gamma literature scoping",
+    "deliverable": "docs/channel_gamma_inventory.md",
+    "channels_to_scope": [
+      "EGL-19", "CCA-1", "UNC-2",
+      "SHL-1", "SHK-1", "EGL-36", "EXP-2", "UNC-103", "EGL-2",
+      "NCA channels (nca-1, nca-2)",
+      "IRK channels (irk-1, -2, -3)",
+      "KQT channels (kqt-1, -2, -3)",
+      "TWK family (twk-*)",
+      "SLO channels (slo-1, slo-2)"
+    ],
+    "scoping_hierarchy": [
+      "1. Direct C. elegans single-channel patch-clamp measurements",
+      "2. Heterologous expression of C. elegans gene (oocyte/HEK293)",
+      "3. Mammalian/Drosophila homolog fallback with documented homolog choice"
+    ],
+    "scoping_outputs_per_channel": [
+      "gamma_pS_value",
+      "source_citation",
+      "epistemic_label",
+      "uncertainty_range",
+      "measurement_conditions",
+      "heteromer_vs_paralog_decision (for multi-gene families)"
+    ]
+  },
+  "out_of_scope": [
+    "Refitting kinetic parameters (V_half, k, time constants)",
+    "Per-channel-family C_global or E_translation (v2)",
+    "Hill function or non-linear scaling (v2)",
+    "New channels not in current Wave 2 builders (Layer 3)",
+    "Compartmentalization (Layer 4)",
+    "Modifications to pumps from §7.2 v2",
+    "Web page / public-facing documentation"
+  ],
+  "hard_stop_conditions_pending_phases": {
+    "phase_2": "Cannot source gamma for >50% of channels",
+    "phase_3": "CeNGEN data inaccessible or schema changed",
+    "phase_4": "C_global biophysically nonsensical",
+    "phase_5": ">50% channels beyond 5x discrepancy with Nicoletti",
+    "phase_6": "Cells fail stable rest with derived parameters"
+  }
+}
