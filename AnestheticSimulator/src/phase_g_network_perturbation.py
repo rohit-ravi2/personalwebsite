@@ -230,6 +230,12 @@ class AnestheticPerturbation:
             except Exception:
                 pass
 
+        # Phase G LIFBrain integration (2026-05-12): W_chem modifications
+        # above mutate the numpy _W_chem_runtime in-place, but LIFBrain's
+        # Brian2 Synapses (syn_exc / syn_inh) bind weights at construction.
+        # Sync modified weights back to Brian2 if present.
+        _sync_wchem_to_brian2(brain)
+
         revert["profile"] = profile
         return revert
 
@@ -242,11 +248,47 @@ class AnestheticPerturbation:
             brain.neurons.I_ext[:] = revert_handle["I_ext_orig"]
         if "W_chem_orig" in revert_handle:
             brain._W_chem_runtime[:] = revert_handle["W_chem_orig"]
+            # Sync revert back to Brian2 Synapses (LIFBrain)
+            _sync_wchem_to_brian2(brain)
         if revert_handle.get("W_syn_orig") is not None and hasattr(brain, "W_syn"):
             try:
                 brain.W_syn = revert_handle["W_syn_orig"]
             except Exception:
                 pass
+
+
+def _sync_wchem_to_brian2(brain) -> None:
+    """Phase G LIFBrain helper: sync modified _W_chem_runtime back to Brian2
+    Synapses (syn_exc, syn_inh) so Brian2's running simulation sees the
+    updated weights.
+
+    LIFBrain builds syn_exc / syn_inh at construction with `w = abs(W_chem)`
+    at connection sites. After in-place mutation of _W_chem_runtime, Brian2
+    needs an explicit write to syn_exc.w[:] / syn_inh.w[:] for the changes
+    to propagate. This helper assumes Phase G perturbations only scale
+    existing edges (no sign flips, no new connections), which is true for
+    all current perturbation hooks (gaba_potentiation, nachr_antagonism,
+    glucl_potentiation — multiplicative scales preserve sign).
+
+    No-op for substrates without syn_exc / syn_inh (Phase G demo network,
+    Wave2HybridBrain in graded_b2 mode, etc.).
+    """
+    import numpy as np
+    has_exc = hasattr(brain, "syn_exc") and hasattr(brain.syn_exc, "w")
+    has_inh = hasattr(brain, "syn_inh") and hasattr(brain.syn_inh, "w")
+    if not (has_exc or has_inh):
+        return
+    if not hasattr(brain, "_W_chem_runtime"):
+        return
+    W = brain._W_chem_runtime
+    if has_exc and len(brain.syn_exc.i) > 0:
+        i_arr = np.asarray(brain.syn_exc.i, dtype=np.int64)
+        j_arr = np.asarray(brain.syn_exc.j, dtype=np.int64)
+        brain.syn_exc.w[:] = np.abs(W[i_arr, j_arr]).astype(np.float32)
+    if has_inh and len(brain.syn_inh.i) > 0:
+        i_arr = np.asarray(brain.syn_inh.i, dtype=np.int64)
+        j_arr = np.asarray(brain.syn_inh.j, dtype=np.int64)
+        brain.syn_inh.w[:] = np.abs(W[i_arr, j_arr]).astype(np.float32)
 
 
 # ===== Smoke test + dose-response demo =====
