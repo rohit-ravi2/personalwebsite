@@ -1,0 +1,39 @@
+==============================================================================
+  Phase 1 sign-mode decision gauntlet
+  Tier: screen (seeds=5, phen=30.0s, scen=30.0s)
+  Modes: ['M1', 'M2-pure', 'M2-current', 'M3a']
+==============================================================================
+
+>>> MODE M1: default + 7 exceptions [PROD default]
+
+  [M1] phenotype audit: 6 ablations × 2 conds × 5 seeds × 30.0s = 60 runs
+    [M1]  5/60  (8%)  last_run=305.9s  elapsed=25.9min  eta=310.2min
+    [M1]  10/60  (17%)  last_run=452.7s  elapsed=64.1min  eta=384.7min
+    [M1]  15/60  (25%)  last_run=439.3s  elapsed=102.0min  eta=408.2min
+    [M1]  20/60  (33%)  last_run=428.3s  elapsed=137.5min  eta=412.5min
+    [M1]  25/60  (42%)  last_run=421.4s  elapsed=172.7min  eta=414.4min
+    [M1]  30/60  (50%)  last_run=462.6s  elapsed=210.5min  eta=420.9min
+  [M1] phenotype CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase1_gauntlet_M1_screen_phenotype.csv
+
+  [M1] scenario audit: 4 scens × 5 seeds × 30.0s = 20 runs
+    [M1/scen]  5/20  (25%)  last=258.4s  elapsed=20.8min
+    [M1/scen]  10/20  (50%)  last=260.7s  elapsed=43.2min
+    [M1/scen]  15/20  (75%)  last=335.9s  elapsed=74.1min
+    [M1/scen]  20/20  (100%)  last=343.2s  elapsed=102.8min
+  [M1] scenario CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase1_gauntlet_M1_screen_scenario.csv
+
+>>> MODE M2-pure: per-edge pure [§5 +60 Hz cascade]
+
+  [M2-pure] phenotype audit: 6 ablations × 2 conds × 5 seeds × 30.0s = 60 runs
+    [M2-pure]  5/60  (8%)  last_run=631.0s  elapsed=52.6min  eta=631.5min
+    [M2-pure]  10/60  (17%)  last_run=664.5s  elapsed=107.9min  eta=647.6min
+    [M2-pure]  15/60  (25%)  last_run=650.8s  elapsed=162.1min  eta=648.6min
+    [M2-pure]  20/60  (33%)  last_run=652.1s  elapsed=216.4min  eta=649.2min
+    [M2-pure]  25/60  (42%)  last_run=631.1s  elapsed=268.9min  eta=645.4min
+    [M2-pure]  30/60  (50%)  last_run=631.3s  elapsed=321.5min  eta=643.0min
+  [M2-pure] phenotype CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase1_gauntlet_M2-pure_screen_phenotype.csv
+
+  [M2-pure] scenario audit: 4 scens × 5 seeds × 30.0s = 20 runs
+    [M2-pure/scen]  5/20  (25%)  last=317.9s  elapsed=26.4min
+    [M2-pure/scen]  10/20  (50%)  last=338.7s  elapsed=54.4min
+    [M2-pure/scen]  15/20  (75%)  last=359.7s  elapsed=84.3min

@@ -1,0 +1,73 @@
+{
+  "n_total_nonzero_chem_edges": 3707,
+  "per_mode_summary": {
+    "M1 default (no exceptions)": {
+      "name": "M1 default (no exceptions)",
+      "n_nonzero": 3120,
+      "n_excitatory": 2287,
+      "n_inhibitory": 833,
+      "sum_excitatory_weight": 13220.0,
+      "sum_inhibitory_weight": 5214.0
+    },
+    "M1 default + exceptions [PRODUCTION DEFAULT]": {
+      "name": "M1 default + exceptions [PRODUCTION DEFAULT]",
+      "n_nonzero": 3120,
+      "n_excitatory": 2285,
+      "n_inhibitory": 835,
+      "sum_excitatory_weight": 13083.0,
+      "sum_inhibitory_weight": 5351.0
+    },
+    "M2 per-edge pure (no exceptions)": {
+      "name": "M2 per-edge pure (no exceptions)",
+      "n_nonzero": 3099,
+      "n_excitatory": 2304,
+      "n_inhibitory": 795,
+      "sum_excitatory_weight": 13292.0,
+      "sum_inhibitory_weight": 4995.0
+    },
+    "M2 per-edge + exceptions [PRODUCTION PER-EDGE]": {
+      "name": "M2 per-edge + exceptions [PRODUCTION PER-EDGE]",
+      "n_nonzero": 3099,
+      "n_excitatory": 2297,
+      "n_inhibitory": 802,
+      "sum_excitatory_weight": 13103.0,
+      "sum_inhibitory_weight": 5184.0
+    }
+  },
+  "pairwise_signflip_counts": {
+    "M1 pure vs M2 pure": {
+      "both_signed_opposite": 518,
+      "any_diff_either_signed": 539,
+      "zeroed_in_one_mode": 21,
+      "n_total_chem_edges": 3707
+    },
+    "M1 prod vs M2 prod": {
+      "both_signed_opposite": 513,
+      "any_diff_either_signed": 534,
+      "zeroed_in_one_mode": 21,
+      "n_total_chem_edges": 3707
+    },
+    "M1 pure vs M2 prod": {
+      "both_signed_opposite": 515,
+      "any_diff_either_signed": 536,
+      "zeroed_in_one_mode": 21,
+      "n_total_chem_edges": 3707
+    },
+    "M1 prod vs M2 pure": {
+      "both_signed_opposite": 520,
+      "any_diff_either_signed": 541,
+      "zeroed_in_one_mode": 21,
+      "n_total_chem_edges": 3707
+    }
+  },
+  "constants": {
+    "n_DEFAULT_SIGN_OVERRIDES": 28,
+    "n_DOCUMENTED_SIGN_EXCEPTIONS": 7
+  },
+  "reconciliation": {
+    "session_1_reported": 518,
+    "session_2_reported": 415,
+    "M1_pure_vs_M2_pure_hard_flips": 518,
+    "M1_prod_vs_M2_prod_hard_flips": 513
+  }
+}
