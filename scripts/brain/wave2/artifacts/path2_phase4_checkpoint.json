@@ -1,0 +1,86 @@
+{
+  "phase": 4,
+  "phase_name": "C_global calibration",
+  "status": "complete",
+  "started": "2026-05-12",
+  "completed": "2026-05-12",
+  "deliverables": {
+    "calibration_protocol": {
+      "path": "docs/channel_calibration_protocol.md",
+      "status": "shipped"
+    }
+  },
+  "C_global_calibrated": {
+    "value": 17296.543534696684,
+    "units": "channels per (cm^2 . TPM unit)",
+    "scientific": "1.7297e4"
+  },
+  "calibration_reference": {
+    "channel": "EGL-19",
+    "cell": "AVAL",
+    "gbar_Nicoletti_intensive_Scm2": 9.288e-6,
+    "gamma_pS": 6.0,
+    "TPM": 89.5,
+    "E_translation": 1.0,
+    "verification_by_construction_ratio": 1.000000
+  },
+  "biophysical_plausibility_checks": {
+    "max_density_channels_per_cm2": 3.527e6,
+    "max_density_under_membrane_saturation_1e7": true,
+    "max_predicted_channels_per_cell": 39.6,
+    "max_predicted_over_1": true,
+    "C_global_sign": "positive",
+    "C_global_finite": true,
+    "hard_stop_triggered": false
+  },
+  "per_channel_cell_audit_summary": {
+    "total_combinations": 18,
+    "within_plausible_range_1_to_1e5": 13,
+    "fractional_under_1_per_cell": 5,
+    "saturated_over_1e5_per_cell": 0
+  },
+  "substantive_findings": {
+    "AIY_systematically_under_channeled": {
+      "description": "All 4 AIY channels predict < 1 total channel per cell under Path 2 derivation",
+      "channels": {
+        "EGL-19": {"total_per_cell": 0.345, "ratio_to_Nicoletti": 0.02},
+        "KQT-1":  {"total_per_cell": 0.723, "ratio_to_Nicoletti": 0.01},
+        "SHL-1":  {"total_per_cell": 0.000, "ratio_to_Nicoletti": 0.00, "note": "T2 false negative per Phase 3.5"},
+        "NCA":    {"total_per_cell": 0.333, "ratio_to_Nicoletti": 0.03}
+      },
+      "cause": "AIY surface area 17x smaller than AVAL; linear TPM scaling produces fractional channels in small cells",
+      "phase_5_action": "Test AIY rest stability with Path 2 derived gbars; if fails, surface as Tier 2 methodology refinement candidate (Hill E_translation, per-cell C_global)"
+    },
+    "RIM_CCA1_high_Nicoletti_gbar": {
+      "description": "Nicoletti's RIM CCA-1 gbar (8.45e-4 S/cm²) is 450x higher than Path 2 derivation predicts",
+      "total_per_cell": 0.649,
+      "ratio_to_Nicoletti": 0.002,
+      "cause": "Nicoletti's CCA-1 gbar fit to whole-cell RIM T-type current; may aggregate other T-type contributions",
+      "phase_5_action": "Test RIM rest stability with derived CCA-1 gbar; candidate refinements include gamma_CCA-1 upper-range refit"
+    },
+    "cell_size_systematic": {
+      "description": "Path 2 with AVAL-anchored C_global over-estimates AVAR (similar size; lower Nicoletti per-cm²) and under-estimates AIY/RIM (smaller cells; higher Nicoletti per-cm²)",
+      "pattern": "Reference choice (EGL-19 in AVAL) implicitly anchors to medium-cell-density regime",
+      "phase_5_implication": "Cell-size systematic likely surfaces as 30-50% Tier 2 trigger if voltage-clamp validation confirms; v2 refinements include per-cell C_global, Hill E_translation, per-channel-family C_global"
+    }
+  },
+  "estimated_phase_5_tier_distribution": {
+    "tier_1_under_30pct_beyond_5x": "POSSIBLE — 27.8% of combinations already FRAC in Phase 4 audit",
+    "tier_2_30_to_50pct_beyond_5x": "LIKELY — voltage-clamp validation may bring more combinations beyond 5x band",
+    "tier_3_over_50pct_beyond_5x": "UNLIKELY — calibration math + sanity checks intact",
+    "note": "Phase 5 derivation will refine this estimate with actual I-V comparisons"
+  },
+  "next_phase": {
+    "number": 5,
+    "name": "Derive all channels + per-channel validation",
+    "deliverable": "scripts/brain/wave2/channels/derived_channel_parameters.py + docs/path2_channel_validation.md",
+    "tasks": [
+      "Build derivation Python module with C_global constant + per-channel gamma + per-cell TPM lookups",
+      "Compute derived gbar for every (channel, cell) combination",
+      "Per-channel I-V validation against Nicoletti's published voltage-clamp data (digitized if needed)",
+      "Categorize per §4.1 bands (2x good / 5x acceptable / beyond-5x finding)",
+      "Apply §5.2 tier triggers to overall result; pause-and-surface if Tier 2",
+      "Document outcomes in path2_channel_validation.md"
+    ]
+  }
+}

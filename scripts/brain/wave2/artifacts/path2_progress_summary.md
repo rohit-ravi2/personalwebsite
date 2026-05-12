@@ -4,11 +4,12 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 3 SHIPPED — TPM inventory complete
-for 9 channels × 3 cells = 27 entries; KQT-1/KQT-3 heteromer hypothesis
-rejected (0% ratio); AIY SHL-1 = 0 TPM substantive finding; nca-1 below
-T2 threshold; methodology doc §6.1 added with Phase 2 field-state
-observation)
+**Last updated:** 2026-05-12 (Phase 4 SHIPPED — C_global = 1.7297e4
+channels/(cm²·TPM) calibrated from EGL-19/AVAL; reference verified by
+construction; biophysical plausibility checks pass; per-(channel,cell)
+audit surfaces 5 substantive findings: 4 AIY channels fractional + RIM
+CCA-1 fractional; 27.8% combinations already beyond plausible 1-channel
+floor pre-validation, approaching §5.2 Tier 2 boundary)
 
 ---
 
@@ -19,7 +20,8 @@ observation)
 | 1 | Methodology document | ✓ SHIPPED | `docs/channel_parameter_derivation_methodology.md` | 2026-05-12 |
 | 2 | γ literature scoping | ✓ SHIPPED | `docs/channel_gamma_inventory.md` | 2026-05-12 |
 | 3 | CeNGEN TPM extension | ✓ SHIPPED | `docs/channel_tpm_inventory.md` | 2026-05-12 |
-| 4 | `C_global` calibration | pending | `docs/channel_calibration_protocol.md` | — |
+| 3.5 | SHL-1 + nca-1 disambiguation | ✓ SHIPPED | progress summary addendum | 2026-05-12 |
+| 4 | `C_global` calibration | ✓ SHIPPED | `docs/channel_calibration_protocol.md` | 2026-05-12 |
 | 5 | Derivation + per-channel validation | pending | `scripts/brain/wave2/channels/derived_channel_parameters.py` + `path2_channel_validation.md` | — |
 | 6 | Per-cell integration | pending | updated cell builders + `path2_cell_validation.md` | — |
 | 7 | Documentation + commit + push | pending | design doc §8.6/§8.7, roadmap update, four commit groups | — |
@@ -165,6 +167,58 @@ adjacent biology — LITERATURE GAP."
 5× discrepancy with Nicoletti, γ refinement is a candidate (could test
 γ = 1, 5, 20 pS as sensitivity sweep). Layer 1 v1 ships with the 5 pS
 estimate; refinement explicitly deferred.
+
+### Phase 3.5 — 2026-05-12 — AIY SHL-1 + nca-1 disambiguation (T4 + unfiltered TMM check)
+
+**Methodology:** Per Rohit's Phase 3.5 authorization, checked T4 (stringent)
+and unfiltered TMM counts (`Average_integrated_TMM_counts_lengthNormalized_111521.tsv`,
+138 per-replicate columns: AVA n=6, AIY n=3, RIM n=4) for SHL-1 and nca-1.
+
+**SHL-1 in AIY — Case (a) confirmed: T2 false negative for low-expression gene.**
+
+| threshold | shl-1 AVA | shl-1 AIY | shl-1 RIM |
+|---|---:|---:|---:|
+| T4 (stringent) | 0 | 0 | 153.1 |
+| T2 (medium-default) | 0 | 0 | 153.1 |
+| **Unfiltered TMM mean** | **6.55** | **8.23** | **287.0** |
+| per-replicate (AIY) | — | 9.83, 6.07, 8.78 | — |
+
+AIY SHL-1 shows consistent low expression across all 3 replicates (mean 8.2,
+range 6-10). This is a **real signal below T2's recommended threshold**, not
+a true absence. RIM shows high expression (~287); AVA also has low signal
+(~6.5) — but Wave 2 AVAL/AVAR don't use SHL-1, so AVA low-but-nonzero
+SHL-1 isn't methodologically relevant.
+
+**Interpretation:** Nicoletti's inclusion of SHL-1 in AIY is **biologically
+supportable** at this low expression level. Path 2 v1 (T2-based derivation)
+gives gbar = 0 for AIY SHL-1, which underestimates biology. Phase 5
+implications:
+- If AIY achieves stable rest without SHL-1 → low-expression channels
+  matter little; T2-based v1 is acceptable; Nicoletti's SHL-1 inclusion
+  was a redundant fit term
+- If AIY fails rest without SHL-1 → low-expression channels DO matter;
+  v1 underestimates them; refinement candidate: "use unfiltered TMM for
+  channels below T2 but consistently non-zero across replicates" (a
+  per-channel methodology refinement; v2 scope)
+
+Documented as **v1 acknowledged limitation** rather than methodology
+failure. Methodology doc update NOT needed (Rohit's "phenomenological
+assignment" case rule doesn't apply — this is the false-negative case).
+
+**nca-1 — not in CeNGEN dataset at all (not annotated).**
+
+T4 and T2 both don't contain `nca-1` as a gene_name. Either gene symbol
+mismatch with CeNGEN's annotation, or the gene is consistently
+indistinguishable from another sequence in CeNGEN's mapping. Pragmatic
+v1 resolution stands: **NCA channel uses nca-2 alone**. Consistent with
+project-internal `cengen_channel_inventory.csv` mapping. If Phase 5
+surfaces NCA-specific discrepancy, alternative aggregation including
+unc-77 as pore-forming is a refinement candidate (unc-77's pore-vs-
+auxiliary status is debated in NALCN-family literature).
+
+**Both findings status:** Documented as v1 limitations with explicit
+Phase 5 dependency. Methodology proceeds. Phase 4 (C_global calibration)
+authorized.
 
 ### Phase 3 — 2026-05-12 — AIY SHL-1 zero-TPM discrepancy (FINDING)
 
