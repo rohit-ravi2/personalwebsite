@@ -354,18 +354,30 @@ layer:
 - **Citation discipline.** Wave 2's primary-source verification protocol
   applies to every new biology citation introduced in Layers 1-7.
 - **Parameter audit before integration (NEW, surfaced 2026-05-12 from
-  §7.3).** Before composing any inherited parameter set into the substrate,
-  audit what state variables and reversal potentials its fit assumed;
-  verify those assumptions are consistent with current substrate state; if
-  not, flag for refit before composition. Standing methodology step
-  applied to:
-    - Nicoletti 2024 channels → §7.3.5 audit + refit (in flight)
-    - Wicks 1996 graded-release Boltzmann → audit before any Layer 3+
-      WB3-equivalent reuse
-    - Nicoletti calcium pool dynamics → audit before Layer 4 ER integration
-    - Peptide release rate-coupling → audit before Layer 5+ neuromodulation
-  See design doc `docs/layer1_design_decisions.md` §8 for the
-  methodology + per-set flag rationale.
+  §7.3 + §7.3.5 Phase 5).** DUAL AUDIT now required before composing any
+  inherited parameter set into the substrate:
+
+    1. **State-variable audit** (introduced §7.3): does the fit's implicit
+       ionic state match the current substrate? If not → refit or replace.
+    2. **Uniqueness audit** (introduced §7.3.5 Phase 5): does the original
+       paper report error bars / sensitivity analyses / uniqueness
+       evidence? If not → reframe validation against measured data, not
+       fitted point estimates.
+
+  Standing methodology step applied to:
+    - Nicoletti 2024 channels → §7.3.5 Path 2 deployed; BOTH audits
+      failed (state inconsistency §7.3 + non-uniqueness §7.3.5 Phase 5)
+    - Wicks 1996 graded-release Boltzmann → BOTH audits required before
+      any Layer 3+ WB3-equivalent reuse
+    - Nicoletti calcium pool dynamics → BOTH audits required before
+      Layer 4 ER integration
+    - Peptide release rate-coupling → BOTH audits required before Layer
+      5+ neuromodulation
+  See design doc `docs/layer1_design_decisions.md` §8 (state-variable
+  audit) + §8.6 (uniqueness audit) for the methodology + per-set flag
+  rationale. Methodology doc `docs/channel_parameter_derivation_methodology.md`
+  §6.0.1 + §7.3 documents the new §2.8 epistemic label category
+  "biophysically derived under non-unique parameter fits."
 
 ---
 

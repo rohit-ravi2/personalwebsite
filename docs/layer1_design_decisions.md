@@ -872,12 +872,94 @@ substrate, run a brief audit pass surveying what implicit state the fit
 assumes; document; refit if inconsistent.** This becomes step zero of any
 inherit-and-compose work block going forward.
 
-### 8.6 Resolution scope
+### 8.6 Uniqueness audit methodology — surfaced from §7.3.5 Phase 5 (2026-05-12)
 
-§7.3.5 (Layer 1.5) audits Nicoletti channel fits + refits under
-physiological [Ca]_in. See `docs/substrate_redesign_roadmap.md` §7.3.5
-entry. Estimated 3-5 work blocks (substantial — refit + per-channel
-re-validation against published voltage-clamp envelopes).
+§7.3.5 Path 2 Phase 5 surfaced a **second methodology contribution**
+distinct from §8's state-variable audit. Direct query of Nicoletti 2024
+(PMC10980225) on FRAC-flagged parameters in Phase 5 pre-flight confirmed:
+
+- **NO error bars / confidence intervals reported** for any fitted gbar
+- **NO sensitivity analyses** documented
+- Authors **explicitly acknowledge "non-uniqueness of the set of
+  parameters"** suggesting parameter space degeneracy without formal
+  characterization
+
+**Implication:** Nicoletti's specific per-cell gbars are point estimates
+from local optima of under-constrained fits. Multiple combinations
+likely reproduce the same I-V curves equivalently. "Match Nicoletti's
+specific values" is therefore the WRONG validation criterion for derived
+parameters — it asks methodology to reproduce one of multiple valid
+solutions arbitrarily selected by Nicoletti's optimization procedure.
+
+**Methodology contribution:** Treating inherited parameter fits as
+ground truth without checking fit uniqueness produces brittle validation
+criteria. The substrate redesign now requires **two audits** before
+inheriting any parameter set:
+
+1. **State-variable audit (§7.3):** does the fit's implicit ionic state
+   match the current substrate?
+2. **Uniqueness audit (NEW, §7.3.5):** does the fit have error bars,
+   sensitivity analyses, or other evidence of unique determination by
+   the underlying data?
+
+**Failing EITHER audit weakens the case for using specific values as
+validation anchors.** Failing both (Nicoletti channels) requires
+fundamental reframing: validate against underlying MEASURED data
+(I-V curves with SEM where reported) rather than against fitted point
+estimates.
+
+### 8.7 New §2.8 epistemic label category
+
+Per `docs/channel_parameter_derivation_methodology.md` §6.0.1, §2.8
+extends with a new category:
+
+- **biophysically derived under non-unique parameter fits** — derived
+  from data fitting but the fit problem is under-constrained; multiple
+  parameter combinations produce equivalent fit quality; specific
+  point estimates lack uncertainty quantification
+
+Channels inherited from Nicoletti 2024 fall into **BOTH** "inconsistent
+substrate" (§8.1-8.5) AND "non-unique parameter fits" (§8.6) categories.
+
+### 8.8 Forward-looking dual-audit application
+
+The dual audit (state-variable + uniqueness) becomes standing methodology
+step for Layers 2-7:
+
+- **Wicks 1996 graded release Boltzmann** (Layer 3+): both audits required
+  before WB3-equivalent reuse. State-variable: Ascaris saline conditions
+  vs substrate state. Uniqueness: Wicks fit error bars, sensitivity.
+- **Nicoletti Ca pool dynamics** (Layer 4): both audits required before
+  ER compartment integration.
+- **Peptide release rate-coupling** (Layer 5+): both audits required
+  before neuromodulation integration.
+- **Loer & Rand 2022 neurotransmitter table:** categorical assignments
+  not parameter fits; uniqueness audit doesn't strictly apply but
+  per-neuron NT identity confidence should be documented.
+
+This is the substrate redesign's **second transferable methodology
+contribution** (state-variable audit was the first, from §7.3). Both
+become step zero of any inherit-and-compose work block in subsequent
+substrate redesign layers.
+
+### 8.9 Resolution scope (revised from 8.6)
+
+§7.3.5 (Layer 1.5) Path 2 ships infrastructure (Phase 1-5 deliverables)
+plus the dual-audit methodology contribution. Phase 6 proceeds under
+**reframed validation criteria** per §8.6:
+
+- Validate against cell-level rest stability + measured I-V envelope
+  match, NOT against Nicoletti's specific gbar values
+- Channel kinetic parameters preserved from Nicoletti (out of scope for
+  Path 2 v1; subject to dual audit in separate work block if Layer 2
+  surfaces issues)
+- Cross-cell consistency check as additional validation axis
+
+If Phase 6 passes under reframed criteria, Path 2 v1 ships as substrate
+redesign's first major demonstration of "biology-derived parameters
+under measurement-data validation." If Phase 6 fails, failure pattern
+informs Option β targeted refinement (per-cell-family C_global,
+γ_IRK refit).
 
 §7.3.5 BLOCKS §7.4 (Phase F restructure depends on correct Ca dynamics
 feeding back into ATP consumption via Ca-ATPase load).

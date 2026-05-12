@@ -478,6 +478,35 @@ assumptions inconsistent with substrate" from `docs/layer1_design_decisions.md`
 §8 until separately audited. Path 2 v1 does NOT refit kinetics; only
 gbar derivation falls in scope. Kinetic audit is Layer 2 or v2.
 
+### 6.0.1 New §2.8 category: "biophysically derived under non-unique parameter fits"
+
+**Phase 5 finding (2026-05-12) added a second epistemic label category**
+distinguishing parameter fits that may be one of multiple valid solutions
+in degenerate parameter space:
+
+| §2.8 label | meaning |
+|---|---|
+| empirically grounded | directly measured for these cells |
+| biophysically derived | calibrated against well-defined biophysical constraint |
+| **biophysically derived under non-unique parameter fits** *(NEW)* | derived from fitting to data but the fit problem is under-constrained; multiple parameter combinations produce equivalent fit quality; specific point estimates lack uncertainty quantification |
+| biophysically derived under assumptions inconsistent with substrate | inherited fits whose implicit state assumptions don't match current substrate (§7.3 finding) |
+| approximation from adjacent biology | mammalian/different-cell C. elegans values applied with documented limitation |
+| free parameter with sensitivity sweep | bounded by validation invariance |
+
+**Channels inherited from Nicoletti 2024 fall into BOTH the "inconsistent
+substrate" category (§7.3 E_Ca finding) AND the "non-unique parameter
+fits" category (§7.3.5 Phase 5 finding).** The uniqueness audit is a
+distinct check from the state-variable audit:
+- **State-variable audit** (§7.3): does the fit's implicit ionic state
+  match the current substrate?
+- **Uniqueness audit** (§7.3.5 Phase 5): does the fit have error bars,
+  sensitivity analyses, or other evidence that the specific values are
+  uniquely determined by the data?
+
+Inherited fits failing EITHER audit weaken the case for using their
+specific values as validation anchors. Both audits should run before
+treating inherited parameters as ground truth.
+
 ### 6.1 Field-state observation from Phase 2 (2026-05-12)
 
 Phase 2 γ literature scoping surfaced an empirical observation that informs
@@ -650,31 +679,68 @@ derive under Layer 1 substrate.
 **Formula does NOT apply:** these are kinetic rates, not conductance
 densities.
 
-### 7.3 Standing methodology step
+### 7.3 Standing methodology step — TWO audits required
 
-For every inherited parameter set, before composing into substrate:
+For every inherited parameter set, before composing into substrate,
+run **both audits**:
+
+#### Audit A — State-variable audit (introduced §7.3 finding)
 
 1. **What state variables does the fit implicitly assume?** Reverse-
    engineer from the original paper's methods section, control conditions,
    and reference saline composition.
 2. **Are those assumptions consistent with the current substrate state?**
    Compare to Layer 1+ ionic concentrations, [ATP], Mg, pH, temperature.
-3. **Determine parameter type:** gbar-like (conductance density) or
+3. **If inconsistent: replace or refit** under physiological state.
+
+#### Audit B — Uniqueness audit (introduced §7.3.5 Phase 5 finding, NEW)
+
+1. **Does the original paper report error bars / confidence intervals /
+   sensitivity analyses for the fitted parameters?**
+2. **Does the paper acknowledge parameter non-uniqueness or local-optimum
+   issues?** (e.g., "non-uniqueness of the set of parameters")
+3. **Are the fitted values point estimates from optimization without
+   uncertainty quantification?**
+4. **If yes to (3): the inherited values are weak validation anchors.**
+   Treat as one of multiple valid solutions in degenerate parameter
+   space; reframe validation against underlying measured data with SEM
+   (where available) rather than against fitted point estimates.
+
+#### Decision tree
+
+5. **Determine parameter type:** gbar-like (conductance density) or
    kinetic-like (rates, voltage-dependence parameters, binding constants).
-4. **If gbar-like and inconsistent:** apply Path 2 formula directly with
-   appropriate γ-equivalent + TPM source.
-5. **If kinetic-like and inconsistent:** apply Path 2 PATTERN with
-   parameter-type-specific derivation math; treat as methodology
-   extension requiring its own work block.
-6. **If consistent:** inherit with documented consistency check.
-7. **Document the audit outcome** in the layer's design decisions doc
+6. **If gbar-like AND inconsistent state OR non-unique:** apply Path 2
+   formula directly with appropriate γ-equivalent + TPM source.
+7. **If kinetic-like AND inconsistent state OR non-unique:** apply Path 2
+   PATTERN with parameter-type-specific derivation math; treat as
+   methodology extension requiring its own work block.
+8. **If consistent state AND fits are well-constrained:** inherit with
+   documented consistency check on both axes.
+9. **Document both audit outcomes** in the layer's design decisions doc
    + `docs/substrate_redesign_roadmap.md` cross-cutting tracks.
 
-This is "parameter audit before integration" as a standing methodology
-step — see `docs/substrate_redesign_roadmap.md` cross-cutting tracks +
-`docs/layer1_design_decisions.md` §2.8. The pattern-vs-formula distinction
-in §7.0 prevents the wrong tool from being applied to the wrong parameter
-type downstream.
+Both audits combined are "parameter audit before integration" as a
+standing methodology step — see `docs/substrate_redesign_roadmap.md`
+cross-cutting tracks + `docs/layer1_design_decisions.md` §2.8 + §8.6.
+
+#### Specific layer applications under both audits
+
+- **Layer 1 §7.3.5 (Nicoletti channels):** Audit A failed (E_Ca=60
+  inconsistent with physiological E_Ca=134); Audit B failed (no error
+  bars; non-uniqueness acknowledged). Path 2 derivation deployed; v1
+  validation reframed against measured I-V envelopes rather than
+  Nicoletti's degenerate point estimates.
+- **Layer 3+ Wicks 1996 graded release:** Audit A pending (need to verify
+  Ascaris ionic state assumptions); Audit B pending (need to check
+  Wicks paper for parameter uncertainty quantification). **Both audits
+  must run before any WB3-equivalent reuse.**
+- **Layer 4 Nicoletti Ca pool dynamics:** Audit A pending; Audit B
+  pending. Same dual-audit requirement.
+- **Layer 5+ peptide release rate-coupling:** Same dual-audit requirement.
+
+The dual audit makes "parameter audit before integration" load-bearing
+across multiple dimensions, not just state-variable consistency.
 
 ---
 
