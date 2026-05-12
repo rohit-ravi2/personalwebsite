@@ -1,0 +1,66 @@
+{
+  "phase": 5,
+  "phase_name": "Derive all channels + per-channel validation",
+  "status": "complete_with_hard_stop",
+  "started": "2026-05-12",
+  "completed": "2026-05-12",
+  "deliverables": {
+    "derivation_module": {
+      "path": "scripts/brain/wave2/channels/derived_channel_parameters.py",
+      "status": "shipped",
+      "verification_by_construction": "PASS (AVAL EGL-19 reference matches Nicoletti to 0.005%)"
+    },
+    "validation_document": {
+      "path": "docs/path2_channel_validation.md",
+      "status": "shipped"
+    },
+    "hard_stop_record": {
+      "path": "scripts/brain/wave2/artifacts/HARD_STOP_path2_phase5.md",
+      "status": "shipped"
+    }
+  },
+  "nicoletti_uncertainty_finding": {
+    "source": "PMC10980225 paper query",
+    "result": "NO error bars / confidence intervals / sensitivity analyses for any fitted gbar; authors explicitly acknowledge 'non-uniqueness of the set of parameters'",
+    "implication": "Nicoletti's gbars are point estimates from local optima of under-constrained fits; multiple parameter combinations likely reproduce same I-V curves; per-cell gbar agreement is NOT a strong validation criterion"
+  },
+  "band_distribution": {
+    "within_2x": {"count": 2, "pct": 12.5, "channels": ["AVAL EGL-19 (ref)", "AVAR EGL-19"]},
+    "within_5x": {"count": 2, "pct": 12.5, "channels": ["AVAR NCA", "AVAR UNC-103"]},
+    "beyond_5x": {"count": 12, "pct": 75.0, "channels": "all AIY + all RIM + AVAL IRK + AVAR IRK"},
+    "excluded": {"count": 1, "reason": "AVAL NCA: Nicoletti g=0"}
+  },
+  "tier_classification": "Tier 3 HARD STOP (75% beyond 5% ≥ 50% threshold)",
+  "failure_patterns": {
+    "pattern_A_small_cell_under_channeling": {
+      "count": 10,
+      "cells_affected": ["AIY (4/4 channels)", "RIM (6/6 channels)"],
+      "ratio_range": "0.0022 to 0.159",
+      "direction": "UNDER (derived << Nicoletti)",
+      "cause": "AVAL-anchored C_global × linear TPM scaling produces fractional total channels in small cells; Nicoletti uses high per-cm² gbar to compensate for small surface area",
+      "v2_candidate_refinement": "per-cell-family C_global"
+    },
+    "pattern_B_IRK_over_channeling": {
+      "count": 2,
+      "cells_affected": ["AVAL IRK", "AVAR IRK"],
+      "ratio_range": "8.05 to 19.09",
+      "direction": "OVER (derived > Nicoletti)",
+      "cause": "gamma_IRK = 25 pS (Kir2.1 chord) is largest gamma in inventory; with high IRK paralog-sum TPM, derived density exceeds Nicoletti per-cm² value",
+      "v2_candidate_refinement": "refit gamma_IRK; alternative ~10 pS Kir2.1 slope conductance"
+    }
+  },
+  "architectural_direction_options": {
+    "option_alpha": "Path 2 v1 ships under reframed validation (cell-level Phase 6, not per-channel gbar match) — RECOMMENDED",
+    "option_beta": "Path 2 v2 methodology refinement (per-cell-family C_global + refit gamma_IRK)",
+    "option_gamma": "Path 1 fallback (refit Nicoletti under physiological Nernst)",
+    "option_delta": "Hybrid derivation framework (gamma per-channel free parameter; TPM x E x surface as cross-cell scaling)"
+  },
+  "recommendation": "Option alpha followed by option beta if Phase 6 reveals load-bearing issues. Nicoletti uncertainty finding genuinely shifts validation interpretation; per-cell integrated rest stability is more biologically meaningful than per-channel gbar point-match.",
+  "phase_6_status": "BLOCKED pending architectural direction",
+  "downstream_blocked": [
+    "§7.3.5 Path 2 Phase 6 (cell integration)",
+    "§7.3.5 Path 2 Phase 7 (commit + push final)",
+    "§7.4 Phase F restructure (§7.3.5 dependency)"
+  ],
+  "standing_by_for": "Rohit's direction on Options alpha / beta / gamma / delta"
+}

@@ -4,12 +4,12 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 4 SHIPPED — C_global = 1.7297e4
-channels/(cm²·TPM) calibrated from EGL-19/AVAL; reference verified by
-construction; biophysical plausibility checks pass; per-(channel,cell)
-audit surfaces 5 substantive findings: 4 AIY channels fractional + RIM
-CCA-1 fractional; 27.8% combinations already beyond plausible 1-channel
-floor pre-validation, approaching §5.2 Tier 2 boundary)
+**Last updated:** 2026-05-12 (Phase 5 SHIPPED + **TIER 3 HARD STOP**:
+75% of (channel, cell) combinations beyond 5× Nicoletti; two structured
+failure patterns documented (small-cell under-channeling 10/12; AVAL/AVAR
+IRK over-channeling 2/12); Nicoletti uncertainty pre-flight confirmed
+no-error-bars + non-uniqueness; 4 architectural-direction options drafted
+in HARD_STOP file; Phase 6 BLOCKED pending Rohit's decision)
 
 ---
 
@@ -22,9 +22,9 @@ floor pre-validation, approaching §5.2 Tier 2 boundary)
 | 3 | CeNGEN TPM extension | ✓ SHIPPED | `docs/channel_tpm_inventory.md` | 2026-05-12 |
 | 3.5 | SHL-1 + nca-1 disambiguation | ✓ SHIPPED | progress summary addendum | 2026-05-12 |
 | 4 | `C_global` calibration | ✓ SHIPPED | `docs/channel_calibration_protocol.md` | 2026-05-12 |
-| 5 | Derivation + per-channel validation | pending | `scripts/brain/wave2/channels/derived_channel_parameters.py` + `path2_channel_validation.md` | — |
-| 6 | Per-cell integration | pending | updated cell builders + `path2_cell_validation.md` | — |
-| 7 | Documentation + commit + push | pending | design doc §8.6/§8.7, roadmap update, four commit groups | — |
+| 5 | Derivation + per-channel validation | ✓ SHIPPED + **HARD STOP** | derived_channel_parameters.py + path2_channel_validation.md + HARD_STOP file | 2026-05-12 |
+| 6 | Per-cell integration | **BLOCKED** pending architectural direction | (gated) | — |
+| 7 | Documentation + commit + push | **BLOCKED** | (gated) | — |
 
 ---
 
