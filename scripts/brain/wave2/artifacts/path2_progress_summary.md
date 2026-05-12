@@ -4,10 +4,11 @@
 Updated after every milestone for cross-session resumability.
 
 **Started:** 2026-05-12
-**Last updated:** 2026-05-12 (Phase 2 SHIPPED — γ inventory complete
-for 9 channels; 8/9 sourced from mammalian homolog literature, 1 (NCA)
-estimated due to documented literature gap; coverage 89% well above 50%
-hard-stop threshold)
+**Last updated:** 2026-05-12 (Phase 3 SHIPPED — TPM inventory complete
+for 9 channels × 3 cells = 27 entries; KQT-1/KQT-3 heteromer hypothesis
+rejected (0% ratio); AIY SHL-1 = 0 TPM substantive finding; nca-1 below
+T2 threshold; methodology doc §6.1 added with Phase 2 field-state
+observation)
 
 ---
 
@@ -17,7 +18,7 @@ hard-stop threshold)
 |---|---|---|---|---|
 | 1 | Methodology document | ✓ SHIPPED | `docs/channel_parameter_derivation_methodology.md` | 2026-05-12 |
 | 2 | γ literature scoping | ✓ SHIPPED | `docs/channel_gamma_inventory.md` | 2026-05-12 |
-| 3 | CeNGEN TPM extension | pending | `docs/channel_tpm_inventory.md` | — |
+| 3 | CeNGEN TPM extension | ✓ SHIPPED | `docs/channel_tpm_inventory.md` | 2026-05-12 |
 | 4 | `C_global` calibration | pending | `docs/channel_calibration_protocol.md` | — |
 | 5 | Derivation + per-channel validation | pending | `scripts/brain/wave2/channels/derived_channel_parameters.py` + `path2_channel_validation.md` | — |
 | 6 | Per-cell integration | pending | updated cell builders + `path2_cell_validation.md` | — |
@@ -164,6 +165,49 @@ adjacent biology — LITERATURE GAP."
 5× discrepancy with Nicoletti, γ refinement is a candidate (could test
 γ = 1, 5, 20 pS as sensitivity sweep). Layer 1 v1 ships with the 5 pS
 estimate; refinement explicitly deferred.
+
+### Phase 3 — 2026-05-12 — AIY SHL-1 zero-TPM discrepancy (FINDING)
+
+**Observation:** Wave 2 AIY cell builder uses SHL-1 (Kv4 A-type K) with
+gbar ≈ 7.59e-4 S/cm². CeNGEN T2 reports `TPM_shl-1_AIY = 0` (below
+threshold 2).
+
+**Diagnosis:** Three possible explanations:
+1. SHL-1 expressed below T2 threshold but functionally present (T2 false
+   negative)
+2. Nicoletti's AIY parameterization uses SHL-1 phenomenologically (whole-
+   cell I-V fit, not AIY-specific expression data); "AIY SHL-1" may
+   capture a different K channel
+3. CeNGEN AIY sampling insufficient
+
+**Resolution:** Phase 5 tests whether AIY achieves stable rest with
+derived SHL-1 gbar = 0. If yes → Path 2 rejects Nicoletti's SHL-1
+inclusion as non-biology-grounded artifact of fit. If no → substantive
+question about Nicoletti-vs-Path-2 reconciliation. Documented as exactly
+the kind of methodology-validation finding Path 2 was designed to surface.
+
+### Phase 3 — 2026-05-12 — nca-1 below CeNGEN T2 threshold
+
+**Observation:** `nca-1` (NALCN pore-forming paralog) not found in CeNGEN
+T2 for any neuron. WBGene00003502 (nca-1 WormBase ID) matches no T2 row.
+
+**Resolution (v1):** NCA channel TPM = TPM_nca-2 alone for v1 derivation.
+Consistent with `cengen_channel_inventory.csv` mapping (NCA channel ↔
+{nca-2, unc-77}; nca-1 absent). Documented as substantive finding for
+Phase 5 sensitivity analysis. If NCA discrepancy surfaces, alternative
+aggregation including unc-77 as pore-forming is a candidate (unc-77's
+pore-vs-auxiliary status is debated in NALCN-family literature).
+
+### Phase 3 — 2026-05-12 — KQT-1/KQT-3 heteromer hypothesis REJECTED
+
+**Observation:** Per Phase 2 §4.2 KQT heteromer flag check:
+- AIY kqt-1 TPM = 63.4
+- AIY kqt-3 TPM = 0.0
+- ratio kqt-3 / kqt-1 = **0%** (well below 20% paralog-separate threshold)
+
+**Resolution:** Paralog-separate confirmed for KQT-1 in AIY. KQT-1 alone
+determines KQT density per methodology §2.4. Methodology KQT-family flag
+RESOLVED.
 
 ### Phase 2 — 2026-05-12 — KQT-1/KQT-3 heteromer hypothesis flagged
 

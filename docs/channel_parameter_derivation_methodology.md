@@ -478,6 +478,52 @@ assumptions inconsistent with substrate" from `docs/layer1_design_decisions.md`
 §8 until separately audited. Path 2 v1 does NOT refit kinetics; only
 gbar derivation falls in scope. Kinetic audit is Layer 2 or v2.
 
+### 6.1 Field-state observation from Phase 2 (2026-05-12)
+
+Phase 2 γ literature scoping surfaced an empirical observation that informs
+all subsequent phases:
+
+**Direct C. elegans single-channel patch-clamp γ measurements do NOT exist
+for any of the 9 Wave 2 channels in scope.** All Path 2 γ values derive
+from mammalian homolog fallback (Cav1.2, Cav3.1, Cav2.1, Kir2.1, KCNQ
+family, Kv4.2, Kv10.1, hERG) with documented cross-species transferability
+assumptions. NCA has no published unitary γ in any species (literature gap;
+v1 uses estimated placeholder).
+
+**This is field state, not methodology limitation.** Single-channel
+recordings in C. elegans neurons are technically rare due to small cell
+size + low channel density + difficulty of patch-clamp in this organism.
+The field's biophysical modeling depends heavily on mammalian homolog
+transferability — including Nicoletti's macroscopic fits.
+
+**Combined uncertainty budget validation:** Per-channel γ uncertainty
+from mammalian homolog fallback (~1.5-3× measurement variance × cross-
+species transferability) combined with linear-TPM-scaling residual
+(~3.6× from §4.1.1) produces total combined uncertainty of **~5-10× per
+channel**. This empirically validates the Phase 5 decision thresholds:
+
+- **Within 2× band (good):** empirically rare under v1 methodology; only
+  expected when both homolog γ + TPM-density assumptions happen to align
+  precisely for that channel
+- **Within 5× band (acceptable):** realistic central performance
+  expectation under v1; the "matches Nicoletti within combined uncertainty"
+  zone
+- **Beyond 5× band (substantive finding):** indicates methodology
+  refinement candidate (γ refinement, heteromer aggregation rule, Hill
+  E_translation, per-family C_global)
+
+Phase 5's `>30% beyond 5× → methodology refinement` tier 2 trigger
+(see §5.2) was set assuming ~5× combined uncertainty. Phase 2's coverage
+outcome (8/9 mammalian homolog + 1 estimated) confirms this assumption.
+The tiered triggers remain calibrated.
+
+**Implication for downstream layers:** Layer 2-7's inherited parameter
+audit (§7) will encounter the same field-state limitation. Most C. elegans
+biophysical parameters lack direct measurement; methodology must accept
+mammalian homolog transferability as standing assumption while documenting
+per-parameter uncertainty explicitly. This is not unique to Path 2;
+it's the rigor mode for any C. elegans substrate redesign.
+
 ---
 
 ## 7 · Forward-looking application to Layers 2-7

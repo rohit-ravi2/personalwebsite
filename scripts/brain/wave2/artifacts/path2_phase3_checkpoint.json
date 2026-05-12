@@ -1,0 +1,73 @@
+{
+  "phase": 3,
+  "phase_name": "CeNGEN TPM extension + translation efficiency",
+  "status": "complete",
+  "started": "2026-05-12",
+  "completed": "2026-05-12",
+  "deliverables": {
+    "tpm_inventory": {
+      "path": "docs/channel_tpm_inventory.md",
+      "status": "shipped",
+      "channels_documented": 9,
+      "cells_documented": ["AVA", "AIY", "RIM"],
+      "data_points": 27
+    }
+  },
+  "per_channel_TPM_aggregated": {
+    "EGL-19":  {"AVA": 89.5, "AIY": 30.3, "RIM": 132.9, "aggregation": "single-gene egl-19"},
+    "CCA-1":   {"AVA": 109.3, "AIY": 0.0, "RIM": 36.3, "aggregation": "single-gene cca-1"},
+    "UNC-2":   {"AVA": 203.9, "AIY": 93.9, "RIM": 57.2, "aggregation": "single-gene unc-2"},
+    "SHL-1":   {"AVA": 0.0, "AIY": 0.0, "RIM": 153.1, "aggregation": "single-gene shl-1"},
+    "KQT-1":   {"AVA": 0.0, "AIY": 63.4, "RIM": 0.0, "aggregation": "single-gene kqt-1 (heteromer rejected)"},
+    "EGL-2":   {"AVA": 64.5, "AIY": 0.0, "RIM": 65.8, "aggregation": "single-gene egl-2"},
+    "UNC-103": {"AVA": 46.1, "AIY": 0.0, "RIM": 112.2, "aggregation": "single-gene unc-103"},
+    "IRK":     {"AVA": 165.6, "AIY": 0.0, "RIM": 120.3, "aggregation": "sum(irk-1, irk-2, irk-3)"},
+    "NCA":     {"AVA": 153.2, "AIY": 29.2, "RIM": 88.0, "aggregation": "nca-2 alone (nca-1 below T2; unc-77 auxiliary)"}
+  },
+  "kqt_heteromer_check": {
+    "decision_rule": ">50% heteromer; <20% paralog-separate; 20-50% surface for direction",
+    "AIY_kqt-1_TPM": 63.4,
+    "AIY_kqt-3_TPM": 0.0,
+    "ratio_pct": 0.0,
+    "decision": "paralog-separate confirmed (ratio 0% << 20% threshold)",
+    "methodology_2_4_kqt_flag_resolution": "rejected - paralog-separate for KQT-1 in AIY"
+  },
+  "per_cell_surface_areas_cm2": {
+    "AVAL": 1.124e-5,
+    "AVAR": 1.122e-5,
+    "AIY":  6.59e-7,
+    "RIM":  1.03e-6
+  },
+  "e_translation_v1": 1.0,
+  "substantive_findings": {
+    "AIY_SHL1_zero_TPM": {
+      "description": "AIY Wave 2 cell uses SHL-1 (gbar=7.59e-4 S/cm2) but CeNGEN T2 TPM_shl-1_AIY = 0",
+      "interpretation": "Either (1) below T2 false negative, (2) Nicoletti uses SHL-1 phenomenologically, (3) CeNGEN AIY sampling insufficient",
+      "phase_5_check": "Test if AIY achieves stable rest with derived SHL-1 gbar=0"
+    },
+    "nca-1_below_T2": {
+      "description": "nca-1 (NALCN pore-forming paralog) not found in CeNGEN T2 at any neuron",
+      "interpretation": "Below threshold broadly; NCA channel uses nca-2 alone for v1",
+      "phase_5_check": "If NCA discrepancy surfaces, test alternative aggregation including unc-77 as pore"
+    }
+  },
+  "local_cengen_panel_audit": {
+    "channel_genes_in_panel": ["egl-19", "cca-1", "unc-2", "nca-2", "unc-77", "unc-80"],
+    "channel_genes_missing": ["shl-1", "kqt-1", "kqt-3", "egl-2", "unc-103", "irk-1", "irk-2", "irk-3", "nca-1"],
+    "coverage": "6/15 channel genes in local panel",
+    "resolution": "All needed TPMs pulled directly from full CeNGEN T2 CSV; local panel extension flagged as separate cross-cutting work block"
+  },
+  "next_phase": {
+    "number": 4,
+    "name": "C_global calibration",
+    "deliverable": "docs/channel_calibration_protocol.md",
+    "tasks": [
+      "Extract Nicoletti's intensive gbar for EGL-19 in AVAL (from option_alpha_ava_cell.py)",
+      "Apply C_global = gbar_Nicoletti / (gamma_EGL19 * TPM_EGL19_AVA * E_translation)",
+      "Verify reference (EGL-19 in AVAL) reproduces Nicoletti exactly by construction",
+      "Sanity-check C_global per methodology section 3.4 (biophysically nonsensical hard-stop)",
+      "Document final value with explicit unit accounting"
+    ],
+    "expected_value": "~1.7e4 channels/(cm^2 . TPM unit) based on EGL-19 sanity check"
+  }
+}
