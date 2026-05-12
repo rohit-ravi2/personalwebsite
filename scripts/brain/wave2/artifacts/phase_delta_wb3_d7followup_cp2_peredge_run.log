@@ -1,0 +1,92 @@
+
+==============================================================================
+  CP2 test point: W_graded_I = 0.3 pA, sign_mode=per_edge
+==============================================================================
+WARNING    The object 'networkoperation' is getting deleted, but was never included in a network. This probably means that you did not store the object reference in a variable, or that the variable was not used to construct the network.
+The object was created here (most recent call only):
+  File '/mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/option_alpha_ava_cell.py', line 189, in _factory
+    @network_operation(dt=0.025 * ms) [brian2.core.base.unused_brian_object]
+WARNING    The object 'networkoperation_1' is getting deleted, but was never included in a network. This probably means that you did not store the object reference in a variable, or that the variable was not used to construct the network.
+The object was created here (most recent call only):
+  File '/mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/option_alpha_avar_cell.py', line 167, in _factory
+    @network_operation(dt=0.025 * ms) [brian2.core.base.unused_brian_object]
+
+  W_graded_I = 0.3 pA, soft-cap warnings 154, AVAL V_end -21.1 mV, AVAR V_end -21.6 mV
+
+  LIF cascade (firing_rates() → Hz, genuine rate):
+  cell      baseline     touch   Δ_touch
+  ALML        0.50     60.50    +60.00
+  ALMR        1.00     61.50    +60.50
+  AVM         0.50     63.00    +62.50
+  PVCL        2.00      1.00     -1.00
+  PVCR        1.50      1.00     -0.50
+  AVDL        8.50     12.00     +3.50
+  AVDR        8.50     10.00     +1.50
+  AVEL       19.50     10.50     -9.00
+  AVER       11.00      7.50     -3.50
+  AVBL        2.50      7.00     +4.50
+  AVBR        4.00      5.50     +1.50
+  AIBL       12.00      9.00     -3.00
+  AIBR        9.50      9.00     -0.50
+  RIML       16.50     14.00     -2.50
+  RIMR       23.00     19.00     -4.00
+  AIYL        0.50      2.50     +2.00
+  AIYR        1.00      1.50     +0.50
+
+  Wave 2 cells (σ-magnitude readout — canonical post-D7-followup):
+  cell        σ_base   σ_touch        Δσ   rate_base  rate_touch     Δrate
+  AVAL      0.6420    0.6255   -0.0165       64.20       62.55     -1.65
+  AVAR      0.6464    0.6191   -0.0273       64.64       61.91     -2.73
+
+  Legacy pseudo-spike counts (Decision 7(a) detector, NOT consumed by firing_rates()):
+    AVAL: 2 events over 9 s
+    AVAR: 4 events over 9 s
+
+==============================================================================
+  CP2 test point: W_graded_I = 10.0 pA, sign_mode=per_edge
+==============================================================================
+
+  W_graded_I = 10.0 pA, soft-cap warnings 264, AVAL V_end -12.0 mV, AVAR V_end -11.6 mV
+
+  LIF cascade (firing_rates() → Hz, genuine rate):
+  cell      baseline     touch   Δ_touch
+  ALML        1.50     64.50    +63.00
+  ALMR        1.00     63.00    +62.00
+  AVM         0.50     61.50    +61.00
+  PVCL      134.00    100.50    -33.50
+  PVCR      136.50    105.00    -31.50
+  AVDL      146.00    123.00    -23.00
+  AVDR      138.50    116.50    -22.00
+  AVEL       97.50     81.00    -16.50
+  AVER       98.50     79.50    -19.00
+  AVBL      129.00     95.00    -34.00
+  AVBR      134.50    100.50    -34.00
+  AIBL       13.50     11.00     -2.50
+  AIBR       16.50     13.00     -3.50
+  RIML       30.50     26.50     -4.00
+  RIMR       38.50     35.00     -3.50
+  AIYL        0.50      2.50     +2.00
+  AIYR        1.00      1.50     +0.50
+
+  Wave 2 cells (σ-magnitude readout — canonical post-D7-followup):
+  cell        σ_base   σ_touch        Δσ   rate_base  rate_touch     Δrate
+  AVAL      0.8820    0.8692   -0.0129       88.20       86.92     -1.29
+  AVAR      0.8999    0.8891   -0.0107       89.99       88.91     -1.07
+
+  Legacy pseudo-spike counts (Decision 7(a) detector, NOT consumed by firing_rates()):
+    AVAL: 1 events over 9 s
+    AVAR: 1 events over 9 s
+
+[CP2 results written] /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/artifacts/phase_delta_wb3_d7followup_cp2_peredge_results.json
+
+==============================================================================
+  CP2 ACCEPTANCE SUMMARY — σ-magnitude readout vs original CP4 artifact
+==============================================================================
+    W_pA  cell      orig pseudo Δ_Hz     σ Δ (raw)     σ×100 Δ (proxy)
+     0.3  AVAL               -0.5000       -0.0165             -1.6451
+     0.3  AVAR               +1.0000       -0.0273             -2.7337
+    10.0  AVAL               +0.0000       -0.0129             -1.2863
+    10.0  AVAR               +0.0000       -0.0107             -1.0729
+
+  ARTIFACT RESOLVED if σ Δ shows substantive cascade activation where original
+  pseudo-spike Δ was ≈ 0 (especially at W=10 pA where σ saturated).

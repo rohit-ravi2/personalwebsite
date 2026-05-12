@@ -44,9 +44,19 @@ WB3 cross-coupling release rule (graded_b2 mode):
     same run_regularly path.
   - Soft-cap safety net: log warnings when |I_total per Wave 2| > 100 pA
     (no truncation); see SOFT_CAP_PA constant.
-  - Pseudo-spike emission from Wave 2: σ > 0.5 rising-threshold
-    (matches `graded_brain.py:269` _poll_sigma pattern); preserves
-    `firing_rates()` API.
+
+Per-cell-type readout API contract (canonical post-WB3 D7-followup):
+  - LIF cells: `firing_rates(window_ms)` → spike-count / window in Hz.
+  - Wave 2 cells (graded_b2 mode): `firing_rates(window_ms)` →
+    σ-magnitude mean over window × 100 (Hz-equivalent rate proxy,
+    matching `graded_brain.py output_rates()` line 378 precedent).
+    For raw σ ∈ [0, 1] use `wave2_activities(window_ms)`.
+  - Decision 7(a) σ>0.5 rising-threshold pseudo-spike emission is
+    PRESERVED in `wave2_pseudo_spikes` for any consumer that explicitly
+    inspects it, but NO LONGER drives `firing_rates()`. The legacy
+    detector silently reported 0 Hz when σ saturated above threshold
+    (the WB3 CP4 readout artifact); the σ-magnitude readout correctly
+    reflects the saturated active state.
 
 I/O contract preserved (same as LIFBrain):
   - Attributes: names, idx, N, neurons (LIF group, the only one ClosedLoopEnv
@@ -54,6 +64,8 @@ I/O contract preserved (same as LIFBrain):
     helpers.
   - Methods: run, time_ms, set_proprioception, set_sensory_rate,
     inject_poisson, ablate, firing_rates.
+  - Wave2HybridBrain-specific extensions: wave2_activities(window_ms)
+    for raw σ ∈ [0, 1] readout per Wave 2 cell; soft_cap_warning_count().
 """
 from __future__ import annotations
 
@@ -217,6 +229,15 @@ class Wave2HybridBrain:
     pseudo-spikes via the LIF group's PoissonInput-style coupling, so
     the readout-classification path remains unchanged.
 
+    Per-cell-type readout API (canonical post-WB3 D7-followup):
+      - `firing_rates(window_ms)` returns (N,) array; LIF cells report
+        spike-count/window (Hz), Wave 2 cells report σ-magnitude mean
+        × 100 (Hz-equivalent rate proxy matching graded_brain.py
+        output_rates() line 378). Resolves WB3 CP4 readout artifact
+        (rising-threshold pseudo-spike rate → 0 in σ-saturated regime).
+      - `wave2_activities(window_ms)` returns dict[str, float] of raw
+        σ ∈ [0, 1] mean for each active Wave 2 cell.
+
     KNOWN LIMITATION: as of overnight WB2, the LIF→Wave2 gap-junction coupling
     is approximated via current-pulse on Wave2's I_ext at 50 ms cadence
     (matching ClosedLoopEnv timestep). Native Brian2 (summed) gap is in
@@ -254,13 +275,19 @@ class Wave2HybridBrain:
         cross_coupling : str  (WB3+; preferred; takes precedence over
                               cross_coupling_mode if non-None)
             "off" — equivalent to cross_coupling_mode="off".
-            "graded_b2" (WB3 default release rule, adjudicated 2026-04-26):
+            "graded_b2" (WB3 default release rule, adjudicated 2026-04-26;
+            readout updated WB3 D7-followup):
                 graded Boltzmann release (Wicks 1996 sigmoidal) on Wave 2 →
                 LIF via Brian2 (summed) Synapses; per-Synapses g_syn(t)
                 decay (τ_syn = 10 ms) on LIF → Wave 2 written to Wave 2's
-                I_ext at fast cadence; soft cap ±100 pA + log warnings;
-                σ > 0.5 rising-threshold pseudo-spikes preserve
-                firing_rates() API.
+                I_ext at fast cadence; soft cap ±100 pA + log warnings.
+                Wave 2 cell readout: σ-magnitude mean × 100 in
+                firing_rates() (Hz-equivalent proxy matching
+                graded_brain.py output_rates() precedent); raw σ via
+                wave2_activities(). Legacy σ > 0.5 rising-threshold
+                pseudo-spike events preserved in self.wave2_pseudo_spikes
+                but no longer drive firing_rates() (Decision 7 artifact:
+                detector blind in saturated regime).
 
         W_graded_I_pA : float
             Per-unit-weight current scale (pA) for σ-modulated coupling.
@@ -489,7 +516,8 @@ class Wave2HybridBrain:
                 "graded_b2: Wicks 1996 sigmoidal release (Wave 2→LIF native "
                 "(summed); LIF→Wave 2 per-Synapses g_syn(t), τ_syn=10 ms); "
                 f"W_graded_I={self.W_graded_I_pA} pA; W_g={self.W_g_nS} nS; "
-                "soft cap ±100 pA + log warnings; σ>0.5 rising pseudo-spikes."
+                "soft cap ±100 pA + log warnings; W2 readout = σ-magnitude "
+                "× 100 (D7-followup; matches graded_brain.py output_rates())."
             )
         else:
             release_rule_summary = (
@@ -1030,15 +1058,40 @@ class Wave2HybridBrain:
             self.neurons.I_ext = (baseline + i_gap_lif_pA) * pA
 
     def _build_wave2_sigma_poll(self):
-        """Pseudo-spike emission via σ > 0.5 rising-threshold (Decision 7 a).
+        """Wave 2 σ-magnitude history recorder (canonical WB3 D7-followup
+        readout) + legacy σ>0.5 rising-threshold pseudo-spike emission.
 
         Polls each Wave 2 cell's V every WB3_SIGMA_POLL_DT_MS, computes σ
-        from V_half/k of that cell type, registers a "spike event" on
-        rising crossings of σ = 0.5. firing_rates() consumes these events
-        from self.wave2_pseudo_spikes for Wave 2 cells.
+        from V_half/k of that cell type, and:
+
+        1. Records (t_ms, σ) into per-cell time-series buffers
+           `self._wave2_sigma_history[name] = (times_ms, sigmas)` —
+           consumed by `wave2_activities(window_ms)` and the Wave 2
+           branch of `firing_rates(window_ms)` for σ-magnitude readout
+           (matches `graded_brain.py output_rates()` line 378 precedent:
+           windowed σ mean × 100 for Hz-equivalent rate proxy).
+
+        2. (Legacy, Decision 7(a)) Detects σ > 0.5 rising-threshold
+           crossings → appends event time to `self.wave2_pseudo_spikes
+           [name]`. Preserved for backward compatibility with consumers
+           that explicitly inspect `wave2_pseudo_spikes`. NOT consumed
+           by `firing_rates()` anymore — that uses the σ-magnitude
+           readout. The rising-threshold detector returns 0 events when
+           σ saturates above 0.5 (the WB3 CP4 artifact); the σ-magnitude
+           readout correctly reflects the saturated active state.
+
+        Storage choice: per-cell python lists (times, sigmas). Cheap;
+        appended at WB3_SIGMA_POLL_DT_MS = 10 ms cadence, so a 30 s run
+        accumulates 3000 entries per cell — negligible memory.
         """
         self.wave2_pseudo_spikes = {name: [] for name in self.wave2_active}
         self._wave2_last_sigma = {name: 0.0 for name in self.wave2_active}
+        # σ-magnitude history per cell: list of (t_ms, sigma) sampled at
+        # WB3_SIGMA_POLL_DT_MS cadence. Lists for cheap append; converted
+        # to numpy by the readout consumers when needed.
+        self._wave2_sigma_history = {
+            name: {"t_ms": [], "sigma": []} for name in self.wave2_active
+        }
 
         @network_operation(dt=WB3_SIGMA_POLL_DT_MS * ms)
         def _poll_sigma():
@@ -1048,6 +1101,13 @@ class Wave2HybridBrain:
                 v_half = self._resolve_v_half_mV(name)
                 k = float(WB3_K_MV[name])
                 sigma = 1.0 / (1.0 + np.exp(-(v_mV - v_half) / k))
+                # Record σ history (canonical readout substrate).
+                hist = self._wave2_sigma_history[name]
+                hist["t_ms"].append(t_ms)
+                hist["sigma"].append(sigma)
+                # Legacy rising-threshold pseudo-spike detector — preserved
+                # but no longer drives firing_rates(). Kept for any
+                # consumer that explicitly inspects wave2_pseudo_spikes.
                 last = self._wave2_last_sigma[name]
                 if sigma > WB3_SIGMA_SPIKE_THRESHOLD and last <= WB3_SIGMA_SPIKE_THRESHOLD:
                     self.wave2_pseudo_spikes[name].append(t_ms)
@@ -1365,14 +1425,30 @@ class Wave2HybridBrain:
         return float(self.net.t / ms)
 
     def firing_rates(self, window_ms=200.0):
-        """Return (N,) array of firing rates over last window_ms.
+        """Return (N,) per-cell-type activity readout over last window_ms.
 
-        For LIF cells: spike-count / window. For Wave 2 cells:
-          - graded_b2 mode: count σ-pseudo-spikes (Decision 7 (a)) in window
-            for each W2 cell; divide by window. Same Hz interpretation as
-            LIF cells.
-          - legacy modes: 1.0 / window if last release event within window
-            (V-threshold provisional rule).
+        Per-cell-type readout API contract (canonical post-WB3 D7-followup):
+
+          * **LIF cells** — spike-count / window in Hz. Standard rate-coded
+            interpretation (matches LIFBrain.firing_rates()).
+
+          * **Wave 2 cells (graded_b2 mode)** — σ-magnitude continuous
+            readout, scaled `× 100` to "feel rate-like" for downstream
+            spike-rate consumers. Matches `graded_brain.py output_rates()`
+            (line 378) precedent. Replaces the legacy WB3 CP4
+            σ>0.5 rising-threshold pseudo-spike rate readout, which
+            silently reports 0 Hz when σ saturates above threshold
+            (the WB3 CP4 readout artifact). σ-magnitude correctly
+            reflects the saturated active state. Returned value is the
+            per-cell mean σ over the window × 100 (so σ ∈ [0, 1] →
+            output ∈ [0, 100]).
+
+          * **Wave 2 cells (legacy modes)** — V-threshold release-event
+            rate (1.0 / window_s if any release in window). Crude
+            estimate; preserved for backward compat with the WB2 path.
+
+        For consumers that need pure σ ∈ [0, 1] without the ×100 rate
+        scaling, use `wave2_activities(window_ms)` directly.
         """
         out = np.zeros(self.N)
         if len(self.spikes.t) > 0:
@@ -1386,24 +1462,86 @@ class Wave2HybridBrain:
             for local, count in enumerate(counts):
                 global_idx = self.lif_idx_global[local]
                 out[global_idx] = count / (window_ms / 1000.0)
-        # Wave 2: count release events in window
-        t_now_ms = self.time_ms()
+        # Wave 2 cells
         if self.cross_coupling == "graded_b2":
-            # Use σ-pseudo-spike events (graded_b2 readout)
-            for name in self.wave2_active:
-                events = self.wave2_pseudo_spikes.get(name, [])
-                if not events:
-                    continue
-                t_cut_ms = t_now_ms - window_ms
-                count = sum(1 for t in events if t >= t_cut_ms)
-                if count > 0:
-                    out[self.idx[name]] = count / (window_ms / 1000.0)
+            # Canonical WB3 D7-followup readout: σ-magnitude × 100 over
+            # window. Matches graded_brain.py output_rates() line 378
+            # precedent. Resolves the saturation artifact: even when σ
+            # is pinned near 1.0, the readout reports the active state.
+            sigma_means = self._wave2_sigma_window_mean(window_ms)
+            for name, sigma_mean in sigma_means.items():
+                out[self.idx[name]] = float(sigma_mean) * 100.0
         else:
+            t_now_ms = self.time_ms()
             for name in self.wave2_active:
                 last = self.wave2_last_spike_t[name]
                 if last > t_now_ms - window_ms:
                     # At least 1 release event in window. Crude estimate.
                     out[self.idx[name]] = 1.0 / (window_ms / 1000.0)
+        return out
+
+    def wave2_activities(self, window_ms=200.0):
+        """Return per-Wave-2-cell σ-magnitude mean over `window_ms`.
+
+        Canonical Wave 2 cell activity readout (graded_b2 mode). Returns
+        a dict `{cell_name: sigma_mean ∈ [0, 1]}` — the raw σ scale,
+        without the ×100 rate-scaling that `firing_rates()` applies for
+        Hz-flavored consumers.
+
+        Matches `graded_brain.py output_rates()` (line 378) precedent in
+        substrate (windowed σ mean) but returns σ ∈ [0, 1] instead of
+        the ×100 rate-equivalent. Use this when downstream consumers
+        want σ-magnitude directly (e.g., FSM classifiers thresholded on
+        σ ≥ 0.7 for "actively releasing"); use `firing_rates()` when
+        consumers want a Hz-comparable rate proxy (Phase G, ablation
+        harness, dashboard).
+
+        In legacy modes (cross_coupling != "graded_b2"), returns an
+        empty dict — σ history is only recorded under graded_b2.
+
+        Parameters
+        ----------
+        window_ms : float
+            Trailing window (ms). Default 200 ms.
+
+        Returns
+        -------
+        dict[str, float]
+            {cell_name: σ_mean ∈ [0, 1]} for each active Wave 2 cell.
+            Cells with no σ history in the window return 0.0.
+        """
+        if self.cross_coupling != "graded_b2":
+            return {}
+        return {
+            name: float(sigma_mean)
+            for name, sigma_mean in self._wave2_sigma_window_mean(window_ms).items()
+        }
+
+    def _wave2_sigma_window_mean(self, window_ms):
+        """Internal: compute per-cell σ mean over the trailing window.
+
+        Uses σ history populated by `_build_wave2_sigma_poll`. Returns a
+        dict {cell_name: σ_mean}. Empty/no-history cells return 0.0.
+        """
+        out = {}
+        if not hasattr(self, "_wave2_sigma_history"):
+            return {name: 0.0 for name in self.wave2_active}
+        t_now_ms = self.time_ms()
+        t_cut_ms = t_now_ms - float(window_ms)
+        for name in self.wave2_active:
+            hist = self._wave2_sigma_history.get(name)
+            if hist is None or len(hist["t_ms"]) == 0:
+                out[name] = 0.0
+                continue
+            t_arr = np.asarray(hist["t_ms"], dtype=np.float64)
+            s_arr = np.asarray(hist["sigma"], dtype=np.float64)
+            mask = t_arr >= t_cut_ms
+            if not np.any(mask):
+                # Window earlier than recorded history (shouldn't happen
+                # in normal use); fall back to most recent sample.
+                out[name] = float(s_arr[-1]) if len(s_arr) else 0.0
+            else:
+                out[name] = float(s_arr[mask].mean())
         return out
 
     def soft_cap_warning_count(self):

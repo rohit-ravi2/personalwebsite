@@ -701,3 +701,143 @@ the retune trajectory honestly, and the empirical finding is the
 **Next:** CP6 grouped commits per spec (A: CP1 options doc; B: CP2
 implementation; C: CP3+CP4 validation; D: CP5 findings + F20 +
 WB2 amendment), then push to remote.
+
+---
+
+## Postscript — D7-followup + W2 investigation (2026-05-03 / horizontal rebase Phase 2)
+
+This postscript records the resolution of the load-bearing readout
+artifact surfaced by §11 above and the subsequent C-37 reframing
+established during the horizontal rebase. **It does not retract any
+empirical CP1-CP5 finding; it updates the interpretation of those
+findings under additional data.**
+
+### What the D7-followup did
+
+Per the *Decision 7 σ > 0.5 rising-threshold pseudo-spike* artifact flagged
+in §6 Methodology Catch #1 + §11, the σ-magnitude continuous readout
+matching `graded_brain.py output_rates()` line 378 precedent was
+implemented in `wave2/integration/wave2_hybrid_brain.py`:
+
+- New `wave2_activities(window_ms)` method → per-cell σ ∈ [0, 1] over
+  trailing window.
+- `firing_rates(window_ms)` for Wave 2 cells now returns σ_mean × 100
+  (Hz-flavored proxy matching graded_brain.py output_rates() semantics).
+- Legacy σ > 0.5 rising-threshold pseudo-spike emission preserved in
+  `self.wave2_pseudo_spikes` for explicit consumers but no longer drives
+  `firing_rates()`. Detector still blind in saturated regime; σ-magnitude
+  readout correctly reflects the saturated active state.
+
+### What CP2 of the D7-followup measured
+
+Re-ran the touch_anterior 30 s protocol under per-edge sign mode + 7
+DOCUMENTED_SIGN_EXCEPTIONS (the production default at the time of CP2)
+at W_graded_I ∈ {0.3, 10} pA:
+
+| W_pA | cell | σ_baseline | σ_touch | Δσ_touch | Δσ_post |
+|---|---|---:|---:|---:|---:|
+| 0.3 | AVAL | 0.6420 | 0.6255 | −0.0165 | −0.0077 |
+| 0.3 | AVAR | 0.6464 | 0.6191 | −0.0273 | −0.0123 |
+| 10 | AVAL | 0.8820 | 0.8692 | −0.0129 | −0.0003 |
+| 10 | AVAR | 0.8999 | 0.8891 | −0.0107 | −0.0016 |
+
+At W=10 pA per-edge, Δσ_post ≈ 0 separates touch effect from settling
+drift cleanly: touch suppressed AVA σ by ~0.011, did not activate it.
+
+### Initial inferred interpretation (PRESERVED AS HISTORICAL RECORD, BUT WRONG MECHANISM)
+
+The CP2 D7-followup originally interpreted the negative Δσ_touch as
+evidence that **Wave 2 cellular substitution itself** broke the
+recurrent-feedback dynamics that produced §5's +60 Hz cascade in pure
+LIF. Three plausible mechanisms were proposed:
+
+1. Removing AVA from LIF NG breaks recurrent positive-feedback loop.
+2. Saturated Wave 2 σ tonically excites LIF baselines.
+3. Driving-force asymmetry at saturated V_post (−54 mV inh / +16 mV exc).
+
+This interpretation classified the finding as Falsified-but-cited for
+the original WB3 §5+§11 "cascade biology preserved" claim.
+
+### Corrected interpretation per W2 investigation (2026-05-03)
+
+The W2 investigation thread (catalog §7.2 of `docs/state_of_claims_2026-05-02.md`,
+script `scripts/brain/wave2/integration/run_wb_investigation_w2_m2pure.py`,
+results `wb_investigation_w2_m2pure_results.json`) re-ran the same
+Wave2HybridBrain touch_anterior protocol under **M2-pure** — per-edge
+sign mode with `sign_exceptions={}`, no DOCUMENTED_SIGN_EXCEPTIONS.
+
+Result under M2-pure:
+
+| cell | Δ peri-touch (Hz, LIF) | σ_baseline | σ_touch | Δσ_touch | Δσ_post |
+|---|---:|---:|---:|---:|---:|
+| AVDL | **+60.5** | — | — | — | — |
+| AVDR | +51.0 | — | — | — | — |
+| AVBL | +38.5 | — | — | — | — |
+| AVBR | +51.5 | — | — | — | — |
+| PVCL | +49.5 | — | — | — | — |
+| PVCR | +67.0 | — | — | — | — |
+| AVAL (W2) | — | 0.6427 | 0.7431 | **+0.1005** | −0.0050 |
+| AVAR (W2) | — | 0.6470 | 0.7477 | **+0.1007** | −0.0082 |
+
+**Cascade fires identically to pure LIFBrain M2-pure (Phase 1A: AVDL
++60.4 Hz exact match). AVA σ activates +10% peri-touch with ~zero
+post-touch drift — clean touch effect, biologically faithful.**
+
+### What this means for §5+§11 and C-37
+
+The original CP2 D7-followup measurement was correct as a measurement.
+The inferred mechanism (Wave 2 substitution breaks recurrent dynamics)
+was wrong.
+
+**The actual mechanism: DOCUMENTED_SIGN_EXCEPTIONS in non-M2-pure sign
+modes collapses the cascade.** The 7-entry exceptions registry
+(introduced 2026-04-25 by commit `aea4c79` after T0 resolution) flips
+the 5 ALM/AVM→PVC edges from per-edge-excitatory to inhibitory under
+per-edge mode (PVC entries are no-ops under default mode per the
+commit's own verification table). Under either default+exceptions or
+per-edge+exceptions, the cascade collapses upstream of Wave 2 cells —
+AVA σ stays at saturated baseline because LIF inputs aren't
+firing. Wave 2 cellular substitution is fine; the exceptions are the
+load-bearing factor.
+
+This was discovered during the Phase 1 sign-mode gauntlet
+(`scripts/brain/phase1_signflip_reconciliation.py` confirmed the 518
+hard sign flips between M1-pure and M2-pure; phase1_gauntlet results
+in `scripts/brain/artifacts/phase1_gauntlet_screen_decision_matrix.md`
+showed M1 + M2-current both fail cascade firing while M2-pure produces
++60 Hz cascade).
+
+### C-37 status — Falsified-but-cited → Direct (under M2-pure conditions)
+
+Catalog claim C-37 ("WB3 graded_b2 preserves cascade biology") in
+`docs/state_of_claims_2026-05-02.md` was reclassified from
+Falsified-but-cited → **Direct** under M2-pure conditions. The
+Wave2HybridBrain integration thread's "demotion from production to
+research-substrate" was **rescinded**: Wave2HybridBrain + M2-pure is
+a viable production-grade brain mode that adds biophysical resolution
+beyond LIF without breaking cascade dynamics.
+
+The §5+§11 "cascade biology preserved" claim survives — it just requires
+M2-pure as the brain-side sign mode. Under the default code path that
+applies DOCUMENTED_SIGN_EXCEPTIONS, neither the LIF brain alone nor the
+Wave 2 hybrid will fire the cascade through to AVA. This is a brain-side
+question (which sign mode to use), not a cellular-layer question.
+
+### Files of record for this postscript
+
+- `scripts/brain/wave2/integration/run_wb3_d7followup_cp2_validation.py`
+  — D7-followup CP2 re-validation script
+- `scripts/brain/wave2/artifacts/phase_delta_wb3_d7followup_cp2_default_results.json`,
+  `phase_delta_wb3_d7followup_cp2_peredge_results.json` — CP2 outputs
+- `scripts/brain/wave2/integration/run_wb_investigation_w2_m2pure.py`
+  — W2 investigation script
+- `scripts/brain/wave2/artifacts/wb_investigation_w2_m2pure_results.json`
+  — W2 outputs
+- `docs/state_of_claims_2026-05-02.md` — catalog with C-37 reclassification
+  in §8.1
+- `docs/brain_v3.5_locked.md` §3.6 — explicit C-37 resolution + rescission
+  of Wave2HybridBrain demotion
+- `scripts/brain/phase1_signflip_reconciliation.py` — verified the 518
+  hard sign flips, surfaced the DOCUMENTED_SIGN_EXCEPTIONS issue
+- `scripts/brain/phase1_gauntlet.py` + Phase 1 decision matrix — the
+  load-bearing experiment that disambiguated

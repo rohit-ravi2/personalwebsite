@@ -1,0 +1,323 @@
+{
+  "test_protocol": "30 s touch_anterior (2 s settle + 3 s baseline + 2 s touch + 2 s recovery)",
+  "stim": "200 Hz Poisson on ALML/ALMR/AVM, 8 mV/spike",
+  "sign_mode": "per_edge",
+  "use_per_edge_glu_signs": true,
+  "wave2_active": [
+    "AVAL",
+    "AVAR"
+  ],
+  "readout_contract": {
+    "LIF_cells": "firing_rates() \u2192 spike-count/window in Hz (genuine rate)",
+    "Wave2_cells_sigma_magnitude": "wave2_activities() \u2192 \u03c3_mean \u2208 [0, 1] (raw)",
+    "Wave2_cells_rate_proxy": "firing_rates() \u2192 \u03c3_mean \u00d7 100 (Hz-flavored proxy)",
+    "Wave2_cells_legacy_pseudo_spikes": "wave2_pseudo_spikes still populated by \u03c3>0.5 rising-threshold detector but NOT driving firing_rates() (CP4 saturation artifact)"
+  },
+  "stage_iv_per_edge_LIF_baseline_AVAL_delta_Hz": 7.5,
+  "cp4_original_pseudo_spike_artifact": {
+    "0.3": {
+      "AVAL_baseline_Hz_artifact": 1.5,
+      "AVAL_touch_Hz_artifact": 1.0,
+      "AVAL_delta_Hz_artifact": -0.5,
+      "AVAR_delta_Hz_artifact": 1.0,
+      "AVAL_pseudo_spike_count_total": 21,
+      "AVAR_pseudo_spike_count_total": 21,
+      "AVAL_v_end_mV": -23.71,
+      "AVAR_v_end_mV": -24.26
+    },
+    "10.0": {
+      "AVAL_baseline_Hz_artifact": 0.0,
+      "AVAL_touch_Hz_artifact": 0.0,
+      "AVAL_delta_Hz_artifact": 0.0,
+      "AVAR_delta_Hz_artifact": 0.0,
+      "AVAL_pseudo_spike_count_total": 1,
+      "AVAR_pseudo_spike_count_total": 1,
+      "AVAL_v_end_mV": -16.09,
+      "AVAR_v_end_mV": -15.61
+    }
+  },
+  "W_0.3_pA": {
+    "W_graded_I_pA": 0.3,
+    "wave2_active": [
+      "AVAL",
+      "AVAR"
+    ],
+    "soft_cap_warnings_total": 154,
+    "wave2_voltages_end_mV": {
+      "AVAL": -21.11214159519564,
+      "AVAR": -21.559238236373922
+    },
+    "lif_cells": {
+      "ALML": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 60.5,
+        "recovery_Hz": 58.0,
+        "delta_touch_Hz": 60.0
+      },
+      "ALMR": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 61.5,
+        "recovery_Hz": 57.0,
+        "delta_touch_Hz": 60.5
+      },
+      "AVM": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 63.0,
+        "recovery_Hz": 60.5,
+        "delta_touch_Hz": 62.5
+      },
+      "PVCL": {
+        "baseline_Hz": 2.0,
+        "touch_Hz": 1.0,
+        "recovery_Hz": 1.5,
+        "delta_touch_Hz": -1.0
+      },
+      "PVCR": {
+        "baseline_Hz": 1.5,
+        "touch_Hz": 1.0,
+        "recovery_Hz": 1.0,
+        "delta_touch_Hz": -0.5
+      },
+      "AVDL": {
+        "baseline_Hz": 8.5,
+        "touch_Hz": 12.0,
+        "recovery_Hz": 10.0,
+        "delta_touch_Hz": 3.5
+      },
+      "AVDR": {
+        "baseline_Hz": 8.5,
+        "touch_Hz": 10.0,
+        "recovery_Hz": 9.5,
+        "delta_touch_Hz": 1.5
+      },
+      "AVEL": {
+        "baseline_Hz": 19.5,
+        "touch_Hz": 10.5,
+        "recovery_Hz": 17.5,
+        "delta_touch_Hz": -9.0
+      },
+      "AVER": {
+        "baseline_Hz": 11.0,
+        "touch_Hz": 7.5,
+        "recovery_Hz": 8.0,
+        "delta_touch_Hz": -3.5
+      },
+      "AVBL": {
+        "baseline_Hz": 2.5,
+        "touch_Hz": 7.0,
+        "recovery_Hz": 4.0,
+        "delta_touch_Hz": 4.5
+      },
+      "AVBR": {
+        "baseline_Hz": 4.0,
+        "touch_Hz": 5.5,
+        "recovery_Hz": 4.0,
+        "delta_touch_Hz": 1.5
+      },
+      "AIBL": {
+        "baseline_Hz": 12.0,
+        "touch_Hz": 9.0,
+        "recovery_Hz": 8.0,
+        "delta_touch_Hz": -3.0
+      },
+      "AIBR": {
+        "baseline_Hz": 9.5,
+        "touch_Hz": 9.0,
+        "recovery_Hz": 8.5,
+        "delta_touch_Hz": -0.5
+      },
+      "RIML": {
+        "baseline_Hz": 16.5,
+        "touch_Hz": 14.0,
+        "recovery_Hz": 13.5,
+        "delta_touch_Hz": -2.5
+      },
+      "RIMR": {
+        "baseline_Hz": 23.0,
+        "touch_Hz": 19.0,
+        "recovery_Hz": 17.5,
+        "delta_touch_Hz": -4.0
+      },
+      "AIYL": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 2.5,
+        "recovery_Hz": 1.5,
+        "delta_touch_Hz": 2.0
+      },
+      "AIYR": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 1.5,
+        "recovery_Hz": 1.0,
+        "delta_touch_Hz": 0.5
+      }
+    },
+    "wave2_cells": {
+      "AVAL": {
+        "sigma_baseline": 0.6419688623986656,
+        "sigma_touch": 0.6255179940271289,
+        "sigma_recovery": 0.6178399860463553,
+        "sigma_delta_touch": -0.016450868371536642,
+        "firing_rate_baseline_proxy": 64.19688623986656,
+        "firing_rate_touch_proxy": 62.551799402712895,
+        "firing_rate_delta_proxy": -1.6450868371536629
+      },
+      "AVAR": {
+        "sigma_baseline": 0.6464103967255953,
+        "sigma_touch": 0.619072960822488,
+        "sigma_recovery": 0.6067743827467447,
+        "sigma_delta_touch": -0.027337435903107332,
+        "firing_rate_baseline_proxy": 64.64103967255953,
+        "firing_rate_touch_proxy": 61.9072960822488,
+        "firing_rate_delta_proxy": -2.7337435903107306
+      }
+    },
+    "wave2_legacy_pseudo_spike_counts": {
+      "AVAL": 2,
+      "AVAR": 4
+    },
+    "sign_mode": "per_edge",
+    "wall_time_s": 233.2498652935028
+  },
+  "W_10.0_pA": {
+    "W_graded_I_pA": 10.0,
+    "wave2_active": [
+      "AVAL",
+      "AVAR"
+    ],
+    "soft_cap_warnings_total": 264,
+    "wave2_voltages_end_mV": {
+      "AVAL": -12.037505223748086,
+      "AVAR": -11.573018630529438
+    },
+    "lif_cells": {
+      "ALML": {
+        "baseline_Hz": 1.5,
+        "touch_Hz": 64.5,
+        "recovery_Hz": 63.5,
+        "delta_touch_Hz": 63.0
+      },
+      "ALMR": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 63.0,
+        "recovery_Hz": 58.5,
+        "delta_touch_Hz": 62.0
+      },
+      "AVM": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 61.5,
+        "recovery_Hz": 60.5,
+        "delta_touch_Hz": 61.0
+      },
+      "PVCL": {
+        "baseline_Hz": 134.0,
+        "touch_Hz": 100.5,
+        "recovery_Hz": 98.0,
+        "delta_touch_Hz": -33.5
+      },
+      "PVCR": {
+        "baseline_Hz": 136.5,
+        "touch_Hz": 105.0,
+        "recovery_Hz": 102.5,
+        "delta_touch_Hz": -31.5
+      },
+      "AVDL": {
+        "baseline_Hz": 146.0,
+        "touch_Hz": 123.0,
+        "recovery_Hz": 122.0,
+        "delta_touch_Hz": -23.0
+      },
+      "AVDR": {
+        "baseline_Hz": 138.5,
+        "touch_Hz": 116.5,
+        "recovery_Hz": 117.0,
+        "delta_touch_Hz": -22.0
+      },
+      "AVEL": {
+        "baseline_Hz": 97.5,
+        "touch_Hz": 81.0,
+        "recovery_Hz": 80.0,
+        "delta_touch_Hz": -16.5
+      },
+      "AVER": {
+        "baseline_Hz": 98.5,
+        "touch_Hz": 79.5,
+        "recovery_Hz": 78.0,
+        "delta_touch_Hz": -19.0
+      },
+      "AVBL": {
+        "baseline_Hz": 129.0,
+        "touch_Hz": 95.0,
+        "recovery_Hz": 95.0,
+        "delta_touch_Hz": -34.0
+      },
+      "AVBR": {
+        "baseline_Hz": 134.5,
+        "touch_Hz": 100.5,
+        "recovery_Hz": 102.0,
+        "delta_touch_Hz": -34.0
+      },
+      "AIBL": {
+        "baseline_Hz": 13.5,
+        "touch_Hz": 11.0,
+        "recovery_Hz": 9.0,
+        "delta_touch_Hz": -2.5
+      },
+      "AIBR": {
+        "baseline_Hz": 16.5,
+        "touch_Hz": 13.0,
+        "recovery_Hz": 12.5,
+        "delta_touch_Hz": -3.5
+      },
+      "RIML": {
+        "baseline_Hz": 30.5,
+        "touch_Hz": 26.5,
+        "recovery_Hz": 20.0,
+        "delta_touch_Hz": -4.0
+      },
+      "RIMR": {
+        "baseline_Hz": 38.5,
+        "touch_Hz": 35.0,
+        "recovery_Hz": 28.5,
+        "delta_touch_Hz": -3.5
+      },
+      "AIYL": {
+        "baseline_Hz": 0.5,
+        "touch_Hz": 2.5,
+        "recovery_Hz": 1.5,
+        "delta_touch_Hz": 2.0
+      },
+      "AIYR": {
+        "baseline_Hz": 1.0,
+        "touch_Hz": 1.5,
+        "recovery_Hz": 1.0,
+        "delta_touch_Hz": 0.5
+      }
+    },
+    "wave2_cells": {
+      "AVAL": {
+        "sigma_baseline": 0.8820255949379756,
+        "sigma_touch": 0.8691621970854168,
+        "sigma_recovery": 0.8688399211926052,
+        "sigma_delta_touch": -0.012863397852558855,
+        "firing_rate_baseline_proxy": 88.20255949379757,
+        "firing_rate_touch_proxy": 86.91621970854168,
+        "firing_rate_delta_proxy": -1.2863397852558904
+      },
+      "AVAR": {
+        "sigma_baseline": 0.8998643869715511,
+        "sigma_touch": 0.889135607350116,
+        "sigma_recovery": 0.887540057574837,
+        "sigma_delta_touch": -0.010728779621435147,
+        "firing_rate_baseline_proxy": 89.98643869715511,
+        "firing_rate_touch_proxy": 88.9135607350116,
+        "firing_rate_delta_proxy": -1.072877962143508
+      }
+    },
+    "wave2_legacy_pseudo_spike_counts": {
+      "AVAL": 1,
+      "AVAR": 1
+    },
+    "sign_mode": "per_edge",
+    "wall_time_s": 237.84887146949768
+  }
+}
