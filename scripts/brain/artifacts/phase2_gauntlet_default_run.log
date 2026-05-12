@@ -1,0 +1,43 @@
+==============================================================================
+  Phase 2 gauntlet — recalibrated FSM stack across 3 sign modes
+  bank: classifier_bank_v2_a2balanced.npz
+  cal:  calibration_m2pure.npz
+  fsm thresholds (behavioral): phase2_fsm_thresholds_behavioral_m2pure.json
+  Tier: default  (seeds=10, phen=60.0s, scen=30.0s)
+  Modes: ['M2-pure']
+==============================================================================
+
+>>> MODE M2-pure: per-edge pure [Phase 1 LOCKED]
+
+  [M2-pure] phenotype audit: 6 ablations × 2 conds × 10 seeds × 60.0s = 120 runs
+    [M2-pure]  5/120  (4%)  last=415.5s  elapsed=33.7min  eta=808.5min
+    [M2-pure]  10/120  (8%)  last=416.4s  elapsed=63.5min  eta=762.0min
+    [M2-pure]  15/120  (12%)  last=370.2s  elapsed=95.6min  eta=765.1min
+    [M2-pure]  20/120  (17%)  last=446.7s  elapsed=129.6min  eta=777.4min
+    [M2-pure]  25/120  (21%)  last=438.1s  elapsed=167.4min  eta=803.3min
+    [M2-pure]  30/120  (25%)  last=428.5s  elapsed=203.7min  eta=814.9min
+    [M2-pure]  35/120  (29%)  last=425.5s  elapsed=239.3min  eta=820.5min
+    [M2-pure]  40/120  (33%)  last=283.5s  elapsed=265.8min  eta=797.5min
+    [M2-pure]  45/120  (38%)  last=233.7s  elapsed=285.3min  eta=760.9min
+    [M2-pure]  50/120  (42%)  last=233.9s  elapsed=304.8min  eta=731.6min
+    [M2-pure]  55/120  (46%)  last=231.4s  elapsed=324.2min  eta=707.4min
+    [M2-pure]  60/120  (50%)  last=232.2s  elapsed=343.6min  eta=687.2min
+  [M2-pure] phenotype CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M2-pure_default_phenotype.csv
+
+  [M2-pure] scenario audit: 4 scens × 10 seeds × 30.0s = 40 runs
+    [M2-pure/scen]  5/40  (12%)  last=58.6s  elapsed=4.9min
+    [M2-pure/scen]  10/40  (25%)  last=59.3s  elapsed=9.8min
+    [M2-pure/scen]  15/40  (38%)  last=84.8s  elapsed=16.8min
+    [M2-pure/scen]  20/40  (50%)  last=86.7s  elapsed=24.0min
+    [M2-pure/scen]  25/40  (62%)  last=120.7s  elapsed=33.6min
+    [M2-pure/scen]  30/40  (75%)  last=128.1s  elapsed=44.0min
+    [M2-pure/scen]  35/40  (88%)  last=131.0s  elapsed=54.8min
+    [M2-pure/scen]  40/40  (100%)  last=176.3s  elapsed=66.4min
+  [M2-pure] scenario CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M2-pure_default_scenario.csv
+
+[summary JSON written] /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_default_summary.json
+[decision matrix written] /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_default_decision_matrix.md
+
+==============================================================================
+  Phase 2 gauntlet complete. Elapsed: 410.0 min (6.83 hr)
+==============================================================================

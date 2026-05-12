@@ -1,0 +1,69 @@
+==============================================================================
+  Phase 2 gauntlet — recalibrated FSM stack across 3 sign modes
+  bank: classifier_bank_v2_a2balanced.npz
+  cal:  calibration_m2pure.npz
+  fsm thresholds (behavioral): phase2_fsm_thresholds_behavioral_m2pure.json
+  Tier: screen  (seeds=5, phen=30.0s, scen=30.0s)
+  Modes: ['M1', 'M2-pure', 'M2-current']
+==============================================================================
+
+>>> MODE M1: default + 7 exceptions [PROD default]
+
+  [M1] phenotype audit: 6 ablations × 2 conds × 5 seeds × 30.0s = 60 runs
+    [M1]  5/60  (8%)  last=140.1s  elapsed=12.6min  eta=150.9min
+    [M1]  10/60  (17%)  last=164.0s  elapsed=26.6min  eta=159.4min
+    [M1]  15/60  (25%)  last=217.9s  elapsed=41.1min  eta=164.3min
+    [M1]  20/60  (33%)  last=242.8s  elapsed=60.5min  eta=181.5min
+    [M1]  25/60  (42%)  last=200.2s  elapsed=77.1min  eta=184.9min
+    [M1]  30/60  (50%)  last=202.1s  elapsed=93.6min  eta=187.3min
+  [M1] phenotype CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M1_screen_phenotype.csv
+
+  [M1] scenario audit: 4 scens × 5 seeds × 30.0s = 20 runs
+    [M1/scen]  5/20  (25%)  last=75.1s  elapsed=6.3min
+    [M1/scen]  10/20  (50%)  last=79.4s  elapsed=12.9min
+    [M1/scen]  15/20  (75%)  last=99.3s  elapsed=21.2min
+    [M1/scen]  20/20  (100%)  last=101.1s  elapsed=29.7min
+  [M1] scenario CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M1_screen_scenario.csv
+
+>>> MODE M2-pure: per-edge pure [Phase 1 LOCKED]
+
+  [M2-pure] phenotype audit: 6 ablations × 2 conds × 5 seeds × 30.0s = 60 runs
+    [M2-pure]  5/60  (8%)  last=160.0s  elapsed=13.4min  eta=160.8min
+    [M2-pure]  10/60  (17%)  last=192.1s  elapsed=29.4min  eta=176.7min
+    [M2-pure]  15/60  (25%)  last=166.8s  elapsed=43.4min  eta=173.5min
+    [M2-pure]  20/60  (33%)  last=166.4s  elapsed=57.3min  eta=171.9min
+    [M2-pure]  25/60  (42%)  last=147.1s  elapsed=69.5min  eta=166.8min
+    [M2-pure]  30/60  (50%)  last=146.0s  elapsed=81.7min  eta=163.4min
+  [M2-pure] phenotype CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M2-pure_screen_phenotype.csv
+
+  [M2-pure] scenario audit: 4 scens × 5 seeds × 30.0s = 20 runs
+    [M2-pure/scen]  5/20  (25%)  last=75.3s  elapsed=6.2min
+    [M2-pure/scen]  10/20  (50%)  last=82.9s  elapsed=13.1min
+    [M2-pure/scen]  15/20  (75%)  last=99.4s  elapsed=21.4min
+    [M2-pure/scen]  20/20  (100%)  last=101.7s  elapsed=29.9min
+  [M2-pure] scenario CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M2-pure_screen_scenario.csv
+
+>>> MODE M2-current: per-edge + 7 exceptions [PROD per-edge]
+
+  [M2-current] phenotype audit: 6 ablations × 2 conds × 5 seeds × 30.0s = 60 runs
+    [M2-current]  5/60  (8%)  last=160.6s  elapsed=13.4min  eta=161.1min
+    [M2-current]  10/60  (17%)  last=193.6s  elapsed=29.5min  eta=177.2min
+    [M2-current]  15/60  (25%)  last=167.0s  elapsed=43.5min  eta=173.9min
+    [M2-current]  20/60  (33%)  last=167.4s  elapsed=57.4min  eta=172.3min
+    [M2-current]  25/60  (42%)  last=147.2s  elapsed=69.7min  eta=167.3min
+    [M2-current]  30/60  (50%)  last=146.5s  elapsed=81.9min  eta=163.8min
+  [M2-current] phenotype CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M2-current_screen_phenotype.csv
+
+  [M2-current] scenario audit: 4 scens × 5 seeds × 30.0s = 20 runs
+    [M2-current/scen]  5/20  (25%)  last=75.3s  elapsed=6.3min
+    [M2-current/scen]  10/20  (50%)  last=82.9s  elapsed=13.2min
+    [M2-current/scen]  15/20  (75%)  last=98.5s  elapsed=21.4min
+    [M2-current/scen]  20/20  (100%)  last=101.6s  elapsed=29.9min
+  [M2-current] scenario CSV → /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_M2-current_screen_scenario.csv
+
+[summary JSON written] /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_screen_summary.json
+[decision matrix written] /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/artifacts/phase2_gauntlet_screen_decision_matrix.md
+
+==============================================================================
+  Phase 2 gauntlet complete. Elapsed: 346.7 min (5.78 hr)
+==============================================================================
