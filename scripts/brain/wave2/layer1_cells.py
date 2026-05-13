@@ -42,7 +42,7 @@ sys.path.insert(0, str(THIS_DIR))
 from ion_dynamics import (
     INTRACELLULAR_DEFAULT_mM, EXTRACELLULAR_DEFAULT_mM,
     NICOLETTI_CAPACITANCE_pF, SPECIFIC_CM_uFcm2,
-    R_EFF_DEFAULT_um, make_cell_geometries,
+    R_EFF_DEFAULT_um, make_cell_geometries, CellGeometry,
     get_state_and_nernst_eqs, get_ion_balance_eqs,
     apply_ion_state, nernst_potential_mV,
 )
@@ -68,6 +68,11 @@ from channels import cca1 as cca1_mod
 from channels import unc2 as unc2_mod
 from channels import egl2 as egl2_mod
 from channels import kqt1 as kqt1_mod
+from channels import exp2 as exp2_mod
+from channels import shk1 as shk1_mod
+from channels import twk as twk_mod
+from channels import slo2 as slo2_mod
+from channels import egl36 as egl36_mod
 
 
 # =========================================================================
@@ -135,6 +140,7 @@ class CellSpec:
     v_init_mV: float
     pump_cell_name: str          # CeNGEN/pump key (AVAL, AVAR, AIY, RIM)
     rest_published_mV: tuple[float, float]  # (min, max) acceptable V_rest range
+    pump_NaK_scale: float = 1.0  # extra Na/K-ATPase multiplier on top of TPM scaling
 
 
 AVAL_SPEC = CellSpec(
@@ -215,7 +221,9 @@ CELL_SPECS = {
 
 # Channels by ion identity (current variable → ion_iX_total accumulator)
 CHANNEL_K_VARS  = ["ik_irk_mAcm2", "ik_unc103_mAcm2", "ik_shl1_mAcm2",
-                   "ik_egl2_mAcm2", "ik_kqt1_mAcm2"]
+                   "ik_egl2_mAcm2", "ik_kqt1_mAcm2", "ik_exp2_mAcm2",
+                   "ik_shk1_mAcm2", "ik_twk_mAcm2", "ik_slo2_mAcm2",
+                   "ik_egl36_mAcm2"]
 CHANNEL_CA_VARS = ["ica_egl19_mAcm2", "ica_cca1_mAcm2", "ica_unc2_mAcm2"]
 CHANNEL_NA_VARS = ["ik_nca_mAcm2"]   # NCA treated as Na-current (Layer 1 v1)
 
@@ -236,6 +244,11 @@ def _build_channel_set(channels: dict) -> tuple[str, list[str], list[str], list[
         "unc2":   (unc2_mod, "ica_unc2_mAcm2", "Ca", ("unc2_eca",)),
         "egl2":   (egl2_mod, "ik_egl2_mAcm2", "K", ("egl2_ek",)),
         "kqt1":   (kqt1_mod, "ik_kqt1_mAcm2", "K", ("kqt1_ek",)),
+        "exp2":   (exp2_mod, "ik_exp2_mAcm2", "K", ("exp2_ek",)),
+        "shk1":   (shk1_mod, "ik_shk1_mAcm2", "K", ("shk1_ek",)),
+        "twk":    (twk_mod, "ik_twk_mAcm2", "K", ("twk_ek",)),
+        "slo2":   (slo2_mod, "ik_slo2_mAcm2", "K", ("slo2_ek",)),
+        "egl36":  (egl36_mod, "ik_egl36_mAcm2", "K", ("egl36_ek",)),
     }
 
     eqs_parts = []
@@ -276,6 +289,11 @@ def _build_cell_composition(spec: CellSpec, present_K: list[str],
     if any(v.endswith("shl1_mAcm2") for v in present_K):   bridges.append("shl1_ek = E_K_mV : 1")
     if any(v.endswith("egl2_mAcm2") for v in present_K):   bridges.append("egl2_ek = E_K_mV : 1")
     if any(v.endswith("kqt1_mAcm2") for v in present_K):   bridges.append("kqt1_ek = E_K_mV : 1")
+    if any(v.endswith("exp2_mAcm2") for v in present_K):   bridges.append("exp2_ek = E_K_mV : 1")
+    if any(v.endswith("shk1_mAcm2") for v in present_K):   bridges.append("shk1_ek = E_K_mV : 1")
+    if any(v.endswith("twk_mAcm2") for v in present_K):    bridges.append("twk_ek = E_K_mV : 1")
+    if any(v.endswith("slo2_mAcm2") for v in present_K):   bridges.append("slo2_ek = E_K_mV : 1")
+    if any(v.endswith("egl36_mAcm2") for v in present_K):  bridges.append("egl36_ek = E_K_mV : 1")
     bridges_str = "\n".join(bridges)
 
     return f"""
@@ -412,16 +430,26 @@ def build_layer1_cell(spec: CellSpec, r_eff_um: float = R_EFF_DEFAULT_um):
 
     G = NeuronGroup(1, eqs, method="rk4")
 
-    # Geometry (Nicoletti capacitance + r_eff geometry for volume)
-    # NOTE: we use Nicoletti's specific surface area (not r_eff-derived) per spec
-    geom = make_cell_geometries(r_eff_um)[spec.name]
+    # Geometry — Nicoletti-named cells use the curated dict; unknown cells
+    # (path2_scale scaling) get a CellGeometry built directly from the spec's
+    # capacitance + specific Cm fields. surf_cm2 is overridden to spec.surf_cm2
+    # regardless; volume_L derives from r_eff.
+    if spec.name in NICOLETTI_CAPACITANCE_pF:
+        geom = make_cell_geometries(r_eff_um)[spec.name]
+    else:
+        cap_pF = spec.cm_uFcm2 * (spec.surf_cm2 * 1e6)  # F/cm² · cm² → F; ×1e12 → pF
+        geom = CellGeometry(
+            cell_name=spec.name,
+            capacitance_pF=cap_pF,
+            specific_cm_uFcm2=spec.cm_uFcm2,
+            r_eff_um=r_eff_um,
+        )
     apply_ion_state(G, geom)
-    # Override geometry with Nicoletti's per-cell surface (more biological)
     G.surf_cm2 = spec.surf_cm2
 
     # Pump parameters: AVAL anchor scaled by TPM for other cells
     pump_params = {
-        "I_NaK_max":      scale_I_max_by_eat6_tpm(PUMP_ANCHOR_AVAL["I_NaK_max"], spec.pump_cell_name),
+        "I_NaK_max":      spec.pump_NaK_scale * scale_I_max_by_eat6_tpm(PUMP_ANCHOR_AVAL["I_NaK_max"], spec.pump_cell_name),
         "I_kcc2_max":     scale_I_max_by_kcc2_tpm(PUMP_ANCHOR_AVAL["I_kcc2_max"], spec.pump_cell_name),
         "I_abts1_max":    scale_I_max_by_abts1_tpm(PUMP_ANCHOR_AVAL["I_abts1_max"], spec.pump_cell_name),
         "I_Ca_clear_max": scale_I_max_by_mca3_tpm(PUMP_ANCHOR_AVAL["I_Ca_clear_max"], spec.pump_cell_name),
@@ -610,13 +638,67 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("gbar_kqt1_Scm2", "kqt1_gbar"),
         ],
     },
+    "exp2": {
+        "params_attr": "EXP2_PARAMS",
+        "gbar_key": "gbar_exp2_Scm2",
+        "skip_keys": {"ek_mV"},
+        "pairs": [
+            ("va_exp2",   "exp2_va"), ("ka_exp2",  "exp2_ka"),
+            ("vi_exp2",   "exp2_vi"), ("ki_exp2",  "exp2_ki"),
+            ("mtau_exp2", "exp2_mtau"), ("htau_exp2","exp2_htau"),
+            ("gbar_exp2_Scm2", "exp2_gbar"),
+        ],
+    },
+    "shk1": {
+        "params_attr": "SHK1_PARAMS",
+        "gbar_key": "gbar_shk1_Scm2",
+        "skip_keys": {"ek_mV"},
+        "pairs": [
+            ("vashak",   "shk1_vashak"), ("kashak", "shk1_kashak"),
+            ("vishak",   "shk1_vishak"), ("kishak", "shk1_kishak"),
+            ("ptmshak1", "shk1_ptmshak1"), ("ptmshak2", "shk1_ptmshak2"),
+            ("ptmshak3", "shk1_ptmshak3"), ("ptmshak4", "shk1_ptmshak4"),
+            ("ptmshak5", "shk1_ptmshak5"), ("shiftV05", "shk1_shiftV05"),
+            ("pthshak",  "shk1_pthshak"),
+            ("gbar_shk1_Scm2", "shk1_gbar"),
+        ],
+    },
+    "twk": {
+        "params_attr": "TWK_PARAMS",
+        "gbar_key": "gbar_twk_Scm2",
+        "skip_keys": {"ek_mV"},
+        "pairs": [
+            ("gbar_twk_Scm2", "twk_gbar"),
+        ],
+    },
+    "slo2": {
+        "params_attr": "SLO2_PARAMS",
+        "gbar_key": "gbar_slo2_Scm2",
+        "skip_keys": {"ek_mV"},
+        "pairs": [
+            ("K_Ca_slo2_mM",   "slo2_K_Ca"),
+            ("n_Ca_slo2",      "slo2_n_Ca"),
+            ("gbar_slo2_Scm2", "slo2_gbar"),
+        ],
+    },
+    "egl36": {
+        "params_attr": "EGL36_PARAMS",
+        "gbar_key": "gbar_egl36_Scm2",
+        "skip_keys": {"ek_mV"},
+        "pairs": [
+            ("va_egl36",   "egl36_va"),  ("ka_egl36", "egl36_ka"),
+            ("mtau_egl36", "egl36_mtau"),
+            ("gbar_egl36_Scm2", "egl36_gbar"),
+        ],
+    },
 }
 
 
 _CHANNEL_MODULE_MAP = {
     "egl19": egl19_mod, "irk": irk_mod, "nca": nca_mod, "unc103": unc103_mod,
     "shl1": shl1_mod, "cca1": cca1_mod, "unc2": unc2_mod, "egl2": egl2_mod,
-    "kqt1": kqt1_mod,
+    "kqt1": kqt1_mod, "exp2": exp2_mod, "shk1": shk1_mod, "twk": twk_mod,
+    "slo2": slo2_mod, "egl36": egl36_mod,
 }
 
 
@@ -660,3 +742,13 @@ def _init_channel_states(group, spec: CellSpec) -> None:
             egl2_mod.egl2_init_states(group, v_mV=v)
         elif ch_name == "kqt1" and hasattr(kqt1_mod, "kqt1_init_states"):
             kqt1_mod.kqt1_init_states(group, v_mV=v)
+        elif ch_name == "exp2" and hasattr(exp2_mod, "exp2_init_states"):
+            exp2_mod.exp2_init_states(group, v_mV=v)
+        elif ch_name == "shk1" and hasattr(shk1_mod, "shk1_init_states"):
+            shk1_mod.shk1_init_states(group, v_mV=v)
+        elif ch_name == "twk":
+            twk_mod.twk_init_states(group, v_mV=v)
+        elif ch_name == "slo2":
+            slo2_mod.slo2_init_states(group, v_mV=v)
+        elif ch_name == "egl36" and hasattr(egl36_mod, "egl36_init_states"):
+            egl36_mod.egl36_init_states(group, v_mV=v)
