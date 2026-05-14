@@ -73,6 +73,7 @@ from channels import shk1 as shk1_mod
 from channels import twk as twk_mod
 from channels import slo2 as slo2_mod
 from channels import egl36 as egl36_mod
+from channels import kvs1 as kvs1_mod
 
 
 # =========================================================================
@@ -223,7 +224,8 @@ CELL_SPECS = {
 CHANNEL_K_VARS  = ["ik_irk_mAcm2", "ik_unc103_mAcm2", "ik_shl1_mAcm2",
                    "ik_egl2_mAcm2", "ik_kqt1_mAcm2", "ik_exp2_mAcm2",
                    "ik_shk1_mAcm2", "ik_twk_mAcm2", "ik_slo2_mAcm2",
-                   "ik_egl36_mAcm2"]
+                   "ik_egl36_mAcm2",
+                   "ik_kvs1_mAcm2"]
 CHANNEL_CA_VARS = ["ica_egl19_mAcm2", "ica_cca1_mAcm2", "ica_unc2_mAcm2"]
 CHANNEL_NA_VARS = ["ik_nca_mAcm2"]   # NCA treated as Na-current (Layer 1 v1)
 
@@ -249,6 +251,7 @@ def _build_channel_set(channels: dict) -> tuple[str, list[str], list[str], list[
         "twk":    (twk_mod, "ik_twk_mAcm2", "K", ("twk_ek",)),
         "slo2":   (slo2_mod, "ik_slo2_mAcm2", "K", ("slo2_ek",)),
         "egl36":  (egl36_mod, "ik_egl36_mAcm2", "K", ("egl36_ek",)),
+        "kvs1":   (kvs1_mod, "ik_kvs1_mAcm2", "K", ("kvs1_ek",)),
     }
 
     eqs_parts = []
@@ -294,6 +297,7 @@ def _build_cell_composition(spec: CellSpec, present_K: list[str],
     if any(v.endswith("twk_mAcm2") for v in present_K):    bridges.append("twk_ek = E_K_mV : 1")
     if any(v.endswith("slo2_mAcm2") for v in present_K):   bridges.append("slo2_ek = E_K_mV : 1")
     if any(v.endswith("egl36_mAcm2") for v in present_K):  bridges.append("egl36_ek = E_K_mV : 1")
+    if any(v.endswith("kvs1_mAcm2") for v in present_K):   bridges.append("kvs1_ek = E_K_mV : 1")
     bridges_str = "\n".join(bridges)
 
     return f"""
@@ -691,6 +695,16 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("gbar_egl36_Scm2", "egl36_gbar"),
         ],
     },
+    "kvs1": {
+        "params_attr": "KVS1_PARAMS",
+        "gbar_key": "gbar_kvs1_Scm2",
+        "skip_keys": {"ek_mV"},
+        "pairs": [
+            ("va_kvs1",   "kvs1_va"),  ("ka_kvs1", "kvs1_ka"),
+            ("mtau_kvs1", "kvs1_mtau"),
+            ("gbar_kvs1_Scm2", "kvs1_gbar"),
+        ],
+    },
 }
 
 
@@ -698,7 +712,7 @@ _CHANNEL_MODULE_MAP = {
     "egl19": egl19_mod, "irk": irk_mod, "nca": nca_mod, "unc103": unc103_mod,
     "shl1": shl1_mod, "cca1": cca1_mod, "unc2": unc2_mod, "egl2": egl2_mod,
     "kqt1": kqt1_mod, "exp2": exp2_mod, "shk1": shk1_mod, "twk": twk_mod,
-    "slo2": slo2_mod, "egl36": egl36_mod,
+    "slo2": slo2_mod, "egl36": egl36_mod, "kvs1": kvs1_mod,
 }
 
 
@@ -752,3 +766,5 @@ def _init_channel_states(group, spec: CellSpec) -> None:
             slo2_mod.slo2_init_states(group, v_mV=v)
         elif ch_name == "egl36" and hasattr(egl36_mod, "egl36_init_states"):
             egl36_mod.egl36_init_states(group, v_mV=v)
+        elif ch_name == "kvs1" and hasattr(kvs1_mod, "kvs1_init_states"):
+            kvs1_mod.kvs1_init_states(group, v_mV=v)

@@ -42,9 +42,9 @@ from path2_scale.pump_capacity_scaling import channel_load_scale
 # Channels with existing NMODL/Brian2 implementations in channels/ directory
 SUPPORTED_CHANNELS = {"EGL-19", "CCA-1", "UNC-2", "IRK", "KQT-1", "SHL-1",
                      "EGL-2", "UNC-103", "NCA", "EXP-2", "SHK-1", "TWK",
-                     "SLO-2", "EGL-36"}
+                     "SLO-2", "EGL-36", "KVS-1"}
 # SLO-1 has slo1_iso module but requires Ca pool integration — defer
-UNSUPPORTED_CHANNELS = {"KVS-1", "SLO-1", "KQT-2", "KQT-3"}
+UNSUPPORTED_CHANNELS = {"SLO-1", "KQT-2", "KQT-3"}
 
 
 # Per-class capacitance + e_leak (Nicoletti where available; defaults otherwise)
@@ -149,7 +149,7 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
         ("egl-19", "egl19"), ("cca-1", "cca1"), ("unc-2", "unc2"),
         ("shl-1", "shl1"), ("egl-2", "egl2"), ("unc-103", "unc103"),
         ("kqt-1", "kqt1"), ("exp-2", "exp2"), ("shk-1", "shk1"),
-        ("slo-2", "slo2"), ("egl-36", "egl36"),
+        ("slo-2", "slo2"), ("egl-36", "egl36"), ("kvs-1", "kvs1"),
     ]:
         tpm = CENGEN_T2_TPM.get(gene, {}).get(cengen_class, 0.0)
         if tpm > 0:
@@ -166,7 +166,7 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
         channel_gbar["nca"] = gbar
 
     # Channels we'd want but don't have NMODL modules — document
-    for gene_check in ("kvs-1", "slo-1"):
+    for gene_check in ("slo-1",):
         if CENGEN_T2_TPM.get(gene_check, {}).get(cengen_class, 0.0) > 0:
             skipped_channels.add(GENE_TO_CHANNEL[gene_check])
 
@@ -229,7 +229,7 @@ def list_coverage() -> dict:
         n_supported = len(spec.channels)
         # Check if cell expresses any unsupported channels
         n_skipped = 0
-        for gene in ("kvs-1", "slo-1"):
+        for gene in ("slo-1",):
             if CENGEN_T2_TPM.get(gene, {}).get(n, 0.0) > 0:
                 n_skipped += 1
         summary["channels_per_neuron"][n] = {"supported": n_supported, "skipped": n_skipped}
