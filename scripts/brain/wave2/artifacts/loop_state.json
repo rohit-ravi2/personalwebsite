@@ -1,0 +1,14 @@
+{
+  "iteration": 2,
+  "accepted_fixes": 2,
+  "stagnant_iters": 2,
+  "nicoletti_deviations": 0,
+  "plausibility_history": [
+    21,
+    21,
+    21,
+    124
+  ],
+  "started_at": "2026-05-13T21:16:59.313752",
+  "hard_stops": []
+}

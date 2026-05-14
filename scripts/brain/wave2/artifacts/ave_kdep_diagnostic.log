@@ -1,0 +1,26 @@
+====================================================================================================
+AVE K-depletion diagnostic
+====================================================================================================
+
+Targets: K_in stays near 140 mM (normal C. elegans intracellular K)
+
+--- Baseline ---
+  baseline (all on)              V=-54.92  K= 44.52  Na=107.68  Cl= 6.04  Ca= 15.454 μM  pump_NaK=1.989e-04
+
+--- Disable individual K channels ---
+  twk = 0                        V=-52.68  K= 60.52  Na= 86.07  Cl= 5.55  Ca= 34.529 μM  pump_NaK=1.987e-04
+  egl36 = 0                      V=-54.92  K= 44.52  Na=107.68  Cl= 6.04  Ca= 15.454 μM  pump_NaK=1.989e-04
+  exp2 = 0                       V=-54.82  K= 44.72  Na=107.43  Cl= 6.04  Ca= 15.736 μM  pump_NaK=1.989e-04
+  irk = 0                        V=-55.12  K= 45.32  Na=106.69  Cl= 6.01  Ca= 14.838 μM  pump_NaK=1.989e-04
+  shl1 = 0                       V=-54.92  K= 44.54  Na=107.65  Cl= 6.04  Ca= 15.469 μM  pump_NaK=1.989e-04
+
+--- Disable KCC-2 (K-Cl co-transporter, K outflux) ---
+  KCC-2 I_max = 0                V=-53.78  K= 42.33  Na=106.68  Cl= 5.00  Ca= 17.714 μM  pump_NaK=1.989e-04
+
+--- Boost Na/K-ATPase ---
+  pump_NaK 2x                    V=-77.53  K=123.09  Na= 15.04  Cl= 4.45  Ca=  0.070 μM  pump_NaK=3.077e-04
+  pump_NaK 5x                    V=-78.46  K=129.32  Na=  7.80  Cl= 4.37  Ca=  0.068 μM  pump_NaK=3.206e-04
+  pump_NaK 10x                   V=-78.65  K=131.06  Na=  5.81  Cl= 4.35  Ca=  0.067 μM  pump_NaK=3.259e-04
+
+--- Combined: pump 5x + twk halved ---
+  pump 5x + twk×0.5              V=-73.51  K=131.32  Na=  7.65  Cl= 4.35  Ca=  0.086 μM  pump_NaK=3.076e-04

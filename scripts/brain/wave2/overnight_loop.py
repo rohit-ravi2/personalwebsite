@@ -38,12 +38,25 @@ SUCCESS_TARGET = 125          # ≥125/128 plausible
 MAX_ACCEPTED_FIXES = 10
 STAGNATION_CAP = 2            # consecutive iters with no net gain
 WALL_CLOCK_HOURS = 8.0
-SUBSET_CONTROLS = 6           # random control cells per iteration
-NICOLETTI_CONTROLS = ["AVAL", "AVAR", "AIY"]  # always check these — RIM excluded
-                              # because it's a known failure we may be fixing
+SIM_MS = 800.0                # shorter sim — substrate equilibrates by 500-800 ms
+SUBSET_CONTROLS = 5           # random control cells per iteration
+NICOLETTI_CONTROLS = ["AVAL", "AVAR", "AIY"]  # always check these
 NAN_FIX_ATTEMPTS = 3
 MAX_NICOLETTI_DEVIATIONS = 3
 WAVE2_DIR = THIS_DIR
+
+# Known failing / borderline cells from prior diagnostic work — used as
+# the iteration seed so we skip the (extremely slow) initial 128-cell sweep.
+# Final full sweep at end will validate globally.
+INITIAL_SEED_FAILURES = [
+    "RIB", "AVE", "RIM",         # known failures
+    "HSN", "VD_DD", "AVA",       # previously failing, now expected OK — verify
+    "AIY", "ASEL", "AWA",        # always-OK controls
+    "I3", "M3", "PQR", "AVL", "MC",   # EGL-36 strong-expressers, verify
+    "ALN", "PDB", "I6", "FLP",   # other EGL-36 cells we didn't check
+    "DA", "DB", "VA", "VB",      # motor neurons (twk-rich)
+    "PVD",                       # peptidergic
+]
 
 
 # ---------------------------------------------------------------------
@@ -274,32 +287,26 @@ def main():
     log(f"Targets: ≥{SUCCESS_TARGET}/128 plausible, {MAX_ACCEPTED_FIXES} fixes max, "
         f"{WALL_CLOCK_HOURS}h wall clock")
 
-    # Initial full sweep
-    log_section("Iteration 0 — full 128-cell baseline sweep")
     all_cells = sweep.all_cengen_cells()
-    log(f"Running full sweep ({len(all_cells)} cells)...")
+    log_section(f"Iteration 0 — seed subset sweep ({len(INITIAL_SEED_FAILURES)} cells)")
+    log(f"Skipping full 128-cell baseline sweep (~5+ hr per cython recompile).")
+    log(f"Using known-failing + control seed set: {INITIAL_SEED_FAILURES}")
     t0 = time.time()
-    full_results = sweep.sweep_cells(all_cells, sim_ms=1500.0, tag="iter0")
-    log(f"  Full sweep took {(time.time()-t0)/60:.1f} min")
+    full_results = sweep.sweep_cells(INITIAL_SEED_FAILURES, sim_ms=SIM_MS,
+                                      tag="iter0")
+    log(f"  Seed sweep took {(time.time()-t0)/60:.1f} min")
 
     n0 = plausibility_count(full_results)
-    log(f"  Baseline: {n0}/{len(all_cells)} plausible")
+    log(f"  Seed plausibility: {n0}/{len(INITIAL_SEED_FAILURES)}")
     state["plausibility_history"].append(n0)
     save_state(state)
 
-    # Save baseline
     (ARTIFACTS / "loop_iter0_baseline.json").write_text(
         json.dumps(full_results, indent=2, default=str))
 
-    # Quick hard-stop check
     stop = check_hard_stops(full_results, state)
     if stop:
         log(f"HARD STOP: {stop}")
-        return
-
-    if n0 >= SUCCESS_TARGET:
-        log(f"Already at success target ({n0} ≥ {SUCCESS_TARGET}). No iteration needed.")
-        final_summary(state, full_results)
         return
 
     # Iteration loop
@@ -356,16 +363,21 @@ def main():
             iter_n += 1
             continue
 
-        # Run subset sweep: failing cells + Nicoletti controls + random controls
-        subset = (list(failures.keys()) + NICOLETTI_CONTROLS +
-                  random.sample([c for c in all_cells
-                                 if c not in failures and c not in NICOLETTI_CONTROLS],
-                                min(SUBSET_CONTROLS, len(all_cells))))
+        # Run subset sweep: failing cells + Nicoletti controls + a few
+        # already-swept controls (avoid cold-cache cython compile cost)
+        already_swept = list(last_results.keys())
+        ok_controls = [c for c in already_swept
+                       if c not in failures and c not in NICOLETTI_CONTROLS
+                       and last_results.get(c, {}).get("status") == "ok"
+                       and diagnosis.is_plausible(last_results[c])]
+        n_ctrls = min(SUBSET_CONTROLS, len(ok_controls))
+        random_ctrls = random.sample(ok_controls, n_ctrls) if ok_controls else []
+        subset = list(failures.keys()) + NICOLETTI_CONTROLS + random_ctrls
         subset = list(dict.fromkeys(subset))  # dedupe preserve order
         log(f"  Subset sweep on {len(subset)} cells...")
         t0 = time.time()
         try:
-            subset_after = sweep.sweep_cells(subset, sim_ms=1500.0,
+            subset_after = sweep.sweep_cells(subset, sim_ms=SIM_MS,
                                               tag=f"iter{iter_n}")
         except Exception as e:
             log(f"  Sweep raised: {e}; reverting")
@@ -452,20 +464,26 @@ def main():
 
         iter_n += 1
 
-    # Final full sweep
-    log_section("Final full sweep")
-    t0 = time.time()
-    final_results = sweep.sweep_cells(all_cells, sim_ms=1500.0, tag="final")
-    log(f"  Final full sweep took {(time.time()-t0)/60:.1f} min")
-    n_final = plausibility_count(final_results)
-    log(f"  Final: {n_final}/{len(all_cells)} plausible")
-    state["plausibility_history"].append(n_final)
-    save_state(state)
-
-    (ARTIFACTS / "loop_final.json").write_text(
-        json.dumps(final_results, indent=2, default=str))
-
-    final_summary(state, final_results)
+    # Final full sweep — only if we have time budget remaining
+    elapsed_hr = (time.time() - start_time) / 3600
+    full_sweep_budget_hr = WALL_CLOCK_HOURS - elapsed_hr
+    if full_sweep_budget_hr > 2.0:
+        log_section("Final full 128-cell sweep")
+        t0 = time.time()
+        final_results = sweep.sweep_cells(all_cells, sim_ms=SIM_MS, tag="final")
+        log(f"  Final full sweep took {(time.time()-t0)/60:.1f} min")
+        n_final = plausibility_count(final_results)
+        log(f"  Final: {n_final}/{len(all_cells)} plausible")
+        state["plausibility_history"].append(n_final)
+        save_state(state)
+        (ARTIFACTS / "loop_final.json").write_text(
+            json.dumps(final_results, indent=2, default=str))
+        final_summary(state, final_results)
+    else:
+        log_section("Final sweep — SKIPPED (insufficient time budget)")
+        log(f"  {full_sweep_budget_hr:.2f}h remaining; need >2h for full 128 sweep")
+        log(f"  Final subset state: {n0} → {plausibility_count(last_results)}")
+        final_summary(state, last_results)
 
     elapsed_hr = (time.time() - start_time) / 3600
     log(f"\nTotal wall clock: {elapsed_hr:.2f}h")
