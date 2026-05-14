@@ -33,3 +33,7 @@ def channel_load_scale(channel_gbar_dict: dict[str, float]) -> float:
     total_gbar = sum(channel_gbar_dict.values())
     raw_scale = total_gbar / AVAL_CHANNEL_LOAD_Scm2
     return max(MIN_PUMP_SCALE, min(MAX_PUMP_SCALE, raw_scale))
+
+
+# Per-cell Ca-clearance scaling overrides (added by overnight loop)
+CA_CLEAR_OVERRIDE: dict[str, float] = {"RIB": 5.0, "RIM": 5.0}
