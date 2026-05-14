@@ -28,6 +28,10 @@ sys.path.insert(0, str(THIS_DIR.parent))
 
 from path2_scale.cengen_tpm_data import CENGEN_T2_TPM, CENGEN_NEURONS
 from path2_scale.extended_gamma import EXTENDED_GAMMA_PS, GENE_TO_CHANNEL
+try:
+    from path2_scale.cell_morphology_data import CELL_MORPHOLOGY
+except ImportError:
+    CELL_MORPHOLOGY = {}
 
 # Reuse existing Layer 1 cell infrastructure
 from layer1_cells import CellSpec, build_layer1_cell
@@ -115,14 +119,21 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
         e_leak = nicoletti_meta["e_leak_mV"]
         v_init = nicoletti_meta["v_init_mV"]
         nicoletti_calibrated = True
+        surf_cm2 = cm_pF * 1e-12 / (cm_specific * 1e-6)
     else:
-        cm_pF = DEFAULT_CM_PF
-        cm_specific = DEFAULT_CM_SPECIFIC
+        # Try cell-specific NeuroML morphology first; fall back to default
+        morph = CELL_MORPHOLOGY.get(cell_name)
+        if morph and morph["surf_cm2"] > 0:
+            surf_cm2 = morph["surf_cm2"]
+            cm_specific = DEFAULT_CM_SPECIFIC
+            cm_pF = surf_cm2 * cm_specific * 1e6  # F/cm² · cm² → F → pF
+        else:
+            cm_pF = DEFAULT_CM_PF
+            cm_specific = DEFAULT_CM_SPECIFIC
+            surf_cm2 = cm_pF * 1e-12 / (cm_specific * 1e-6)
         e_leak = DEFAULT_E_LEAK_MV
         v_init = DEFAULT_V_INIT
         nicoletti_calibrated = False
-
-    surf_cm2 = cm_pF * 1e-12 / (cm_specific * 1e-6)
 
     # Pull channel inventory from CeNGEN; aggregate paralogs
     channel_gbar: dict[str, float] = {}
