@@ -1,0 +1,110 @@
+INFO       Cache size for target 'cython': 1591 MB.
+You can call clear_cache('cython') to delete all files from the cache or manually delete files in the '/home/rohit/.cython/brian_extensions' directory. [brian2]
+================================================================================
+Layer 2 stability diagnostic
+================================================================================
+
+--- Test 1: Substrate only (no synapses) ---
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~18708 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+WARNING    neurongroup's variable 'Ca_in' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'h_unc2' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_egl36' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_unc2' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'hs_shl1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_kqt1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'h_exp2' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_kvs1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'K_in' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 's_kqt1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'v' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_egl2' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'Na_in' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_cca1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_shl1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'hf_shl1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_shk1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'h_egl19' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'h_unc103' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_irk' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_exp2' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_unc103' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'h_shk1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'm_egl19' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'h_cca1' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    neurongroup's variable 'Cl_in' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+WARNING    synapses's variable 's' has NaN, very large values, or encountered an error in numerical integration. This is usually a sign that an unstable or invalid integration method was chosen. [brian2.groups.group.invalid_values]
+[layer2] Wiring gap junctions (2188 edges)...
+
+  chem_scale=0.0 pS, gap_scale=0.0 pS, sim=500.0ms
+  NaN V: 0/300, NaN Ca: 0/300
+  V: min -88.0, max -57.1, med -77.6 mV
+  Ca: max 13.018 μM, med 0.0679
+  K: min 101.3, max 145.7 mM
+  Na: min 3.36, max 34.73 mM
+
+--- Test 2: Gap junctions @ 1 pS ---
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~18708 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+[layer2] Wiring gap junctions (2188 edges)...
+
+  chem_scale=0.0 pS, gap_scale=1.0 pS, sim=500.0ms
+  NaN V: 300/300, NaN Ca: 300/300
+  Sample NaN cells: ['ADAL', 'ADAR', 'ADEL', 'ADER', 'ADFL', 'ADFR', 'ADLL', 'ADLR', 'AFDL', 'AFDR']
+
+--- Test 3: Chemical synapses @ 1 pS ---
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~18708 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+[layer2] Wiring gap junctions (2188 edges)...
+
+  chem_scale=1.0 pS, gap_scale=0.0 pS, sim=500.0ms
+  NaN V: 0/300, NaN Ca: 0/300
+  V: min -88.0, max -56.3, med -77.6 mV
+  Ca: max 15.459 μM, med 0.0678
+  K: min 101.4, max 145.8 mM
+  Na: min 3.36, max 34.74 mM
+
+--- Test 4: Both @ 1 pS ---
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~18708 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+[layer2] Wiring gap junctions (2188 edges)...
+
+  chem_scale=1.0 pS, gap_scale=1.0 pS, sim=500.0ms
+  NaN V: 300/300, NaN Ca: 300/300
+  Sample NaN cells: ['ADAL', 'ADAR', 'ADEL', 'ADER', 'ADFL', 'ADFR', 'ADLL', 'ADLR', 'AFDL', 'AFDR']
+
+--- Test 5: Chem 1 pS + Gap 0.01 pS ---
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~18708 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+[layer2] Wiring gap junctions (2188 edges)...
+
+  chem_scale=1.0 pS, gap_scale=0.01 pS, sim=500.0ms
+  NaN V: 0/300, NaN Ca: 0/300
+  V: min -88.1, max -56.1, med -77.6 mV
+  Ca: max 15.867 μM, med 0.0680
+  K: min 101.4, max 146.2 mM
+  Na: min 3.36, max 34.74 mM
+
+--- Test 6: Chem 1 pS + Gap 0.001 pS ---
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~18708 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+[layer2] Wiring gap junctions (2188 edges)...
+
+  chem_scale=1.0 pS, gap_scale=0.001 pS, sim=500.0ms
+  NaN V: 0/300, NaN Ca: 0/300
+  V: min -88.0, max -56.3, med -77.6 mV
+  Ca: max 15.500 μM, med 0.0678
+  K: min 101.4, max 145.8 mM
+  Na: min 3.36, max 34.74 mM
