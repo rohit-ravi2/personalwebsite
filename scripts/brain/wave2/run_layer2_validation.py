@@ -33,7 +33,8 @@ from layer2.assemble import assemble_layer2_network
 REST_MS = 5000.0
 STIM_MS = 5000.0
 STIM_CELLS = ["ASEL", "ASER", "AWCL", "AWCR"]  # chemosensory pair, classic activators
-STIM_AMP_pA = 5.0
+STIM_AMP_pA = 0.5  # ~3 mV swing in a typical 300 μm² cell with new g_leak=5e-5;
+                   # still measurable but doesn't saturate graded-synapse release
 
 
 def loose_plausible(V, K, Na, Cl, Ca_uM):
