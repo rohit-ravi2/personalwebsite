@@ -51,12 +51,16 @@ SUPPORTED_CHANNELS = {"EGL-19", "CCA-1", "UNC-2", "IRK", "KQT-1", "SHL-1",
 UNSUPPORTED_CHANNELS = {"SLO-1", "KQT-2", "KQT-3"}
 
 
-# Per-class capacitance + e_leak (Nicoletti where available; defaults otherwise)
+# Per-class capacitance + e_leak + g_leak (Nicoletti calibrated values).
 NICOLETTI_CELLS = {
-    "AVAL": {"cm_pF": 9.66, "cm_specific_uFcm2": 0.86, "e_leak_mV": -39.0, "v_init_mV": -39.0},
-    "AVAR": {"cm_pF": 8.43, "cm_specific_uFcm2": 0.75, "e_leak_mV": -37.0, "v_init_mV": -37.0},
-    "AIY":  {"cm_pF": 1.05, "cm_specific_uFcm2": 1.6,  "e_leak_mV": -89.57, "v_init_mV": -89.57},
-    "RIM":  {"cm_pF": 1.55, "cm_specific_uFcm2": 1.5,  "e_leak_mV": -50.0, "v_init_mV": -50.0},
+    "AVAL": {"cm_pF": 9.66, "cm_specific_uFcm2": 0.86, "e_leak_mV": -39.0,
+             "v_init_mV": -39.0, "g_leak_Scm2": 1.336e-5},
+    "AVAR": {"cm_pF": 8.43, "cm_specific_uFcm2": 0.75, "e_leak_mV": -37.0,
+             "v_init_mV": -37.0, "g_leak_Scm2": 2.008e-5},
+    "AIY":  {"cm_pF": 1.05, "cm_specific_uFcm2": 1.6,  "e_leak_mV": -89.57,
+             "v_init_mV": -89.57, "g_leak_Scm2": 0.14e-9 / 65.89e-8},  # 2.12e-4
+    "RIM":  {"cm_pF": 1.55, "cm_specific_uFcm2": 1.5,  "e_leak_mV": -50.0,
+             "v_init_mV": -50.0, "g_leak_Scm2": 9.676795e-5},
 }
 
 # Default substrate parameters for cells without Nicoletti data
@@ -64,7 +68,11 @@ DEFAULT_CM_PF = 1.0  # ~100 μm² surface area
 DEFAULT_CM_SPECIFIC = 1.0  # standard biological membrane
 DEFAULT_E_LEAK_MV = -60.0  # mid-range estimate
 DEFAULT_V_INIT = -60.0
-DEFAULT_G_LEAK_SCM2 = 1.0e-5  # within range of Nicoletti's 4 cells
+DEFAULT_G_LEAK_SCM2 = 5.0e-5  # mid-range across Nicoletti's 4 cells
+                              # (AVAL/AVAR 1.3-2e-5, RIM 1e-4, AIY 2e-4)
+                              # — raised 2026-05-16 to better match biology
+                              # (R_in ~ 1-3 GΩ → g_total ~ 0.3-1 nS for
+                              # typical 300 μm² cell needs g_density 1e-4)
 
 # Path 2 v2 C_global per cell family (from §7.3.5 v2 calibration)
 # For cells outside the 3 calibrated families, use AVA-class C_global as default
@@ -118,6 +126,7 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
         cm_specific = nicoletti_meta["cm_specific_uFcm2"]
         e_leak = nicoletti_meta["e_leak_mV"]
         v_init = nicoletti_meta["v_init_mV"]
+        g_leak = nicoletti_meta["g_leak_Scm2"]
         nicoletti_calibrated = True
         surf_cm2 = cm_pF * 1e-12 / (cm_specific * 1e-6)
     else:
@@ -133,6 +142,7 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
             surf_cm2 = cm_pF * 1e-12 / (cm_specific * 1e-6)
         e_leak = DEFAULT_E_LEAK_MV
         v_init = DEFAULT_V_INIT
+        g_leak = DEFAULT_G_LEAK_SCM2
         nicoletti_calibrated = False
 
     # Pull channel inventory from CeNGEN; aggregate paralogs
@@ -189,7 +199,7 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
         surf_cm2=surf_cm2,
         e_leak_mV=e_leak,
         v_init_mV=v_init,
-        g_leak_Scm2=DEFAULT_G_LEAK_SCM2,
+        g_leak_Scm2=g_leak,
         channels=channel_gbar,
         nicoletti_calibrated=nicoletti_calibrated,
     )
@@ -208,7 +218,10 @@ def to_layer1_cellspec(s: ScalableCellSpec) -> CellSpec:
     """
     if s.name in ("AVAL", "AVAR", "AIY", "RIM"):
         pump_key = s.name
-        pump_scale = 1.0  # Nicoletti cells use their own calibrated pumps
+        # Nicoletti cells: channel-load scale applies too when CeNGEN-derived
+        # inventory differs substantially from hand-fit set. Floor at 1.0 to
+        # preserve Nicoletti calibration when channel load is similar.
+        pump_scale = max(1.0, channel_load_scale(s.channels))
     else:
         pump_key = "AVAL"
         pump_scale = channel_load_scale(s.channels)
