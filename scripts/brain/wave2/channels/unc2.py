@@ -135,6 +135,9 @@ UNC2_PARAMS = {
     # Conductance + reversal
     "gbar_unc2_Scm2": 1.0,
     "eca_mV":      60.0,
+    # Ca-dependent inactivation (P/Q-type, Cav2.1 — Lee 2000)
+    "KdCDI_mM": 1.0e-3,   # 1 μM half-inactivation
+    "nCDI":     2.0,
 }
 
 
@@ -165,7 +168,11 @@ unc2_htau = (
 dm_unc2/dt = (unc2_minf - m_unc2) / (unc2_mtau * ms) : 1
 dh_unc2/dt = (unc2_hinf - h_unc2) / (unc2_htau * ms) : 1
 # Channel current density (mA/cm²): ica = gbar * m * h * (v - eca)
-ica_unc2_mAcm2 = unc2_gbar * m_unc2 * h_unc2 * (v_mV - unc2_eca) : 1
+# Ca-dependent inactivation factor (P/Q-type CDI, Kd ~ 1 μM)
+unc2_cdi = 1.0 / (1.0 + (Ca_in / unc2_KdCDI)**unc2_nCDI) : 1
+ica_unc2_mAcm2 = unc2_gbar * m_unc2 * h_unc2 * unc2_cdi * (v_mV - unc2_eca) : 1
+unc2_KdCDI : 1
+unc2_nCDI : 1
 # Parameters:
 unc2_va : 1
 unc2_ka : 1
@@ -233,6 +240,8 @@ def unc2_apply_params(group, gbar_Scm2: float | None = None,
         "consthunc2":      "unc2_consth",
         "gbar_unc2_Scm2":  "unc2_gbar",
         "eca_mV":          "unc2_eca",
+        "KdCDI_mM": "unc2_KdCDI",
+        "nCDI": "unc2_nCDI",
     }
     for src, dst in name_map.items():
         setattr(group, dst, p[src])

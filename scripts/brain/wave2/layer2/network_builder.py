@@ -131,15 +131,18 @@ def build_homogeneous_eqs() -> str:
 
     # ---- Per-cell parameters ----
     g_leak_Scm2 : 1
-    f_K_leak    : 1
-    f_Na_leak   : 1
+    e_leak_mV   : 1
     cm_uFcm2    : 1
 
     v_mV = v / mV : 1
 
-    # ---- LEAK split ----
-    iK_leak_mAcm2  = f_K_leak  * g_leak_Scm2 * (v_mV - E_K_mV)  : 1
-    iNa_leak_mAcm2 = f_Na_leak * g_leak_Scm2 * (v_mV - E_Na_mV) : 1
+    # ---- LEAK split — dynamic GHK partition (re-derived each timestep from
+    # current E_K, E_Na). Eliminates K-depletion positive feedback that the
+    # static fraction created.
+    f_K_dyn  = clip((e_leak_mV - E_Na_mV) / (E_K_mV - E_Na_mV + 1e-9), 0.0, 1.0) : 1
+    f_Na_dyn = 1.0 - f_K_dyn : 1
+    iK_leak_mAcm2  = f_K_dyn  * g_leak_Scm2 * (v_mV - E_K_mV)  : 1
+    iNa_leak_mAcm2 = f_Na_dyn * g_leak_Scm2 * (v_mV - E_Na_mV) : 1
     iLeak_total_mAcm2 = iK_leak_mAcm2 + iNa_leak_mAcm2 : 1
 
     # ---- Per-ion totals ----
@@ -285,6 +288,7 @@ def build_per_cell_params(connectome_names: list[str]) -> list[dict]:
             "cm_uFcm2": spec_l.cm_uFcm2,
             "cm_pF": spec_s.cm_pF,
             "pump_NaK_scale": spec_l.pump_NaK_scale,
+            "pump_Ca_scale": spec_l.pump_Ca_scale,
             "pump_cell_name": spec_l.pump_cell_name,
             "unmapped": name in unmapped,
         })
@@ -309,22 +313,12 @@ def apply_per_cell_params(group, per_cell_params: list[dict]) -> None:
     e_leak_arr   = np.array([p["e_leak_mV"] for p in per_cell_params])
     v_init_arr   = np.array([p["v_init_mV"] for p in per_cell_params])
     pump_scale_arr = np.array([p["pump_NaK_scale"] for p in per_cell_params])
+    pump_Ca_arr = np.array([p["pump_Ca_scale"] for p in per_cell_params])
 
     group.surf_cm2 = surf_cm2_arr
     group.cm_uFcm2 = cm_uFcm2_arr
     group.g_leak_Scm2 = g_leak_arr
-
-    # GHK leak split — vectorized per cell
-    E_K = nernst_potential_mV(EXTRACELLULAR_DEFAULT_mM["K"], INTRACELLULAR_DEFAULT_mM["K"], +1)
-    E_Na = nernst_potential_mV(EXTRACELLULAR_DEFAULT_mM["Na"], INTRACELLULAR_DEFAULT_mM["Na"], +1)
-    f_K = np.zeros(n)
-    f_Na = np.zeros(n)
-    for i, e in enumerate(e_leak_arr):
-        fk, fna = ghk_leak_split(float(e), E_K, E_Na)
-        f_K[i] = fk
-        f_Na[i] = fna
-    group.f_K_leak = f_K
-    group.f_Na_leak = f_Na
+    group.e_leak_mV = e_leak_arr  # dynamic leak split reads this per timestep
 
     # Initialize ion state
     group.K_in  = INTRACELLULAR_DEFAULT_mM["K"]
@@ -353,6 +347,7 @@ def apply_per_cell_params(group, per_cell_params: list[dict]) -> None:
     # override I_max with scaled values
     group.pump_NaK_I_max_mAcm2 = pump_scale_arr * PUMP_ANCHOR_AVAL["I_NaK_max"]
     apply_ca_clearance_params(group, I_max_mAcm2=PUMP_ANCHOR_AVAL["I_Ca_clear_max"])
+    group.ca_clear_I_max_mAcm2 = pump_Ca_arr * PUMP_ANCHOR_AVAL["I_Ca_clear_max"]
     apply_kcc2_params(group, I_max_mAcm2=PUMP_ANCHOR_AVAL["I_kcc2_max"])
     apply_abts1_params(group, I_max_mAcm2=PUMP_ANCHOR_AVAL["I_abts1_max"])
 

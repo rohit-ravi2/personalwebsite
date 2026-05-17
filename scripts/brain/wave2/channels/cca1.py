@@ -80,6 +80,10 @@ CCA1_PARAMS = {
     # Conductance + reversal
     "gbar_cca1_Scm2": 0.7,
     "eca_mV":    60.0,
+    # Ca-dependent inactivation (T-type CDI is weaker but present per Lacinová 2009;
+    # use larger Kd to reflect lower sensitivity)
+    "KdCDI_mM": 5.0e-3,   # 5 μM half-inactivation (T-type weaker than L-type)
+    "nCDI":     2.0,
 }
 
 
@@ -105,7 +109,11 @@ cca1_htau = (
 dm_cca1/dt = (cca1_minf - m_cca1) / (cca1_mtau * ms) : 1
 dh_cca1/dt = (cca1_hinf - h_cca1) / (cca1_htau * ms) : 1
 # Channel current density (mA/cm²): ica = gbar * m^2 * h * (v - eca)
-ica_cca1_mAcm2 = cca1_gbar * m_cca1 * m_cca1 * h_cca1 * (v_mV - cca1_eca) : 1
+# Ca-dependent inactivation factor (T-type CDI, Kd ~ 5 μM)
+cca1_cdi = 1.0 / (1.0 + (Ca_in / cca1_KdCDI)**cca1_nCDI) : 1
+ica_cca1_mAcm2 = cca1_gbar * m_cca1 * m_cca1 * h_cca1 * cca1_cdi * (v_mV - cca1_eca) : 1
+cca1_KdCDI : 1
+cca1_nCDI : 1
 # Parameters:
 cca1_va : 1
 cca1_ka : 1
@@ -169,6 +177,8 @@ def cca1_apply_params(group, gbar_Scm2: float | None = None,
         "consthcca1":      "cca1_consth",
         "gbar_cca1_Scm2":  "cca1_gbar",
         "eca_mV":          "cca1_eca",
+        "KdCDI_mM": "cca1_KdCDI",
+        "nCDI": "cca1_nCDI",
     }
     for src, dst in name_map.items():
         setattr(group, dst, p[src])

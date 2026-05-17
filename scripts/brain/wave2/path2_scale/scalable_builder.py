@@ -225,6 +225,12 @@ def to_layer1_cellspec(s: ScalableCellSpec) -> CellSpec:
     else:
         pump_key = "AVAL"
         pump_scale = channel_load_scale(s.channels)
+    # Ca-clearance scaling: use Ca-channel-load specifically (more direct
+    # signal than total channel load). For cells without Ca channels in
+    # inventory the scale stays at 1.0 (AVAL anchor pump).
+    ca_chans = {k: v for k, v in s.channels.items()
+                if k in ("egl19", "cca1", "unc2")}
+    pump_Ca_scale = max(1.0, channel_load_scale(ca_chans)) if ca_chans else 1.0
     return CellSpec(
         name=s.name,
         e_leak_mV=s.e_leak_mV,
@@ -236,6 +242,7 @@ def to_layer1_cellspec(s: ScalableCellSpec) -> CellSpec:
         pump_cell_name=pump_key,
         rest_published_mV=s.rest_published_mV,
         pump_NaK_scale=pump_scale,
+        pump_Ca_scale=pump_Ca_scale,
     )
 
 

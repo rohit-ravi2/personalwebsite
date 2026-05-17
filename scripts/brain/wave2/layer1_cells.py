@@ -142,6 +142,7 @@ class CellSpec:
     pump_cell_name: str          # CeNGEN/pump key (AVAL, AVAR, AIY, RIM)
     rest_published_mV: tuple[float, float]  # (min, max) acceptable V_rest range
     pump_NaK_scale: float = 1.0  # extra Na/K-ATPase multiplier on top of TPM scaling
+    pump_Ca_scale: float = 1.0   # extra Ca-clearance multiplier (channel-load scaled)
 
 
 AVAL_SPEC = CellSpec(
@@ -306,16 +307,22 @@ def _build_cell_composition(spec: CellSpec, present_K: list[str],
 
     # ---- Per-cell parameters ----
     g_leak_Scm2 : 1
-    f_K_leak    : 1
-    f_Na_leak   : 1
+    e_leak_mV   : 1
     cm_uFcm2    : 1
 
     # ---- v_mV bridge (Brian2 volt → bare mV for channel eqs) ----
     v_mV = v / mV : 1
 
-    # ---- LEAK split into K + Na components (GHK-derived) ----
-    iK_leak_mAcm2  = f_K_leak  * g_leak_Scm2 * (v_mV - E_K_mV)  : 1
-    iNa_leak_mAcm2 = f_Na_leak * g_leak_Scm2 * (v_mV - E_Na_mV) : 1
+    # ---- LEAK split — dynamic GHK-style partition.
+    # Each timestep, recompute f_K, f_Na from current Nernst potentials so the
+    # split tracks ion-concentration drift. Without this, K depletion shifts
+    # E_K but the static fraction stayed wrong, creating positive feedback
+    # (MI failure mode pre-2026-05-17).
+    # f_K + f_Na = 1; clipped to [0,1] to handle e_leak outside bracket.
+    f_K_dyn  = clip((e_leak_mV - E_Na_mV) / (E_K_mV - E_Na_mV + 1e-9), 0.0, 1.0) : 1
+    f_Na_dyn = 1.0 - f_K_dyn : 1
+    iK_leak_mAcm2  = f_K_dyn  * g_leak_Scm2 * (v_mV - E_K_mV)  : 1
+    iNa_leak_mAcm2 = f_Na_dyn * g_leak_Scm2 * (v_mV - E_Na_mV) : 1
     iLeak_total_mAcm2 = iK_leak_mAcm2 + iNa_leak_mAcm2 : 1
 
     # ---- Per-ion totals (channel + leak + pump contributions) ----
@@ -456,7 +463,7 @@ def build_layer1_cell(spec: CellSpec, r_eff_um: float = R_EFF_DEFAULT_um):
         "I_NaK_max":      spec.pump_NaK_scale * scale_I_max_by_eat6_tpm(PUMP_ANCHOR_AVAL["I_NaK_max"], spec.pump_cell_name),
         "I_kcc2_max":     scale_I_max_by_kcc2_tpm(PUMP_ANCHOR_AVAL["I_kcc2_max"], spec.pump_cell_name),
         "I_abts1_max":    scale_I_max_by_abts1_tpm(PUMP_ANCHOR_AVAL["I_abts1_max"], spec.pump_cell_name),
-        "I_Ca_clear_max": scale_I_max_by_mca3_tpm(PUMP_ANCHOR_AVAL["I_Ca_clear_max"], spec.pump_cell_name),
+        "I_Ca_clear_max": spec.pump_Ca_scale * scale_I_max_by_mca3_tpm(PUMP_ANCHOR_AVAL["I_Ca_clear_max"], spec.pump_cell_name),
     }
     apply_na_k_atpase_params(G, I_max_mAcm2=pump_params["I_NaK_max"])
     apply_ca_clearance_params(G, I_max_mAcm2=pump_params["I_Ca_clear_max"])
@@ -466,13 +473,10 @@ def build_layer1_cell(spec: CellSpec, r_eff_um: float = R_EFF_DEFAULT_um):
     # Channel parameters (manually, bypassing apply_params to avoid bridged reversal)
     _apply_channels_manual(G, spec)
 
-    # Per-cell LEAK split
-    E_K = nernst_potential_mV(EXTRACELLULAR_DEFAULT_mM["K"], INTRACELLULAR_DEFAULT_mM["K"], +1)
-    E_Na = nernst_potential_mV(EXTRACELLULAR_DEFAULT_mM["Na"], INTRACELLULAR_DEFAULT_mM["Na"], +1)
-    f_K, f_Na = ghk_leak_split(spec.e_leak_mV, E_K, E_Na)
+    # Per-cell LEAK split — dynamic f_K/f_Na as subexpressions in eqs;
+    # we just feed e_leak_mV per cell here.
     G.g_leak_Scm2 = spec.g_leak_Scm2
-    G.f_K_leak = f_K
-    G.f_Na_leak = f_Na
+    G.e_leak_mV = spec.e_leak_mV
     G.cm_uFcm2 = spec.cm_uFcm2
 
     # Initial V
@@ -499,7 +503,7 @@ def build_layer1_cell(spec: CellSpec, r_eff_um: float = R_EFF_DEFAULT_um):
     return {
         "group": G, "monitor": mon, "network": net,
         "spec": spec, "pump_params": pump_params,
-        "leak_split": (f_K, f_Na),
+        "leak_split": ("dynamic", "see f_K_dyn subexpression"),
         "geometry": geom,
     }
 
@@ -525,6 +529,7 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("pds7", "egl19_pds7"), ("pds8", "egl19_pds8"), ("pds9", "egl19_pds9"),
             ("pds10", "egl19_pds10"), ("pds11", "egl19_pds11"),
             ("gbar_egl19_Scm2", "egl19_gbar"),
+            ("KdCDI_mM", "egl19_KdCDI"), ("nCDI", "egl19_nCDI"),
         ],
     },
     "irk": {
@@ -590,6 +595,7 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("sthcca1", "cca1_sth"), ("f4ca", "cca1_f4"),
             ("consthcca1", "cca1_consth"),
             ("gbar_cca1_Scm2", "cca1_gbar"),
+            ("KdCDI_mM", "cca1_KdCDI"), ("nCDI", "cca1_nCDI"),
         ],
     },
     "unc2": {
@@ -612,6 +618,7 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("shifthunc2", "unc2_shifth"), ("fp5", "unc2_fp5"),
             ("consthunc2", "unc2_consth"),
             ("gbar_unc2_Scm2", "unc2_gbar"),
+            ("KdCDI_mM", "unc2_KdCDI"), ("nCDI", "unc2_nCDI"),
         ],
     },
     "egl2": {

@@ -85,6 +85,9 @@ EGL19_PARAMS = {
     # Conductance + reversal (defaults; cells override)
     "gbar_egl19_Scm2": 1.55,
     "eca_mV": 60.0,
+    # Ca-dependent inactivation (Hill, Zühlke 1999; Cav1.2 CaM-CDI)
+    "KdCDI_mM": 1.0e-3,   # 1 μM half-inactivation
+    "nCDI":     2.0,       # Hill coefficient
 }
 
 
@@ -131,7 +134,16 @@ dm_egl19/dt = (egl19_minf - m_egl19) / (egl19_mtau * ms) : 1
 dh_egl19/dt = (egl19_hinf - h_egl19) / (egl19_htau * ms) : 1
 # Channel current density (mA/cm²): I = g * (V_mV - E_mV) with units
 #   (S/cm²) × mV = (A/cm²)·(V/V) × 1e-3 V = mA/cm² (factor 1e-3 from V→mV cancels A→mA).
-ica_egl19_mAcm2 = egl19_gbar * m_egl19 * h_egl19 * (v_mV - egl19_eca) : 1
+# Ca-dependent inactivation (CDI) — Hill function of intracellular Ca.
+# Adds the canonical CaM-mediated CDI feedback that the original .mod omitted.
+# At Ca_in ≪ Kd_CDI, factor ≈ 1 (channel fully available); at Ca_in ≫ Kd_CDI,
+# factor → 0 (channel auto-shutoff). References:
+#   - Zühlke 1999 (Cav1.2 CaM-CDI Kd ~ 1 μM, n = 2)
+#   - Liu 2020 (C. elegans Cav1 has functional CDI per coexpression studies)
+egl19_cdi = 1.0 / (1.0 + (Ca_in / egl19_KdCDI)**egl19_nCDI) : 1
+ica_egl19_mAcm2 = egl19_gbar * m_egl19 * h_egl19 * egl19_cdi * (v_mV - egl19_eca) : 1
+egl19_KdCDI : 1
+egl19_nCDI : 1
 # Parameters (set at NeuronGroup construction):
 egl19_va : 1
 egl19_ka : 1
@@ -229,6 +241,8 @@ def egl19_apply_params(group, gbar_Scm2: float | None = None,
         "pds11": "egl19_pds11",
         "gbar_egl19_Scm2": "egl19_gbar",
         "eca_mV": "egl19_eca",
+        "KdCDI_mM": "egl19_KdCDI",
+        "nCDI": "egl19_nCDI",
     }
     for src, dst in name_map.items():
         setattr(group, dst, p[src])
