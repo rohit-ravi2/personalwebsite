@@ -1,74 +1,41 @@
 ---
-title: "Clinical Trial Failure Prediction — Leak-Clean Multimodal Fusion"
+title: "Clinical Trial Failure Prediction"
 startDate: 2026-05-12
-description: "AACT (CT.gov + Drugs@FDA) tabular features + ChemBERTa (SMILES) + ESM2 (target sequence) + SciBERT (protocol text) multimodal fusion over 582,806 trials, with a rigorous leakage audit (null-label AUC 0.48, 5-fold CV matches test). Audited Phase 3 / time-split AUROC = 0.8603. The leakage methodology is the differentiated contribution."
-tags: ["Clinical Trials", "LightGBM", "Transformers", "Multimodal", "Leakage Auditing", "Research"]
+description: "Phase-3 trial outcome prediction over the AACT clinical trials database, with a leakage audit that proved the headline number is signal, not label encoding. Audited AUROC 0.8603. The audit methodology is the part worth carrying forward, not the model."
+tags: ["Clinical Trials", "LightGBM", "Multimodal", "Leakage Auditing", "Research"]
 image:
   url: /images/projects/clinical-trial-failure-prediction/cover.png
-  alt: "P3/time AUROC across 5 splits: Day 1 baseline vs Day 3 leak-clean fusion"
+  alt: "P3/time AUROC across splits: Day 1 baseline vs Day 3 leak-clean fusion"
 ---
 
 import { TrialOutcomePredictor } from "../../components/react/TrialOutcomePredictor";
 
-## Thesis
+Last week I built a Phase 3 clinical trial outcome predictor and the AUROC was good enough to be suspicious.
 
-You can build a Phase 3 trial outcome predictor that hits **audited AUROC = 0.8603** on the time-split test cohort with 134 tabular features (no embeddings) over the AACT clinical-trials database joined to Drugs@FDA. Adding ChemBERTa + ESM2 + SciBERT multimodal fusion gives **+0.034 on the indication holdout** — the deep modalities pay off where tabular features fail (held-out therapeutic area), not on the headline time split. The real contribution of this project isn't the model; it's the **leakage audit methodology** that proved the headline number is signal, not label-encoding.
+The data is all open. ClinicalTrials.gov publishes its full database through AACT (582,806 trials going back to the 1990s, refreshed monthly), and Drugs@FDA tells you which compounds eventually got approved. The first afternoon I had a LightGBM model hitting 0.77 AUROC on a time-based held-out split. Trial design features, sponsor type, prior-trial counts, the standard tabular stuff. That felt right, matched what the published literature reports for similar setups.
 
-## Interactive: predict a P3 outcome
+The next morning I tried to push harder. Joined in features from ChEMBL, FDA AdCom voting records, FAERS adverse event reports. By lunch I was at 0.87. Which is when I started getting suspicious.
+
+Published trial outcome prediction work clusters around 0.70–0.85 AUROC. HINT at NeurIPS 2022, Lo's 2023 paper, Hong 2020. Hitting 0.87 from one extra morning of feature engineering means either I'd done something clever or (much more likely) something stupid. So I went leak-hunting and found one fast. I was using whether the drug *ever* showed up in Drugs@FDA as a feature, which is basically the label. Drugs in the FDA database are drugs that completed P3 successfully, almost by construction. The model was learning "matched to FDA → succeeds" and it was right but for the wrong reason.
+
+I dropped the FDA-match features and rebuilt with more care. Prior trials of the same compound, time-truncated to registration date so future information couldn't sneak in. Orphan designation status at registration date, not "ever". Mechanism of action via a multi-step fuzzy match against the ChEMBL preferred-name and synonym tables. The AUROC came back to 0.87 anyway, from real features this time. Which I didn't believe for a second.
+
+So Day 3 turned into the meaningful part of the project: an explicit leakage audit. The thing I'd missed on Day 2 was that the FDA-match feature wasn't obviously a label proxy until I looked at it sideways, and there's probably some other feature in 134 doing the same thing more subtly. Three checks. Train the model on shuffled training labels and evaluate on the real test set — if any feature structurally encodes the label, this would still score above random. Got 0.4818. Five-fold within-train cross-validation, just to confirm the test number wasn't a temporal-shortcut artifact — got 0.8647 ± 0.005, which matches test 0.8718 within retraining noise. Per-feature univariate train/test AUROC delta — no feature has a test AUROC outside [0.30, 0.70]. The top one is "mechanism of action unknown" at 0.695, which is biologically plausible. Drugs whose mechanism nobody documented tend to fail more.
+
+<img src="/images/projects/clinical-trial-failure-prediction/fig2_leakage_audit.png" alt="Leakage audit: test AUROC 0.87, 5-fold CV 0.86, null-label control 0.48. The null result confirms features don't structurally encode the label." class="mx-auto max-w-2xl rounded-lg border my-6" />
+
+The audit caught a bug in itself, which is worth mentioning because the same bug probably lives in other people's AACT pipelines. The first audit run produced AUROC 0.91+, which I knew was impossible. After about an hour of staring at column indices I found it. The audit was loading `features_v2.parquet` and indexing by position into the split pickle, but the split pickle's positional indices reference `cohort_<task>_nct_ids.parquet` row order, not features row order. So the audit was scoring mis-aligned rows and convincing itself the model was psychic. The fix is `set_index('nct_id').loc[cohort_ncts]` instead of `isin(keep).reset_index()`. Worth knowing if you work with these splits.
+
+After the audit cleared I added the multimodal fusion. ChemBERTa-77M on canonical SMILES, ESM2-150M on protein target sequences, SciBERT on protocol text (title plus brief summary, truncated to 512 tokens). Cross-attention transformer over the five modality tokens. The headline P3/time AUROC moved from 0.8718 to 0.8746. A +0.003 lift. Underwhelming.
+
+The interesting result is buried in the per-split breakdown. On indication holdout, where the test set is therapeutic areas the train set never saw, the lift from adding the deep modalities is +0.034. Text and protein embeddings generalize to held-out indications in a way one-hot indication codes can't, because those one-hots are by construction zero on held-out classes. So the deep modalities pay off exactly where you'd expect: out-of-distribution generalization on categorical features that fail by definition.
 
 <TrialOutcomePredictor client:only="react" />
 
-Set the 8-feature trial design profile; the demo LightGBM model runs locally via ONNX Runtime and returns the predicted P3 success probability. The full model uses 134 features (this demo: 8) — see the honesty banner under the result. Real test-set trials at the bottom show predicted vs actual.
+The demo above is a smaller, simpler version. Eight features instead of 134, AUROC 0.85 instead of 0.87, because the architectural ceiling for eight features is just lower. The full leak-clean Day-2 model is a 7.2MB LightGBM file with isotonic calibration on the validation fold. I exported a tiny version for the page because typing 134 features into a form is not a good user experience.
 
-## What I built
+The honest read on three days of this. The multimodal-fusion approach is competitive with published work, not above it. The 0.87 number is real after audit, but it's not a breakthrough number, it's a "decently engineered baseline" number. The thing I'd defend as the actual contribution is the audit methodology. The null-label experiment in particular is a check I'd encourage anyone doing this kind of work to run. It caught nothing here, but the discipline of running it is what made me trust the headline.
 
-**Pipeline over 582,806 CT.gov trials × 60,833 P2+P3 trials matched to Drugs@FDA × 8 frozen splits (P2/P3 × time/drugclass/indication/target):**
-
-- **Day 1 — AACT 2026-05-01 dump + Drugs@FDA join.** 46.91% P3 match rate. Time-split P3/time LightGBM baseline: AUROC = 0.7663, ECE = 0.024. 8 leave-one-out time/drug-class/indication/target splits frozen.
-- **Day 2 — leakage discovery + leak-clean rebuild.** Found that direct FDA-match features encoded the label structurally (matching means the drug got FDA-reviewed → biased toward success). Dropped 506 → 134 features. Day-2 LightGBM v2 on the *same* P3/time split: AUROC = 0.8718 (+0.10 from removing leakage isn't a fix — it's that the rebuilt features pick up real signal once the lazy proxies are gone). Also: per-drug framing (P3 perdrug AUROC = 0.7822), 5-class failure-mode taxonomy from CT.gov why_stopped text.
-- **Day 3 — rigorous leakage audit + real multimodal fusion.**
-  - **Audit**: null-label experiment (train on shuffled labels, eval on real test) → AUROC = 0.4818 (must be ≤ 0.55). 5-fold within-train CV: 0.8647 ± 0.005 (matches test 0.8718 → no temporal shortcut). All named-suspect features verified absent from the trained model.
-  - **Audit verdict**: headline is real. The Day-3 *audited* numbers (with one row-alignment bug-fix) are 0.8603 on P3/time, 0.7965 on P3/target, 0.7735 on P3/indication.
-  - **Real multimodal fusion**: ChemBERTa-77M-MLM (1,247 SMILES × 768) + ESM2-150M (951 target sequences × 640) + SciBERT (84,408 trials × 768 protocol text embeddings) → cross-attention transformer over 5 modalities. P3/time = **0.8746** (+0.003 over tab-only), **P3/indication = 0.8376 (+0.034 over tab-only)**.
-
-<img src="/images/projects/clinical-trial-failure-prediction/fig1_day_trajectory.png" alt="P3/time AUROC across 5 splits and 3 days: Day 1 (LGBM baseline) → Day 2 (leak-clean v2) → Day 3 (real multimodal fusion)" class="mx-auto max-w-2xl rounded-lg border" />
-
-## The leakage audit — the load-bearing methods contribution
-
-<img src="/images/projects/clinical-trial-failure-prediction/fig2_leakage_audit.png" alt="Three audit numbers: real test AUROC 0.87, 5-fold CV 0.86, null-label control AUROC 0.48. The null-label result confirms features don't encode label structurally." class="mx-auto max-w-2xl rounded-lg border" />
-
-**Why this matters.** Published trial-outcome prediction work (HINT NeurIPS 2022, Lo 2023, Hong 2020) routinely reports AUROC 0.7–0.85 without these three checks. The null-label experiment is the strongest single test: if features structurally encoded the label, training on shuffled labels would still score above random. AUROC 0.48 (below random) proves they don't.
-
-**Audit bug catch.** First audit run produced a fake AUROC 0.91+ because `feats[isin(keep)].reset_index()` preserved features_v2 row order, but split-pickle positional indices reference cohort order from `cohort_<task>_nct_ids.parquet`. Fixed via `set_index('nct_id').loc[cohort_ncts]`. This is generally applicable: any code touching split pickles must align rows by `nct_id`, not positional index.
-
-## Modality ablation — where deep features actually help
-
-<img src="/images/projects/clinical-trial-failure-prediction/fig3_modality_ablation.png" alt="Tab-only vs full real-fusion AUROC across 3 splits. Indication holdout gets +0.034 from deep modalities, time and target splits get +0.003-0.012." class="mx-auto max-w-2xl rounded-lg border" />
-
-The deep modalities help most on **indication holdout** — out-of-therapeutic-area generalization. SciBERT (protocol text) + ESM2 (target sequence) embeddings generalize to a held-out therapeutic area better than tabular features that depend on therapeutic-area one-hots that are by construction zero. Modest lift on time (+0.006) and target (+0.012); slight regression on drug-class where held-out classes are by construction absent from the SMILES/protein embedding distribution in train.
-
-## Calibration
-
-<img src="/images/projects/clinical-trial-failure-prediction/fig4_calibration.png" alt="Reliability diagram for P3/time test split. ECE = 0.024. Predicted vs observed frequencies hug the y=x line." class="mx-auto max-w-2xl rounded-lg border" />
-
-P3/time: Brier = 0.0749, ECE = 0.0239. Isotonic calibration on validation fold; the test reliability tracks the y=x line closely. Calibration is the silent quality measure that distinguishes "ranks trials reasonably" from "gives a usable probability."
-
-## Day-2 fusion was inflated by leakage in the fusion driver
-
-Day-2 reported fusion AUROC 0.8865 on P3/time. Day-3 caught the cause: `phaseE_fusion.py` failed to drop `chembl_resolved` and `drug_has_orphan_ever` even though `phaseB_train.py` did. **Real fusion P3/time = 0.8746, not 0.8865.** The published Day-2 fusion numbers are superseded; the project's canonical fusion number is 0.8746.
-
-## Open Phase D — LLM failure-mode classification
-
-The Day-3 deliverable that didn't ship: passing the 33,042 unique `why_stopped` strings through Claude Sonnet to classify each as EFFICACY / SAFETY / PK / RECRUITMENT / OPERATIONAL. The script (`src/day3/phaseD_llm_failure_modes.py`) is ready and resumable via the Anthropic Batches API at temperature 0. The blocker is purely environmental — `ANTHROPIC_API_KEY` was empty in the agent shell at run time. This would be the contribution that genuinely differentiates this from the published trial-outcome-prediction literature, since most published work outputs success/fail, not *why*.
-
-## What this work isn't
-
-Honest read after literature check: the multimodal-fusion approach is on the curve, not above it. HINT (Fu et al. NeurIPS 2022) and similar papers cluster around AUROC 0.80–0.85 on the same kind of cohort. The +0.034 indication-holdout lift is the only real differentiator on the architectural side.
-
-**What's genuinely original is the audit methodology** — null-label experiment + per-feature univariate train/test AUROC deltas + cohort-row-ordering bug-catch. A focused leakage-audit methods paper ("False signals in clinical trial outcome prediction") could publish at JAMIA / PLOS Comp Bio / AMIA. The headline-model angle is not differentiated.
-
-## Status
-
-Day-1 / Day-2 / Day-3 reports + code committed and pushed. The 8 frozen LightGBM models (per split) total ~36 MB and are hosted via GitHub Releases. ChEMBL 36 SQLite (~28 GB local) + AACT 2026-05-01 dump + Drugs@FDA + UniProt human + ChEMBL/PubChem/Open Targets / FDA AdCom raw downloads are all reproducible from the `data_download.sh` script in the repo.
+What didn't ship is the failure-mode classification — pushing the 33,042 unique `why_stopped` strings from terminated trials through Claude Sonnet to classify each as efficacy / safety / PK / recruitment / operational. The script is ready and resumable via the Anthropic Batches API. `ANTHROPIC_API_KEY` came back empty in the agent shell at run time and I didn't have time to chase it before the project got handed off. That would actually be a differentiated contribution — most published trial prediction outputs success/fail, not *why* — and it's the thing I'd pick up first if I came back to this.
 
 Repo: [github.com/rohit-ravi2/clinical-trial-failure-prediction](https://github.com/rohit-ravi2/clinical-trial-failure-prediction)

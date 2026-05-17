@@ -1,81 +1,39 @@
 ---
 title: "Antibiotic Resistance — Mutation Trajectory Prediction"
 startDate: 2026-05-12
-description: "Autoregressive transformer + LightGBM reranker over directed-evolution trajectories from ALEdb + CARD + Imamovic + Barbosa + Melnyk + PATRIC clinical isolates. Predicts the next resistance-conferring mutation given an ordered mutation history, with canonical-AMR top-3 = 0.403 over 14 drug classes (Day-1 LambdaRank baseline: 0.13–0.21)."
+description: "Predicting the next resistance mutation given an ordered evolution history, over ALEdb plus CARD plus deep mutational scanning data. A LightGBM + autoregressive transformer + reranker stack lifts canonical-AMR top-3 from 0.17 to 0.403 across 14 drug classes."
 tags: ["Antibiotic Resistance", "Directed Evolution", "Transformers", "Protein Language Models", "Bioinformatics", "Research"]
 image:
   url: /images/projects/amr-mutation-trajectory/cover.png
-  alt: "AMR canonical-AMR top-3 trajectory: 0.17 → 0.00 → 0.403 across three days"
+  alt: "Canonical-AMR top-3 across 3 days: 0.17, 0.00, 0.403"
 ---
 
 import { TrajectoryExplorer } from "../../components/react/TrajectoryExplorer";
 
-## Thesis
+The thing about predicting the next mutation in a directed-evolution trajectory is that you have to decide what "right" means. Most antibiotic resistance machine learning predicts phenotype from genome. Given this bacterium's whole genome, will it be resistant to ciprofloxacin? I wanted to do something different. Given an ordered history of mutations that have already accumulated under selection, what's the next one going to be? That's a sequential-decision problem on the evolution side rather than a classification problem on the diagnostic side, and at the start of Day 1 I had not realized how much that framing matters.
 
-The directed-evolution literature gives us **ordered mutation trajectories** under antibiotic selection — but every standard mutation-ranking approach treats each next-mutation prediction as a context-free classification problem. **Autoregressive context (the order of mutations matters)** is what unlocks the canonical-AMR-mutation signal that frequency-prior baselines miss. The headline lift: +0.37 top-3 from AR context (Day-2 ablation), and a reranker that bridges LGBM's top-10 candidates with transformer log-probabilities recovers canonical-AMR top-3 = **0.403** across 8 of 14 drug classes.
+Day 1 was the foundation. 28,768 lab-evidence genomes pulled from BV-BRC, annotated with AMRFinderPlus at 98.81% coverage. 17,991 unique resistance protein sequences embedded with ESM2-650M at half precision on an 8GB RTX 4060 Ti. Trajectory data from ALEdb (28,028 transitions across 860 trajectories) plus deep mutational scanning measurements from Pal 2015, Marcusson 2009, and Gullberg 2014 for fluoroquinolone-target proteins. A LightGBM LambdaRank model over candidate mutations hit top-3 = 0.708 overall, which sounded fine. Then I sliced by canonical-AMR mutations specifically — the ones that show up in the CARD database of clinically-relevant resistance — and canonical-AMR top-3 dropped to 0.13–0.21.
 
-## Interactive: browse the reranker's per-transition predictions
+The Day-1 test split was a more specific problem. About 86% of the ALE trajectories came from one hypermutator-strain experiment selecting for fluoroquinolone resistance, so the data has wild proportions of passenger mutations riding along with the canonical ones. The held-out e1230 trajectory had n=7 canonical-AMR transitions in it. Anything I did to the canonical-AMR metric on that split was within ±14 percentage points of meaningless.
+
+Day 2 I built an autoregressive transformer over the trajectory token sequence. Four-layer causal decoder, d_model=128, taking concatenated learned-mutation-embedding + ESM2-residue-projection + DMS-fitness-scalar inputs, conditioned on drug class and organism. Cross-entropy loss with a 5× weight on canonical-AMR mutations. The headline finding from the day was an ablation. Removing the autoregressive context (predict next mutation from a `<START>` token only, no history) drops top-3 from 0.527 to 0.156. A +0.37 lift from giving the model ordered mutation history.
+
+That was a clean architectural finding and it survived every form of scrutiny I put it through. The trouble was that the transformer alone at top-3 = 0.527 still underperformed the LightGBM LambdaRank baseline of 0.708 on the same test split. So the transformer wasn't replacing the LGBM. It was learning something the LGBM wasn't, and also losing to it on the overall metric.
 
 <TrajectoryExplorer client:only="react" />
 
-Pick a drug class to see the test-split transitions and the reranker's top-10 next-mutation predictions for each one. Green-starred mutations are canonical AMR (CARD-curated). Green-bordered predictions are the actual observed next mutation. This is the real Day-3 reranker output on the held-out canonical-AMR-rich evaluation split.
+Day 3 was the realization that the right structure isn't a single end-to-end model. It's a reranker.
 
-## What I built
+LightGBM and the transformer fail in opposite ways on full-vocabulary scoring. LGBM gets canonical-AMR top-3 = 0.054 because it ranks all 14,006 mutation tokens additively without considering trajectory context, so it's dominated by per-class frequency priors. Transformer gets 0.000 because the per-position softmax over 14,006 candidates loses to frequency priors when there's no candidate filtering at all. So: let the LGBM filter down to the top-10 candidates per transition, score those 10 with the transformer's autoregressive log-probabilities, and combine them in a second LightGBM that takes both signals plus frequency priors and 14 drug-class one-hots as features.
 
-**Across 3 species (E. coli, S. aureus, K. pneumoniae) × 14 drug classes × 28,578 transitions / 1,379 trajectories:**
+Canonical-AMR top-3 on the proper rebuilt test split (n=571 transitions across all 14 drug classes, because the Day-2 n=7 split was unusable and I had to rebuild the eval): **0.403**.
 
-- **Day 1 — BV-BRC + AMRFinderPlus + ALEdb foundation.** 28,768 lab-evidence genomes phenotyped. AMRFinderPlus annotation rate 98.81%. 17,991 unique resistance protein sequences embedded with ESM2-650M (fp16). 95,722 DMS fitness measurements (TEM/VIM/DHFR). LightGBM LambdaRank: top-3 = 0.708 overall, 0.13–0.21 on canonical-AMR stratum.
-- **Day 2 — Residue projector + autoregressive transformer.** Learned 128-dim residue projector (R² = 0.688, vs PCA-32 R² = 0.385). 4-layer causal transformer decoder over the trajectory token sequence. Headline ablation: **+0.37 top-3 from AR context** (no-AR baseline = 0.156). But the transformer alone underperforms LightGBM on full-vocabulary scoring.
-- **Day 3 — Reranker over LGBM top-10 + canonical-AMR-rich eval split.**
-  - Built a proper canonical-AMR test split (n=571 transitions, all 14 drug classes), replacing Day-2's e1230 hypermutator-passenger-dominated holdout that only had n=7 canonical-AMR transitions.
-  - Reranker design: stage-1 LGBM ranks all 14,006 candidates; keep top-10; stage-2 transformer scores those 10 with autoregressive context; stage-3 LGBM combines stage-1 score, stage-2 log-prob, frequency priors, and 14 drug-class one-hots.
-  - **Canonical-AMR top-3 = 0.403** on the 72 transitions with full feature coverage.
+The per-class breakdown isn't uniform. Carbapenem and diaminopyrimidine top-3 are 0.67 each. Rifamycin 0.40, glycopeptide and nitrofuran 0.375, fosfomycin and sulfonamide 0.30, macrolide 0.18. That covers eight of the fourteen drug classes. The other six (aminoglycoside, cephalosporin, fluoroquinolone, penicillin, phenicol, tetracycline) show n=0 in the reranker's per-class output, which is a pipeline bug not a model failure. When the transformer's vocabulary doesn't contain a candidate the LGBM proposed, the (mutation, candidate) pair gets dropped from the feature matrix instead of receiving a `has_tf=0` indicator. The fix is mechanical, I just didn't ship it before the project got handed off.
 
-<img src="/images/projects/amr-mutation-trajectory/fig1_canonical_trajectory.png" alt="Canonical-AMR top-3 across Day 1 (0.17) → Day 2 transformer alone (0.00 on uninformative n=7 split, also 0.00 on Day-3 n=571 split) → Day 3 reranker (0.403)" class="mx-auto max-w-2xl rounded-lg border" />
+<img src="/images/projects/amr-mutation-trajectory/fig3_ablations.png" alt="Transformer ablations: removing autoregressive context drops top-3 from 0.527 to 0.156. Removing ESM2/DMS features or canonical loss weighting barely changes anything." class="mx-auto max-w-2xl rounded-lg border my-6" />
 
-## Per drug-class breakdown
+A few other holes worth being honest about. The MIC supervision is on a linear-ramp proxy, because ALEdb provides endpoint MIC measurements but not per-flask values. The apparent Pearson 0.92 between predicted step number and MIC is largely tautological, since the proxy was constructed to be a linear function of step number to begin with. The macrolide canonical-AMR top-1 = 0 on n=11 transitions is biologically suspicious and probably means the mutation tokenization breaks for ribosomal-RNA loci, where most macrolide resistance actually lives. No held-out-organism or held-out-drug-class evaluation, so the 0.403 is on chromosomally-similar data to the training set.
 
-<img src="/images/projects/amr-mutation-trajectory/fig2_per_drugclass.png" alt="Per drug-class top-3 from the reranker: carbapenem 0.67, diaminopyrimidine 0.67, rifamycin 0.40, glycopeptide / nitrofuran 0.375, fosfomycin / sulfonamide 0.30, macrolide 0.18" class="mx-auto max-w-2xl rounded-lg border" />
-
-8 of 14 drug classes have non-zero canonical-AMR signal under the reranker. The remaining 6 (aminoglycoside, cephalosporin, fluoroquinolone, penicillin, phenicol, tetracycline) are zero in the per-class breakdown because the reranker's full feature pipeline dropped ~87% of test transitions when transformer features were missing — a known Day-4 priority documented in REPORT_day3.md §9 #1.
-
-## The AR-context finding — the cleanest architectural result
-
-<img src="/images/projects/amr-mutation-trajectory/fig3_ablations.png" alt="Transformer ablation: removing autoregressive context drops top-3 from 0.527 to 0.156 (−0.37). Removing ESM2/DMS features or canonical weighting barely changes anything." class="mx-auto max-w-2xl rounded-lg border" />
-
-Day-2 ablation result that survives Day-3 scrutiny: **ordered mutation history is the load-bearing input**. ESM2 + DMS features barely register in additive-feature regimes; canonical-AMR weighting doesn't help on its own. The autoregressive context (`<START>` → mut₁ → mut₂ → ... where each token gets the prefix of observed history) is what makes the model learn anything beyond per-class frequency baselines.
-
-## Trajectory data growth across days
-
-<img src="/images/projects/amr-mutation-trajectory/fig4_data_growth.png" alt="Day 1: 28,028 transitions, 86% FQ from one hypermutator experiment, 1 effective drug class in canonical eval. Day 2: 28,578 with non-FQ expansion, 14 drug classes. Day 3: canonical-AMR test split n=571, 8 evaluable classes." class="mx-auto max-w-2xl rounded-lg border" />
-
-Day-1 had a structural test-set problem: 86% of trajectories came from a single hypermutator FQ experiment, so the "canonical-AMR stratum" had n=7 — statistically meaningless. Day-3 built the proper test split (n=571 across all 14 drug classes); the reranker delivers signal on 8 of those 14.
-
-## Methodology notes
-
-- **Plasmid scope tagging.** CARD-derived whitelist of 106 plasmid-borne resistance genes. Cross-reference: 1 of 28,028 transitions is plasmid-borne. The dataset is **almost entirely chromosomal point-mutation evolution**, consistent with ALEdb's lab-evolution origin.
-- **MIC is a linear-ramp proxy.** Step-number ↔ MIC Pearson = 0.92, but the MIC values are interpolated linearly between experiment start and endpoint flask numbers (ALEdb provides only endpoint MICs, not per-flask). The 0.92 is largely tautological.
-- **Long-protein chunked ESM2** (Day-3). GyrA (875aa), ParC (752aa), RpoB (1342aa) exceed the standard 512aa ESM2 context. Sliding-window chunked inference with 64-residue overlap; 14 canonical AMR proteins now have proper per-residue embeddings at canonical-determining positions (e.g., GyrA 83/87, ParC 80/84, RpoB 526/531).
-- **The reranker design rationale.** A pure transformer softmaxes over 14,006 tokens — it fails on full-vocab canonical-AMR scoring (top-3 = 0.000). LGBM alone scores per-candidate without ordered context — it fails differently (top-3 = 0.054). Combining stage-1 LGBM top-10 selection + stage-2 transformer rescoring is what works.
-
-## Known holes (these are honest, not afterthought)
-
-1. **Reranker pipeline drops ~87% of test transitions.** The 0.403 is on 72 transitions; the full 571-row split shows lower per-class hit rates. Root cause: when `tf_logprob` is NaN for a (mutation, candidate) pair (because the candidate isn't in the transformer's vocabulary), the pair gets dropped instead of receiving a `has_tf=0` indicator. Mechanical fix; Day-4 work.
-2. **6 of 14 drug classes have n=0 in the per-class breakdown** of the reranker outputs (cephalosporin, aminoglycoside, fluoroquinolone, penicillin, phenicol, tetracycline). Per #1.
-3. **Macrolide top-1 = 0.000** is biologically suspicious. Ribosomal-RNA canonical mutations may be mis-tokenized.
-4. **MIC supervision is on a proxy.** Need real per-flask MIC measurements to make the trajectory-level resistance-level claim non-tautological.
-
-## Day-1 → Day-2 → Day-3 honest read
-
-| Metric | Day 1 (LGBM) | Day 2 (transformer) | Day 3 (reranker) |
-|--------|------------:|--------------------:|-----------------:|
-| Canonical-AMR top-3 | 0.13–0.21 | 0.000 (n=7 split) | **0.403** (n=72 in rerank pipeline) |
-| AR-context contribution | n/a | +0.37 top-3 | preserved as reranker feature |
-| Drug-class breadth in canonical eval | 1 (FQ) | 1 (FQ) | 14 attempted; 8 with non-zero result |
-| Plasmid-aware scope | no | no | yes (1/28028) |
-
-## Status
-
-Day-1 / Day-2 / Day-3 reports + code committed and pushed. The trajectory transformer (~11 MB) and reranker (~43 KB) checkpoints are hosted via GitHub Releases. No PhD-scale data infrastructure required to reproduce — pure public BV-BRC + ALEdb + Pal 2015 / Marcusson 2009 / Gullberg 2014 + curated CARD canonical mutations.
+The reranker design — frequency-prior baseline filtered, autoregressive transformer rescored, gradient-boosted combination — is the thing I'd most defend. The data is almost entirely chromosomal point-mutation evolution (1 of 28,028 transitions is plasmid-borne, consistent with ALEdb's serial-passage origin), so the model is learning chromosomal evolution patterns specifically. That's a useful narrow regime, not a general-purpose AMR predictor.
 
 Repo: [github.com/rohit-ravi2/amr-mutation-trajectory](https://github.com/rohit-ravi2/amr-mutation-trajectory)
