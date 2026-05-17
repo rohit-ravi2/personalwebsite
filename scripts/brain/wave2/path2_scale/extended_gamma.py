@@ -37,9 +37,15 @@ EXTENDED_GAMMA_PS: dict[str, float] = {
     "SLO-1": 200.0,    # BK channel (canonical large conductance ~100-300 pS)
     "SLO-2":  20.0,    # SK/IK family (~10-30 pS)
     # ===== Non-specific cation / NALCN family =====
-    "NCA":     1.5,    # NALCN literature gap (v2 refit lower-end)
+    "NCA":     1.5,    # v2 calibration. Tried 3-5 pS to boost plateau drive but
+                       # network coupling cascades NaN when NCA universally boosted.
+                       # Accessory-modulation (UNC-79/80/NLF-1) is structural and
+                       # safe, but raising baseline γ requires per-cell tuning
+                       # not yet implemented.
     # ===== K2P leak family (TWK) =====
     "TWK":    40.0,    # K2P family canonical (TWK channels are leak K2P)
+    # ===== HCN (cng-1/cng-2/cng-3 + tax-2/tax-4 in C. elegans) =====
+    "HCN":     5.0,    # mammalian HCN1 single-channel ~1-5 pS
 }
 
 

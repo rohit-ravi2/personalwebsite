@@ -77,6 +77,7 @@ from channels import twk as twk_mod
 from channels import slo2 as slo2_mod
 from channels import egl36 as egl36_mod
 from channels import kvs1 as kvs1_mod
+from channels import hcn as hcn_mod
 
 
 # =========================================================================
@@ -231,7 +232,8 @@ CHANNEL_K_VARS  = ["ik_irk_mAcm2", "ik_unc103_mAcm2", "ik_shl1_mAcm2",
                    "ik_egl36_mAcm2",
                    "ik_kvs1_mAcm2"]
 CHANNEL_CA_VARS = ["ica_egl19_mAcm2", "ica_cca1_mAcm2", "ica_unc2_mAcm2"]
-CHANNEL_NA_VARS = ["ik_nca_mAcm2"]   # NCA treated as Na-current (Layer 1 v1)
+CHANNEL_NA_VARS = ["ik_nca_mAcm2", "ik_hcn_mAcm2"]   # NCA + HCN (mixed cation currents
+                                  # treated as Na for ion-balance purposes)
 
 
 def _build_channel_set(channels: dict) -> tuple[str, list[str], list[str], list[str]]:
@@ -256,6 +258,7 @@ def _build_channel_set(channels: dict) -> tuple[str, list[str], list[str], list[
         "slo2":   (slo2_mod, "ik_slo2_mAcm2", "K", ("slo2_ek",)),
         "egl36":  (egl36_mod, "ik_egl36_mAcm2", "K", ("egl36_ek",)),
         "kvs1":   (kvs1_mod, "ik_kvs1_mAcm2", "K", ("kvs1_ek",)),
+        "hcn":    (hcn_mod, "ik_hcn_mAcm2", "Na", ()),   # HCN uses its own eh = -30 mV
     }
 
     eqs_parts = []
@@ -720,6 +723,17 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("gbar_kvs1_Scm2", "kvs1_gbar"),
         ],
     },
+    "hcn": {
+        "params_attr": "HCN_PARAMS",
+        "gbar_key": "gbar_hcn_Scm2",
+        "skip_keys": set(),   # eh_mV is HCN's own; no Nernst bridge
+        "pairs": [
+            ("va_hcn",   "hcn_va"),  ("ka_hcn", "hcn_ka"),
+            ("mtau_hcn", "hcn_mtau"),
+            ("gbar_hcn_Scm2", "hcn_gbar"),
+            ("eh_mV", "hcn_eh"),
+        ],
+    },
 }
 
 
@@ -727,7 +741,7 @@ _CHANNEL_MODULE_MAP = {
     "egl19": egl19_mod, "irk": irk_mod, "nca": nca_mod, "unc103": unc103_mod,
     "shl1": shl1_mod, "cca1": cca1_mod, "unc2": unc2_mod, "egl2": egl2_mod,
     "kqt1": kqt1_mod, "exp2": exp2_mod, "shk1": shk1_mod, "twk": twk_mod,
-    "slo2": slo2_mod, "egl36": egl36_mod, "kvs1": kvs1_mod,
+    "slo2": slo2_mod, "egl36": egl36_mod, "kvs1": kvs1_mod, "hcn": hcn_mod,
 }
 
 
@@ -783,3 +797,5 @@ def _init_channel_states(group, spec: CellSpec) -> None:
             egl36_mod.egl36_init_states(group, v_mV=v)
         elif ch_name == "kvs1" and hasattr(kvs1_mod, "kvs1_init_states"):
             kvs1_mod.kvs1_init_states(group, v_mV=v)
+        elif ch_name == "hcn" and hasattr(hcn_mod, "hcn_init_states"):
+            hcn_mod.hcn_init_states(group, v_mV=v)

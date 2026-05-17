@@ -1,0 +1,13 @@
+INFO       Cache size for target 'cython': 1862 MB.
+You can call clear_cache('cython') to delete all files from the cache or manually delete files in the '/home/rohit/.cython/brian_extensions' directory. [brian2]
+AVAL     V= -81.67  Ca=   0.029  K= 121.5  Na=   7.4  hcn=0.00e+00
+AVBL     V= -69.39  Ca=   0.058  K= 128.7  Na=  10.5  hcn=0.00e+00
+AVEL     V= -74.38  Ca=   0.055  K= 125.6  Na=  12.0  hcn=0.00e+00
+AVDL     V= -70.58  Ca=   0.076  K= 129.4  Na=   9.2  hcn=0.00e+00
+RIML     V= -55.93  Ca=   4.916  K= 102.6  Na=  39.6  hcn=0.00e+00
+HSNL     V= -68.36  Ca=   0.084  K= 129.6  Na=   9.9  hcn=0.00e+00
+DA1      V= -85.41  Ca=   0.020  K= 122.4  Na=  11.0  hcn=0.00e+00
+VB1      V= -84.70  Ca=   0.020  K= 123.2  Na=  10.5  hcn=0.00e+00
+WARNING    'hcn_gbar' is an internal variable of group 'neurongroup', but also exists in the run namespace with the value 0. The internal variable will be used. [brian2.groups.group.Group.resolve.resolution_conflict]
+ASEL     V= -68.04  Ca=   0.033  K= 130.5  Na=   9.1  hcn=4.23e-06
+AIYL     V= -89.41  Ca=   0.004  K= 138.7  Na=   3.4  hcn=0.00e+00

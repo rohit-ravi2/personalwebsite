@@ -69,6 +69,7 @@ from channels import twk as twk_mod
 from channels import slo2 as slo2_mod
 from channels import egl36 as egl36_mod
 from channels import kvs1 as kvs1_mod
+from channels import hcn as hcn_mod
 
 from path2_scale.scalable_builder import build_scalable_spec, to_layer1_cellspec
 from path2_scale.cengen_tpm_data import CENGEN_NEURONS
@@ -91,6 +92,7 @@ ALL_CHANNELS = [
     ("slo2",   slo2_mod,   "ik_slo2_mAcm2",    "K",  ("slo2_ek",)),
     ("egl36",  egl36_mod,  "ik_egl36_mAcm2",   "K",  ("egl36_ek",)),
     ("kvs1",   kvs1_mod,   "ik_kvs1_mAcm2",    "K",  ("kvs1_ek",)),
+    ("hcn",    hcn_mod,    "ik_hcn_mAcm2",     "Na", ()),  # HCN has own eh=-30 mV
 ]
 
 K_CURRENTS  = [v for _, _, v, ion, _ in ALL_CHANNELS if ion == "K"]
@@ -414,5 +416,9 @@ def init_channel_states_vectorized(group, v_init_arr):
     group.h_shk1   = 1.0
     group.m_egl36  = 0.0
     group.m_kvs1   = 0.0
+    # HCN: at hyperpolarized v_init, HCN should be partially OPEN
+    # (V_half = -75 mV). Compute steady state per cell from v_init.
+    import numpy as np
+    group.m_hcn = 1.0 / (1.0 + np.exp((v_init_arr - (-75.0)) / 8.0))
     # TWK: no gating
     # SLO-2: Ca-activated, computed instantaneously from Ca_in

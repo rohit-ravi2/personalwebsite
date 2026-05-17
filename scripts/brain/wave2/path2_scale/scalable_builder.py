@@ -32,6 +32,20 @@ try:
     from path2_scale.cell_morphology_data import CELL_MORPHOLOGY
 except ImportError:
     CELL_MORPHOLOGY = {}
+try:
+    from path2_scale.ncx_hcn_tpm_data import (
+        CNG_1_TPM, CNG_2_TPM, CNG_3_TPM, TAX_2_TPM, TAX_4_TPM,
+    )
+    HCN_TPM_TABLES = (CNG_1_TPM, CNG_2_TPM, CNG_3_TPM, TAX_2_TPM, TAX_4_TPM)
+except ImportError:
+    HCN_TPM_TABLES = ()
+try:
+    from path2_scale.nca_accessory_tpm_data import (
+        UNC_79_TPM, UNC_80_TPM, NLF_1_TPM,
+    )
+    NCA_ACCESSORY_TABLES = (UNC_79_TPM, UNC_80_TPM, NLF_1_TPM)
+except ImportError:
+    NCA_ACCESSORY_TABLES = ()
 
 # Reuse existing Layer 1 cell infrastructure
 from layer1_cells import CellSpec, build_layer1_cell
@@ -165,6 +179,15 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
         gbar = gamma_s * twk_tpm * 1.0 * c_global
         channel_gbar["twk"] = gbar
 
+    # HCN — aggregate cng-1/2/3 + tax-2/4 (cyclic-nucleotide-gated cation
+    # channels, hyperpolarization-activated; cengen data via ncx_hcn_tpm_data)
+    if HCN_TPM_TABLES:
+        hcn_tpm = sum(tbl.get(cengen_class, 0.0) for tbl in HCN_TPM_TABLES)
+        if hcn_tpm > 0:
+            gamma_s = EXTENDED_GAMMA_PS["HCN"] * 1e-12
+            gbar = gamma_s * hcn_tpm * 1.0 * c_global
+            channel_gbar["hcn"] = gbar
+
     # Single-gene channels
     for gene, ch_mod_name in [
         ("egl-19", "egl19"), ("cca-1", "cca1"), ("unc-2", "unc2"),
@@ -179,11 +202,22 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
             gbar = gamma_s * tpm * 1.0 * c_global
             channel_gbar[ch_mod_name] = gbar
 
-    # NCA (use nca-2 alone — nca-1 below T2 threshold)
+    # NCA (use nca-2 alone — nca-1 below T2 threshold).
+    # Modulate effective gbar by accessory-protein availability: UNC-79/UNC-80/
+    # NLF-1 are required for NCA-2 to form functional Ca-activated channels.
+    # accessory_factor = min(1, mean(unc79, unc80, nlf1) / nca_tpm) caps the
+    # effective gbar at the limiting reagent (NCA pore-forming subunit).
     nca_tpm = CENGEN_T2_TPM.get("nca-2", {}).get(cengen_class, 0.0)
     if nca_tpm > 0:
         gamma_s = EXTENDED_GAMMA_PS["NCA"] * 1e-12
-        gbar = gamma_s * nca_tpm * 1.0 * c_global
+        # Compute accessory-protein factor
+        if NCA_ACCESSORY_TABLES:
+            acc_mean = sum(tbl.get(cengen_class, 0.0)
+                          for tbl in NCA_ACCESSORY_TABLES) / len(NCA_ACCESSORY_TABLES)
+            acc_factor = min(1.0, acc_mean / nca_tpm)
+        else:
+            acc_factor = 1.0
+        gbar = gamma_s * nca_tpm * acc_factor * c_global
         channel_gbar["nca"] = gbar
 
     # Channels we'd want but don't have NMODL modules — document
