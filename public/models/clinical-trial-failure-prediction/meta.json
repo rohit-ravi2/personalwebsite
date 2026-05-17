@@ -1,0 +1,41 @@
+{
+  "model_name": "Demo: Clinical trial outcome predictor (P3 success)",
+  "feature_names": [
+    "phase_p3_only",
+    "drug_type_code",
+    "sponsor_class_code",
+    "enrollment_log1p_f",
+    "duration_days_f",
+    "oncology",
+    "n_prior_drug",
+    "n_prior_target"
+  ],
+  "feature_descriptions": {
+    "phase_p3_only": "1 if Phase 3, 0 if Phase 2/Phase 3 (combined)",
+    "drug_type_code": "0=small molecule, 1=biologic, 2=device, 3=procedure, 4=cell/gene, 5=other",
+    "sponsor_class_code": "0=industry, 1=academic, 2=other gov, 3=NIH",
+    "enrollment_log1p_f": "log(1 + planned enrollment count)",
+    "duration_days_f": "planned trial duration in days",
+    "oncology": "1 if indication is oncology, 0 otherwise",
+    "n_prior_drug": "number of prior trials of the same drug (time-truncated)",
+    "n_prior_target": "number of prior trials of the same target (time-truncated)"
+  },
+  "drug_type_labels": [
+    "Small molecule",
+    "Biologic",
+    "Device",
+    "Procedure",
+    "Cell or gene",
+    "Other"
+  ],
+  "sponsor_class_labels": [
+    "Industry",
+    "Academic",
+    "Other Gov",
+    "NIH"
+  ],
+  "demo_eval_auroc": 0.8516468495357137,
+  "full_model_audited_auroc": 0.8718,
+  "headline_real_audited_auroc": 0.8603,
+  "note": "Simplified 8-feature demo model. The production model (134 features) achieves AUROC 0.8718 on the same test split (audited to 0.8603 after Day-3 leakage review). Demo is for UI illustration \u2014 the architectural ceiling for these 8 features is lower."
+}

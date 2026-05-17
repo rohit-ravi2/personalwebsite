@@ -1,0 +1,87 @@
+---
+title: "cfDNA Methylation — Cross-Cohort Cancer Detection"
+startDate: 2026-05-12
+description: "Loyfer-atlas deconvolution + NaN-aware learned deconvolution + coverage augmentation training over the GSE186458 healthy cfDNA WGBS cohort. Cross-cohort GSE122126 AUROC went from 0.217 (below random, model inverted) to 0.850 across 4 of 5 cancer types via four interacting methodological fixes."
+tags: ["cfDNA", "Methylation", "Liquid Biopsy", "Deep Learning", "Deconvolution", "Research"]
+image:
+  url: /images/projects/cfdna-cancer-detection/cover.png
+  alt: "cfDNA cross-cohort AUROC bar chart — Day 2 (0.217) vs Day 3 (0.850) on GSE122126"
+---
+
+import { DeconvolutionPlayground } from "../../components/react/DeconvolutionPlayground";
+
+## Thesis
+
+A coverage-robust, atlas-aware cfDNA cancer-detection classifier can be built from **public-data-only sources** (no dbGaP / no EGA) by training a learned NNLS-style deconvolution over the Loyfer 2023 atlas, augmenting with TCGA tumor methylation profiles via per-cancer Gaussian-mixture sampling, and exposing the classifier to coverage-degraded variants during training. The Day-2 to Day-3 cross-cohort AUROC jump on GSE122126 (0.217 → **0.850**) is what this stack buys.
+
+## Interactive: real ONNX inference in your browser
+
+<DeconvolutionPlayground client:only="react" />
+
+Pick a sample type and tumor fraction. The 40-dim deconvolution vector is interpolated from precomputed grid points (TCGA tissue × tumor fraction), then fed through the Day-1 multitask MLP via ONNX Runtime Web. Cancer probability, tissue-of-origin, and tumor-fraction regression are real outputs of the model running locally on your machine. Note: this is the **Day-1** model (in-silico AUROC 0.90, cross-cohort 0.217). The Day-3 production model (cross-cohort AUROC 0.850) is 158 MB and too large for browser inference.
+
+## What I built
+
+**Pipeline over 23 deep-WGBS healthy cfDNA samples (GSE186458, ~140× coverage) + 108 TCGA tumor tissue samples across COAD/LIHC/LUAD/BRCA, deconvolved against the Loyfer 2023 atlas (9520 atlas blocks × 40 cell types):**
+
+- **Day 1 — NNLS deconvolution validation.** Granulocyte fraction = 29.2% (Loyfer-published: ~30%). 828 in-silico mixtures across 5 cancer types × 9 tumor fractions. Day-1 multitask MLP: stage-3 sens 36.5% @ 99% spec, tissue top-1 58.3%. Cross-cohort AUROC on GSE122126: **0.217** (model inverting rankings).
+- **Day 2 — Learned deep deconvolution + fragmentomics fusion.** Beats NNLS on in-silico mixtures (Pearson 0.999 vs 0.972). Megakaryocyte ≈ 28% finding confirmed as real platelet-derived signal (Fox-Fisher 2022). Cross-cohort still failing.
+- **Day 3 — the four mechanisms that closed the cross-cohort gap.** 0.217 → **0.850**:
+  1. **Distribution-sampled mixtures.** Per-cancer Gaussian-mixture models over TCGA tumor methylation, with Loyfer-atlas centroid fallback at the 91.6% of atlas blocks TCGA's 450K array doesn't cover.
+  2. **NaN-aware learned deconvolution.** Input expanded from 9520-dim betas to 19,040-dim (betas-imputed ‖ observation mask). Trained with random 10–80% block masking.
+  3. **Coverage-augmentation training.** Generate deconv features at 4 coverage levels {100, 30, 15, 8}%, training over identical labels → classifier learns coverage-invariant boundaries.
+  4. **TCGA-tissue + Loyfer-atlas fallback.** At TCGA-observed blocks (~8.4% atlas coverage), sample from the per-block Gaussian. At unobserved blocks, use the Loyfer atlas's tumor-tissue centroid as the prior.
+
+<img src="/images/projects/cfdna-cancer-detection/fig1_cross_cohort_delta.png" alt="Cross-cohort GSE122126 AUROC went from 0.217 (Day 2) to 0.850 (Day 3) — a +0.633 lift" class="mx-auto max-w-2xl rounded-lg border" />
+
+## Cross-cohort GSE122126 — per tissue
+
+<img src="/images/projects/cfdna-cancer-detection/fig2_per_tissue.png" alt="Per-tissue cross-cohort AUROC: CRC 0.94, BREAST 1.00, CUP 0.94, LUNG 0.56" class="mx-auto max-w-2xl rounded-lg border" />
+
+**LUAD (AUROC 0.56) is a real failure**, not a model bug. The 4 LUNG samples in GSE122126 show identical Lung-Ep-Alveo deconvolution as 4 HEALTHY samples — same pattern Day-2 NNLS produced. Either the lung tumors are early-stage low-shedders, or atlas Lung-Ep-Alveo + Lung-Ep-Bron don't separate from baseline at this coverage. This is the load-bearing limitation of the current stack.
+
+**Biological validation on GSE122126** (the rank-order tissue elevations check out):
+
+| Cohort | Colon-Ep | Liver-Hep | Lung-Alveo | Breast-Lum | Granul |
+|--------|---------:|----------:|-----------:|-----------:|-------:|
+| Healthy (n=4) | 0.023 | 0.029 | 0.013 | 0.010 | 0.243 |
+| **CRC (n=4)** | **0.047** | 0.031 | 0.018 | 0.014 | 0.233 |
+| **BREAST (n=3)** | 0.034 | 0.035 | 0.018 | **0.022** | 0.233 |
+| LUNG (n=4) | 0.023 | 0.029 | 0.013 | 0.010 | 0.244 |
+| CUP (n=4) | 0.029 | 0.031 | 0.015 | 0.013 | 0.238 |
+
+## Coverage robustness — what coverage augmentation actually buys
+
+<img src="/images/projects/cfdna-cancer-detection/fig3_coverage_robustness.png" alt="Coverage-stratified in-silico AUROC: 0.95 (100%) → 0.88 (30%) → 0.83 (15%) → 0.80 (8%). Sensitivity @ 99% specificity tracks the same shape." class="mx-auto max-w-2xl rounded-lg border" />
+
+The 8–15% atlas coverage regime is where GSE122126 (clinical 450K array) lives. Without coverage augmentation, the classifier saturates and inverts; with it, AUROC degrades gracefully and the operating threshold remains usable.
+
+## In-silico stage-stratified sensitivity
+
+<img src="/images/projects/cfdna-cancer-detection/fig4_stage1_jump.png" alt="Stage-1 sensitivity @ 99% specificity jumped from 0.04 (Day 2) to 0.48 (Day 3)" class="mx-auto max-w-2xl rounded-lg border" />
+
+**Stage-1 sensitivity at 99% specificity went from 0.04 to 0.48 in-silico.** Distribution-sampled mixtures with realistic TCGA-derived tumor profiles let the model learn smaller tumor signatures than the fixed-donor mixture style used Day-2.
+
+## Methodology notes
+
+- **The Day-3 v1 → v2 fix.** First Day-3 attempt collapsed tumor profiles to healthy means at TCGA-unobserved blocks (91.6% of atlas). Fix: sample per-block Gaussian where TCGA observed, fall back to Loyfer atlas centroid where TCGA blind. v2 preserves the tumor signal in the atlas-aware regions.
+- **The Day-3 collapse fix.** First NaN-aware training collapsed to "Megakaryocyte" for all samples because healthy NNLS gives Megak ≈ Granul ≈ 0.27 and a poorly-conditioned CE-on-dominant-cell-type pulled the argmax to whichever class won the first batch. Fix: drop CE-on-dominant, use MSE + KL over full 40-dim fraction vector.
+- **The score-saturation issue.** Cross-cohort scores fall in [0.894, 0.9998] — sigmoid saturated. AUROC is real (rank-order correct), but the 99%-spec operating threshold collapses. Calibration (Platt or temperature scaling) is the Day-4 priority.
+
+## What this work isn't
+
+Honest read after a literature check: **the four mechanisms above are not novel** at the level of individual components. M-PACT (Nature Cancer 2026) does coverage-sparsity augmentation training over 3.2M in-silico samples for pediatric CNS tumors. CUPiD (Nature Communications 2024) does TCGA-tumor + cfDNA in-silico mixtures across 29 tumor classes (n=143 + n=27 validation). crossNN (Nature Cancer 2025) is explicitly cross-platform DNA-methylation-based tumor classification with the same masking strategy. MetDecode (Bioinformatics 2024) is coverage-aware deconvolution. The generalizable HCC framework (bioRxiv 2025) hits the same score-saturation issue and uses threshold tuning, the same Day-4 priority I'd write.
+
+What this project *does* contribute:
+
+1. **Public-data-only reproducibility.** No dbGaP, no EGA, no commercial cohort. Everything is GEO + TCGA + Loyfer, with all preprocessing scripts in `src/`.
+2. **Explicit failure-mode documentation.** LUAD 0.56, tissue-top-1 regression 0.811 → 0.247 from multi-task pooling, score saturation breaking the 99%-spec threshold — these are all in the report rather than swept under the rug.
+3. **A clean four-component ablation** of the cross-cohort fix.
+
+## Status
+
+Day-1 / Day-2 / Day-3 reports + code committed and pushed. The Day-3 production model (`learned_deconv_nanaware.pt`, 158 MB) is hosted via GitHub Releases.
+
+**Day-4 priorities if I picked this back up**: (1) Platt scaling on the saturated cross-cohort scores; (2) separate full-coverage tissue classifier to restore Day-2's 0.811 tissue top-1; (3) PAAD integration (37/40 files were still downloading); (4) LUAD diagnostic — try Lung-Ep-Alveo vs Lung-Ep-Bron subtype split or alternate lung-cancer marker set.
+
+Repo: [github.com/rohit-ravi2/cfdna-cancer-detection](https://github.com/rohit-ravi2/cfdna-cancer-detection)

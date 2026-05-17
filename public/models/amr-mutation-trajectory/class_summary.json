@@ -1,0 +1,126 @@
+{
+  "carbapenem": {
+    "n_transitions": 9,
+    "top3_hit_rate": 0.6666666666666666,
+    "canonical_amr_top3_hit_rate": 0.6666666666666666,
+    "representative_drugs": [
+      "meropenem"
+    ]
+  },
+  "tetracycline": {
+    "n_transitions": 21,
+    "top3_hit_rate": 0.0,
+    "canonical_amr_top3_hit_rate": 0.0,
+    "representative_drugs": [
+      "tetracycline",
+      "doxycycline"
+    ]
+  },
+  "macrolide": {
+    "n_transitions": 11,
+    "top3_hit_rate": 0.18181818181818182,
+    "canonical_amr_top3_hit_rate": 0.18181818181818182,
+    "representative_drugs": [
+      "erythromycin"
+    ]
+  },
+  "aminoglycoside": {
+    "n_transitions": 79,
+    "top3_hit_rate": 0.0,
+    "canonical_amr_top3_hit_rate": 0.0,
+    "representative_drugs": [
+      "gentamicin",
+      "amikacin",
+      "tobramycin"
+    ]
+  },
+  "cephalosporin": {
+    "n_transitions": 93,
+    "top3_hit_rate": 0.0,
+    "canonical_amr_top3_hit_rate": 0.0,
+    "representative_drugs": [
+      "cefoxitin",
+      "ceftazidime"
+    ]
+  },
+  "rifamycin": {
+    "n_transitions": 257,
+    "top3_hit_rate": 0.01556420233463035,
+    "canonical_amr_top3_hit_rate": 0.01556420233463035,
+    "representative_drugs": [
+      "rifampicin"
+    ]
+  },
+  "sulfonamide": {
+    "n_transitions": 22,
+    "top3_hit_rate": 0.13636363636363635,
+    "canonical_amr_top3_hit_rate": 0.13636363636363635,
+    "representative_drugs": [
+      "sulfamethoxazole"
+    ]
+  },
+  "nitrofuran": {
+    "n_transitions": 8,
+    "top3_hit_rate": 0.375,
+    "canonical_amr_top3_hit_rate": 0.375,
+    "representative_drugs": [
+      "nitrofurantoin"
+    ]
+  },
+  "fosfomycin": {
+    "n_transitions": 26,
+    "top3_hit_rate": 0.11538461538461539,
+    "canonical_amr_top3_hit_rate": 0.11538461538461539,
+    "representative_drugs": [
+      "fosfomycin"
+    ]
+  },
+  "glycopeptide": {
+    "n_transitions": 8,
+    "top3_hit_rate": 0.375,
+    "canonical_amr_top3_hit_rate": 0.375,
+    "representative_drugs": [
+      "vancomycin"
+    ]
+  },
+  "phenicol": {
+    "n_transitions": 4,
+    "top3_hit_rate": 0.0,
+    "canonical_amr_top3_hit_rate": 0.0,
+    "representative_drugs": [
+      "chloramphenicol"
+    ]
+  },
+  "diaminopyrimidine": {
+    "n_transitions": 6,
+    "top3_hit_rate": 0.3333333333333333,
+    "canonical_amr_top3_hit_rate": 0.3333333333333333,
+    "representative_drugs": [
+      "trimethoprim"
+    ]
+  },
+  "penicillin": {
+    "n_transitions": 4,
+    "top3_hit_rate": 0.0,
+    "canonical_amr_top3_hit_rate": 0.0,
+    "representative_drugs": [
+      "ampicillin"
+    ]
+  },
+  "unspecified": {
+    "n_transitions": 3,
+    "top3_hit_rate": 1.0,
+    "canonical_amr_top3_hit_rate": 1.0,
+    "representative_drugs": [
+      "multidrug"
+    ]
+  },
+  "fluoroquinolone": {
+    "n_transitions": 20,
+    "top3_hit_rate": 0.0,
+    "canonical_amr_top3_hit_rate": 0.0,
+    "representative_drugs": [
+      "ciprofloxacin"
+    ]
+  }
+}

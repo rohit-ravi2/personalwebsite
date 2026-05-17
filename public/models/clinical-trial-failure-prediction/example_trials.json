@@ -1,0 +1,77 @@
+[
+  {
+    "nct_id": "NCT04556526",
+    "features": {
+      "phase_p3_only": 1.0,
+      "drug_type_code": 1.0,
+      "sponsor_class_code": 0.0,
+      "enrollment_log1p_f": 8.302018165588379,
+      "duration_days_f": 878.0,
+      "oncology": 0.0,
+      "n_prior_drug": 0.0,
+      "n_prior_target": 0.0
+    },
+    "actual_success": false,
+    "predicted_proba": 0.04330713625405748
+  },
+  {
+    "nct_id": "NCT03940807",
+    "features": {
+      "phase_p3_only": 1.0,
+      "drug_type_code": 0.0,
+      "sponsor_class_code": 1.0,
+      "enrollment_log1p_f": 0.0,
+      "duration_days_f": 1008.0,
+      "oncology": 0.0,
+      "n_prior_drug": 0.0,
+      "n_prior_target": 0.0
+    },
+    "actual_success": false,
+    "predicted_proba": 0.004744193556271268
+  },
+  {
+    "nct_id": "NCT03598426",
+    "features": {
+      "phase_p3_only": 1.0,
+      "drug_type_code": 0.0,
+      "sponsor_class_code": 1.0,
+      "enrollment_log1p_f": 4.510859489440918,
+      "duration_days_f": 2344.0,
+      "oncology": 0.0,
+      "n_prior_drug": 501.0,
+      "n_prior_target": 1659.0
+    },
+    "actual_success": false,
+    "predicted_proba": 0.005990098559468183
+  },
+  {
+    "nct_id": "NCT03830281",
+    "features": {
+      "phase_p3_only": 1.0,
+      "drug_type_code": 0.0,
+      "sponsor_class_code": 0.0,
+      "enrollment_log1p_f": 6.156979084014893,
+      "duration_days_f": 326.0,
+      "oncology": 0.0,
+      "n_prior_drug": 99.0,
+      "n_prior_target": 696.0
+    },
+    "actual_success": false,
+    "predicted_proba": 0.303579474023475
+  },
+  {
+    "nct_id": "NCT05247541",
+    "features": {
+      "phase_p3_only": 0.0,
+      "drug_type_code": 0.0,
+      "sponsor_class_code": 1.0,
+      "enrollment_log1p_f": 2.7725887298583984,
+      "duration_days_f": 1248.0,
+      "oncology": 0.0,
+      "n_prior_drug": 50.0,
+      "n_prior_target": 0.0
+    },
+    "actual_success": false,
+    "predicted_proba": 0.5795046661952832
+  }
+]

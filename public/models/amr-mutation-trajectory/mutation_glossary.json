@@ -1,0 +1,534 @@
+{
+  "blaKPC-2_acquired": {
+    "tag": "acquired_gene",
+    "is_canonical_amr": true
+  },
+  "blaKPC-3_acquired": {
+    "tag": "acquired_gene",
+    "is_canonical_amr": true
+  },
+  "ompK35_truncation": {
+    "tag": "loss_of_function",
+    "is_canonical_amr": true
+  },
+  "blaSHV-1_acquired": {
+    "tag": "acquired_gene",
+    "is_canonical_amr": true
+  },
+  "ompK36_GD134-135insGD": {
+    "tag": "indel",
+    "is_canonical_amr": true
+  },
+  "aphA_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "gatC_pseudo": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrR_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "ghrB_L148L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "adhE_F583L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rrlE_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "EK12AG100_RS00080_L43L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "hns_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "ompF_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "yhcE,yhcF_DEL@3,366,751": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "Neisseria_G70D": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "PhoQ_V260G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "PhoQ_V24G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "PhoP_D191Y": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mtrR_A39T": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "lmrA_Q52P": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "PhoQ_K123Q": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "PhoP_A110V": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mtrR_G45D": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "PhoP_R117L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "araB_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mexY,_PA14_RS15615_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "gyrB_L744V": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "ftsI_R504C": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acnA_S522G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mexY_K130K": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mexY_T429A": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "ftsI_A482V": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mhpC_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "pheV_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "araC_F276F": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_A1002T": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_G288S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "yieK_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "ynaJ,uspE,fnr,ogt,abgT,abgB,abgA,abgR,mcaS,smrA,dgcM,zntB,fnrS,ynaL,dbpA,ttcA_DEL@1,397,381": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "lacI_L330L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_H525Q": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_Q523E": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_E1092D": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H526Y": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_E750Q": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_D485Y": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_L516P": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_R262C": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_V431M": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_V1252M": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_V48A": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_V48G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_P64A": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_P55A": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_P64H": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_V48F": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_P55H": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_R54G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_R228S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folP_P55R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_loss": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsB_loss": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_S33R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_R133S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_R15C": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_R203C": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_G131D": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "nfsA_R203L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "murA_C115S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "murA_E291D": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "UhpT_E350Q": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "murA_C115E": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "GlpT_F3I": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "GlpT_W137R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "murA_Q362R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "UhpT_W425R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "cyaA_S352T": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "UhpT_G112E": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoC_D244Y": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "3003970_D295G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "3003970_E13G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "3003970_G99R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "3003970_V241D": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "VRA-F_K84E": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "3003970_P313L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "murG_P108L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "gltP_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_A995S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_T624I": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_G570S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrR_T5A": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_Q1000H": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_W634C": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "acrB_L377P": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "glpR_pseudo": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "insB9,insA9,crl_DEL@257,908": {
+    "tag": "indel",
+    "is_canonical_amr": true
+  },
+  "insB-5,insA-5_DEL@1,978,503": {
+    "tag": "indel",
+    "is_canonical_amr": true
+  },
+  "folA_L28R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_A26T": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "lrhA_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_D27E": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_W30G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "kefC,_folA_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "kefC_ig": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_I94L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_P21Q": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_F153S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_P21L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_W30R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "folA_W30C": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "istA|istA_R116G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "yeiE_F11Y": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "korF_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H445R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H445S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H445G": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H481N": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H502N": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H445N": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H445Q": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H445P": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rpoB_H502L": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "blaI": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "blaPC1": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "blaR1": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "dusA_S14R": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "ydgH_A60S": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "rph_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "icd_H366H": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "mutS_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "yeaR_coding": {
+    "tag": "point_mutation",
+    "is_canonical_amr": true
+  },
+  "insH21_DEL@1,299,499": {
+    "tag": "indel",
+    "is_canonical_amr": true
+  }
+}
