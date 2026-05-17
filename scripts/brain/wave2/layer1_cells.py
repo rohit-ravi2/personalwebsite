@@ -57,6 +57,9 @@ from pumps.kcc2_abts1_lumped import (
     apply_kcc2_params, apply_abts1_params,
     scale_I_max_by_kcc2_tpm, scale_I_max_by_abts1_tpm,
 )
+from pumps.ncx import (
+    NCX_EQS, apply_ncx_params, I_MAX_NCX_mAcm2_DEFAULT,
+)
 
 # Channel modules
 from channels import egl19 as egl19_mod
@@ -326,16 +329,18 @@ def _build_cell_composition(spec: CellSpec, present_K: list[str],
     iLeak_total_mAcm2 = iK_leak_mAcm2 + iNa_leak_mAcm2 : 1
 
     # ---- Per-ion totals (channel + leak + pump contributions) ----
+    # NCX adds Ca-extrusion (positive iCa) + Na-influx (negative iNa).
     ion_iK_total_mAcm2  = iK_leak_mAcm2  + ({sum_K}) + pump_NaK_iK_mAcm2 + kcc2_iK_mAcm2 : 1
-    ion_iNa_total_mAcm2 = iNa_leak_mAcm2 + ({sum_Na}) + pump_NaK_iNa_mAcm2 : 1
-    ion_iCa_total_mAcm2 = ({sum_Ca}) + ca_clear_iCa_mAcm2 : 1
+    ion_iNa_total_mAcm2 = iNa_leak_mAcm2 + ({sum_Na}) + pump_NaK_iNa_mAcm2 + ncx_iNa_mAcm2 : 1
+    ion_iCa_total_mAcm2 = ({sum_Ca}) + ca_clear_iCa_mAcm2 + ncx_iCa_mAcm2 : 1
     ion_iCl_total_mAcm2 = kcc2_iCl_mAcm2 + abts1_iCl_mAcm2 : 1
 
     # ---- Membrane current density (drives dV/dt) ----
     # All currents that move net charge across the membrane: channels + leaks +
     # electrogenic pumps. KCC-2 + ABTS-1 lumped electroneutral → no contribution.
+    # NCX electrogenic: net +1 charge in per cycle (3 Na in - 2 Ca-charge out).
     i_total_mAcm2 = (iLeak_total_mAcm2 + ({sum_K}) + ({sum_Ca}) + ({sum_Na})
-                     + pump_NaK_I_mAcm2 + ca_clear_I_mAcm2) : 1
+                     + pump_NaK_I_mAcm2 + ca_clear_I_mAcm2 + ncx_I_mAcm2) : 1
 
     I_total = i_total_mAcm2 * surf_cm2 * 1e9 * pA - I_inj : amp
     dv/dt = -I_total / (cm_uFcm2 * surf_cm2 * 1e6 * pF) : volt
@@ -434,6 +439,7 @@ def build_layer1_cell(spec: CellSpec, r_eff_um: float = R_EFF_DEFAULT_um):
         + LUMPED_CA_CLEARANCE_EQS
         + KCC2_EQS
         + ABTS1_EQS
+        + NCX_EQS
         + ch_eqs
         + composition
         + get_ion_balance_eqs()
@@ -469,6 +475,8 @@ def build_layer1_cell(spec: CellSpec, r_eff_um: float = R_EFF_DEFAULT_um):
     apply_ca_clearance_params(G, I_max_mAcm2=pump_params["I_Ca_clear_max"])
     apply_kcc2_params(G, I_max_mAcm2=pump_params["I_kcc2_max"])
     apply_abts1_params(G, I_max_mAcm2=pump_params["I_abts1_max"])
+    # NCX — scaled by Ca-channel load (matches Ca pump scaling rationale)
+    apply_ncx_params(G, I_max_mAcm2=spec.pump_Ca_scale * I_MAX_NCX_mAcm2_DEFAULT)
 
     # Channel parameters (manually, bypassing apply_params to avoid bridged reversal)
     _apply_channels_manual(G, spec)

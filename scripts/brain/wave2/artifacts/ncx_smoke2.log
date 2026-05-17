@@ -1,0 +1,10 @@
+INFO       Cache size for target 'cython': 1851 MB.
+You can call clear_cache('cython') to delete all files from the cache or manually delete files in the '/home/rohit/.cython/brian_extensions' directory. [brian2]
+AVAL     V= -81.67  Ca=   0.029 μM  K= 121.5  Na=   7.4
+AVBL     V= -69.39  Ca=   0.058 μM  K= 128.7  Na=  10.5
+RIBL     V= -52.33  Ca=  23.300 μM  K= 121.7  Na=  20.8
+RIML     V= -55.93  Ca=   4.916 μM  K= 102.6  Na=  39.6
+RIPL     V= -50.49  Ca=  10.271 μM  K=  44.1  Na= 117.8
+HSNL     V= -68.36  Ca=   0.084 μM  K= 129.6  Na=   9.9
+ASEL     V= -68.70  Ca=   0.030 μM  K= 130.4  Na=   8.9
+MI       V= -64.38  Ca=   0.113 μM  K=  77.1  Na=  72.2

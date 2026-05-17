@@ -47,6 +47,7 @@ from pumps.kcc2_abts1_lumped import (
     KCC2_EQS, ABTS1_EQS,
     apply_kcc2_params, apply_abts1_params,
 )
+from pumps.ncx import NCX_EQS, apply_ncx_params, I_MAX_NCX_mAcm2_DEFAULT
 from layer1_cells import (
     PUMP_ANCHOR_AVAL, ghk_leak_split, _CHANNEL_APPLIES, _CHANNEL_MODULE_MAP,
     strip_param_decl,
@@ -105,7 +106,8 @@ def build_homogeneous_eqs() -> str:
              NA_K_ATPASE_EQS,
              LUMPED_CA_CLEARANCE_EQS,
              KCC2_EQS,
-             ABTS1_EQS]
+             ABTS1_EQS,
+             NCX_EQS]
 
     bridges = []
     for name, mod, cur, ion, bridge_params in ALL_CHANNELS:
@@ -147,13 +149,13 @@ def build_homogeneous_eqs() -> str:
 
     # ---- Per-ion totals ----
     ion_iK_total_mAcm2  = iK_leak_mAcm2  + ({sum_K}) + pump_NaK_iK_mAcm2 + kcc2_iK_mAcm2 : 1
-    ion_iNa_total_mAcm2 = iNa_leak_mAcm2 + ({sum_Na}) + pump_NaK_iNa_mAcm2 : 1
-    ion_iCa_total_mAcm2 = ({sum_Ca}) + ca_clear_iCa_mAcm2 : 1
+    ion_iNa_total_mAcm2 = iNa_leak_mAcm2 + ({sum_Na}) + pump_NaK_iNa_mAcm2 + ncx_iNa_mAcm2 : 1
+    ion_iCa_total_mAcm2 = ({sum_Ca}) + ca_clear_iCa_mAcm2 + ncx_iCa_mAcm2 : 1
     ion_iCl_total_mAcm2 = kcc2_iCl_mAcm2 + abts1_iCl_mAcm2 : 1
 
     # ---- Membrane current density (drives dV/dt) ----
     i_total_mAcm2 = (iLeak_total_mAcm2 + ({sum_K}) + ({sum_Ca}) + ({sum_Na})
-                     + pump_NaK_I_mAcm2 + ca_clear_I_mAcm2) : 1
+                     + pump_NaK_I_mAcm2 + ca_clear_I_mAcm2 + ncx_I_mAcm2) : 1
 
     # I_intrinsic comes from substrate; I_syn + I_gap + I_inj are external
     I_intrinsic = i_total_mAcm2 * surf_cm2 * 1e9 * pA : amp
@@ -348,6 +350,9 @@ def apply_per_cell_params(group, per_cell_params: list[dict]) -> None:
     group.pump_NaK_I_max_mAcm2 = pump_scale_arr * PUMP_ANCHOR_AVAL["I_NaK_max"]
     apply_ca_clearance_params(group, I_max_mAcm2=PUMP_ANCHOR_AVAL["I_Ca_clear_max"])
     group.ca_clear_I_max_mAcm2 = pump_Ca_arr * PUMP_ANCHOR_AVAL["I_Ca_clear_max"]
+    # NCX — scaled by Ca-channel load (same scaling as PMCA Ca clearance)
+    apply_ncx_params(group, I_max_mAcm2=I_MAX_NCX_mAcm2_DEFAULT)
+    group.ncx_I_max_mAcm2 = pump_Ca_arr * I_MAX_NCX_mAcm2_DEFAULT
     apply_kcc2_params(group, I_max_mAcm2=PUMP_ANCHOR_AVAL["I_kcc2_max"])
     apply_abts1_params(group, I_max_mAcm2=PUMP_ANCHOR_AVAL["I_abts1_max"])
 
