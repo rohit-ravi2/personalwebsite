@@ -70,6 +70,7 @@ from channels import slo2 as slo2_mod
 from channels import egl36 as egl36_mod
 from channels import kvs1 as kvs1_mod
 from channels import hcn as hcn_mod
+from channels import nap as nap_mod
 
 from path2_scale.scalable_builder import build_scalable_spec, to_layer1_cellspec
 from path2_scale.cengen_tpm_data import CENGEN_NEURONS
@@ -93,6 +94,7 @@ ALL_CHANNELS = [
     ("egl36",  egl36_mod,  "ik_egl36_mAcm2",   "K",  ("egl36_ek",)),
     ("kvs1",   kvs1_mod,   "ik_kvs1_mAcm2",    "K",  ("kvs1_ek",)),
     ("hcn",    hcn_mod,    "ik_hcn_mAcm2",     "Na", ()),  # HCN has own eh=-30 mV
+    ("nap",    nap_mod,    "ik_nap_mAcm2",     "Na", ()),  # I_NaP has own e=+30 mV
 ]
 
 K_CURRENTS  = [v for _, _, v, ion, _ in ALL_CHANNELS if ion == "K"]
@@ -420,5 +422,10 @@ def init_channel_states_vectorized(group, v_init_arr):
     # (V_half = -75 mV). Compute steady state per cell from v_init.
     import numpy as np
     group.m_hcn = 1.0 / (1.0 + np.exp((v_init_arr - (-75.0)) / 8.0))
+    # I_NaP: persistent Na, V_half = -65 mV. At hyperpolarized v_init
+    # (typically -60 mV substrate default, K-rest ≈ -75 mV), m_nap is
+    # partially activated so it provides bootstrap drive for plateau cells
+    # while remaining modest enough that phasic cells stay stable.
+    group.m_nap = 1.0 / (1.0 + np.exp(-(v_init_arr - (-65.0)) / 5.0))
     # TWK: no gating
     # SLO-2: Ca-activated, computed instantaneously from Ca_in

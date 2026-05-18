@@ -47,6 +47,15 @@ try:
 except ImportError:
     NCA_ACCESSORY_TABLES = ()
 
+# AlphaFold-derived weights for NCA accessory proteins (2026-05-18).
+# Source: path2_scale/analyze_af_structures.py.
+# AF mean pLDDT confirms UNC-79 is well-folded (83% high-confidence, 59% very
+# high) — obligate primary partner with reliable structural interface. NLF-1
+# is partly disordered (53% high-confidence) — peripheral modulator. UNC-80
+# not in AF DB (too large at 3263 aa) but assumed similar to UNC-79
+# architecture (HEAT-repeat scaffold).
+NCA_ACCESSORY_WEIGHTS = {"unc79": 0.623, "unc80": 0.311, "nlf1": 0.066}
+
 # Reuse existing Layer 1 cell infrastructure
 from layer1_cells import CellSpec, build_layer1_cell
 
@@ -60,7 +69,7 @@ from path2_scale.pump_capacity_scaling import channel_load_scale
 # Channels with existing NMODL/Brian2 implementations in channels/ directory
 SUPPORTED_CHANNELS = {"EGL-19", "CCA-1", "UNC-2", "IRK", "KQT-1", "SHL-1",
                      "EGL-2", "UNC-103", "NCA", "EXP-2", "SHK-1", "TWK",
-                     "SLO-2", "EGL-36", "KVS-1"}
+                     "SLO-2", "EGL-36", "KVS-1", "NAP"}
 # SLO-1 has slo1_iso module but requires Ca pool integration — defer
 UNSUPPORTED_CHANNELS = {"SLO-1", "KQT-2", "KQT-3"}
 
@@ -212,13 +221,33 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
     if nca_tpm > 0:
         gamma_s = EXTENDED_GAMMA_PS["NCA"] * 1e-12
         if NCA_ACCESSORY_TABLES:
-            # MIN of accessory TPMs is the limiting-reagent biology
-            acc_min = min(tbl.get(cengen_class, 0.0) for tbl in NCA_ACCESSORY_TABLES)
-            acc_factor = min(1.0, acc_min / nca_tpm)
+            # AlphaFold-weighted accessory aggregation (2026-05-18).
+            # UNC-79 weighted highest (obligate primary, AF mean pLDDT=83);
+            # UNC-80 weighted intermediate (architectural similarity, AF DB
+            # missing); NLF-1 lowest (partly disordered per AF, peripheral).
+            # OBLIGATE: if UNC-79 TPM = 0, no NCA function (no primary partner).
+            unc79 = UNC_79_TPM.get(cengen_class, 0.0)
+            unc80 = UNC_80_TPM.get(cengen_class, 0.0)
+            nlf1  = NLF_1_TPM.get(cengen_class, 0.0)
+            if unc79 == 0:
+                acc_factor = 0.0  # obligate primary partner missing
+            else:
+                weighted = (NCA_ACCESSORY_WEIGHTS["unc79"] * unc79
+                          + NCA_ACCESSORY_WEIGHTS["unc80"] * unc80
+                          + NCA_ACCESSORY_WEIGHTS["nlf1"]  * nlf1)
+                acc_factor = min(1.0, weighted / nca_tpm)
         else:
             acc_factor = 1.0
         gbar = gamma_s * nca_tpm * acc_factor * c_global
         channel_gbar["nca"] = gbar
+
+    # I_NaP — uniform persistent Na bootstrap current.
+    # nav-1 / I_NaP: DISABLED (2026-05-18). Uniform application across 300
+    # cells crashed the network (300/300 NaN). To use I_NaP, need cell-class
+    # whitelist (Path A) or coordinated pump rescaling — deferred. Setting
+    # gbar=0 here keeps the channel present in eqs (no recompile needed)
+    # but contributes zero current.
+    channel_gbar["nap"] = 0.0
 
     # Channels we'd want but don't have NMODL modules — document
     for gene_check in ("slo-1",):

@@ -1,0 +1,144 @@
+INFO       Cache size for target 'cython': 1919 MB.
+You can call clear_cache('cython') to delete all files from the cache or manually delete files in the '/home/rohit/.cython/brian_extensions' directory. [brian2]
+================================================================================
+Initial-condition bootstrap test — plateau cells seeded at published rest
+================================================================================
+[layer2] Building substrate params for 300 cells...
+[layer2] Building NeuronGroup of 300 cells (eqs ~21136 chars)...
+[layer2] Wiring chemical synapses (3099 edges)...
+[layer2]   2392 excitatory + 707 inhibitory
+[layer2] Wiring gap junctions (2188 edges)...
+
+[init_test] Assembly took 1.0s
+[init_test] Network: 300 cells, 2392 exc + 707 inh chem synapses, 2188 gap junctions
+
+[init_test] v_init overrides applied to 84 cells:
+  motor-active           n= 45  v_init=-50 mV
+    e.g. ['DA1', 'DA2', 'DA3', 'DA4', 'DA5']
+  pharyngeal-plateau     n=  2  v_init=-55 mV
+    e.g. ['MCL', 'MCR']
+  plateau-command        n= 16  v_init=-25 mV
+    e.g. ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'AVDL']
+  plateau-modulatory     n= 19  v_init=-45 mV
+    e.g. ['ADEL', 'ADER', 'ADFL', 'ADFR', 'CEPDL']
+  plateau-pharyngeal     n=  2  v_init=-55 mV
+    e.g. ['RIPL', 'RIPR']
+
+[init_test] Phase A: 5000.0 ms rest (no external input)...
+[init_test] Phase A took 151.7s
+
+=== After rest (t=5000.0 ms) ===
+  Plausibility: loose 293/300, strict 287/300, NaN 0
+  V_rest mV:    min -89.1, max -48.2, med -70.4, mean+/-std -72.8+/-8.2
+  K_in mM:      min 50.8, max 137.5, med 118.2
+  Na_in mM:     min 3.9, max 100.6, med 9.3
+  Cl_in mM:     min 4.3, max 5.9, med 4.5
+  Ca_in uM:     min 0.004, max 10.154, med 0.054
+  Cells V > -30 mV (potential 'active'): 0
+
+=== Per-cell bootstrap report (overridden cells, t=5s) ===
+name       class   role                    v_init    V_5s   d_set   V_pub   d_pub    Ca_uM category          
+--------------------------------------------------------------------------------------------------------------
+ADEL       ADE     plateau-modulatory       -45.0   -68.1   -23.1   -45.0   -23.1    0.061  B_slid_back
+ADER       ADE     plateau-modulatory       -45.0   -68.1   -23.1   -45.0   -23.1    0.062  B_slid_back
+ADFL       ADF     plateau-modulatory       -45.0   -69.0   -24.0   -50.0   -19.0    0.048  B_slid_back
+ADFR       ADF     plateau-modulatory       -45.0   -69.0   -24.0   -50.0   -19.0    0.048  B_slid_back
+AVAL       AVA     plateau-command          -25.0   -79.3   -54.3   -25.0   -54.3    0.041  B_slid_back
+AVAR       AVA     plateau-command          -25.0   -77.8   -52.8   -25.0   -52.8    0.050  B_slid_back
+AVBL       AVB     plateau-command          -25.0   -70.3   -45.3   -30.0   -40.3    0.055  B_slid_back
+AVBR       AVB     plateau-command          -25.0   -70.3   -45.3   -30.0   -40.3    0.055  B_slid_back
+AVDL       AVD     plateau-command          -25.0   -68.3   -43.3   -30.0   -38.3    0.089  B_slid_back
+AVDR       AVD     plateau-command          -25.0   -68.2   -43.2   -30.0   -38.2    0.090  B_slid_back
+AVEL       AVE     plateau-command          -25.0   -74.2   -49.2   -30.0   -44.2    0.055  B_slid_back
+AVER       AVE     plateau-command          -25.0   -74.2   -49.2   -30.0   -44.2    0.055  B_slid_back
+CEPDL      CEP     plateau-modulatory       -45.0   -69.3   -24.3   -45.0   -24.3    0.082  B_slid_back
+CEPDR      CEP     plateau-modulatory       -45.0   -69.2   -24.2   -45.0   -24.2    0.082  B_slid_back
+CEPVL      CEP     plateau-modulatory       -45.0   -69.1   -24.1   -45.0   -24.1    0.083  B_slid_back
+CEPVR      CEP     plateau-modulatory       -45.0   -69.4   -24.4   -45.0   -24.4    0.080  B_slid_back
+DA1        DA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.029  B_slid_back
+DA2        DA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.029  B_slid_back
+DA3        DA      motor-active             -50.0   -83.1   -33.1   -50.0   -33.1    0.028  B_slid_back
+DA4        DA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.029  B_slid_back
+DA5        DA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.029  B_slid_back
+DA6        DA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.029  B_slid_back
+DA7        DA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.029  B_slid_back
+DA8        DA      motor-active             -50.0   -83.1   -33.1   -50.0   -33.1    0.028  B_slid_back
+DA9        DA      motor-active             -50.0   -83.9   -33.9   -50.0   -33.9    0.023  B_slid_back
+DB1        DB      motor-active             -50.0   -82.0   -32.0   -50.0   -32.0    0.038  B_slid_back
+DB2        DB      motor-active             -50.0   -82.0   -32.0   -50.0   -32.0    0.038  B_slid_back
+DB3        DB      motor-active             -50.0   -82.0   -32.0   -50.0   -32.0    0.038  B_slid_back
+DB4        DB      motor-active             -50.0   -82.0   -32.0   -50.0   -32.0    0.038  B_slid_back
+DB5        DB      motor-active             -50.0   -82.0   -32.0   -50.0   -32.0    0.038  B_slid_back
+DB6        DB      motor-active             -50.0   -82.0   -32.0   -50.0   -32.0    0.038  B_slid_back
+DB7        DB      motor-active             -50.0   -82.2   -32.2   -50.0   -32.2    0.038  B_slid_back
+HSNL       HSN     plateau-modulatory       -45.0   -67.9   -22.9   -40.0   -27.9    0.095  B_slid_back
+HSNR       HSN     plateau-modulatory       -45.0   -67.9   -22.9   -40.0   -27.9    0.095  B_slid_back
+MCL        MC      pharyngeal-plateau       -55.0   -83.3   -28.3   -60.0   -23.3    0.014  B_slid_back
+MCR        MC      pharyngeal-plateau       -55.0   -83.6   -28.6   -60.0   -23.6    0.014  B_slid_back
+NSML       NSM     plateau-modulatory       -45.0   -76.4   -31.4   -45.0   -31.4    0.053  B_slid_back
+NSMR       NSM     plateau-modulatory       -45.0   -76.4   -31.4   -45.0   -31.4    0.053  B_slid_back
+PDEL       PDE     plateau-modulatory       -45.0   -68.2   -23.2   -45.0   -23.2    0.059  B_slid_back
+PDER       PDE     plateau-modulatory       -45.0   -68.2   -23.2   -45.0   -23.2    0.059  B_slid_back
+PVCL       PVC     plateau-command          -25.0   -80.7   -55.7   -50.0   -30.7    0.039  B_slid_back
+PVCR       PVC     plateau-command          -25.0   -80.8   -55.8   -50.0   -30.8    0.039  B_slid_back
+RICL       RIC     plateau-modulatory       -45.0   -64.8   -19.8   -50.0   -14.8    0.092  B_partial_slide
+RICR       RIC     plateau-modulatory       -45.0   -64.8   -19.8   -50.0   -14.8    0.091  B_partial_slide
+RIML       RIM     plateau-modulatory       -45.0   -55.9   -10.9   -50.0    -5.9    5.039  B_partial_slide
+RIMR       RIM     plateau-modulatory       -45.0   -55.6   -10.6   -50.0    -5.6    5.177  B_partial_slide
+RIPL       RIP     plateau-pharyngeal       -55.0   -56.9    -1.9   -50.0    -6.9    9.282  A_maintained
+RIPR       RIP     plateau-pharyngeal       -55.0   -56.9    -1.9   -50.0    -6.9    9.281  A_maintained
+RIS        RIS     plateau-modulatory       -45.0   -67.4   -22.4   -50.0   -17.4    0.039  B_slid_back
+RMDDL      RMD     plateau-command          -25.0   -48.2   -23.2   -50.0    +1.8    6.564  B_slid_back
+RMDDR      RMD     plateau-command          -25.0   -49.7   -24.7   -50.0    +0.3    7.031  B_slid_back
+RMDL       RMD     plateau-command          -25.0   -67.3   -42.3   -50.0   -17.3    0.110  B_slid_back
+RMDR       RMD     plateau-command          -25.0   -67.7   -42.7   -50.0   -17.7    0.107  B_slid_back
+RMDVL      RMD     plateau-command          -25.0   -50.5   -25.5   -50.0    -0.5    7.291  B_slid_back
+RMDVR      RMD     plateau-command          -25.0   -49.5   -24.5   -50.0    +0.5    6.999  B_slid_back
+VA1        VA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.025  B_slid_back
+VA10       VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA11       VA      motor-active             -50.0   -83.0   -33.0   -50.0   -33.0    0.025  B_slid_back
+VA12       VA      motor-active             -50.0   -83.7   -33.7   -50.0   -33.7    0.023  B_slid_back
+VA2        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA3        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA4        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA5        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA6        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA7        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA8        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VA9        VA      motor-active             -50.0   -82.9   -32.9   -50.0   -32.9    0.025  B_slid_back
+VB1        VB      motor-active             -50.0   -82.7   -32.7   -50.0   -32.7    0.027  B_slid_back
+VB10       VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB11       VB      motor-active             -50.0   -82.5   -32.5   -50.0   -32.5    0.027  B_slid_back
+VB2        VB      motor-active             -50.0   -82.5   -32.5   -50.0   -32.5    0.028  B_slid_back
+VB3        VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB4        VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB5        VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB6        VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB7        VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB8        VB      motor-active             -50.0   -82.4   -32.4   -50.0   -32.4    0.028  B_slid_back
+VB9        VB      motor-active             -50.0   -82.5   -32.5   -50.0   -32.5    0.028  B_slid_back
+VC1        VC      motor-active             -50.0   -70.7   -20.7   -50.0   -20.7    0.062  B_slid_back
+VC2        VC      motor-active             -50.0   -70.7   -20.7   -50.0   -20.7    0.062  B_slid_back
+VC3        VC      motor-active             -50.0   -70.7   -20.7   -50.0   -20.7    0.062  B_slid_back
+VC4        VC      motor-active             -50.0   -70.7   -20.7   -50.0   -20.7    0.062  B_slid_back
+VC5        VC      motor-active             -50.0   -70.6   -20.6   -50.0   -20.6    0.062  B_slid_back
+VC6        VC      motor-active             -50.0   -70.7   -20.7   -50.0   -20.7    0.062  B_slid_back
+
+=== Category counts (84 overridden cells) ===
+  A_maintained           n=  2
+  B_partial_slide        n=  4
+  B_slid_back            n= 78
+
+=== Per-role aggregate ===
+role                      n  v_init  V_5s_med  d_set_med     A%     B%     C%
+--------------------------------------------------------------------------------
+motor-active             45   -50.0     -82.5      -32.5     0%   100%     0%
+pharyngeal-plateau        2   -55.0     -83.5      -28.5     0%   100%     0%
+plateau-command          16   -25.0     -69.3      -44.3     0%   100%     0%
+plateau-modulatory       19   -45.0     -68.2      -23.2     0%   100%     0%
+plateau-pharyngeal        2   -55.0     -56.9       -1.9   100%     0%     0%
+
+Saved: /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/artifacts/init_bootstrap_test.json
+Saved audit-compatible: /mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain/wave2/artifacts/init_bootstrap_test_audit.json
+
+Total wall clock: 11.4 min

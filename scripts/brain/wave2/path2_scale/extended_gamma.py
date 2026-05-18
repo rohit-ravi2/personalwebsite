@@ -37,15 +37,22 @@ EXTENDED_GAMMA_PS: dict[str, float] = {
     "SLO-1": 200.0,    # BK channel (canonical large conductance ~100-300 pS)
     "SLO-2":  20.0,    # SK/IK family (~10-30 pS)
     # ===== Non-specific cation / NALCN family =====
-    "NCA":     3.0,    # NALCN literature 2-5 pS. γ=3 PAIRED WITH MIN-stoichiometry
-                       # accessory modulation: cells without limiting-reagent
-                       # complement get sharply reduced NCA, protecting network
-                       # stability while letting cells with full UNC-79+UNC-80+
-                       # NLF-1 complement reach plateau biology.
+    "NCA":     1.5,    # v2 calibration retained. Tried γ=3 with min-stoich AND
+                       # with AF-weighted accessory (UNC-79 obligate, weighted
+                       # 0.623). Both crashed network: any meaningful boost
+                       # cascades. Substrate stability requires γ=1.5. The AF-
+                       # derived insight (UNC-79 obligate) is encoded in the
+                       # accessory_factor formula even at this gamma.
     # ===== K2P leak family (TWK) =====
     "TWK":    40.0,    # K2P family canonical (TWK channels are leak K2P)
     # ===== HCN (cng-1/cng-2/cng-3 + tax-2/tax-4 in C. elegans) =====
     "HCN":     5.0,    # mammalian HCN1 single-channel ~1-5 pS
+    # ===== I_NaP (persistent Na — bootstrap drive for plateau cells) =====
+    # Mammalian Nav1.6 persistent component ~5-10 pS. We use γ-bookkeeping
+    # entry mainly for symmetry; actual gbar assignment in scalable_builder
+    # is UNIFORM (not γ × TPM × C_global) because nav-1 is below CeNGEN T2
+    # threshold and per-gene TPM scaling is not available.
+    "NAP":     5.0,
 }
 
 
