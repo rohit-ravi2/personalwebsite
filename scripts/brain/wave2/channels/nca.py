@@ -44,9 +44,13 @@ NCA_PARAMS = {
     "gbar_nca_Scm2": 0.055,
     "e_nca_mV":      30.0,
     # Ca-activation (CAN current per Yeh 2008, Humphrey 2007)
-    "Kca_nca_mM":    1.0e-3,   # 1 μM half-activation
-    "n_nca":         2.0,       # Hill coefficient
-    "max_pot_nca":   5.0,       # max potentiation at saturating Ca
+    "Kca_nca_mM":    1.0e-3,   # 1 μM canonical (Yeh 2008). Tried 0.3 μM to
+                                # bootstrap plateau from resting Ca but caused
+                                # runaway in cells with moderate Ca (RIB went
+                                # 0.06 → 9 μM) without helping AVA (whose Ca
+                                # stays too low regardless: chicken-and-egg).
+    "n_nca":         2.0,
+    "max_pot_nca":   5.0,
 }
 
 

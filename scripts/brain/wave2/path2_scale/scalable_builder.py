@@ -203,18 +203,18 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
             channel_gbar[ch_mod_name] = gbar
 
     # NCA (use nca-2 alone — nca-1 below T2 threshold).
-    # Modulate effective gbar by accessory-protein availability: UNC-79/UNC-80/
-    # NLF-1 are required for NCA-2 to form functional Ca-activated channels.
-    # accessory_factor = min(1, mean(unc79, unc80, nlf1) / nca_tpm) caps the
-    # effective gbar at the limiting reagent (NCA pore-forming subunit).
+    # PPI-refined accessory modulation (2026-05-17): real NCA needs UNC-79
+    # AND UNC-80 AND NLF-1 (all three) to form functional channels (Yeh 2008,
+    # Humphrey 2007 — biochemistry shows obligate complex assembly).
+    # → accessory_factor uses MIN (limiting reagent) not mean.
+    # Effective gbar = γ × NCA_TPM × min(1, min_accessory_TPM / NCA_TPM) × C_global
     nca_tpm = CENGEN_T2_TPM.get("nca-2", {}).get(cengen_class, 0.0)
     if nca_tpm > 0:
         gamma_s = EXTENDED_GAMMA_PS["NCA"] * 1e-12
-        # Compute accessory-protein factor
         if NCA_ACCESSORY_TABLES:
-            acc_mean = sum(tbl.get(cengen_class, 0.0)
-                          for tbl in NCA_ACCESSORY_TABLES) / len(NCA_ACCESSORY_TABLES)
-            acc_factor = min(1.0, acc_mean / nca_tpm)
+            # MIN of accessory TPMs is the limiting-reagent biology
+            acc_min = min(tbl.get(cengen_class, 0.0) for tbl in NCA_ACCESSORY_TABLES)
+            acc_factor = min(1.0, acc_min / nca_tpm)
         else:
             acc_factor = 1.0
         gbar = gamma_s * nca_tpm * acc_factor * c_global
