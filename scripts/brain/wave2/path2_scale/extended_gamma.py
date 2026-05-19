@@ -47,6 +47,12 @@ EXTENDED_GAMMA_PS: dict[str, float] = {
     "TWK":    40.0,    # K2P family canonical (TWK channels are leak K2P)
     # ===== HCN (cng-1/cng-2/cng-3 + tax-2/tax-4 in C. elegans) =====
     "HCN":     5.0,    # mammalian HCN1 single-channel ~1-5 pS
+    # ===== DEG/ENaC family — UNC-8, DEL-1/2/3, ASIC-1/2, DEG-1, ACD-3 =====
+    "DEGENAC": 1.0,    # Lowered from 5pS canonical to 1pS to fit substrate.
+                       # ENaC literature γ 5-10 pS but cumulative TPMs 200-600
+                       # per plateau cell × 5pS × C_global crashed network at
+                       # the cell-intrinsic level (not synaptic). 1 pS gives
+                       # gbar comparable to NCA (~5e-6 S/cm²) — safer.
     # ===== I_NaP (persistent Na — bootstrap drive for plateau cells) =====
     # Mammalian Nav1.6 persistent component ~5-10 pS. We use γ-bookkeeping
     # entry mainly for symmetry; actual gbar assignment in scalable_builder

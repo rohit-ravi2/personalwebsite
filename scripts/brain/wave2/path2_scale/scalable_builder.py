@@ -46,6 +46,10 @@ try:
     NCA_ACCESSORY_TABLES = (UNC_79_TPM, UNC_80_TPM, NLF_1_TPM)
 except ImportError:
     NCA_ACCESSORY_TABLES = ()
+try:
+    from path2_scale.degenac_tpm_data import DEGENAC_TABLES
+except ImportError:
+    DEGENAC_TABLES = ()
 
 # AlphaFold-derived weights for NCA accessory proteins (2026-05-18).
 # Source: path2_scale/analyze_af_structures.py.
@@ -69,7 +73,7 @@ from path2_scale.pump_capacity_scaling import channel_load_scale
 # Channels with existing NMODL/Brian2 implementations in channels/ directory
 SUPPORTED_CHANNELS = {"EGL-19", "CCA-1", "UNC-2", "IRK", "KQT-1", "SHL-1",
                      "EGL-2", "UNC-103", "NCA", "EXP-2", "SHK-1", "TWK",
-                     "SLO-2", "EGL-36", "KVS-1", "NAP"}
+                     "SLO-2", "EGL-36", "KVS-1", "NAP", "DEGENAC"}
 # SLO-1 has slo1_iso module but requires Ca pool integration — defer
 UNSUPPORTED_CHANNELS = {"SLO-1", "KQT-2", "KQT-3"}
 
@@ -248,6 +252,19 @@ def build_scalable_spec(cengen_class: str, cell_name: Optional[str] = None,
     # gbar=0 here keeps the channel present in eqs (no recompile needed)
     # but contributes zero current.
     channel_gbar["nap"] = 0.0
+
+    # DEG/ENaC family (2026-05-19): aggregate UNC-8 + DEL-1/2/3 + ASIC-1/2 +
+    # DEG-1 + ACD-3 TPMs as a single "degenac" channel. CeNGEN selectivity
+    # naturally limits to plateau-command + motor + dopaminergic cells;
+    # phasic sensory cells have ~zero expression → no risk of universal
+    # destabilization. Voltage-INDEPENDENT and not Ca-activated → no
+    # cascading positive feedback like I_NaP/NCA boost attempts.
+    if DEGENAC_TABLES:
+        deg_tpm = sum(tbl.get(cengen_class, 0.0) for tbl in DEGENAC_TABLES)
+        if deg_tpm > 0:
+            gamma_s = EXTENDED_GAMMA_PS["DEGENAC"] * 1e-12
+            gbar = gamma_s * deg_tpm * 1.0 * c_global
+            channel_gbar["degenac"] = gbar
 
     # Channels we'd want but don't have NMODL modules — document
     for gene_check in ("slo-1",):

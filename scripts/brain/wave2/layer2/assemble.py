@@ -33,7 +33,11 @@ CONNECTOME_PATH = Path("/home/rohit/Desktop/website/personalwebsite/scripts/brai
 # → total leak ≈ 1e-11 S = 0.01 nS. Synaptic gbar must be in pS range to
 # not dominate. Use ~1 pS per unit weight (factor 1000 smaller than c302
 # reference for unit-membrane-area cells).
-CHEM_WEIGHT_TO_GBAR_S = 1.0e-12  # 1 pS per unit weight
+CHEM_WEIGHT_TO_GBAR_S = 1.0e-12  # 1 pS per unit weight. Tried 0.3 pS to
+                                  # see if synaptic damping fixed DEG/ENaC crash
+                                  # — it didn't. Substrate crashes intrinsically
+                                  # at γ=5pS DEG/ENaC, not through synaptic
+                                  # coupling. Reverted to 1 pS canonical.
 GAP_WEIGHT_TO_GBAR_S = 1.0e-14   # 0.01 pS per unit weight (gap junctions
                                   # are Ohmic and aggregate fast; need lower
                                   # scale to avoid voltage-clamp instability)

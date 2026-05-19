@@ -71,6 +71,7 @@ from channels import egl36 as egl36_mod
 from channels import kvs1 as kvs1_mod
 from channels import hcn as hcn_mod
 from channels import nap as nap_mod
+from channels import degenac as degenac_mod
 
 from path2_scale.scalable_builder import build_scalable_spec, to_layer1_cellspec
 from path2_scale.cengen_tpm_data import CENGEN_NEURONS
@@ -95,6 +96,7 @@ ALL_CHANNELS = [
     ("kvs1",   kvs1_mod,   "ik_kvs1_mAcm2",    "K",  ("kvs1_ek",)),
     ("hcn",    hcn_mod,    "ik_hcn_mAcm2",     "Na", ()),  # HCN has own eh=-30 mV
     ("nap",    nap_mod,    "ik_nap_mAcm2",     "Na", ()),  # I_NaP has own e=+30 mV
+    ("degenac",degenac_mod,"ik_degenac_mAcm2", "Na", ()),  # DEG/ENaC own e=+50 mV
 ]
 
 K_CURRENTS  = [v for _, _, v, ion, _ in ALL_CHANNELS if ion == "K"]

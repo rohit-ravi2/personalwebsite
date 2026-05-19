@@ -79,6 +79,7 @@ from channels import egl36 as egl36_mod
 from channels import kvs1 as kvs1_mod
 from channels import hcn as hcn_mod
 from channels import nap as nap_mod
+from channels import degenac as degenac_mod
 
 
 # =========================================================================
@@ -233,7 +234,8 @@ CHANNEL_K_VARS  = ["ik_irk_mAcm2", "ik_unc103_mAcm2", "ik_shl1_mAcm2",
                    "ik_egl36_mAcm2",
                    "ik_kvs1_mAcm2"]
 CHANNEL_CA_VARS = ["ica_egl19_mAcm2", "ica_cca1_mAcm2", "ica_unc2_mAcm2"]
-CHANNEL_NA_VARS = ["ik_nca_mAcm2", "ik_hcn_mAcm2", "ik_nap_mAcm2"]   # NCA + HCN + I_NaP
+CHANNEL_NA_VARS = ["ik_nca_mAcm2", "ik_hcn_mAcm2", "ik_nap_mAcm2",
+                   "ik_degenac_mAcm2"]   # NCA + HCN + I_NaP + DEG/ENaC
                                   # (mixed cation / persistent Na currents
                                   # treated as Na for ion-balance purposes)
 
@@ -262,6 +264,7 @@ def _build_channel_set(channels: dict) -> tuple[str, list[str], list[str], list[
         "kvs1":   (kvs1_mod, "ik_kvs1_mAcm2", "K", ("kvs1_ek",)),
         "hcn":    (hcn_mod, "ik_hcn_mAcm2", "Na", ()),   # HCN uses its own eh = -30 mV
         "nap":    (nap_mod, "ik_nap_mAcm2", "Na", ()),   # I_NaP uses own e = +30 mV; no bridge
+        "degenac":(degenac_mod, "ik_degenac_mAcm2", "Na", ()),   # DEG/ENaC own e=+50 mV
     }
 
     eqs_parts = []
@@ -748,6 +751,15 @@ _CHANNEL_APPLIES: dict[str, dict] = {
             ("e_nap_mV", "nap_e"),
         ],
     },
+    "degenac": {
+        "params_attr": "DEGENAC_PARAMS",
+        "gbar_key": "gbar_degenac_Scm2",
+        "skip_keys": set(),   # e_degenac_mV is DEG/ENaC's own
+        "pairs": [
+            ("gbar_degenac_Scm2", "degenac_gbar"),
+            ("e_degenac_mV", "degenac_e"),
+        ],
+    },
 }
 
 
@@ -756,7 +768,7 @@ _CHANNEL_MODULE_MAP = {
     "shl1": shl1_mod, "cca1": cca1_mod, "unc2": unc2_mod, "egl2": egl2_mod,
     "kqt1": kqt1_mod, "exp2": exp2_mod, "shk1": shk1_mod, "twk": twk_mod,
     "slo2": slo2_mod, "egl36": egl36_mod, "kvs1": kvs1_mod, "hcn": hcn_mod,
-    "nap": nap_mod,
+    "nap": nap_mod, "degenac": degenac_mod,
 }
 
 
