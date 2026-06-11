@@ -347,9 +347,9 @@ To prevent the framework paper from drifting toward unsupported claims:
 
 ### 9.4 Open V7 items
 
-- **Mouse bootstrap CI is not currently computed.** The V5 M5 bootstrap artifact (`artifacts/v5_controls/M5_bootstrap_CIs.json`) contains worm and fly CIs only. Adding mouse halothane + isoflurane CIs is a small additional run (1000 resamples on existing 5-seed ensembles, ~minutes) that would let the page report all three organisms' CIs symmetrically. Currently the page reports worm + fly CIs at one location and mouse fold-errors as point predictions.
-- **LHS for fly and mouse.** M3 LHS ran worm only per the pre-registration's compute budget. Extending to fly + mouse would tighten the sensitivity claim cross-organism but is not required by the pre-registration.
-- **Interactive panel update.** The React `AnesthesiaPipeline.tsx` component does not yet surface Sub-Q2 redundancy structure or Sub-Q1 percentile histograms. Deferred to a separate session.
+- **Mouse bootstrap CI — RESOLVED 2026-06-10** (see `docs/v7_closeout_addendum_9.4.md` §A). `mouse_V6` block added to `artifacts/v5_controls/M5_bootstrap_CIs.json`: halothane WT 296.9 µM [289.9, 307.4], isoflurane WT 273.2 µM [268.8, 277.6]. Reconstruction validated against the committed worm/fly CIs (halothane matches to the decimal). Both mouse published anchors sit just outside the CIs (predicted low) — extends the worm/fly "precise but published-just-outside" pattern; published-inside-CI tally is now 1/6 across WT volatile anchors. No verdict changed.
+- **LHS for fly and mouse — RESOLVED 2026-06-10** (see addendum §B). 100-sample ±50% LHS at frozen α: fly 328.0 µM [273.5, 422.6] (fold 1.04), mouse 283.0 µM [229.7, 367.6] (fold 1.24). Driver reproduces the preregistered worm CI [178.4, 447.6] exactly. Key finding: **both fly and mouse CIs fall entirely within the preregistered [200, 600] band** — the worm M3c lower-tail deviation is worm-specific, not architecture-wide. Reported as an exploratory extension (`artifacts/v7_sensitivity/v7_sensitivity_lhs_allorganisms.json`); the preregistered worm-only M3c verdict is untouched.
+- **Interactive panel update.** The React `AnesthesiaPipeline.tsx` component does not yet surface Sub-Q2 redundancy structure or Sub-Q1 percentile histograms. Deferred to a separate session (front-end task, not a compute gap).
 
 ### 9.5 Cross-session implications to flag (not to act on)
 

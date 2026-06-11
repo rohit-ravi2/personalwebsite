@@ -286,6 +286,29 @@
         "ec50_ci_high_uM": 1562.4103022914705,
         "ec50_log10_sd": 0.005184706956073689
       }
+    },
+    "mouse_V6": {
+      "halothane__WT": {
+        "anesthetic": "halothane",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 296.9148646936893,
+        "ec50_ci_low_uM": 289.9332708471382,
+        "ec50_ci_high_uM": 307.3608137519325,
+        "ec50_log10_sd": 0.006572984808733905
+      },
+      "isoflurane__WT": {
+        "anesthetic": "isoflurane",
+        "mutant_gene": "WT",
+        "n_bootstrap_samples_with_crossing": 1000,
+        "n_bootstrap_attempted": 1000,
+        "ec50_median_uM": 273.16637361123975,
+        "ec50_ci_low_uM": 268.75609814255694,
+        "ec50_ci_high_uM": 277.636970225277,
+        "ec50_log10_sd": 0.0036760261034230325
+      }
     }
-  }
+  },
+  "mouse_V6_provenance": "mouse_V6 CIs added post-hoc (V7 \u00a79.4 open item); same method, rng_seed, and n_boot as worm_V3/fly_V4; computed by src/state_validation/v7_m5_bootstrap_ci.py from frozen V6 raw qf."
 }

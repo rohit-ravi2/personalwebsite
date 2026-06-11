@@ -1,0 +1,42 @@
+{
+  "description": "M3 LHS extended to fly + mouse (exploratory; not a preregistered gate). 100 joint \u00b150% samples, 8 doses x 3 seeds, frozen alpha. Worm is the preregistered M3c case (see v7_sensitivity_verdict.json).",
+  "protocol": {
+    "n_samples": 100,
+    "perturb_frac": 0.5,
+    "seeds": [
+      42,
+      137,
+      219
+    ],
+    "lhs_seed": 20260502
+  },
+  "organisms": {
+    "worm": {
+      "n_valid_samples": 100,
+      "median_uM": 311.6431226332532,
+      "95pct_CI_low_uM": 178.4364276504409,
+      "95pct_CI_high_uM": 447.5618819464422,
+      "published_uM": 340.0,
+      "median_fold_error": 1.090991506974847,
+      "CI_width_uM": 269.1254542960013
+    },
+    "fly": {
+      "n_valid_samples": 100,
+      "median_uM": 327.9662856657511,
+      "95pct_CI_low_uM": 273.4827245729497,
+      "95pct_CI_high_uM": 422.6341087847026,
+      "published_uM": 340.0,
+      "median_fold_error": 1.0366919249331412,
+      "CI_width_uM": 149.15138421175294
+    },
+    "mouse": {
+      "n_valid_samples": 100,
+      "median_uM": 283.0323339915335,
+      "95pct_CI_low_uM": 229.65435741401876,
+      "95pct_CI_high_uM": 367.5918689308339,
+      "published_uM": 350.0,
+      "median_fold_error": 1.2366078287382873,
+      "CI_width_uM": 137.93751151681516
+    }
+  }
+}

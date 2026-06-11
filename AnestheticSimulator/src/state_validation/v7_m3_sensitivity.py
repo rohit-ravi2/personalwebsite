@@ -247,7 +247,7 @@ def run_lhs(organism: str = LHS_ORGANISM, n_samples: int = LHS_N_SAMPLES):
             print(f'  [{sample_idx+1}/{n_samples}]  {elapsed:.1f}m  ETA {eta:.0f}m',
                   flush=True)
 
-    out_csv = OUT_DIR / 'v7_sensitivity_lhs.csv'
+    out_csv = OUT_DIR / f'v7_sensitivity_lhs_{organism}.csv'
     fieldnames = ['sample_idx', 'organism', 'predicted_EC50_uM', 'fold_error',
                    'ec50_factors', 'max_factors']
     with open(out_csv, 'w', newline='') as f:
