@@ -1,0 +1,42 @@
+{
+  "stage": "stage3_eger",
+  "preregistration_hash": "533b624a00b5ff9efecee41fb549fcb9cf5f02810aefcde55e14c7981fd09ff4",
+  "sim_duration_s": 30.0,
+  "doses_eger_uM": [
+    30.0,
+    100.0,
+    300.0,
+    1000.0,
+    3000.0,
+    10000.0,
+    30000.0
+  ],
+  "compounds": [
+    "cis_12_dichloroethylene",
+    "trans_12_dichloroethylene",
+    "hexafluoroethane"
+  ],
+  "seeds": [
+    42,
+    137,
+    219,
+    331,
+    443
+  ],
+  "pass_criterion": "cis_DCE_max_qf >= 0.5 AND trans_DCE_max_qf < 0.5 AND hexafluoroethane_max_qf < 0.5",
+  "wall_minutes": 72.44028828144073,
+  "per_organism": {
+    "worm": {
+      "n_stage2_passers_tested": 14,
+      "n_stage3_passers": 14
+    },
+    "fly": {
+      "n_stage2_passers_tested": 3,
+      "n_stage3_passers": 3
+    },
+    "mouse": {
+      "n_stage2_passers_tested": 8,
+      "n_stage3_passers": 8
+    }
+  }
+}

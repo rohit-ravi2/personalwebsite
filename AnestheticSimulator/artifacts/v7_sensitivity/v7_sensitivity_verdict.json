@@ -1,0 +1,40 @@
+{
+  "preregistration_hash": "533b624a00b5ff9efecee41fb549fcb9cf5f02810aefcde55e14c7981fd09ff4",
+  "pipeline": "v7_m3_sensitivity",
+  "predictions": {
+    "M3a_no_OAT_fails_2x": {
+      "expected": "no single \u00b150% OAT yields fold-error > 2x",
+      "observed_max_OAT_fold_error": 1.4372671740332206,
+      "OAT_failures_above_2x": [],
+      "falsifies_threshold": "any OAT > 3x falsifies",
+      "OAT_failures_above_3x": [],
+      "verdict": "PASS"
+    },
+    "M3b_load_bearing_param_exists": {
+      "expected": "at least one param with |S| > 0.3",
+      "observed_max_abs_sensitivity": 0.8406771307088913,
+      "n_params_above_0.3": 9,
+      "falsifies_threshold": "max |S| < 0.1",
+      "verdict": "PASS"
+    },
+    "M3c_LHS_95pct_CI_in_200_600": {
+      "expected": "95% LHS CI \u2282 [200, 600] \u00b5M (worm)",
+      "observed_95pct_CI_uM": [
+        178.4364276504409,
+        447.5618819464422
+      ],
+      "organism": "worm",
+      "falsifies_threshold": "95% CI extending beyond [100, 1000] \u00b5M",
+      "verdict": "DEVIATION"
+    }
+  },
+  "lhs_summary": {
+    "organism": "worm",
+    "n_samples": 100,
+    "n_valid_samples": 100,
+    "95pct_CI_low_uM": 178.4364276504409,
+    "95pct_CI_high_uM": 447.5618819464422,
+    "median_uM": 311.6431226332532,
+    "csv_path": "/home/rohit/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/v7_sensitivity/v7_sensitivity_lhs.csv"
+  }
+}

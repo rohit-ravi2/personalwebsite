@@ -1,0 +1,7 @@
+organism,subset,dose_uM,seed,quiescent_fraction,command_rate_hz,network_rate_hz
+mouse,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism,200.0,42,0.0,0.9118055555555555,0.9089166666666667
+mouse,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism,1000.0,42,1.0,0.5806944444444445,0.5803333333333334
+worm,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation,200.0,42,0.0625,5.916666666666667,1.6565277777777778
+worm,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation,1000.0,42,0.9791666666666666,0.8385416666666666,0.3045833333333333
+fly,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation,200.0,42,0.0,1.2056737588652482,1.2302958446251129
+fly,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation,1000.0,42,1.0,0.8488475177304964,0.8552535004516711

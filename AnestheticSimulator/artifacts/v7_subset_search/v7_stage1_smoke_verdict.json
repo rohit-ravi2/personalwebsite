@@ -1,0 +1,66 @@
+{
+  "stage": "stage1_halothane",
+  "preregistration_hash": "533b624a00b5ff9efecee41fb549fcb9cf5f02810aefcde55e14c7981fd09ff4",
+  "pass_criterion": "max(predicted/published, published/predicted) <= 2.0",
+  "sim_duration_s": 30.0,
+  "doses_halothane_uM": [
+    200.0,
+    1000.0
+  ],
+  "seeds": [
+    42
+  ],
+  "workers": 12,
+  "n_total_subsets_tested": 3,
+  "n_total_sims": 6,
+  "wall_minutes": 0.9324003418286642,
+  "per_organism": {
+    "worm": {
+      "alpha_frozen": 0.13,
+      "halothane_pub_uM": 340.0,
+      "n_subsets_tested": 1,
+      "n_subsets_passing": 1,
+      "min_passing_subset_size": 7,
+      "passing_subsets_by_size": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 1
+      }
+    },
+    "fly": {
+      "alpha_frozen": 0.06,
+      "halothane_pub_uM": 340.0,
+      "n_subsets_tested": 1,
+      "n_subsets_passing": 1,
+      "min_passing_subset_size": 7,
+      "passing_subsets_by_size": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 1
+      }
+    },
+    "mouse": {
+      "alpha_frozen": 0.1,
+      "halothane_pub_uM": 350.0,
+      "n_subsets_tested": 1,
+      "n_subsets_passing": 1,
+      "min_passing_subset_size": 6,
+      "passing_subsets_by_size": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 1
+      }
+    }
+  }
+}

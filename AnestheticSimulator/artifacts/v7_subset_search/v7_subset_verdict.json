@@ -1,0 +1,166 @@
+{
+  "preregistration_hash": "533b624a00b5ff9efecee41fb549fcb9cf5f02810aefcde55e14c7981fd09ff4",
+  "pipeline": "v7_subq2_subset_search",
+  "stage_counts": {
+    "stage1_pass": 33,
+    "stage2_pass": 25,
+    "stage3_pass": 25,
+    "all_stages_pass": 25
+  },
+  "per_organism": {
+    "worm": {
+      "n_all_stages_passers": 14,
+      "smallest_subset_size": 5,
+      "necessary_classes_100pct": [
+        "snare_cooperativity"
+      ],
+      "sufficient_classes_at_least_one_passer": [
+        "complex_i_block",
+        "gaba_potentiation",
+        "glucl_potentiation",
+        "k2p_potentiation",
+        "nachr_antagonism",
+        "nca_block",
+        "snare_cooperativity"
+      ]
+    },
+    "fly": {
+      "n_all_stages_passers": 3,
+      "smallest_subset_size": 6,
+      "necessary_classes_100pct": [
+        "complex_i_block",
+        "gaba_potentiation",
+        "k2p_potentiation",
+        "nachr_antagonism",
+        "nca_block"
+      ],
+      "sufficient_classes_at_least_one_passer": [
+        "complex_i_block",
+        "gaba_potentiation",
+        "glucl_potentiation",
+        "k2p_potentiation",
+        "nachr_antagonism",
+        "nca_block",
+        "snare_cooperativity"
+      ]
+    },
+    "mouse": {
+      "n_all_stages_passers": 8,
+      "smallest_subset_size": 4,
+      "necessary_classes_100pct": [
+        "complex_i_block",
+        "nca_block"
+      ],
+      "sufficient_classes_at_least_one_passer": [
+        "complex_i_block",
+        "gaba_potentiation",
+        "k2p_potentiation",
+        "nachr_antagonism",
+        "nca_block",
+        "snare_cooperativity"
+      ]
+    }
+  },
+  "all_stages_passing_subsets": [
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block"
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block"
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "worm",
+      "subset": "complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation"
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism"
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation"
+    }
+  ]
+}

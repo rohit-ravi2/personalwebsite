@@ -1,0 +1,75 @@
+{
+  "preregistration_hash": "533b624a00b5ff9efecee41fb549fcb9cf5f02810aefcde55e14c7981fd09ff4",
+  "pipeline": "v7_subq1_random_ensemble",
+  "doses_halothane_uM": [
+    10.0,
+    30.0,
+    100.0,
+    200.0,
+    350.0,
+    500.0,
+    1000.0,
+    3000.0
+  ],
+  "seeds_random": [
+    42,
+    137,
+    219
+  ],
+  "sim_duration_s": 30.0,
+  "n_random_ensembles": 50,
+  "match_levels": {
+    "match1_count_only": {
+      "match_level": 1,
+      "rejection_failures": 0,
+      "conserved_fold_error": {
+        "worm": 1.0509646254176128,
+        "fly": 1.0638680582778743,
+        "mouse": 1.2145733375998224
+      },
+      "percentile_rank": {
+        "worm": 0.0,
+        "fly": 5.555555555555555,
+        "mouse": 28.000000000000004
+      },
+      "wall_minutes": 130.1181072672208,
+      "summary_path": "/home/rohit/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/v7_random_ensemble/v7_match1_random_50.csv",
+      "raw_path": "/home/rohit/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/v7_random_ensemble/v7_match1_raw.csv"
+    },
+    "match2_count_plus_magnitude": {
+      "match_level": 2,
+      "rejection_failures": 0,
+      "conserved_fold_error": {
+        "worm": 1.0509646254176128,
+        "fly": 1.0638680582778743,
+        "mouse": 1.2145733375998224
+      },
+      "percentile_rank": {
+        "worm": 0.0,
+        "fly": 4.761904761904762,
+        "mouse": 46.0
+      },
+      "wall_minutes": 127.41328582366307,
+      "summary_path": "/home/rohit/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/v7_random_ensemble/v7_match2_random_50.csv",
+      "raw_path": "/home/rohit/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/v7_random_ensemble/v7_match2_raw.csv"
+    },
+    "match3_cell_type_spread": {
+      "status": "V7-DEVIATION",
+      "reason": "V1 validator applies all perturbations globally (resolve_target_neurons returns range(brain.N)). CeNGEN-resolved targeting required for cell-type spread discrimination is V2 work and is not in V7 scope. In V1 architecture, Match #3 reduces mathematically to Match #2 because all classes hit all neurons.",
+      "P8_thresholds_left_unfilled": true
+    }
+  },
+  "pre_registered_predictions": {
+    "P6_match1_percentile_le_50": {
+      "threshold": "<= 50%",
+      "falsifies_below": "<= 10% (conserved too special at this match)"
+    },
+    "P7_match2_percentile_le_30": {
+      "threshold": "<= 30%",
+      "falsifies_below": "<= 5% (total magnitude is the entire story)"
+    },
+    "P8_match3": {
+      "status": "NOT_TESTED \u2014 see match3_cell_type_spread above"
+    }
+  }
+}

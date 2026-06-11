@@ -1,0 +1,4 @@
+organism,subset,n_classes,predicted_EC50_uM,published_EC50_uM,fold_error,passes_stage1,qf_dose_200,qf_dose_1000
+mouse,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism,6,447.213595499958,350.0,1.2777531299998799,True,0.0,1.0
+worm,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation,7,431.1509187787195,340.0,1.2680909375844691,True,0.0625,0.9791666666666666
+fly,gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation,7,447.213595499958,340.0,1.3153341044116411,True,0.0,1.0
