@@ -1,0 +1,561 @@
+{
+  "block_id": "P18-C",
+  "gates": {
+    "G0_denominator_freeze": {
+      "in_scope_count": 19,
+      "verdict": "PASS",
+      "criterion": "in-scope set fixed by frozen predicate, non-empty"
+    },
+    "G1_rank2_attribution": {
+      "in_scope_count": 19,
+      "rank2_native_count": 18,
+      "contaminated_count": 0,
+      "contaminated_artifacts": [],
+      "verdict": "PASS",
+      "criterion": "100% in-scope RANK2-NATIVE by call-graph AND schema; contaminated==0"
+    },
+    "G1b_untraceable": {
+      "untraceable_in_scope_csv": 0,
+      "missing_never_produced_count": 1,
+      "missing_never_produced_artifacts": [
+        "artifacts/v7_random_ensemble/v7_match3_random_50.csv"
+      ],
+      "verdict": "FAIL",
+      "criterion": "zero orphan in-scope CSVs AND zero referenced-but-absent in-scope artifacts (orphan/missing => FAIL, never pass-by-default)"
+    }
+  },
+  "G0_denominator_freeze": {
+    "doc_hashes": {
+      "docs/v7_final_summary.md": "7c751edc00e4f1e92e4c9f5430f50dd016eeb1b4d881f12fd21b6c41201970ed",
+      "docs/v7_preregistration.md": "533b624a00b5ff9efecee41fb549fcb9cf5f02810aefcde55e14c7981fd09ff4"
+    },
+    "in_scope": [
+      "artifacts/v5_controls/M5_bootstrap_CIs.json",
+      "artifacts/v7_cross_cal/v7_cross_cal_verdict.json",
+      "artifacts/v7_random_ensemble/v7_match1_random_50.csv",
+      "artifacts/v7_random_ensemble/v7_match1_raw.csv",
+      "artifacts/v7_random_ensemble/v7_match2_random_50.csv",
+      "artifacts/v7_random_ensemble/v7_match2_raw.csv",
+      "artifacts/v7_random_ensemble/v7_match3_random_50.csv",
+      "artifacts/v7_random_ensemble/v7_random_ensemble_verdict.json",
+      "artifacts/v7_sensitivity/v7_sensitivity_lhs.csv",
+      "artifacts/v7_sensitivity/v7_sensitivity_lhs_allorganisms.json",
+      "artifacts/v7_sensitivity/v7_sensitivity_oat.csv",
+      "artifacts/v7_sensitivity/v7_sensitivity_verdict.json",
+      "artifacts/v7_subset_search/v7_stage1_halothane.csv",
+      "artifacts/v7_subset_search/v7_stage1_verdict.json",
+      "artifacts/v7_subset_search/v7_stage2_isoflurane.csv",
+      "artifacts/v7_subset_search/v7_stage2_verdict.json",
+      "artifacts/v7_subset_search/v7_stage3_eger.csv",
+      "artifacts/v7_subset_search/v7_stage3_verdict.json",
+      "artifacts/v7_subset_search/v7_subset_verdict.json"
+    ],
+    "referenced_by": {
+      "artifacts/v5_controls/M5_bootstrap_CIs.json": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_sensitivity/v7_sensitivity_lhs_allorganisms.json": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_subset_search/v7_subset_verdict.json": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_subset_search/v7_stage1_verdict.json": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_subset_search/v7_stage2_verdict.json": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_subset_search/v7_stage3_verdict.json": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_random_ensemble/v7_random_ensemble_verdict.json": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_random_ensemble/v7_match1_raw.csv": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_random_ensemble/v7_match2_raw.csv": [
+        "docs/v7_final_summary.md"
+      ],
+      "artifacts/v7_sensitivity/v7_sensitivity_verdict.json": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_sensitivity/v7_sensitivity_oat.csv": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_sensitivity/v7_sensitivity_lhs.csv": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_cross_cal/v7_cross_cal_verdict.json": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_subset_search/v7_stage1_halothane.csv": [
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_subset_search/v7_stage2_isoflurane.csv": [
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_subset_search/v7_stage3_eger.csv": [
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_random_ensemble/v7_match1_random_50.csv": [
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_random_ensemble/v7_match2_random_50.csv": [
+        "docs/v7_preregistration.md"
+      ],
+      "artifacts/v7_random_ensemble/v7_match3_random_50.csv": [
+        "docs/v7_preregistration.md"
+      ]
+    },
+    "known_suspect": "artifacts/phase_g/phase_g_halothane_dose_response.csv",
+    "known_suspect_in_scope": false
+  },
+  "prereg_sha256": "99c18604038b697ddd1a54d80c716b0dfbf0bffe3b00fe3891cc39cea0258b8b",
+  "known_suspect_analysis": {
+    "artifact": "artifacts/phase_g/phase_g_halothane_dose_response.csv",
+    "in_load_bearing_scope": false,
+    "writer_modules": [
+      "phase_g_network_perturbation",
+      "web_export_anesthesia"
+    ],
+    "reaches_apply_to_brain": true,
+    "higher_rank_hits": [
+      "phase_g_network_perturbation->phase_g_network_perturbation"
+    ],
+    "schema_class": "HIGHER-RANK-NATIVE",
+    "schema_higher_rank_cols": [
+      "complex_i_max",
+      "gaba_max",
+      "glucl_max",
+      "hyperpol_pA",
+      "k2p_max",
+      "nachr_max",
+      "snare_max"
+    ],
+    "consumer_modules": [
+      "phase_g_network_perturbation",
+      "web_export_anesthesia"
+    ],
+    "disposition": "HIGHER-RANK-NATIVE-but-OUT-OF-SCOPE-website-only"
+  },
+  "ledger": [
+    {
+      "artifact": "artifacts/v5_controls/M5_bootstrap_CIs.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_m5_bootstrap_ci"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2-REANALYSIS",
+      "reaches_run_single": false,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_cross_cal/v7_cross_cal_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_m4_cross_cal"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_m4_cross_cal->state_validation.v7_m4_cross_cal",
+        "state_validation.v7_m4_cross_cal->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_random_ensemble/v7_match1_random_50.csv",
+      "referenced_by": [
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_random_ensemble"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_random_ensemble->state_validation.v7_random_ensemble",
+        "state_validation.v7_random_ensemble->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_random_ensemble/v7_match1_raw.csv",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_random_ensemble"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_random_ensemble->state_validation.v7_random_ensemble",
+        "state_validation.v7_random_ensemble->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_random_ensemble/v7_match2_random_50.csv",
+      "referenced_by": [
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_random_ensemble"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_random_ensemble->state_validation.v7_random_ensemble",
+        "state_validation.v7_random_ensemble->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_random_ensemble/v7_match2_raw.csv",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_random_ensemble"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_random_ensemble->state_validation.v7_random_ensemble",
+        "state_validation.v7_random_ensemble->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_random_ensemble/v7_match3_random_50.csv",
+      "referenced_by": [
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_random_ensemble"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_random_ensemble->state_validation.v7_random_ensemble",
+        "state_validation.v7_random_ensemble->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "MISSING",
+      "schema_higher_rank_cols": [],
+      "verdict": "MISSING-NEVER-PRODUCED"
+    },
+    {
+      "artifact": "artifacts/v7_random_ensemble/v7_random_ensemble_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_random_ensemble"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_random_ensemble->state_validation.v7_random_ensemble",
+        "state_validation.v7_random_ensemble->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_sensitivity/v7_sensitivity_lhs.csv",
+      "referenced_by": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_m3_lhs_extend",
+        "state_validation.v7_m3_sensitivity"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_m3_lhs_extend->state_validation.v7_random_ensemble",
+        "state_validation.v7_m3_lhs_extend->state_validation.v7_subset_search",
+        "state_validation.v7_m3_sensitivity->state_validation.v7_random_ensemble",
+        "state_validation.v7_m3_sensitivity->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_sensitivity/v7_sensitivity_lhs_allorganisms.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_m3_lhs_extend"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_m3_lhs_extend->state_validation.v7_random_ensemble",
+        "state_validation.v7_m3_lhs_extend->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_sensitivity/v7_sensitivity_oat.csv",
+      "referenced_by": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_m3_sensitivity"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_m3_sensitivity->state_validation.v7_random_ensemble",
+        "state_validation.v7_m3_sensitivity->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_sensitivity/v7_sensitivity_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_m3_lhs_extend",
+        "state_validation.v7_m3_sensitivity"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_m3_lhs_extend->state_validation.v7_random_ensemble",
+        "state_validation.v7_m3_lhs_extend->state_validation.v7_subset_search",
+        "state_validation.v7_m3_sensitivity->state_validation.v7_random_ensemble",
+        "state_validation.v7_m3_sensitivity->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_stage1_halothane.csv",
+      "referenced_by": [
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_search->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_stages23"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_stage1_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_search"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_search->state_validation.v7_subset_search"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_stage2_isoflurane.csv",
+      "referenced_by": [
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_stages23"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_stages23"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_stage2_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_stages23"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_stages23"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_stage3_eger.csv",
+      "referenced_by": [
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_stages23"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_stages23"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_stage3_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_stages23"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_stages23"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    },
+    {
+      "artifact": "artifacts/v7_subset_search/v7_subset_verdict.json",
+      "referenced_by": [
+        "docs/v7_final_summary.md",
+        "docs/v7_preregistration.md"
+      ],
+      "writer_modules": [
+        "state_validation.v7_subset_stages23"
+      ],
+      "traceable": true,
+      "callgraph_class": "RANK2",
+      "reaches_run_single": true,
+      "reaches_apply_to_brain": false,
+      "run_single_hits": [
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_search",
+        "state_validation.v7_subset_stages23->state_validation.v7_subset_stages23"
+      ],
+      "higher_rank_hits": [],
+      "schema_class": "RANK2-NATIVE",
+      "schema_higher_rank_cols": [],
+      "verdict": "RANK2-NATIVE"
+    }
+  ],
+  "overall_verdict": "FAIL"
+}

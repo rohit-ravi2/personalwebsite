@@ -1,0 +1,60 @@
+{
+  "block_id": "P18-A",
+  "title": "Write-path closure audit (static AST/regex)",
+  "frozen_utc": "2026-06-11",
+  "premise_under_test": "The V1 perturbation operator is RANK-2: between brain construction and brain.run(), run_single mutates the brain ONLY via apply_genotype + apply_anesthetic, and every such mutation is a UNIFORM broadcast (identical value to all N neurons for I_ext; a single global scalar for synapse weight w). No per-neuron-VARYING reachable writer exists. QF = G(total_pa, snare_gain).",
+  "scope": {
+    "source_roots": [
+      "/mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/src",
+      "/mnt/ssd4tb/Desktop/website/personalwebsite/scripts/brain"
+    ],
+    "coupling_vocabulary": ["I_ext", "I_ext_", "v", "w", "PoissonGroup.rates", "rates"],
+    "in_scope_factories": ["worm:SeededLIFBrain(LIFBrain)", "fly:FlyLarvaBrain", "mouse:MouseBrain"],
+    "entry_point": "phase_g_state_validator.run_single"
+  },
+  "definitions": {
+    "writer": "Any AST assignment (Assign/AugAssign) or in-place mutation whose target is an attribute/subscript chain ending in one of the coupling tokens on a brain/neurons/synapse/PoissonGroup object; OR a PoissonGroup(...) construction with a rates= kwarg.",
+    "per_neuron_VARYING": "A write whose RHS value is NOT identical across all N neurons: indexed assignment with a per-index array/vector RHS (e.g. neurons.I_ext_ = ablation_current_pA*1e-12 where ablation_current_pA is a length-N vector), or a subscript write to a strict subset of indices with non-uniform values.",
+    "uniform_broadcast": "A write whose RHS is a single scalar applied identically to all targeted neurons (e.g. I_ext[:] += scalar*pA), or a single global multiplicative scalar on the entire weight vector (w[:] *= factor).",
+    "rank_contributing": "A writer that is (a) reachable from run_single along the construction->run() window AND (b) actually changes the realized I_ext/w/rates seen by brain.run().",
+    "reachable_from_run_single": "There exists a call-graph path from run_single() to the function containing the writer, traversed ONLY through calls that run_single makes between brain construction and brain.run() (i.e. apply_genotype, apply_anesthetic, and brain-factory constructors). Functions only invoked by ablate()/set_proprioception()/set_sensory_rate()/inject_poisson()/modulation attach are NOT reachable unless run_single calls them.",
+    "dormant_attached_but_rate_gated_zero": "A writer that IS added to the Brian2 network at construction (so it executes during run) but whose effect is gated to zero because its rate/current source is never updated above zero by run_single (e.g. proprio_group created with rates=0 and set_proprioception never called)."
+  },
+  "gates": {
+    "G1-closure": {
+      "criterion": "The set of {reachable-from-run_single AND rank-contributing} writers == exactly {apply_genotype, apply_anesthetic}, with ZERO per-neuron-VARYING writes among them, verified for ALL THREE factories (worm, fly, mouse).",
+      "decision_rule": "PASS iff (reachable_rank_contributing_writer_functions == {apply_genotype, apply_anesthetic}) AND (count of per_neuron_VARYING writers that are reachable+rank_contributing == 0) AND (this holds for worm AND fly AND mouse). Any reachable per-neuron-VARYING rank-contributing writer => FAIL => rank-2 premise broken => HALT.",
+      "hard": true
+    },
+    "G2-rot-detector": {
+      "criterion": "The machine-re-derived writer seed-set (every coupling-token writer site the AST/regex pass finds) is a SUPERSET of the >=11 hand-enumerated known witnesses.",
+      "known_witness_count_min": 11,
+      "known_witnesses": [
+        "phase_g_state_validator.apply_genotype:complex_i I_ext[:]+=ci_pa (uniform)",
+        "phase_g_state_validator.apply_genotype:nca I_ext[:]+=nca_pa (uniform)",
+        "phase_g_state_validator.apply_genotype:k2p I_ext[:]+=k2p_pa (uniform)",
+        "phase_g_state_validator.apply_genotype:Gao syn_exc.w[:]*=f (uniform-global)",
+        "phase_g_state_validator.apply_genotype:Gao syn_inh.w[:]*=f (uniform-global)",
+        "phase_g_state_validator.apply_anesthetic:total_pa I_ext[:]+=total_pa (uniform)",
+        "phase_g_state_validator.apply_anesthetic:SNARE syn_exc.w[:]*=factor (uniform-global)",
+        "phase_g_state_validator.apply_anesthetic:SNARE syn_inh.w[:]*=factor (uniform-global)",
+        "lif_brain._push_ablation: neurons.I_ext_ = ablation_current_pA*1e-12 (PER-NEURON-VARYING, UNATTACHED-until-ablate)",
+        "lif_brain.set_proprioception: proprio_group.rates = full(n,rate) (ATTACHED-but-rate-gated-zero)",
+        "lif_brain.set_sensory_rate: pg.rates = [...] (unreachable)",
+        "lif_brain.inject_poisson: PoissonGroup(...) (unreachable)",
+        "modulation_layer.attach_to_brain: neurons.I_ext_ = I_total*1e-12 (PER-NEURON-VARYING, unreachable-modulation-not-attached)",
+        "fly_larva_brain:232 neurons.I_ext = 0 (uniform-zero init, construction)",
+        "mouse_brain:140 neurons.I_ext = 0 (uniform-zero init, construction)"
+      ],
+      "decision_rule": "PASS iff re-derived_writer_site_count >= 11 AND re-derived set contains (by file:line or function tag) every hand-enumerated witness above. Missing any witness => FAIL (audit blind spot).",
+      "hard": true
+    },
+    "G3-rate-source-durability": {
+      "criterion": "Regression lock asserts BOTH: (A) no NEW I_ext/I_ext_ writer beyond {apply_genotype, apply_anesthetic} is reachable+rank-contributing from run_single; AND (B) every PoissonGroup.rates source (proprioceptive/sensory) is either unreachable from run_single OR reachable-but-rate-gated-zero (never driven >0 by run_single).",
+      "decision_rule": "PASS iff clause_A (reachable_new_Iext_writers == 0) AND clause_B (every rate source classified UNREACHABLE or ATTACHED-RATE-GATED-ZERO; none ACTIVE). Either clause false => FAIL.",
+      "hard": true
+    }
+  },
+  "overall_decision_rule": "G1-closure, G2-rot-detector, G3-rate-source-durability are ALL hard. Any FAIL => P18-A FAIL => HALT the build program (re-scope operator rank). No PARTIAL reframing.",
+  "anti_target_engineering": "Thresholds (witness_count>=11, per_neuron_varying_reachable==0) are fixed here BEFORE running. The audit is accept-either-way: a reachable per-neuron-VARYING writer is a real, publishable FAIL that REVIVES some positive claims."
+}

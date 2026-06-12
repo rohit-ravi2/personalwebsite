@@ -1,0 +1,56 @@
+======================================================================
+P18-C ARTIFACT PROVENANCE LEDGER
+======================================================================
+Load-bearing docs frozen: ['docs/v7_final_summary.md', 'docs/v7_preregistration.md']
+prereg.json sha256: 99c18604038b697ddd1a54d80c716b0dfbf0bffe3b00fe3891cc39cea0258b8b
+In-scope artifact count (G0 denominator): 19
+----------------------------------------------------------------------
+[RANK2-NATIVE      ] artifacts/v5_controls/M5_bootstrap_CIs.json
+    writer=['state_validation.v7_m5_bootstrap_ci'] cg=RANK2-REANALYSIS (run_single=False, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_cross_cal/v7_cross_cal_verdict.json
+    writer=['state_validation.v7_m4_cross_cal'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_random_ensemble/v7_match1_random_50.csv
+    writer=['state_validation.v7_random_ensemble'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_random_ensemble/v7_match1_raw.csv
+    writer=['state_validation.v7_random_ensemble'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_random_ensemble/v7_match2_random_50.csv
+    writer=['state_validation.v7_random_ensemble'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_random_ensemble/v7_match2_raw.csv
+    writer=['state_validation.v7_random_ensemble'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[MISSING-NEVER-PRODUCED] artifacts/v7_random_ensemble/v7_match3_random_50.csv
+    writer=['state_validation.v7_random_ensemble'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=MISSING hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_random_ensemble/v7_random_ensemble_verdict.json
+    writer=['state_validation.v7_random_ensemble'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_sensitivity/v7_sensitivity_lhs.csv
+    writer=['state_validation.v7_m3_lhs_extend', 'state_validation.v7_m3_sensitivity'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_sensitivity/v7_sensitivity_lhs_allorganisms.json
+    writer=['state_validation.v7_m3_lhs_extend'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_sensitivity/v7_sensitivity_oat.csv
+    writer=['state_validation.v7_m3_sensitivity'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_sensitivity/v7_sensitivity_verdict.json
+    writer=['state_validation.v7_m3_lhs_extend', 'state_validation.v7_m3_sensitivity'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_stage1_halothane.csv
+    writer=['state_validation.v7_subset_search', 'state_validation.v7_subset_stages23'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_stage1_verdict.json
+    writer=['state_validation.v7_subset_search'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_stage2_isoflurane.csv
+    writer=['state_validation.v7_subset_stages23'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_stage2_verdict.json
+    writer=['state_validation.v7_subset_stages23'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_stage3_eger.csv
+    writer=['state_validation.v7_subset_stages23'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_stage3_verdict.json
+    writer=['state_validation.v7_subset_stages23'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+[RANK2-NATIVE      ] artifacts/v7_subset_search/v7_subset_verdict.json
+    writer=['state_validation.v7_subset_stages23'] cg=RANK2 (run_single=True, apply_to_brain=False) schema=RANK2-NATIVE hr_cols=[]
+----------------------------------------------------------------------
+KNOWN SUSPECT: artifacts/phase_g/phase_g_halothane_dose_response.csv
+    in_load_bearing_scope=False writer=['phase_g_network_perturbation', 'web_export_anesthesia'] apply_to_brain=True schema=HIGHER-RANK-NATIVE hr_cols=['complex_i_max', 'gaba_max', 'glucl_max', 'hyperpol_pA', 'k2p_max', 'nachr_max', 'snare_max']
+    consumers=['phase_g_network_perturbation', 'web_export_anesthesia']
+    disposition=HIGHER-RANK-NATIVE-but-OUT-OF-SCOPE-website-only
+----------------------------------------------------------------------
+G0_denominator_freeze: PASS  {'in_scope_count': 19, 'verdict': 'PASS', 'criterion': 'in-scope set fixed by frozen predicate, non-empty'}
+G1_rank2_attribution: PASS  {'in_scope_count': 19, 'rank2_native_count': 18, 'contaminated_count': 0, 'contaminated_artifacts': [], 'verdict': 'PASS', 'criterion': '100% in-scope RANK2-NATIVE by call-graph AND schema; contaminated==0'}
+G1b_untraceable: FAIL  {'untraceable_in_scope_csv': 0, 'missing_never_produced_count': 1, 'missing_never_produced_artifacts': ['artifacts/v7_random_ensemble/v7_match3_random_50.csv'], 'verdict': 'FAIL', 'criterion': 'zero orphan in-scope CSVs AND zero referenced-but-absent in-scope artifacts (orphan/missing => FAIL, never pass-by-default)'}
+======================================================================
+OVERALL: FAIL

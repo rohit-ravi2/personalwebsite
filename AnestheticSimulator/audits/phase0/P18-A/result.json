@@ -1,0 +1,317 @@
+{
+  "block_id": "P18-A",
+  "run_single_pre_run_calls": [
+    "SeededLIFBrain",
+    "apply_anesthetic",
+    "apply_genotype",
+    "brain_factory",
+    "seed"
+  ],
+  "run_single_brain_run_line": 369,
+  "fly_reuses_run_single": true,
+  "mouse_reuses_run_single": true,
+  "total_writer_sites": 141,
+  "reachable_rank_contributing_funcs": [
+    "apply_anesthetic",
+    "apply_genotype"
+  ],
+  "reachable_rank_contributing_writers": [
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 262,
+      "func": "apply_genotype",
+      "token": "I_ext",
+      "class": "uniform"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 267,
+      "func": "apply_genotype",
+      "token": "I_ext",
+      "class": "uniform"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 283,
+      "func": "apply_genotype",
+      "token": "I_ext",
+      "class": "uniform"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 324,
+      "func": "apply_anesthetic",
+      "token": "I_ext",
+      "class": "uniform"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 275,
+      "func": "apply_genotype",
+      "token": "w",
+      "class": "uniform_global_scalar"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 277,
+      "func": "apply_genotype",
+      "token": "w",
+      "class": "uniform_global_scalar"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 333,
+      "func": "apply_anesthetic",
+      "token": "w",
+      "class": "uniform_global_scalar"
+    },
+    {
+      "file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+      "line": 335,
+      "func": "apply_anesthetic",
+      "token": "w",
+      "class": "uniform_global_scalar"
+    }
+  ],
+  "per_neuron_VARYING_writers_all": [
+    {
+      "file": "scripts/brain/graded_brain.py",
+      "line": 331,
+      "func": "_push_ablation",
+      "token": "I_ext_",
+      "class": "per_neuron_VARYING",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/lif_brain.py",
+      "line": 479,
+      "func": "_push_ablation",
+      "token": "I_ext_",
+      "class": "per_neuron_VARYING",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/modulation_layer.py",
+      "line": 314,
+      "func": "_update_modulation",
+      "token": "I_ext_",
+      "class": "per_neuron_VARYING",
+      "reachability": "UNREACHABLE"
+    }
+  ],
+  "per_neuron_VARYING_reachable_count": 0,
+  "rate_sources": [
+    {
+      "file": "scripts/brain/graded_brain.py",
+      "line": 317,
+      "func": "set_proprioception",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/graded_brain.py",
+      "line": 303,
+      "func": "_setup_proprioception",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/graded_brain.py",
+      "line": 356,
+      "func": "set_sensory_rate",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/graded_brain.py",
+      "line": 363,
+      "func": "inject_poisson",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/graded_brain.py",
+      "line": 346,
+      "func": "set_sensory_rate",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/lif_brain.py",
+      "line": 449,
+      "func": "set_proprioception",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/lif_brain.py",
+      "line": 431,
+      "func": "_setup_proprioception",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "ATTACHED_RATE_GATED_ZERO"
+    },
+    {
+      "file": "scripts/brain/lif_brain.py",
+      "line": 506,
+      "func": "set_sensory_rate",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/lif_brain.py",
+      "line": 515,
+      "func": "inject_poisson",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/lif_brain.py",
+      "line": 496,
+      "func": "set_sensory_rate",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/phase3_cascade_diagnostic.py",
+      "line": 99,
+      "func": "inject_directly",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/wave2/integration/wave2_hybrid_brain.py",
+      "line": 1332,
+      "func": "set_proprioception",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/wave2/integration/wave2_hybrid_brain.py",
+      "line": 1319,
+      "func": "_setup_proprioception",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/wave2/integration/wave2_hybrid_brain.py",
+      "line": 1362,
+      "func": "set_sensory_rate",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/wave2/integration/wave2_hybrid_brain.py",
+      "line": 1374,
+      "func": "inject_poisson",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    },
+    {
+      "file": "scripts/brain/wave2/integration/wave2_hybrid_brain.py",
+      "line": 1352,
+      "func": "set_sensory_rate",
+      "token": "rates",
+      "class": "rate_source",
+      "reachability": "UNREACHABLE"
+    }
+  ],
+  "new_iext_reachable_writers": [],
+  "witness_hits": {
+    "phase_g_state_validator.py:apply_genotype:I_ext": 3,
+    "phase_g_state_validator.py:apply_genotype:w": 2,
+    "phase_g_state_validator.py:apply_anesthetic:I_ext": 1,
+    "phase_g_state_validator.py:apply_anesthetic:w": 2,
+    "lif_brain.py:_push_ablation:I_ext_": 1,
+    "lif_brain.py:set_proprioception:rates": 1,
+    "lif_brain.py:set_sensory_rate:rates": 2,
+    "lif_brain.py:inject_poisson:rates": 1,
+    "modulation_layer.py:_update_modulation:I_ext_": 1,
+    "fly_larva_brain.py:None:I_ext": 1,
+    "mouse_brain.py:None:I_ext": 1
+  },
+  "witnesses_found_keys": 11,
+  "total_witness_sites": 16,
+  "factory_construction_Iext": {
+    "worm": {
+      "factory_class": "LIFBrain",
+      "file": "scripts/brain/lif_brain.py",
+      "construction_Iext_writes": [
+        {
+          "line": 479,
+          "token": "I_ext_",
+          "src": "self.neurons.I_ext_ = self.ablation_current_pA * 1e-12",
+          "class": "per_neuron_VARYING"
+        }
+      ]
+    },
+    "fly": {
+      "factory_class": "FlyLarvaBrain",
+      "file": "AnestheticSimulator/src/state_validation/fly_larva_brain.py",
+      "construction_Iext_writes": [
+        {
+          "line": 232,
+          "token": "I_ext",
+          "src": "self.neurons.I_ext = 0 * 1e-12  # unitless, will be set as pA",
+          "class": "zero_init"
+        }
+      ]
+    },
+    "mouse": {
+      "factory_class": "MouseBrain",
+      "file": "AnestheticSimulator/src/state_validation/mouse_brain.py",
+      "construction_Iext_writes": [
+        {
+          "line": 140,
+          "token": "I_ext",
+          "src": "self.neurons.I_ext = 0",
+          "class": "zero_init"
+        }
+      ]
+    }
+  },
+  "gates": {
+    "G1-closure": {
+      "pass": true,
+      "reachable_funcs": [
+        "apply_anesthetic",
+        "apply_genotype"
+      ],
+      "expected": [
+        "apply_anesthetic",
+        "apply_genotype"
+      ],
+      "per_neuron_VARYING_reachable": 0,
+      "fly_reuses": true,
+      "mouse_reuses": true
+    },
+    "G2-rot-detector": {
+      "pass": true,
+      "total_witness_sites": 16,
+      "min_required": 11,
+      "all_known_witnesses_present": true,
+      "missing_witnesses": []
+    },
+    "G3-rate-source-durability": {
+      "pass": true,
+      "clause_A_no_new_iext_writer": true,
+      "clause_B_rate_sources_inert": true,
+      "rate_active_from_run_single": 0
+    }
+  },
+  "overall_pass": true
+}

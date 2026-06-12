@@ -1,0 +1,56 @@
+{
+  "block_id": "P18-B",
+  "title": "Dynamic dual-input rank certificate (build-only, no brain.run())",
+  "frozen_at_commit": "4e44790206de3ad09e3118266fadd2f7079f93c2",
+  "frozen_before_run": true,
+  "premise_under_test": "The V1 perturbation operator is RANK-2: every anesthetic/genotype profile collapses to two scalars (total_pa, broadcast IDENTICALLY to all N neurons into I_ext; and snare_gain, SNARE's lone global multiplicative synaptic weight scale). Forward map QF = G(total_pa, snare_gain).",
+  "method": {
+    "construct_only": true,
+    "no_brain_run": "brain.run() MUST NOT be called. Only the brain constructor + apply_genotype + apply_anesthetic are invoked, with I_ext and synapse weights snapshotted before/after.",
+    "env": "/home/rohit/miniconda3/envs/ml/bin/python (brian2)",
+    "factory": "worm SeededLIFBrain (use_per_edge_glu_signs=True); rank gates evaluated on the worm operator, which is the canonical run_single default. Fly/mouse share the identical apply_genotype/apply_anesthetic code path (verified by import in P18-A scope).",
+    "battery": {
+      "mechanism_classes_current_axis": ["complex_i_block", "complex_ii_block", "k2p_potentiation", "nca_block", "gaba_potentiation", "glucl_potentiation", "nachr_antagonism"],
+      "snare_axis": ["snare_cooperativity"],
+      "engagements_per_class": ">=2 (e.g. partial + saturating)",
+      "genotype_branches": ["complex_i_factor<1 (gas-1)", "nca_leak_factor<1 (unc-79)", "wsyn_global_factor!=1 (goa-1)", "k2p_baseline_factor<1 (Sandman/fly)"],
+      "mixtures": ["3-class", "5-class", "7-class"],
+      "snare_cases": ["SNARE-alone", "SNARE co-engaged with current classes"],
+      "min_cases": 50
+    },
+    "matrices": {
+      "D": "cases x N_neurons matrix of per-case I_ext deltas (post-pre, in pA), restricted to non-trivial (nonzero) current-axis cases",
+      "S": "cases x N_synapses matrix of per-case synapse-weight RATIOS (post/pre), restricted to non-trivial (ratio != 1) SNARE/wsyn cases"
+    },
+    "statistics": {
+      "singular_spectrum": "SVD of D and of S; count singular values > tau",
+      "rho_k": "per-case spatial-uniformity residual of each I_ext delta row d_k: rho_k = || d_k - mean(d_k)*ones || / (||d_k|| + eps). rho_k=0 => perfect all-ones broadcast.",
+      "synapse_uniformity": "per-case synapse ratio uniformity r_k: max(|ratio_i - median(ratio)|) over synapses; 0 => single global scalar"
+    }
+  },
+  "tau": 1e-6,
+  "decision_rule": {
+    ">1e-6": "FALSIFY (hidden per-neuron/synapse structure => rank>2 => FAIL => HALT build program)",
+    "[1e-9,1e-6]": "ESCALATE (borderline; manual review)",
+    "<1e-9": "PASS (clean broadcast / global scalar)"
+  },
+  "gates": {
+    "G1-current-rank": {
+      "criterion": "number of singular values of D exceeding tau (1e-6) EQUALS 1, AND max_k rho_k < 1e-6 (every I_ext delta is a spatially-uniform all-ones broadcast).",
+      "pass_if": "n_sv_D(>1e-6) == 1 AND max_rho_k < 1e-6",
+      "fail_meaning": "more than one nonzero singular value OR any non-uniform delta => hidden per-neuron structure => current operator rank>1 in space => rank-2 premise FALSE => HALT."
+    },
+    "G2-synapse-rank": {
+      "criterion": "S is rank-1 (number of singular values of S exceeding tau EQUALS 1) AND every per-case synapse ratio is spatially uniform (max r_k < 1e-6 => single global SNARE/wsyn scalar).",
+      "pass_if": "n_sv_S(>1e-6) == 1 AND max_synapse_nonuniformity < 1e-6",
+      "fail_meaning": "per-synapse-varying scale => SNARE axis is not a single global scalar => rank>2 => HALT."
+    },
+    "G3-coverage-completeness": {
+      "criterion": "7/7 current-axis mechanism classes exercised, 4/4 genotype branches exercised, and 100% of the load-bearing if-branches inside apply_anesthetic + apply_genotype actually exercised at least once. If incomplete, the rank gates G1/G2 are VOID.",
+      "pass_if": "classes_hit==7 AND genotype_branches_hit==4 AND all_load_bearing_if_branches_hit==True",
+      "fail_meaning": "battery did not exercise the operator fully => rank certificate is not coverage-complete => VOID."
+    }
+  },
+  "overall_pass_rule": "G1-current-rank PASS AND G2-synapse-rank PASS AND G3-coverage-completeness PASS. ANY gate FAIL => block FAIL => HALT the WF2 build program (re-scope ledger). G3 FAIL => rank gates VOID (indeterminate).",
+  "anti_target_engineering": "tau frozen at 1e-6 from roadmap line 152/154 BEFORE any run. No threshold is tuned to outcome. A FAIL is reported loudly and is a pre-accepted, real outcome that HALTS the build program."
+}

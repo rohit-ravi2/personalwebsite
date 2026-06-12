@@ -1,0 +1,35 @@
+{
+  "block_id": "P18-C",
+  "title": "Artifact provenance ledger - static import/call-graph",
+  "frozen_utc": "2026-06-11",
+  "premise_under_test": "Every LOAD-BEARING v7 artifact (the ensemble/percentile/subset CSVs+JSONs the claims rest on) was produced by the rank-2 run_single path (I_ext[:] += total_pa*pA broadcast + single global SNARE syn.w *= factor), NOT by a higher-rank writer (phase_g_network_perturbation.apply_to_brain carrying per-neuron k2p_max schema).",
+  "env": "python3 stdlib ast/regex/subprocess - static only, no brain.run()",
+  "repo_root": "/mnt/ssd4tb/Desktop/website/personalwebsite",
+  "src_root": "/mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/src",
+
+  "G0_denominator_freeze": {
+    "rule": "The in-scope (load-bearing) artifact set is fixed BEFORE classification by a hash-locked grep-reachability predicate over the load-bearing claim docs. No post-hoc shrinking permitted.",
+    "predicate": "in_scope := every path matching regex (artifacts/[A-Za-z0-9_./-]+\\.(csv|json)) that is textually referenced by a LOAD-BEARING claim doc. Load-bearing claim docs are FROZEN here as: docs/v7_final_summary.md and docs/v7_preregistration.md. The candidate set additionally records the KNOWN SUSPECT artifacts/phase_g/phase_g_halothane_dose_response.csv regardless of reference, and its scope is decided by the predicate (in-scope iff referenced by a load-bearing doc).",
+    "hash_lock": "sha256 of each load-bearing doc + sha256 of this prereg.json are recorded in result.json; recomputed at run time and asserted unchanged-within-run.",
+    "pass_condition": "in_scope set is non-empty, fully determined by the predicate, and recorded with its members BEFORE any classification step runs.",
+    "fail_condition": "in_scope set is empty, or any member is added/removed by hand after classification begins."
+  },
+
+  "G1_rank2_attribution": {
+    "rule": "100% of in-scope artifacts must trace to the rank-2 run_single path by BOTH (a) call-graph reachability AND (b) schema fingerprint. contaminated_count must == 0.",
+    "callgraph_criterion": "The writer module of each in-scope artifact, via transitive intra-package import + module-level reachability, must reach run_single (or only re-analyze frozen rank-2 raw artifacts) and must NOT reach phase_g_network_perturbation.apply_to_brain / NetworkPerturbation.",
+    "schema_criterion": "RANK2-NATIVE := artifact columns/keys are QF-space outputs (qf_dose_*, predicted_EC50_uM, max_qf, fold_error, percentile, ec50, ci_*) and contain NONE of the higher-rank per-neuron fingerprint columns {k2p_max, complex_i_max, gaba_max, snare_max, nachr_max, glucl_max, hyperpol_pA}. HIGHER-RANK-NATIVE := contains any of those fingerprint columns.",
+    "pass_condition": "for EVERY in-scope artifact: callgraph==RANK2 AND schema==RANK2-NATIVE; contaminated_count==0.",
+    "fail_condition": "any in-scope artifact is HIGHER-RANK-NATIVE by schema, or its writer reaches apply_to_brain by call-graph; contaminated_count>=1 => that claim VOID-pending-rederivation."
+  },
+
+  "G1b_untraceable": {
+    "rule": "Zero orphan/untraceable in-scope CSVs. An in-scope CSV with no identifiable writer module is an automatic FAIL (never pass-by-default).",
+    "pass_condition": "untraceable_in_scope == 0",
+    "fail_condition": "untraceable_in_scope >= 1"
+  },
+
+  "expected_per_roadmap": "ensemble/percentile/subset family CLEAN (RANK2-NATIVE, call-graph reaches run_single); phase_g_halothane_dose_response.csv is HIGHER-RANK-NATIVE (k2p_max schema, writer reaches apply_to_brain) BUT website-only / OUT-OF-SCOPE by the frozen predicate (referenced only by web_export_anesthesia.py, not by any load-bearing claim doc).",
+
+  "decision_rule": "PASS iff G0 frozen-and-nonempty AND G1 contaminated_count==0 AND G1b untraceable_in_scope==0. Any single gate FAIL => block FAIL: a load-bearing number silently came from the richer operator (publishable provenance correction). HARD GATES ABSOLUTE - no reframe to PARTIAL."
+}

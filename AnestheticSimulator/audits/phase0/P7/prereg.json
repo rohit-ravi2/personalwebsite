@@ -1,0 +1,46 @@
+{
+  "block_id": "P7",
+  "title": "Provenance git-archaeology: sat_pa ladder + 3 Hz cutoff vs the halothane alpha fit",
+  "frozen_at": "2026-06-11",
+  "frozen_before_running": true,
+  "premise_under_test": "The 'one free parameter (alpha)' honesty framing requires that the sat_pa magnitude ladder and the 3.0 Hz quiescence cutoff were frozen (pinned by a dated prereg, value-stable) BEFORE the halothane alpha was fit. If they were co-tuned with alpha, the framing deflates.",
+  "repo_root": "/mnt/ssd4tb/Desktop/website/personalwebsite",
+  "primary_source_file": "AnestheticSimulator/src/state_validation/phase_g_state_validator.py",
+  "tokens": {
+    "cutoff_token": "QUIESCENT_RATE_THRESHOLD_HZ",
+    "cutoff_value_token": "QUIESCENT_RATE_THRESHOLD_HZ = 3.0",
+    "sat_pa_table_token": "DEFAULT_PER_CLASS_PA_AT_SATURATION",
+    "sat_pa_value_tokens": [
+      "complex_i_block':       60.0",
+      "complex_ii_block':      20.0",
+      "k2p_potentiation':      30.0",
+      "nca_block':             40.0",
+      "gaba_potentiation':     30.0",
+      "glucl_potentiation':    20.0",
+      "nachr_antagonism':      30.0",
+      "snare_cooperativity':   50.0"
+    ],
+    "worm_alpha_token": "ALPHA = 0.13",
+    "worm_alpha_refit_signature": "recalibrated after W_chem"
+  },
+  "n_sat_pa_values": 8,
+  "method": [
+    "WB1: git log --all -S<token> for cutoff token + each of the 8 sat_pa value tokens + the sat_pa table token + the worm-alpha token. Record introducing commit hash+date for each.",
+    "WB2: byte-identity trace -- for every commit that touches the sat_pa table, extract the 8 values; assert they are byte-identical across all commits (no value ever changed). ACTIVE-TUNING detector: flag if ANY commit diff changes a sat_pa value AND changes a worm-alpha assignment in the SAME diff.",
+    "WB3: prereg-vs-shipped rule diff -- locate the earliest dated preregistration doc that states the quiescence/immobilization rule FORM; compare its rule-form and its threshold-determination procedure against the shipped fixed 3.0 Hz.",
+    "WB4: over-deflation guard -- record whether the prereg pins a FIXED numeric value or a DERIVED procedure (e.g. WT 90th-percentile / <5% time). If derived, the within-10%-of-band check is NOT computable from git alone and is reported as NOT-ESTABLISHABLE-FROM-GIT (procedural-redesign branch)."
+  ],
+  "gates": {
+    "P7.A": {
+      "name": "3 Hz quiescence cutoff provenance",
+      "decision_rule": "PROVEN_PREREGISTERED iff (a) a dated prereg committed strictly BEFORE the shipped cutoff's introducing commit pins the rule-FORM AND (b) the shipped value 3.0 Hz is within 10% of the WT-calibrated band that the prereg's procedure would produce. Else if the rule-FORM is preregistered but the shipped value replaces a preregistered DERIVED procedure with a fixed number => RULE_REDESIGNED_VALUE_DEFENSIBLE (when 3.0 is plausibly in-band / not establishable as out-of-band) or POSTHOC (when no dated prereg pins even the rule-form). Order of evaluation: no-dated-prereg-of-rule-form -> POSTHOC; dated-prereg-of-rule-form + fixed value matching derived band within 10% -> PROVEN_PREREGISTERED; dated-prereg-of-rule-form but value-form redesigned (procedure->fixed) -> RULE_REDESIGNED_VALUE_DEFENSIBLE.",
+      "ten_percent_band_note": "If the prereg specifies a DERIVED threshold (procedure, not number), the 'within 10% of WT-calibrated band' test is computable only by re-running the WT calibration; from git alone it is NOT-ESTABLISHABLE. Report that explicitly rather than fabricating a band."
+    },
+    "P7.B": {
+      "name": "sat_pa magnitude ladder provenance",
+      "decision_rule": "PROVEN iff an earlier dated doc (committed strictly before the ladder's introducing commit) pins ALL 8 sat_pa values AND byte-identity holds across all commits touching the ladder. Else UNDECIDABLE_BY_TIMESTAMP (ladder first appears in its own introducing commit with no earlier pinning doc; pre-first-commit working-tree tuning is unobservable from git). If an ACTIVE-TUNING diff is found (a sat_pa value changed in the SAME diff as a worm-alpha re-fit) => ACTIVE_TUNING (halt-and-narrow)."
+    }
+  },
+  "fail_branch_prewritten": "If P7.A = POSTHOC/RULE_REDESIGNED and/or P7.B = UNDECIDABLE/ACTIVE_TUNING: narrow the 'one free parameter (alpha)' claim to 'one fitted scalar (alpha, itself re-fit) conditional on a ladder of UNDECIDABLE a-priori status and a cutoff rule whose threshold-determination was redesigned (preregistered derived-procedure -> shipped fixed 3.0 Hz) post-prereg.' This DEFLATION is an accepted, expected outcome and must be reported loudly, not reframed.",
+  "honesty_note": "Report the honest verdict even if it deflates the one-free-alpha framing. Do NOT tune any threshold to make a gate pass. No measurement may be fabricated; numbers come only from executed git commands."
+}

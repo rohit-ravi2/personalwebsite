@@ -1,0 +1,36 @@
+=== P18-A Write-path closure audit ===
+run_single pre-run calls: ['SeededLIFBrain', 'apply_anesthetic', 'apply_genotype', 'brain_factory', 'seed']
+brain.run() at line 369
+fly reuses run_single: True | mouse reuses run_single: True
+total coupling-token writer sites: 141
+reachable+rank-contributing writer funcs: ['apply_anesthetic', 'apply_genotype']
+  (expected: ['apply_anesthetic', 'apply_genotype'])
+per-neuron-VARYING writers (all): 3
+    scripts/brain/graded_brain.py:331 _push_ablation [per_neuron_VARYING] reach=UNREACHABLE
+    scripts/brain/lif_brain.py:479 _push_ablation [per_neuron_VARYING] reach=UNREACHABLE
+    scripts/brain/modulation_layer.py:314 _update_modulation [per_neuron_VARYING] reach=UNREACHABLE
+per-neuron-VARYING reachable from run_single: 0
+rate sources: 16
+    scripts/brain/graded_brain.py:317 set_proprioception reach=UNREACHABLE
+    scripts/brain/graded_brain.py:303 _setup_proprioception reach=UNREACHABLE
+    scripts/brain/graded_brain.py:356 set_sensory_rate reach=UNREACHABLE
+    scripts/brain/graded_brain.py:363 inject_poisson reach=UNREACHABLE
+    scripts/brain/graded_brain.py:346 set_sensory_rate reach=UNREACHABLE
+    scripts/brain/lif_brain.py:449 set_proprioception reach=UNREACHABLE
+    scripts/brain/lif_brain.py:431 _setup_proprioception reach=ATTACHED_RATE_GATED_ZERO
+    scripts/brain/lif_brain.py:506 set_sensory_rate reach=UNREACHABLE
+    scripts/brain/lif_brain.py:515 inject_poisson reach=UNREACHABLE
+    scripts/brain/lif_brain.py:496 set_sensory_rate reach=UNREACHABLE
+    scripts/brain/phase3_cascade_diagnostic.py:99 inject_directly reach=UNREACHABLE
+    scripts/brain/wave2/integration/wave2_hybrid_brain.py:1332 set_proprioception reach=UNREACHABLE
+    scripts/brain/wave2/integration/wave2_hybrid_brain.py:1319 _setup_proprioception reach=UNREACHABLE
+    scripts/brain/wave2/integration/wave2_hybrid_brain.py:1362 set_sensory_rate reach=UNREACHABLE
+    scripts/brain/wave2/integration/wave2_hybrid_brain.py:1374 inject_poisson reach=UNREACHABLE
+    scripts/brain/wave2/integration/wave2_hybrid_brain.py:1352 set_sensory_rate reach=UNREACHABLE
+total witness sites: 16 (>=11 required)
+missing witnesses: []
+
+G1-closure              : PASS
+G2-rot-detector         : PASS
+G3-rate-source-durability: PASS
+OVERALL                 : PASS

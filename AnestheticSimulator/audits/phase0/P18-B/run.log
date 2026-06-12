@@ -1,0 +1,19 @@
+=== P18-B dynamic rank certificate ===
+tau = 1e-06
+battery size = 62 cases
+N_neurons = 300
+D shape = (56, 300)  (nontrivial current cases)
+S shape = (18, 3099)  (nontrivial synapse cases)
+singular values D (top 6): [7355.392817518, 0.0, 0.0, 0.0, 0.0, 0.0]
+  #sv(D) > tau = 1
+singular values S (top 6): [192.861990812, 0.0, 0.0, 0.0, 0.0, 0.0]
+  #sv(S) > tau = 1
+max rho_k (current spatial non-uniformity) = 2.741e-16
+max synapse non-uniformity = 2.220e-16
+current classes hit = 7/7 : ['complex_i_block', 'complex_ii_block', 'gaba_potentiation', 'glucl_potentiation', 'k2p_potentiation', 'nachr_antagonism', 'nca_block']
+genotype branches hit = 4/4 : ['complex_i_factor<1', 'k2p_baseline_factor<1', 'nca_leak_factor<1', 'wsyn_global_factor!=1']
+operator if-branches fired: {'apply_anesthetic.total_pa_iext_write': True, 'apply_anesthetic.snare_syn_scale': True, 'apply_genotype.complex_i_iext': True, 'apply_genotype.nca_iext': True, 'apply_genotype.wsyn_scale': True, 'apply_genotype.k2p_iext': True}
+G1-current-rank = PASS  (n_sv_D==1 need 1; max_rho=2.74e-16 need <1e-06)
+G2-synapse-rank = PASS  (n_sv_S==1 need 1; max_syn_nonunif=2.22e-16 need <1e-06)
+G3-coverage     = PASS  (classes 7/7, geno 4/4, branches True)
+OVERALL = PASS

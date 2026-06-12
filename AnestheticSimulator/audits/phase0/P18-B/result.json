@@ -1,0 +1,667 @@
+{
+  "block_id": "P18-B",
+  "tau": 1e-06,
+  "n_cases": 62,
+  "N_neurons": 300,
+  "D_shape": [
+    56,
+    300
+  ],
+  "S_shape": [
+    18,
+    3099
+  ],
+  "singular_values_D": [
+    7355.392817518313,
+    1.1586110795557836e-11,
+    1.562147943520277e-26,
+    2.2101739936301652e-41,
+    6.260090653253991e-57,
+    2.212181737689977e-71,
+    2.801421195000476e-86,
+    1.20327223257944e-100,
+    2.8455767139936397e-117,
+    8.938311760427233e-132,
+    3.0122965976533947e-146,
+    7.080260920760022e-161,
+    8.688815769866796e-177,
+    4.1250250963295075e-192,
+    5.335417961724083e-207,
+    4.5718756230306336e-222,
+    1.7770649020283927e-237,
+    1.5267676758158123e-252,
+    1.7099793173021791e-267,
+    6.829158753932213e-283,
+    1.1860171496273096e-297,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "singular_values_S": [
+    192.86199081208278,
+    2.3975589380613268e-12,
+    6.554942884044368e-15,
+    3.723672929827441e-15,
+    1.825970093872185e-15,
+    8.142210322662553e-16,
+    4.12550525605047e-16,
+    2.0612223076527685e-16,
+    1.7107548150806863e-16,
+    4.0218577189996586e-27,
+    4.3125866363322666e-29,
+    6.95133468523164e-30,
+    2.9804715067674527e-31,
+    1.1978969935343695e-31,
+    1.2274746533219938e-32,
+    9.348393294186594e-34,
+    2.927650909623769e-47,
+    6.931533507097496e-52
+  ],
+  "n_sv_D_gt_tau": 1,
+  "n_sv_S_gt_tau": 1,
+  "max_rho_k_current": 2.7407627223147553e-16,
+  "max_synapse_nonuniformity": 2.220446049250313e-16,
+  "coverage": {
+    "current_classes_hit": [
+      "complex_i_block",
+      "complex_ii_block",
+      "gaba_potentiation",
+      "glucl_potentiation",
+      "k2p_potentiation",
+      "nachr_antagonism",
+      "nca_block"
+    ],
+    "n_current_classes": 7,
+    "genotype_branches_hit": [
+      "complex_i_factor<1",
+      "k2p_baseline_factor<1",
+      "nca_leak_factor<1",
+      "wsyn_global_factor!=1"
+    ],
+    "n_genotype_branches": 4,
+    "operator_if_branches_fired": {
+      "apply_anesthetic.total_pa_iext_write": true,
+      "apply_anesthetic.snare_syn_scale": true,
+      "apply_genotype.complex_i_iext": true,
+      "apply_genotype.nca_iext": true,
+      "apply_genotype.wsyn_scale": true,
+      "apply_genotype.k2p_iext": true
+    },
+    "all_branches_hit": true
+  },
+  "per_case_rho": [
+    {
+      "case": "class[complex_i_block]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -12.0,
+      "delta_min_pA": -12.0,
+      "delta_max_pA": -12.0
+    },
+    {
+      "case": "class[complex_i_block]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -24.0,
+      "delta_min_pA": -24.0,
+      "delta_max_pA": -24.0
+    },
+    {
+      "case": "class[complex_i_block]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -36.0,
+      "delta_min_pA": -36.0,
+      "delta_max_pA": -36.0
+    },
+    {
+      "case": "class[complex_i_block]_e0.9",
+      "rho": 1.3158198810372227e-16,
+      "delta_mean_pA": -53.999999999999986,
+      "delta_min_pA": -53.99999999999999,
+      "delta_max_pA": -53.99999999999999
+    },
+    {
+      "case": "class[complex_ii_block]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -4.0,
+      "delta_min_pA": -4.0,
+      "delta_max_pA": -4.0
+    },
+    {
+      "case": "class[complex_ii_block]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -8.0,
+      "delta_min_pA": -8.0,
+      "delta_max_pA": -8.0
+    },
+    {
+      "case": "class[complex_ii_block]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -12.0,
+      "delta_min_pA": -12.0,
+      "delta_max_pA": -12.0
+    },
+    {
+      "case": "class[complex_ii_block]_e0.9",
+      "rho": 0.0,
+      "delta_mean_pA": -18.0,
+      "delta_min_pA": -18.0,
+      "delta_max_pA": -18.0
+    },
+    {
+      "case": "class[k2p_potentiation]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -6.0,
+      "delta_min_pA": -6.0,
+      "delta_max_pA": -6.0
+    },
+    {
+      "case": "class[k2p_potentiation]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -12.0,
+      "delta_min_pA": -12.0,
+      "delta_max_pA": -12.0
+    },
+    {
+      "case": "class[k2p_potentiation]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -18.0,
+      "delta_min_pA": -18.0,
+      "delta_max_pA": -18.0
+    },
+    {
+      "case": "class[k2p_potentiation]_e0.9",
+      "rho": 1.3158198810372227e-16,
+      "delta_mean_pA": -26.999999999999993,
+      "delta_min_pA": -26.999999999999996,
+      "delta_max_pA": -26.999999999999996
+    },
+    {
+      "case": "class[nca_block]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -8.0,
+      "delta_min_pA": -8.0,
+      "delta_max_pA": -8.0
+    },
+    {
+      "case": "class[nca_block]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -16.0,
+      "delta_min_pA": -16.0,
+      "delta_max_pA": -16.0
+    },
+    {
+      "case": "class[nca_block]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -24.0,
+      "delta_min_pA": -24.0,
+      "delta_max_pA": -24.0
+    },
+    {
+      "case": "class[nca_block]_e0.9",
+      "rho": 0.0,
+      "delta_mean_pA": -36.0,
+      "delta_min_pA": -36.0,
+      "delta_max_pA": -36.0
+    },
+    {
+      "case": "class[gaba_potentiation]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -6.0,
+      "delta_min_pA": -6.0,
+      "delta_max_pA": -6.0
+    },
+    {
+      "case": "class[gaba_potentiation]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -12.0,
+      "delta_min_pA": -12.0,
+      "delta_max_pA": -12.0
+    },
+    {
+      "case": "class[gaba_potentiation]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -18.0,
+      "delta_min_pA": -18.0,
+      "delta_max_pA": -18.0
+    },
+    {
+      "case": "class[gaba_potentiation]_e0.9",
+      "rho": 1.3158198810372227e-16,
+      "delta_mean_pA": -26.999999999999993,
+      "delta_min_pA": -26.999999999999996,
+      "delta_max_pA": -26.999999999999996
+    },
+    {
+      "case": "class[glucl_potentiation]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -4.0,
+      "delta_min_pA": -4.0,
+      "delta_max_pA": -4.0
+    },
+    {
+      "case": "class[glucl_potentiation]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -8.0,
+      "delta_min_pA": -8.0,
+      "delta_max_pA": -8.0
+    },
+    {
+      "case": "class[glucl_potentiation]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -12.0,
+      "delta_min_pA": -12.0,
+      "delta_max_pA": -12.0
+    },
+    {
+      "case": "class[glucl_potentiation]_e0.9",
+      "rho": 0.0,
+      "delta_mean_pA": -18.0,
+      "delta_min_pA": -18.0,
+      "delta_max_pA": -18.0
+    },
+    {
+      "case": "class[nachr_antagonism]_e0.2",
+      "rho": 0.0,
+      "delta_mean_pA": -6.0,
+      "delta_min_pA": -6.0,
+      "delta_max_pA": -6.0
+    },
+    {
+      "case": "class[nachr_antagonism]_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -12.0,
+      "delta_min_pA": -12.0,
+      "delta_max_pA": -12.0
+    },
+    {
+      "case": "class[nachr_antagonism]_e0.6",
+      "rho": 0.0,
+      "delta_mean_pA": -18.0,
+      "delta_min_pA": -18.0,
+      "delta_max_pA": -18.0
+    },
+    {
+      "case": "class[nachr_antagonism]_e0.9",
+      "rho": 1.3158198810372227e-16,
+      "delta_mean_pA": -26.999999999999993,
+      "delta_min_pA": -26.999999999999996,
+      "delta_max_pA": -26.999999999999996
+    },
+    {
+      "case": "mix_3class_e0.3",
+      "rho": 1.8797426871960316e-16,
+      "delta_mean_pA": -18.900000000000002,
+      "delta_min_pA": -18.9,
+      "delta_max_pA": -18.9
+    },
+    {
+      "case": "mix_3class_e0.5",
+      "rho": 0.0,
+      "delta_mean_pA": -31.5,
+      "delta_min_pA": -31.5,
+      "delta_max_pA": -31.5
+    },
+    {
+      "case": "mix_3class_e0.7",
+      "rho": 1.6112080175965983e-16,
+      "delta_mean_pA": -44.1,
+      "delta_min_pA": -44.099999999999994,
+      "delta_max_pA": -44.099999999999994
+    },
+    {
+      "case": "mix_3class_e0.85",
+      "rho": 1.3268771909619048e-16,
+      "delta_mean_pA": -53.550000000000004,
+      "delta_min_pA": -53.55,
+      "delta_max_pA": -53.55
+    },
+    {
+      "case": "mix_5class_e0.3",
+      "rho": 0.0,
+      "delta_mean_pA": -36.6,
+      "delta_min_pA": -36.6,
+      "delta_max_pA": -36.6
+    },
+    {
+      "case": "mix_5class_e0.5",
+      "rho": 0.0,
+      "delta_mean_pA": -61.0,
+      "delta_min_pA": -61.0,
+      "delta_max_pA": -61.0
+    },
+    {
+      "case": "mix_5class_e0.7",
+      "rho": 1.6640345099768146e-16,
+      "delta_mean_pA": -85.39999999999999,
+      "delta_min_pA": -85.4,
+      "delta_max_pA": -85.4
+    },
+    {
+      "case": "mix_5class_e0.85",
+      "rho": 2.7407627223147553e-16,
+      "delta_mean_pA": -103.70000000000003,
+      "delta_min_pA": -103.7,
+      "delta_max_pA": -103.7
+    },
+    {
+      "case": "mix_7class_e0.3",
+      "rho": 0.0,
+      "delta_mean_pA": -52.5,
+      "delta_min_pA": -52.5,
+      "delta_max_pA": -52.5
+    },
+    {
+      "case": "mix_7class_e0.5",
+      "rho": 0.0,
+      "delta_mean_pA": -87.5,
+      "delta_min_pA": -87.5,
+      "delta_max_pA": -87.5
+    },
+    {
+      "case": "mix_7class_e0.7",
+      "rho": 0.0,
+      "delta_mean_pA": -122.5,
+      "delta_min_pA": -122.5,
+      "delta_max_pA": -122.5
+    },
+    {
+      "case": "mix_7class_e0.85",
+      "rho": 0.0,
+      "delta_mean_pA": -148.75,
+      "delta_min_pA": -148.75,
+      "delta_max_pA": -148.75
+    },
+    {
+      "case": "snare_coengaged_e0.3",
+      "rho": 0.0,
+      "delta_mean_pA": -45.0,
+      "delta_min_pA": -45.0,
+      "delta_max_pA": -45.0
+    },
+    {
+      "case": "snare_coengaged_e0.5",
+      "rho": 0.0,
+      "delta_mean_pA": -75.0,
+      "delta_min_pA": -75.0,
+      "delta_max_pA": -75.0
+    },
+    {
+      "case": "snare_coengaged_e0.7",
+      "rho": 0.0,
+      "delta_mean_pA": -105.0,
+      "delta_min_pA": -105.0,
+      "delta_max_pA": -105.0
+    },
+    {
+      "case": "snare_coengaged_e0.9",
+      "rho": 0.0,
+      "delta_mean_pA": -135.0,
+      "delta_min_pA": -135.0,
+      "delta_max_pA": -135.0
+    },
+    {
+      "case": "geno_complex_i",
+      "rho": 0.0,
+      "delta_mean_pA": -30.0,
+      "delta_min_pA": -30.0,
+      "delta_max_pA": -30.0
+    },
+    {
+      "case": "geno_nca",
+      "rho": 0.0,
+      "delta_mean_pA": -28.5,
+      "delta_min_pA": -28.5,
+      "delta_max_pA": -28.5
+    },
+    {
+      "case": "geno_k2p",
+      "rho": 0.0,
+      "delta_mean_pA": 30.0,
+      "delta_min_pA": 30.0,
+      "delta_max_pA": 30.0
+    },
+    {
+      "case": "geno_combo_current",
+      "rho": 1.4210854715202004e-16,
+      "delta_mean_pA": -25.000000000000007,
+      "delta_min_pA": -25.000000000000004,
+      "delta_max_pA": -25.000000000000004
+    },
+    {
+      "case": "geno[gas-1]_x_anesth_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -74.0,
+      "delta_min_pA": -74.0,
+      "delta_max_pA": -74.0
+    },
+    {
+      "case": "geno[gas-1]_x_anesth_e0.8",
+      "rho": 1.2043097216272884e-16,
+      "delta_mean_pA": -118.00000000000003,
+      "delta_min_pA": -118.00000000000001,
+      "delta_max_pA": -118.00000000000001
+    },
+    {
+      "case": "geno[unc-79]_x_anesth_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -72.5,
+      "delta_min_pA": -72.5,
+      "delta_max_pA": -72.5
+    },
+    {
+      "case": "geno[unc-79]_x_anesth_e0.8",
+      "rho": 1.2198158553821465e-16,
+      "delta_mean_pA": -116.49999999999997,
+      "delta_min_pA": -116.49999999999999,
+      "delta_max_pA": -116.49999999999999
+    },
+    {
+      "case": "geno[goa-1]_x_anesth_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -44.0,
+      "delta_min_pA": -44.0,
+      "delta_max_pA": -44.0
+    },
+    {
+      "case": "geno[goa-1]_x_anesth_e0.8",
+      "rho": 0.0,
+      "delta_mean_pA": -88.0,
+      "delta_min_pA": -88.0,
+      "delta_max_pA": -88.0
+    },
+    {
+      "case": "geno[Sandman]_x_anesth_e0.4",
+      "rho": 0.0,
+      "delta_mean_pA": -13.999999999999996,
+      "delta_min_pA": -13.999999999999996,
+      "delta_max_pA": -13.999999999999996
+    },
+    {
+      "case": "geno[Sandman]_x_anesth_e0.8",
+      "rho": 1.2250736823450005e-16,
+      "delta_mean_pA": -57.999999999999986,
+      "delta_min_pA": -57.99999999999999,
+      "delta_max_pA": -57.99999999999999
+    }
+  ],
+  "per_case_synapse_nonuniformity": [
+    {
+      "case": "snare_alone_e0.2",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.9,
+      "ratio_min": 0.8999999999999999,
+      "ratio_max": 0.9000000000000001
+    },
+    {
+      "case": "snare_alone_e0.4",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.8,
+      "ratio_min": 0.7999999999999999,
+      "ratio_max": 0.8000000000000002
+    },
+    {
+      "case": "snare_alone_e0.6",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.7,
+      "ratio_min": 0.6999999999999998,
+      "ratio_max": 0.7
+    },
+    {
+      "case": "snare_alone_e0.9",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.55,
+      "ratio_min": 0.55,
+      "ratio_max": 0.55
+    },
+    {
+      "case": "snare_coengaged_e0.3",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.85,
+      "ratio_min": 0.8499999999999999,
+      "ratio_max": 0.8500000000000001
+    },
+    {
+      "case": "snare_coengaged_e0.5",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.75,
+      "ratio_min": 0.75,
+      "ratio_max": 0.75
+    },
+    {
+      "case": "snare_coengaged_e0.7",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.65,
+      "ratio_min": 0.65,
+      "ratio_max": 0.6500000000000001
+    },
+    {
+      "case": "snare_coengaged_e0.9",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.55,
+      "ratio_min": 0.55,
+      "ratio_max": 0.55
+    },
+    {
+      "case": "geno_wsyn_up",
+      "nonuniformity": 0.0,
+      "ratio_median": 1.5,
+      "ratio_min": 1.5,
+      "ratio_max": 1.5
+    },
+    {
+      "case": "geno_wsyn_down",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.5,
+      "ratio_min": 0.5,
+      "ratio_max": 0.5
+    },
+    {
+      "case": "geno[gas-1]_x_anesth_e0.4",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.8,
+      "ratio_min": 0.7999999999999999,
+      "ratio_max": 0.8000000000000002
+    },
+    {
+      "case": "geno[gas-1]_x_anesth_e0.8",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.6,
+      "ratio_min": 0.6,
+      "ratio_max": 0.6
+    },
+    {
+      "case": "geno[unc-79]_x_anesth_e0.4",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.8,
+      "ratio_min": 0.7999999999999999,
+      "ratio_max": 0.8000000000000002
+    },
+    {
+      "case": "geno[unc-79]_x_anesth_e0.8",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.6,
+      "ratio_min": 0.6,
+      "ratio_max": 0.6
+    },
+    {
+      "case": "geno[goa-1]_x_anesth_e0.4",
+      "nonuniformity": 2.220446049250313e-16,
+      "ratio_median": 1.2000000000000002,
+      "ratio_min": 1.2,
+      "ratio_max": 1.2000000000000002
+    },
+    {
+      "case": "geno[goa-1]_x_anesth_e0.8",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.8999999999999999,
+      "ratio_min": 0.8999999999999999,
+      "ratio_max": 0.9
+    },
+    {
+      "case": "geno[Sandman]_x_anesth_e0.4",
+      "nonuniformity": 1.1102230246251565e-16,
+      "ratio_median": 0.8,
+      "ratio_min": 0.7999999999999999,
+      "ratio_max": 0.8000000000000002
+    },
+    {
+      "case": "geno[Sandman]_x_anesth_e0.8",
+      "nonuniformity": 0.0,
+      "ratio_median": 0.6,
+      "ratio_min": 0.6,
+      "ratio_max": 0.6
+    }
+  ],
+  "errors": [],
+  "gates": {
+    "G1-current-rank": {
+      "verdict": "PASS",
+      "n_sv_D": 1,
+      "max_rho_k": 2.7407627223147553e-16
+    },
+    "G2-synapse-rank": {
+      "verdict": "PASS",
+      "n_sv_S": 1,
+      "max_synapse_nonuniformity": 2.220446049250313e-16
+    },
+    "G3-coverage-completeness": {
+      "verdict": "PASS",
+      "n_classes": 7,
+      "n_genotype_branches": 4,
+      "all_branches_hit": true
+    }
+  },
+  "overall": "PASS",
+  "notes": []
+}

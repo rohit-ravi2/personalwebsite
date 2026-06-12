@@ -1,0 +1,153 @@
+{
+  "block_id": "P7",
+  "gates": {
+    "P7.A": {
+      "verdict": "RULE_REDESIGNED_VALUE_DEFENSIBLE",
+      "reason": "Dated prereg (phase_g_network_perturbation.md, 2026-04-28 07:12:10 -0400) pins the rule-FORM (command-neuron mean rate < threshold) but specifies a DERIVED threshold-determination procedure (WT 90th-percentile / <5%-time calibration that 'freezes after the WT control runs'). The shipped code replaces this with a FIXED 3.0 Hz hardcode. The rule-form was preregistered; the value-determination was redesigned post-prereg (procedure->fixed number). Whether 3.0 Hz lands within 10% of the WT-calibrated band is NOT-ESTABLISHABLE-FROM-GIT (needs WT re-run). Honest classification: RULE_REDESIGNED_VALUE_DEFENSIBLE, NOT PROVEN_PREREGISTERED."
+    },
+    "P7.B": {
+      "verdict": "UNDECIDABLE_BY_TIMESTAMP",
+      "reason": "No earlier dated doc pins the 8 sat_pa values (the only dated prereg, phase_g_network_perturbation.md 2026-04-28 07:12:10 -0400, contains NO DEFAULT_PER_CLASS_PA_AT_SATURATION ladder -- it uses a different Phase-D/E/F kinetic-shift architecture). The ladder first appears in its OWN introducing commit 34ed2dae02e434ee12fae8aa9278bb2b2851041f, the same commit that first ships the re-fit worm alpha (ALPHA=0.13, 'recalibrated after W_chem ... bug fix activated SNARE'). The 8 values ARE byte-identical across all 3 commits that touch the table (no value ever changed), so there is NO active-tuning MODIFICATION diff -- but the co-INTRODUCTION of ladder+refit-alpha in one commit means pre-first-commit working-tree tuning is unobservable from git. Honest verdict: UNDECIDABLE_BY_TIMESTAMP, not a vindication."
+    }
+  },
+  "evidence": {
+    "cutoff_introducing_commit": {
+      "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+      "date": "2026-05-02 14:09:38 -0400",
+      "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+    },
+    "sat_pa_table_introducing_commit": {
+      "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+      "date": "2026-05-02 14:09:38 -0400",
+      "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+    },
+    "worm_alpha_0p13_introducing_commit": {
+      "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+      "date": "2026-05-02 14:09:38 -0400",
+      "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+    },
+    "worm_alpha_refit_signature_introducing_commit": {
+      "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+      "date": "2026-05-02 14:09:38 -0400",
+      "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+    },
+    "source_file_first_commit": {
+      "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+      "date": "2026-05-02 14:09:38 -0400",
+      "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+    },
+    "prereg_doc_first_commit": {
+      "hash": "934725add11b7ec36a3f5e637b0f985fc9e15e05",
+      "date": "2026-04-28 07:12:10 -0400",
+      "subject": "chore(wave-p): project scaffold + preregistered phase plan"
+    },
+    "sat_pa_value_token_intro": {
+      "complex_i_block':       60.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "complex_ii_block':      20.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "k2p_potentiation':      30.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "nca_block':             40.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "gaba_potentiation':     30.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "glucl_potentiation':    20.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "nachr_antagonism':      30.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      },
+      "snare_cooperativity':   50.0": {
+        "hash": "34ed2dae02e434ee12fae8aa9278bb2b2851041f",
+        "date": "2026-05-02 14:09:38 -0400",
+        "subject": "feat(anesthesia): network-state validator (V3 ensemble, 4/4 gates pass)"
+      }
+    },
+    "sat_pa_snapshots_per_commit": {
+      "470c767c6f436ff11bc3ea27aba573bb2c2c412a": {
+        "complex_i_block": 60.0,
+        "complex_ii_block": 20.0,
+        "k2p_potentiation": 30.0,
+        "nca_block": 40.0,
+        "gaba_potentiation": 30.0,
+        "glucl_potentiation": 20.0,
+        "nachr_antagonism": 30.0,
+        "snare_cooperativity": 50.0
+      },
+      "1c8e0d579276db8ba1a11b8d7bc09a00657b7b45": {
+        "complex_i_block": 60.0,
+        "complex_ii_block": 20.0,
+        "k2p_potentiation": 30.0,
+        "nca_block": 40.0,
+        "gaba_potentiation": 30.0,
+        "glucl_potentiation": 20.0,
+        "nachr_antagonism": 30.0,
+        "snare_cooperativity": 50.0
+      },
+      "34ed2dae02e434ee12fae8aa9278bb2b2851041f": {
+        "complex_i_block": 60.0,
+        "complex_ii_block": 20.0,
+        "k2p_potentiation": 30.0,
+        "nca_block": 40.0,
+        "gaba_potentiation": 30.0,
+        "glucl_potentiation": 20.0,
+        "nachr_antagonism": 30.0,
+        "snare_cooperativity": 50.0
+      }
+    },
+    "sat_pa_distinct_value_sets_count": 1,
+    "sat_pa_byte_identity_holds": true,
+    "sat_pa_canonical_values": {
+      "complex_i_block": 60.0,
+      "complex_ii_block": 20.0,
+      "gaba_potentiation": 30.0,
+      "glucl_potentiation": 20.0,
+      "k2p_potentiation": 30.0,
+      "nachr_antagonism": 30.0,
+      "nca_block": 40.0,
+      "snare_cooperativity": 50.0
+    },
+    "active_tuning_hits_src_only": [
+      "34ed2dae02e434ee12fae8aa9278bb2b2851041f"
+    ],
+    "active_tuning_hits_wholecommit": [
+      "34ed2dae02e434ee12fae8aa9278bb2b2851041f"
+    ],
+    "active_tuning_modification_hits_excl_introduction": [],
+    "prereg_rule_form_present": true,
+    "prereg_threshold_is_derived_procedure": true,
+    "prereg_pins_fixed_3hz_value": false,
+    "shipped_cutoff_is_fixed_3p0_hz": true,
+    "prereg_doc_date": "2026-04-28 07:12:10 -0400",
+    "source_file_first_date": "2026-05-02 14:09:38 -0400",
+    "cutoff_intro_date": "2026-05-02 14:09:38 -0400",
+    "sat_pa_table_intro_date": "2026-05-02 14:09:38 -0400",
+    "worm_alpha_intro_date": "2026-05-02 14:09:38 -0400",
+    "prereg_doc_BEFORE_source_file": true,
+    "prereg_doc_BEFORE_cutoff_intro": true,
+    "ten_percent_band_establishable_from_git": false,
+    "prereg_doc_contains_satpa_ladder": false
+  },
+  "one_free_alpha_framing": "DEFLATED",
+  "halt_required": false
+}
