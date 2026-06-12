@@ -1,0 +1,812 @@
+{
+  "gate": "G4_A_entailment",
+  "n_rows": 75,
+  "pooled_r2": 0.9068629276235365,
+  "predictor_rank_at_maxqf_doses": 2,
+  "ols_coef_intercept_totalpa_snaregain": [
+    -0.18105655804239956,
+    -0.050906067327937635,
+    0.19904566746648417
+  ],
+  "per_organism_r2": {
+    "worm": {
+      "r2": 0.998914984425903,
+      "n": 42,
+      "predictor_rank": 2
+    },
+    "fly": {
+      "r2": 0.9947508681610123,
+      "n": 9,
+      "predictor_rank": 2
+    },
+    "mouse": {
+      "r2": 0.9954178722574012,
+      "n": 24,
+      "predictor_rank": 2
+    }
+  },
+  "snare_gain_degenerate_all_~1": false,
+  "total_attrition_stage2_to_stage3": 0,
+  "attrition_detail": {
+    "worm": {
+      "stage2_passers_tested": 14,
+      "stage3_passers": 14,
+      "attrition": 0
+    },
+    "fly": {
+      "stage2_passers_tested": 3,
+      "stage3_passers": 3,
+      "attrition": 0
+    },
+    "mouse": {
+      "stage2_passers_tested": 8,
+      "stage3_passers": 8,
+      "attrition": 0
+    }
+  },
+  "thresholds": {
+    "r2_min": 0.95,
+    "attrition_max": 0
+  },
+  "verdict_pooled_frozen_gate": "RETAIN_8.4_independent",
+  "pooled_entailed": false,
+  "verdict": "RETAIN_8.4_independent",
+  "operator_faithful_per_organism": {
+    "min_per_organism_r2": 0.9947508681610123,
+    "per_organism_entailed": true,
+    "rationale": "alpha and qf-threshold are PER-ORGANISM, so the rank-2 map G(total_pa,snare_gain) is per-organism; pooling across organisms with one intercept/slope is a Simpson-type artifact, NOT evidence of residual structure. Min per-org R2 reported as the substantive entailment statistic alongside the frozen pooled gate."
+  },
+  "rule": "R^2 >= 0.95 AND attrition == 0 => Gate-4 is ENTAILED by Gates 1+2; DEMOTE sec 8.4 from 'independent capability' to 'demonstration/corollary'. R^2 < 0.95 OR attrition > 0 => RETAIN 8.4 as carrying independent information (the two coordinates do NOT explain the non-immobilizer call; there is residual discriminative structure). Accept whichever lands.",
+  "records": [
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8833333333333332,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -20.297104534809453,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.03861386138613861,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -2.6,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8416666666666666,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -19.03087076857569,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 3000.0,
+      "total_pa": -1.9500000000000002,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.02326043737574553,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8833333333333332,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -20.25974025974026,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8416666666666666,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -18.993506493506498,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8833333333333332,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -20.297104534809453,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.03861386138613861,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 300.0,
+      "total_pa": -0.22075471698113208,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8416666666666666,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -19.03087076857569,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.03861386138613861,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.02326043737574553,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8416666666666666,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -18.993506493506498,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.9708333333333334,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -24.095805833510752,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.03861386138613861,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.02326043737574553,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.9625,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -22.829572067276988,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.12580645161290324,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 300.0,
+      "total_pa": -0.22075471698113208,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.9333333333333333,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -21.563338301043224,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.03861386138613861,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.07647058823529412,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.8416666666666666,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -19.03087076857569,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.12580645161290324,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.07647058823529412,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.9625,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -22.792207792207794,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.9625,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -22.829572067276988,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.12580645161290324,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 300.0,
+      "total_pa": -0.22075471698113208,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 0.9958333333333332,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -26.628273365978288,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 300.0,
+      "total_pa": -0.3545454545454546,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "worm",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 300.0,
+      "total_pa": -0.22075471698113208,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -10.603174603174605,
+      "snare_gain": 0.7222222222222221,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01782178217821782,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01073558648111332,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -11.714285714285714,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01782178217821782,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.03529411764705882,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 30000.0,
+      "total_pa": -12.289972322759208,
+      "snare_gain": 0.7077922077922078,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01782178217821782,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "fly",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism|glucl_potentiation",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01073558648111332,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -14.894179894179894,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.0297029702970297,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01789264413518887,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -14.814814814814817,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -14.894179894179894,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 100.0,
+      "total_pa": -0.09677419354838711,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01789264413518887,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -14.894179894179894,
+      "snare_gain": 0.7222222222222221,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.0297029702970297,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01789264413518887,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -17.671957671957674,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.0297029702970297,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01789264413518887,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -14.814814814814817,
+      "snare_gain": 0.7222222222222221,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": 0.0,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 10000.0,
+      "total_pa": -14.894179894179894,
+      "snare_gain": 0.7222222222222221,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.0297029702970297,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01789264413518887,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "cis_12_dichloroethylene",
+      "max_qf": 1.0,
+      "max_qf_dose_uM": 3000.0,
+      "total_pa": -15.203007518796994,
+      "snare_gain": 0.763157894736842,
+      "is_non_immobilizer": false
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "trans_12_dichloroethylene",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.0297029702970297,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    },
+    {
+      "organism": "mouse",
+      "subset": "gaba_potentiation|k2p_potentiation|complex_i_block|snare_cooperativity|nca_block|nachr_antagonism",
+      "compound": "hexafluoroethane",
+      "max_qf": 0.0,
+      "max_qf_dose_uM": 30.0,
+      "total_pa": -0.01789264413518887,
+      "snare_gain": 1.0,
+      "is_non_immobilizer": true
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "block_id": "P17",
+  "title": "Readout-validity / C-22 gate vs Kato HisCl + NeuroPAL(Atanas) held-out data",
+  "frozen_utc": "2026-06-12",
+  "phase": 1,
+  "independent_of_rank2_family": true,
+  "gates_paper2_bridge": true,
+  "premise_under_test": "V7's immobilization readout is operationalized as: quiescent_fraction = fraction of time bins where the MEAN firing rate of the AVA-containing command-interneuron set (phase_g_state_validator.COMMAND_NEURONS, AVA/AVB/AVD/AVE/PVC + AIB/RIB/RIM) falls below QUIESCENT_RATE_THRESHOLD_HZ = 3.0 Hz. This block asks whether that readout has the behavioral semantics it claims: (Q1) does LOW command-interneuron activity actually track behavioral IMMOBILITY/quiescence in held-out worms? (Q2) does CAUSAL AVA silencing (HisCl) move the behavioral quiescence/dwell distribution in the pre-declared direction? (Q3) is the 3.0 Hz threshold a defensible bimodality boundary, i.e. is the command-activity distribution genuinely bimodal in held-out data AND is 3.0 Hz within +-1 Hz of the MODEL's OWN activity-histogram valley? If all PASS, the readout language stands and Paper-2 is unblocked. If FAIL, the readout is demoted to 'command-interneuron rate suppression -- a NETWORK STATISTIC, not validated behavioral quiescence' and Paper-2 is BLOCKED-on-readout.",
+
+  "hard_modality_rule": {
+    "rule": "NEVER compare a model firing-rate Hz value to a data dF/F value, and never compare the 3.0 Hz number to any dF/F number. All cross-modality grounding is DIRECTIONAL/SIGN-based and ORDINAL only. Within-modality valley/threshold procedures derive a number from each modality's OWN histogram; the model's 3.0 Hz is compared only to the model's own firing-rate valley, and the data bimodality is established only within dF/F space.",
+    "rationale": "Kato/Atanas neural data are bleaching-corrected dF/F (and ratiometric fluorescence); the model emits LIF spike rates in Hz. They are different observables on incommensurable scales. Equating them would be the exact category error C-22 flags."
+  },
+
+  "velocity_immobility_threshold_DERIVATION": {
+    "rule": "The velocity-immobility cut used for the Atanas-pose arm of Q1 is DERIVED, not asserted: it is the histogram VALLEY (local minimum between the two modes) of the per-worm |velocity| distribution (Behavior/velocity/velocity), found via a Gaussian-KDE minimum-between-modes / Otsu-style two-class split. This is a PROCEDURE producing a per-worm number, not a frozen number. If the |velocity| distribution is NOT bimodal for a worm, that worm's Atanas arm is reported as descriptive (no clean immobility class) rather than forcing a cut. The Kato arm does NOT need a velocity cut: Kato provides explicit per-timepoint behavioral STATE labels.",
+    "kato_immobility_states": {
+      "WT_NoStim_8state": "Behavioral-immobility/low-locomotion proxy = REVSUS (sustained reversal, the deep-brain-state low-locomotion attractor) AND SLOW. Active-locomotion proxy = FWD. The directional test compares command-low vs command-high partition against these labeled states. NOTE: Kato is a deep-brain-state dataset, not a sleep dataset; 'immobility' here = the low-mobility / reversal-dominated state class, declared BEFORE running.",
+      "AVA_HisCl_4state": "States_key decoded from file = {0:reversal,1:forward,2:quiescence,3:turn}. The HisCl dataset carries an EXPLICIT 'quiescence' behavioral state label (state==2). This is the airtight Q2 data-side observable."
+    }
+  },
+
+  "questions_and_gates": {
+    "Q1_data_sign": {
+      "name": "Q1-data-sign",
+      "claim": "Command-interneuron LOW activity tracks behavioral IMMOBILITY/quiescence (positive association), i.e. the model's 'low command rate == quiescent' mapping has the correct SIGN in held-out worms.",
+      "statistic_kato": "Per worm: build the AVA-containing command-set mean dF/F trace from the LABELED neurons present (require >=1 of {AVAL,AVAR}; add AVB/AVD/AVE/PVC/AIB/RIB/RIM if labeled). For each timepoint assign behavioral class in {ACTIVE=FWD, IMMOBILE=REVSUS|SLOW}. Compute s = (mean command activity during ACTIVE) - (mean command activity during IMMOBILE), per worm. Because AVA is a REVERSAL command neuron that is HIGH during reversal, the directional prediction is sign-aware: the readout's behavioral content is that the FORWARD/active-locomotion bouts coincide with the LOW-command-quiescence-readout side. PRE-DECLARED sign: command-set activity is HIGHER in the IMMOBILE(reversal-dominated) class than in the ACTIVE(forward) class, i.e. s < 0, EQUIVALENTLY the AVA-reversal command is elevated exactly when forward locomotion is suppressed. The test statistic reported is t = sign-corrected effect = -s (so t>0 supports the readout). Aggregate t across worms; CI via worm-level bootstrap (1e4 resamples).",
+      "statistic_atanas": "Per worm: command-set mean dF/F from NeuroPAL-labeled AVA(+command) neurons. Behavioral class from signed velocity: ACTIVE = |velocity| above the derived valley; IMMOBILE = |velocity| below the valley. Same sign-corrected statistic t=-s aggregated across worms with worm-level bootstrap CI.",
+      "positive_control_id_correctness": "AVA must show the canonical reversal-tuning: mean AVA dF/F during REVERSAL (Kato REV1/REV2/REVSUS; Atanas velocity<0) STRICTLY GREATER than during FORWARD (Kato FWD; Atanas velocity>0), per worm. This certifies neuron-ID correctness BEFORE the Q1 verdict is trusted; if AVA fails its own reversal-tuning control in a worm, that worm is dropped from Q1 (ID-unreliable), not counted as a Q1 failure.",
+      "PASS_RULE": "PASS iff the aggregated sign-corrected t has a bootstrap 95% CI that EXCLUDES 0 on the supporting side (t>0) in BOTH Kato-labeled-states AND Atanas-pose, AND >=3 worms survive the AVA reversal-tuning ID control in each modality.",
+      "FAIL_RULE": "If the CI straddles 0, or excludes 0 on the WRONG side, in EITHER modality -> Q1 FAIL/AMBIGUOUS: the command-low<->immobility mapping is not directionally supported by held-out data; readout demoted.",
+      "underpowered_branch": "If <3 ID-controlled worms in a modality -> Q1 reported UNDERPOWERED for that modality (descriptive, not decisive); overall Q1 cannot PASS without both modalities, but a single-modality positive is logged.",
+      "two_sided": true
+    },
+
+    "Q2_causal_AVA_silencing": {
+      "name": "Q2-causal-AVA-silencing",
+      "claim": "Causally silencing AVA (AVA::HisCl + histamine) shifts the behavioral quiescence/dwell distribution. The DATA half is airtight; the MODEL half is a bonus.",
+      "data_half_airtight": {
+        "observable": "Kato AVA_HisCl carries an explicit per-timepoint 'quiescence' behavioral state (States_key code 2). Compare the quiescence/dwell structure under AVA silencing to the WT references (WT_NoStim 8-state: REVSUS+SLOW as the low-locomotion class; WT_Stim 4-state). NOTE on availability: AVA_HisCl has NO per-neuron AVA trace (IDs are numeric placeholders -- AVA is the silenced target and is not co-identified), so the data-side test is purely on the BEHAVIORAL-STATE distribution, which is exactly the readout-relevant variable.",
+        "pre_declared_direction": "Silencing the AVA reversal command should REDUCE sustained-reversal occupancy and RE-PARTITION dwell toward the non-reversal classes. PRE-DECLARED: the fraction of time in the sustained-reversal/REVSUS-equivalent class is LOWER under AVA-HisCl than in WT, and/or the explicit 'quiescence' state occupancy DIFFERS from the WT low-locomotion occupancy. Statistic: difference in fraction-of-time in the reversal-dominated class (WT REVSUS-equivalent vs HisCl reversal state==0), worm-level, bootstrap CI.",
+        "PASS_RULE": "Q2-data PASS iff the dwell-fraction shift matches the pre-declared direction (reversal-class occupancy lower / re-partitioned under HisCl) with worm-bootstrap 95% CI excluding 0 on the declared side. FAIL iff CI straddles 0 or excludes 0 on the wrong side -> the causal manipulation does not move behavior in the readout-implied direction."
+      },
+      "model_half_bonus": {
+        "observable": "OPTIONAL model-side: simulate AVA ablation (set AVAL/AVAR to silent) in the worm SeededLIFBrain and recompute the command-fraction quiescent readout; pre-declared direction = removing AVA from the command set / silencing it changes the quiescent_fraction.",
+        "too_special_leak_floor": "The model-side bonus is QUARANTINED if the model effect is TOO LARGE/clean: if silencing AVA flips quiescent_fraction by an implausibly large delta (|delta quiescent_fraction| > 0.8) it is flagged as a too-special leak (AVA dominates the readout by construction because it is 2/16 of a small command set), NOT counted as corroboration. A model bonus only counts if 0.05 <= |delta| <= 0.8 AND it matches the data-side direction.",
+        "status": "BONUS ONLY -- a model-half null or quarantine does NOT fail Q2; only the data half is load-bearing."
+      },
+      "two_sided": true
+    },
+
+    "Q3_threshold_valley": {
+      "name": "Q3-threshold-valley",
+      "claim": "The command-activity distribution is genuinely BIMODAL (so a threshold-based quiescence cut is meaningful), AND the model's 3.0 Hz cut sits at the model's OWN activity-histogram valley.",
+      "data_bimodality_kato": {
+        "statistic": "Per worm: command-set mean dF/F trace (Kato). Fit 1-component vs 2-component Gaussian mixture (full EM, common-sense init) and compute deltaBIC = BIC(1) - BIC(2). Aggregate: report median deltaBIC and the count of worms with deltaBIC>=10 (strong evidence for 2 components). This establishes bimodality EXISTENCE in dF/F space ONLY -- the dF/F valley location is NOT compared to 3.0 Hz.",
+        "PASS_PART_A": "Kato command-activity bimodal iff median worm deltaBIC >= 10 (i.e. typical worm shows strong 2-component evidence)."
+      },
+      "model_self_consistency_3hz": {
+        "statistic": "On the FROZEN worm model: assemble the distribution of per-bin command-set mean FIRING RATE (Hz) across the V7 dose ladder / baseline (reuse phase_g_state_validator compute_metrics' per-bin cmd_mean_rate; aggregate over the doses used by the V7 readout). Find the histogram VALLEY (KDE minimum between modes, or the antimode of the rate distribution) in the model's OWN Hz space. Compare 3.0 Hz to this MODEL-OWN valley.",
+        "PASS_PART_B": "3.0 Hz within +-1.0 Hz of the model's own command-rate histogram valley. If the model rate distribution is NOT bimodal (no clean valley), PART_B is reported as NO-VALLEY -> the 3.0 Hz cut is not a data-driven antimode and Q3 cannot PASS on self-consistency (demote: cutoff is a hand-set rate, not an emergent boundary)."
+      },
+      "PASS_RULE": "Q3 PASS iff PART_A (Kato command bimodal, median deltaBIC>=10) AND PART_B (3.0 Hz within +-1 Hz of the MODEL's own valley). NO Hz<->dF/F equivalence is ever asserted: PART_A lives in dF/F, PART_B lives in Hz; they jointly certify (i) thresholding is meaningful in real data and (ii) the specific 3.0 Hz number is the model's emergent antimode.",
+      "FAIL_RULE": "PART_A fail (data not bimodal) -> a threshold readout is not justified by data structure. PART_B fail (3.0 Hz off the model valley by >1 Hz, or no model valley) -> the specific number is hand-set, not emergent. Either -> Q3 FAIL.",
+      "two_sided": true
+    }
+  },
+
+  "overall_decision": {
+    "PASS": "Q1 PASS AND Q2-data PASS AND Q3 PASS -> readout language ('AVA-containing command-fraction quiescence') stands; Paper-2 bridge UNBLOCKED.",
+    "PARTIAL/DEMOTE": "Any load-bearing gate (Q1, Q2-data, Q3) FAIL -> readout DEMOTED to 'command-interneuron rate suppression -- a network statistic, NOT validated behavioral quiescence'; Paper-2 BLOCKED-on-readout. This is an accepted, pre-written claim-narrowing outcome (Bayesian-plausible given connectome~shuffled prior + the original C-22 flag).",
+    "accept_either_way": true,
+    "no_self_override": "A failed gate is a FAIL, reported loudly, never reframed as PARTIAL-and-proceed for the Paper-2 bridge."
+  },
+
+  "fast_gates_this_workflow": {
+    "F1_data_availability": "All three Kato .mat (WT_NoStim, WT_Stim, AVA_HisCl) exist on disk and open as v7.3/HDF5; >=10 Atanas NWB exist on disk and open lazily (no whole-file load).",
+    "F2_loaders": "Kato loader full-loads a .mat worm (deltaFOverF_bc/traces + States + NeuronNames/IDs + fps) into memory correctly; Atanas loader STREAMS only the small processed datasets (CalciumActivity/SignalCalciumImResponseSeries/data [<=1600x134], CalciumActivity/NeuronIDs/labels, Behavior/velocity) via h5py partial reads -- NEVER the 27GB CalciumImageSeries raw movie.",
+    "F3_AVA_present": "AVAL and/or AVAR are present and labeled in Kato WT worms and in Atanas labeled neurons (ID correctness precondition).",
+    "F4_Q1_within_Kato": "Run the Q1 Kato-arm directional statistic (sign-corrected t with worm-bootstrap CI) and the AVA reversal-tuning ID control on the Kato WT worms -- CPU, no sim. Report the number and whether the CI excludes 0; record as a fast preview (the full Q1 verdict also needs the Atanas streaming pass which is HEAVY).",
+    "F5_Q3_bimodality_within_Kato": "Run the Q3 PART_A Kato command-activity 1-vs-2-component deltaBIC on the WT worms -- CPU, no sim. Report median deltaBIC and PASS/FAIL of PART_A.",
+    "note": "Fast gates establish data/loader validity + the within-Kato Q1/Q3 statistics (no big sim, no full Atanas pass). The HEAVY run is the full Atanas streaming pass (Q1 Atanas-pose arm over all worms) + the model-side Hz-valley (PART_B) + optional model AVA-ablation bonus."
+  },
+
+  "heavy_run_gate": "The heavy Atanas streaming pass evaluates the Atanas-pose half of Q1-data-sign (whose PASS requires BOTH Kato AND Atanas to exclude 0). Accept-either-way: a Kato-positive but Atanas-null Q1 is a FAIL of the conjunctive PASS (readout demoted), reported as such, not reframed.",
+
+  "non_destructive": "Reads frozen phase_g_state_validator constants (COMMAND_NEURONS, 3.0 Hz) WITHOUT mutating them; reads connectome.npz; reads held-out data read-only. Emits NEW artifacts under artifacts/p17_readout_validity/. Does not touch v7_* ensembles, frozen operators, or any prior artifact.",
+
+  "anti_target_engineering": "All sign directions, the immobility-state definitions, the deltaBIC>=10 and +-1 Hz thresholds, and the too-special leak floor are fixed HERE, before running the statistics, from the readout's own structure and C. elegans command-circuit biology (AVA = reversal command). Each gate is two-sided and can FAIL. The demotion outcome (Paper-2 BLOCKED) is explicitly pre-accepted."
+}

@@ -1,0 +1,48 @@
+{
+  "block_id": "P4",
+  "title": "Gate-4 (Eger non-immobilizer) entailment demotion + SNARE-orthogonal falsifier",
+  "frozen_utc": "2026-06-12",
+  "roadmap_ref": "wf2_gated_fix_roadmap.md FRONT/P4 + PHASE-1 WB-P4 (lines 102, 190-194)",
+  "premise_under_test": "P18 certified V1 is rank-2: QF = G(total_pa, snare_factor), with total_pa = alpha * sum_{non-SNARE current classes}(-sat_pa*engagement) and snare_factor = 1+(snare_max-1)*engagement_snare. The shipped narrative (sec 8.4) treats Gate-4 non-immobilizer discrimination (cis-DCE immobilizes; trans-DCE + hexafluoroethane do NOT) as an INDEPENDENT capability. Hypothesis: with zero Stage2->Stage3 attrition observed in the frozen v7 run, Gate-4 is ENTAILED by Gates 1+2 (correct volatile total_pa prediction) -- the non-immobilizer call falls out of the two-coordinate operator with no added degrees of freedom, so 8.4 demotes to a DEMONSTRATION (corollary), not an independent test. Separately, build a SNARE-only pseudo-non-immobilizer (total_pa pinned in the non-immobilizer band, ONLY the orthogonal SNARE channel engaged) to ask whether the orthogonal synaptic lever can manufacture immobilization on its own.",
+  "operator_coordinate_definitions": {
+    "total_pa": "alpha_calib * sum over cls in {complex_i_block, complex_ii_block, nachr_antagonism, nca_block, gaba_potentiation, glucl_potentiation, k2p_potentiation} of (-DEFAULT_PER_CLASS_PA_AT_SATURATION[cls] * engagement(dose)). SNARE contributes 0 to total_pa. engagement(dose)=dose^n/(dose^n+ec50^n). Mirrors phase_g_state_validator.apply_anesthetic lines 308-324. REUSES v7_match2b.operator_total_pa (single source of truth, fidelity-gated to 1e-9 in P8).",
+    "snare_gain": "1.0 if snare_cooperativity absent / engagement<=0 / max_effect None, else 1.0 + (snare_max-1.0)*engagement_snare(dose). Mirrors apply_anesthetic lines 327-335. REUSES v7_match2b.operator_snare_factor.",
+    "per_row_coordinate_rule": "For each frozen Stage3 row (organism, subset, compound), restrict that compound's full perturbation profile to the subset's mechanism classes (the exact _build_subset_profile mask used in the frozen run), then evaluate (total_pa, snare_gain) at the SAME dose that produced the per-compound max_qf recorded in v7_stage3_eger_raw.csv. The regression target is that max_qf."
+  },
+  "data_provenance": {
+    "frozen_inputs": [
+      "artifacts/v7_subset_search/v7_stage3_eger_raw.csv (per-(org,subset,compound,dose,seed) quiescent_fraction; FROZEN, READ-ONLY)",
+      "artifacts/v7_subset_search/v7_stage3_eger.csv (per-(org,subset) per-compound max_qf summary; FROZEN, READ-ONLY)",
+      "artifacts/v7_subset_search/v7_stage3_verdict.json (preregistration_hash 533b624a..., FROZEN)",
+      "perturbation tables via _organism_runtime (worm/fly/mouse), FROZEN"
+    ],
+    "non_destructive": "P4 reads frozen artifacts only; writes NEW artifacts under artifacts/p4_gate4_entailment/. The frozen operator (apply_anesthetic) and v7_match2b operator-mirrors are REUSED, never mutated. The heavy SNARE-falsifier run emits NEW CSVs; nothing existing is overwritten."
+  },
+  "gates": {
+    "G4_WB0_writepath": {
+      "rule": "Static confirmation from the P18-A write-path audit + a direct re-derivation: in apply_anesthetic, EXACTLY ONE mechanism class gates a write to the orthogonal synaptic channel (syn_exc.w / syn_inh.w), and it is snare_cooperativity. All other classes route only to the I_ext (total_pa) broadcast. This certifies SNARE is the single orthogonal synaptic lever, so the pseudo-non-immobilizer falsifier (SNARE-only) is well-posed.",
+      "decision": "n_synaptic_channels == 1 AND channel == 'snare_cooperativity' => PASS; otherwise => FAIL (operator has >1 orthogonal synaptic lever; the SNARE-only falsifier mis-specified, re-scope).",
+      "fast": true
+    },
+    "G4_A_entailment": {
+      "rule": "Re-analysis on FROZEN Stage3 data (no sim). Regress per-(organism,subset,compound) max_qf on the two operator coordinates (total_pa, snare_gain) evaluated at the max_qf dose. Report ordinary-least-squares R^2 with an intercept; report attrition = number of Stage2 passers that FAIL Stage3 (lose the non-immobilizer discrimination) from the frozen verdict.",
+      "decision": "R^2 >= 0.95 AND attrition == 0 => Gate-4 is ENTAILED by Gates 1+2; DEMOTE sec 8.4 from 'independent capability' to 'demonstration/corollary'. R^2 < 0.95 OR attrition > 0 => RETAIN 8.4 as carrying independent information (the two coordinates do NOT explain the non-immobilizer call; there is residual discriminative structure). Accept whichever lands.",
+      "thresholds": {"r2_min": 0.95, "attrition_max": 0},
+      "fast": true,
+      "also_report": "Per-organism R^2 + pooled R^2; the rank of the (total_pa, snare_gain) design at the max_qf doses (must be 2 for the two-coordinate claim to be non-degenerate); a degenerate-snare note (if all snare_gain entries are ~1.0 in the realized Stage3 rows, the map collapses to total_pa alone -- still an entailment, but by ONE coordinate; report explicitly)."
+    },
+    "G4_B_snare_falsifier": {
+      "rule": "Heavy (one synthetic compound dose-response, <1hr, ml env). Build a SNARE-ONLY pseudo-non-immobilizer: a synthetic profile with total_pa PINNED inside the non-immobilizer band (target |total_pa| <= the frozen trans-DCE / hexafluoroethane max |total_pa| at any tested dose, i.e. effectively ~0 current shift) while ONLY snare_cooperativity is engaged (driven to its strongest realizable engagement across the Eger dose grid). PRECONDITION (positive control): a SNARE-lever-sufficiency probe must show SNARE-max moves QF by >= 0.2 from the snare-off baseline at matched total_pa; if it does NOT, the falsifier is UNINTERPRETABLE (the synaptic lever is inert in this substrate -- report honestly, fall back to the Part-A demonstration). If the precondition passes: run the SNARE-only pseudo-NI dose-response; pseudo_NI max_qf >= 0.5 => OUTCOME-A (SNARE alone manufactures immobilization-level quiescence => the non-immobilizer call is NOT secured by total_pa alone => DEMOTE / sharpen 8.4's claim that non-immobilizers fail BECAUSE they lack total_pa). pseudo_NI max_qf < 0.5 => OUTCOME-B (SNARE alone cannot cross the immobilization threshold => the orthogonal lever does NOT rescue a non-immobilizer => RETAIN that total_pa is the load-bearing discriminator; narrowly retains 8.4's mechanism even under entailment).",
+      "thresholds": {"precondition_dqf_min": 0.2, "pseudo_ni_immobilization_qf": 0.5},
+      "fast": false,
+      "expected": "Precondition is a LIVE risk: SNARE scales syn_exc.w AND syn_inh.w by the SAME factor, so it amplifies excitation and inhibition symmetrically and may not net-move QF. If the precondition fails, P4 ships the Part-A entailment demonstration honestly and reports the SNARE lever as QF-inert."
+    }
+  },
+  "pseudo_test_screen": {
+    "G4_A_can_fail": "R^2 can land below 0.95 if max_qf carries discriminative structure orthogonal to (total_pa, snare_gain) -- e.g. nonlinear threshold effects, dose-grid quantization of the max, or seed variance. The regression is NOT constructed to pass: it is a literal 2-predictor OLS on frozen outcomes. Attrition can be > 0 (the frozen verdict could have shown Stage2->Stage3 dropouts).",
+    "G4_B_can_fail": "Outcome-A and Outcome-B are both reachable and pre-accepted; the precondition can FAIL (UNINTERPRETABLE) -- three distinct landing zones, none privileged."
+  },
+  "anti_target_engineering": "All thresholds (R^2>=0.95, attrition==0, precondition dQF>=0.2, pseudo-NI 0.5) are fixed from the operator structure + the frozen v7 Gate-4 design BEFORE any P4 computation. The non-immobilizer band for the pseudo-NI is read from the FROZEN trans-DCE/hexafluoroethane total_pa, not chosen to produce a result. Every gate is two-sided and able to FAIL.",
+  "dependencies": "P18 PASS (rank-2 premise). Shares the WB0 write-path grep with P18-A. Reuses v7_match2b operator-mirrors (P8 G1 fidelity-gated to 1e-9).",
+  "compute": "G4_WB0 + G4_A: pure-Python re-analysis on frozen CSVs, seconds (FAST, run now). G4_B: one synthetic-compound dose-response (~<1hr, ml conda brian2 env) -- RETURNED as command, NOT launched in this workflow."
+}

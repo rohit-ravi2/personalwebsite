@@ -1,0 +1,98 @@
+{
+  "block_id": "P20",
+  "title": "Genotype x anesthetic two-block reachability partition",
+  "frozen_utc": "2026-06-12",
+  "depends_on": "P18 PASS (rank-2 operator certified). The two-block composition theorem is only valid if the write-path is complete: apply_genotype + apply_anesthetic are the ONLY state mutations between brain construction and brain.run().",
+  "premise_under_test": "The untested interaction term: does the genotype x anesthetic composition contain a STRUCTURALLY-UNREACHABLE region (a real positive that routes V1's epistasis to V2/Tier4), or is all epistasis a bookkeeping consequence of two trivially-composable operator blocks? Verified by code-read (phase_g_state_validator.apply_genotype lines 248-283; apply_anesthetic lines 286-335): the operator decomposes into exactly TWO genotype blocks acting on disjoint operator coordinates.",
+  "two_block_partition": {
+    "block_I_Iext_additive": {
+      "definition": "Genotypes routed to the I_ext broadcast. apply_genotype ADDS a per-genotype constant pA shift (ci_pa for complex_i_factor<1, nca_pa for nca_leak_factor<1, k2p_pa for k2p_baseline_factor<1) to I_ext[:] BEFORE apply_anesthetic ADDS its own total_pa to the same I_ext[:]. Because both write the SAME scalar broadcast additively, the net coordinate is total_pa_eff(geno,dose) = geno_pa + total_pa(dose). This is a pure HORIZONTAL TRANSLATION of the dose-response in pA-space => a translation of EC50 in dose-space.",
+      "genotypes": ["gas-1", "gas-2", "nduf-6", "ndus-8", "nuo-1", "unc-79", "unc-80"],
+      "count": 7,
+      "geno_pa_formula": "complex_i: ci_pa = -50.0*(1-complex_i_factor)*alpha ; nca: nca_pa = -30.0*(1-nca_leak_factor)*alpha ; (worm has no k2p_baseline genotypes). All NEGATIVE (hyperpolarizing) => leftward EC50 shift => HYPERsensitive, consistent with literature_ratio<1."
+    },
+    "block_S_synaptic_multiplicative": {
+      "definition": "Genotypes routed to the synaptic-weight multiplier. apply_genotype MULTIPLIES syn_exc.w and syn_inh.w by wsyn_global_factor. apply_anesthetic SEPARATELY MULTIPLIES the same syn.w by the SNARE factor. Net synaptic gain = wsyn_global_factor * snare_factor(dose). The two synaptic scalars COMMUTE and COMPOSE MULTIPLICATIVELY on syn.w; this block does NOT touch I_ext.",
+      "genotypes": ["goa-1", "dgk-1"],
+      "count": 2,
+      "wsyn_factors": {"goa-1": 1.5, "dgk-1": 1.3},
+      "note": "wsyn_global_factor>1 => more excitable => RESISTANT (rightward EC50 shift), consistent with literature_ratio>1."
+    },
+    "deferred_excluded": {
+      "genotypes": ["eat-16", "egl-10", "ocrl-1"],
+      "count": 3,
+      "reason": "DEFERRED rows in mutant_baseline_perturbations.csv (no clean LIF entry point / direction conflict). All three have complex_i_factor=nca_leak_factor=wsyn_global_factor=1.0 => identity operator => would be trivially WT-identical and are excluded from the live battery per roadmap WB2 ('3 DEFERRED rows excluded')."
+    },
+    "WT_reference": {"genotype": "WT", "note": "identity operator; battery includes WT as the per-volatile EC50 baseline against which genotype ratios are computed."}
+  },
+  "held_out_literature_bands": {
+    "source": "literature_ratio column of mutant_baseline_perturbations.csv (mutant/WT halothane EC50 ratio). These were NOT fit to; they are the held-out comparison bands for WB3.",
+    "bands": {
+      "gas-1": [0.33, 0.5], "gas-2": [0.5, 0.7], "nduf-6": [0.4, 0.6],
+      "ndus-8": [0.4, 0.6], "nuo-1": [0.4, 0.7],
+      "unc-79": [0.33, 0.5], "unc-80": [0.33, 0.5],
+      "goa-1": [1.5, 3.0], "dgk-1": [1.5, 2.0]
+    },
+    "note": "circularity caveat: the geno_pa magnitudes (-50, -30 pA prefactors) and wsyn factors (1.5, 1.3) were hand-set to roughly reproduce these directions; WB3/WB4 are explicitly circularity-flagged. The reachability question (GATE-A) is robust to this because it asks a STRUCTURAL question (is any band OUTSIDE the operator's achievable EC50-ratio envelope), not a fit-quality question."
+  },
+  "gates": {
+    "P20_GATE_A_reachability": {
+      "type": "load-bearing, accept-either-way",
+      "rule": "For each of the 9 active genotypes, determine whether its held-out literature EC50-ratio band is STRUCTURALLY REACHABLE by the two-block operator. A band is UNREACHABLE if NO setting of the operator's genotype coordinate (the additive geno_pa for block-I, or the multiplicative wsyn for block-S, within their biologically-admissible sign/monotonicity constraints) can place the simulated EC50 ratio inside the band given the FROZEN volatile profiles and alpha. Operationally: run the LIVE battery, compute simulated EC50-ratio per genotype, and ALSO compute the operator's full achievable EC50-ratio ENVELOPE per block (block-I: sweep geno_pa across the hyperpolarizing range; block-S: sweep wsyn across [1, large]); a genotype is UNREACHABLE iff its literature band has EMPTY intersection with the achievable envelope.",
+      "decision": "POSITIVE (>=1 of 9 genotypes STRUCTURALLY-UNREACHABLE): a real positive => the unreachable genotype's epistasis cannot be expressed by the rank-2 + two-block operator and is ROUTED to V2 (expression-routable) or Tier4 (metabolic). NEGATIVE (all 9 reachable): epistasis-is-bookkeeping DEFLATION => genotype x anesthetic interaction is fully entailed by two trivially-composable blocks, adds no independent capability; relocate the claim accordingly. ACCEPT WHICHEVER LANDS.",
+      "on_indeterminate": "if EC50 unfittable (qf never crosses 0.5) for a genotype at all doses, mark that genotype EC50-INDETERMINATE and report; do not silently treat as reachable or unreachable."
+    },
+    "P20_GATE_B_gao_multiplicative": {
+      "type": "load-bearing, accept-either-way",
+      "rule": "The block-S (Gao) genotypes must produce a MULTIPLICATIVE interaction with the SNARE anesthetic coordinate, distinguishable from an ADDITIVE null. Test: total synaptic gain under (goa-1, volatile@dose) must equal wsyn_global_factor * snare_factor(dose) to within FID_TOL=1e-6 (verified on the realized syn.w post/pre ratio), and the dose-response EC50 shift must follow the multiplicative composition, NOT geno_pa-style additive translation. Concretely the realized syn.w ratio R_obs(geno,dose) is compared to R_mult = wsyn*snare_factor and R_add = wsyn + (snare_factor - 1).",
+      "decision": "PASS: |R_obs - R_mult| < 1e-6 AND |R_obs - R_add| separable (R_mult != R_add at >=1 tested dose, i.e. snare_factor != 1) => Gao interaction is multiplicative as predicted. FAIL: R_obs matches additive null or neither => the two-block multiplicative-S theorem is wrong; re-derive. (Circularity-flagged: this confirms the OPERATOR structure, which is the load-bearing claim; the magnitude credit is deferred to P7.)",
+      "fidelity_tol": 1e-6
+    },
+    "P20_GATE_C_too_special_circularity": {
+      "type": "leak / too-special floor",
+      "rule": "If ALL 9 genotype simulated EC50 ratios land within <5% relative error of their literature band MIDPOINTS, this is TOO GOOD given the bands are wide (0.33-0.5 etc.) and the geno_pa prefactors were hand-set: it indicates the ratios were circularly back-fit to the literature rather than emerging from frozen biophysics.",
+      "decision": "If all-9 < 5% midpoint error => raise CIRCULARITY FLAG => escalate to P7 (was geno_pa ladder frozen before the literature anchor?). Otherwise (>=1 genotype with >=5% error, the expected case for honestly-frozen wide bands) => no circularity flag; the partition stands on its structural merits.",
+      "threshold_pct": 5.0
+    }
+  },
+  "WB1_analytic_rank_certificate": {
+    "status": "DEMOTED from gate to cheap confirmation (per roadmap WB1).",
+    "block_I_claim": "Adding a genotype to block-I is exactly a horizontal translation of the volatile dose-response in pA-space: I_ext_eff(dose) = geno_pa + total_pa(dose). The EC50 (dose at qf=0.5) translates monotonically. Certificate: the realized I_ext delta after apply_genotype+apply_anesthetic equals geno_pa + total_pa(dose) to 1e-9, AND is spatially UNIFORM (every neuron moves by the same scalar => the composed write is still rank-1 in I_ext space).",
+    "block_S_claim": "Composing a block-S genotype with the SNARE coordinate is exactly multiplicative on syn.w: realized syn.w post/pre ratio == wsyn_global_factor * snare_factor(dose) to 1e-9, spatially uniform. The genotype-coordinate is a SINGLE global synaptic scalar (rank-1 in synapse space), composing multiplicatively with the SNARE scalar.",
+    "joint_claim": "The two blocks act on DISJOINT operator coordinates (I_ext vs syn.w) and therefore COMMUTE. The full (genotype x anesthetic) map is rank-(2 genotype-DOF) x rank-2 anesthetic, but each genotype block contributes only ONE extra scalar DOF on an already-saturated coordinate => no genotype expands the operator beyond its two spatial broadcasts. This is the structural basis for the 'epistasis is bookkeeping' deflation hypothesis that GATE-A tests."
+  },
+  "protocol": {
+    "WB2_live_battery": {
+      "genotypes": ["WT", "gas-1", "gas-2", "nduf-6", "ndus-8", "nuo-1", "unc-79", "unc-80", "goa-1", "dgk-1"],
+      "n_genotypes_active": 9,
+      "n_genotypes_including_WT": 10,
+      "volatiles": ["halothane", "isoflurane", "sevoflurane"],
+      "doses_uM": [10.0, 30.0, 100.0, 200.0, 350.0, 500.0, 1000.0, 3000.0],
+      "seeds": [42, 137, 219, 7, 91],
+      "n_seeds": 5,
+      "sim_duration_s": 30.0,
+      "organism": "worm",
+      "alpha_frozen": 0.13,
+      "halothane_pub_uM": 340.0,
+      "n_sims_total": "10 genotypes x 3 volatiles x 8 doses x 5 seeds = 1200 sims (battery includes WT; the 9-genotype ratio computation uses 9x3x8x5=1080 mutant sims + 3x8x5=120 WT sims; roadmap '~1080-sim battery' counts the mutant rows)",
+      "workers": 12,
+      "chunksize": 4
+    },
+    "ec50_metric": "per (genotype, volatile): hill_fit_ec50 over the 8 doses (seed-averaged qf), threshold 0.5. EC50_ratio(geno,vol) = EC50(geno,vol)/EC50(WT,vol).",
+    "envelope_sweep": {
+      "block_I_geno_pa_grid_pA": "linspace over the achievable hyperpolarizing range: 25 points from 0 down to the most-negative single-block geno_pa achievable (= -50*1.0*alpha for full complex_i LoF and -30*1.0*alpha for full nca LoF, combined cap). Re-simulate EC50 ratio at each to map the reachable EC50-ratio envelope; alpha frozen.",
+      "block_S_wsyn_grid": "linspace [1.0, 2.5] x 15 points; re-simulate EC50 ratio to map block-S envelope.",
+      "note": "the envelope sweeps are PART OF the heavy run (they are LIF re-simulations); WB1 analytic certificate is the cheap fast-gate confirmation."
+    },
+    "rng_seed": 20260612,
+    "outputs": "artifacts/p20/ (NEW artifacts; nothing overwritten)"
+  },
+  "anti_target_engineering": "GATE-A is two-sided and accept-either-way: an all-reachable NEGATIVE (epistasis-is-bookkeeping deflation) is an explicit acceptable outcome and the Bayesian-likely one given the two-block structure. The geno_pa/wsyn prefactors are FROZEN here before the run; GATE-C is the leak screen that catches circular back-fitting. GATE-B confirms operator STRUCTURE (multiplicative-S) which is load-bearing independent of magnitude credit (deferred to P7).",
+  "fast_gates_this_workflow": [
+    "WB1 analytic rank-certificate (block-I additive horizontal-translation to 1e-9 + spatial uniformity; block-S multiplicative to 1e-9 + spatial uniformity; disjoint-coordinate commutation) — operator-immediate, NO brain.run(), <1 min",
+    "GATE-B formula-fidelity precondition (realized syn.w ratio == wsyn*snare_factor, separable from additive null) — operator-immediate",
+    "battery task-graph build + count assertion (1200 sims, 10x3x8x5)",
+    "1-genotype x 1-volatile x 2-dose x 1-seed SMOKE sim (run_single end-to-end through apply_genotype+apply_anesthetic, assert finite qf + correct mutant tag)"
+  ],
+  "heavy_run_gate": "GATE-A (reachability) + GATE-C (too-special) are evaluated by the ~1200-sim battery + envelope sweeps; GATE-B's load-bearing structural half is settled by the fast WB1/fidelity certificate, the heavy run only confirms the dose-response shape."
+}

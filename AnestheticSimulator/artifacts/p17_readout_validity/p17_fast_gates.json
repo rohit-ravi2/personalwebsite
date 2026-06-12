@@ -1,0 +1,211 @@
+{
+  "block": "P17",
+  "mode": "fast",
+  "frozen_constants": {
+    "COMMAND_NEURONS": [
+      "AVAL",
+      "AVAR",
+      "AVBL",
+      "AVBR",
+      "AVDL",
+      "AVDR",
+      "AVEL",
+      "AVER",
+      "PVCL",
+      "PVCR",
+      "AIBL",
+      "AIBR",
+      "RIBL",
+      "RIBR",
+      "RIML",
+      "RIMR"
+    ],
+    "QUIESCENT_RATE_THRESHOLD_HZ": 3.0
+  },
+  "F1_data_availability": {
+    "kato_files_exist": true,
+    "kato_open_v73": true,
+    "n_atanas_nwb": 10,
+    "atanas_ge_10": true,
+    "atanas_opens_lazily": true,
+    "verdict": "PASS"
+  },
+  "F2_kato_loader": {
+    "n_wt_worms": 5,
+    "n_hiscl_worms": 5,
+    "wt0_dff_shape": [
+      109,
+      3137
+    ],
+    "load_seconds": 0.33,
+    "verdict": "PASS"
+  },
+  "F2_atanas_streamer": {
+    "act_shape": [
+      1600,
+      134
+    ],
+    "vel_len": 1600,
+    "n_labeled": 98,
+    "stream_seconds": 0.002,
+    "note": "streamed ONLY processed traces+labels+velocity; 27GB raw movie untouched",
+    "verdict": "PASS"
+  },
+  "F3_AVA_present": {
+    "kato_wt_worms_with_AVA": 5,
+    "n_kato_wt": 5,
+    "atanas_worm0_has_AVA": true,
+    "verdict": "PASS"
+  },
+  "F4_Q1_kato_preview": {
+    "modality": "kato_labeled_states",
+    "n_worms_used": 5,
+    "n_id_controlled": 5,
+    "mean_t_signcorr": 0.23419143321456737,
+    "ci95": [
+      0.19102699885394264,
+      0.26983543440082886
+    ],
+    "ci_excludes_0": true,
+    "ci_side": "supporting",
+    "per_worm": [
+      {
+        "worm": 0,
+        "cmd_neurons": [
+          "AVAL",
+          "AVAR",
+          "AVER",
+          "AVEL",
+          "AIBR",
+          "AVBR",
+          "AIBL",
+          "RIMR",
+          "AVBL",
+          "RIBL",
+          "RIML"
+        ],
+        "id_control_pass": true,
+        "s_active_minus_immobile": -0.2585944473992935,
+        "t_signcorr": 0.2585944473992935
+      },
+      {
+        "worm": 1,
+        "cmd_neurons": [
+          "AVAR",
+          "AVAL",
+          "AVER",
+          "AVEL",
+          "AIBR",
+          "AVBR",
+          "RIBR",
+          "AVBL",
+          "AIBL",
+          "RIBL",
+          "RIMR",
+          "RIML"
+        ],
+        "id_control_pass": true,
+        "s_active_minus_immobile": -0.15934740679265824,
+        "t_signcorr": 0.15934740679265824
+      },
+      {
+        "worm": 2,
+        "cmd_neurons": [
+          "AVAL",
+          "AVER",
+          "AIBR",
+          "AVEL",
+          "AVBR",
+          "AVBL",
+          "AIBL",
+          "RIMR",
+          "RIML",
+          "RIBL",
+          "AVAR",
+          "RIBR"
+        ],
+        "id_control_pass": true,
+        "s_active_minus_immobile": -0.269368824313279,
+        "t_signcorr": 0.269368824313279
+      },
+      {
+        "worm": 3,
+        "cmd_neurons": [
+          "AVAR",
+          "AVAL",
+          "AVEL",
+          "AVER",
+          "AIBL",
+          "AIBR",
+          "RIBR",
+          "AVBR",
+          "RIBL",
+          "AVBL",
+          "RIMR",
+          "RIML"
+        ],
+        "id_control_pass": true,
+        "s_active_minus_immobile": -0.20772394957845952,
+        "t_signcorr": 0.20772394957845952
+      },
+      {
+        "worm": 4,
+        "cmd_neurons": [
+          "AVAR",
+          "AVAL",
+          "AVER",
+          "AVEL",
+          "AIBR",
+          "AVBR",
+          "AIBL",
+          "RIBR",
+          "RIBL",
+          "RIMR",
+          "AVBL",
+          "RIML"
+        ],
+        "id_control_pass": true,
+        "s_active_minus_immobile": -0.27592253798914645,
+        "t_signcorr": 0.27592253798914645
+      }
+    ],
+    "verdict": "PASS",
+    "note": "within-Kato only; full Q1-data-sign PASS additionally requires the Atanas-pose arm (HEAVY) to exclude 0 on the supporting side."
+  },
+  "F5_Q3_partA_kato_bimodality": {
+    "per_worm_deltaBIC": [
+      1273.0073934941872,
+      979.3667044897106,
+      1210.1808322917573,
+      148.73194546368575,
+      1189.271590971457
+    ],
+    "median_deltaBIC": 1189.271590971457,
+    "n_worms_deltaBIC_ge_10": 5,
+    "n_worms": 5,
+    "PART_A_pass": true,
+    "verdict": "PASS"
+  },
+  "Q2_data_half_preview": {
+    "wt_revsus_occupancy_mean": 0.34060223794406863,
+    "wt_ci": [
+      0.3187190959208288,
+      0.36380099871204435
+    ],
+    "hiscl_reversal_occupancy_mean": 0.3552197264786364,
+    "hiscl_ci": [
+      0.28055582654909256,
+      0.4323013316848442
+    ],
+    "hiscl_quiescence_occupancy_mean": 0.25762347203617103,
+    "diff_wt_minus_hiscl": -0.01461748853456779,
+    "diff_ci95": [
+      -0.09572082467919166,
+      0.061634804860965835
+    ],
+    "ci_excludes_0": false,
+    "ci_side": "straddles",
+    "note": "HisCl carries NO per-neuron AVA trace (numeric IDs); test is on the labeled behavioral-state distribution, which is the readout variable.",
+    "verdict": "AMBIGUOUS"
+  }
+}

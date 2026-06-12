@@ -1,0 +1,281 @@
+{
+  "block_id": "P16",
+  "phase": "fast_preconditions",
+  "F1": {
+    "gate": "F1_strict_shuffle_invariance",
+    "PASS": true,
+    "per_matrix": {
+      "W_chem_per_edge": {
+        "in_degree_preserved": true,
+        "out_degree_preserved": true,
+        "weight_multiset_pos": true,
+        "weight_multiset_neg": true,
+        "edge_count_pos": true,
+        "edge_count_neg": true,
+        "self_loops_preserved": true,
+        "total_nnz_preserved": true,
+        "actually_randomized": true,
+        "PASS": true,
+        "n_edge_positions_changed": 5564
+      },
+      "W_chem": {
+        "in_degree_preserved": true,
+        "out_degree_preserved": true,
+        "weight_multiset_pos": true,
+        "weight_multiset_neg": true,
+        "edge_count_pos": true,
+        "edge_count_neg": true,
+        "self_loops_preserved": true,
+        "total_nnz_preserved": true,
+        "actually_randomized": true,
+        "PASS": true,
+        "n_edge_positions_changed": 5488
+      }
+    },
+    "leaky_negative_control": {
+      "leaky_in_degree_preserved": false,
+      "leaky_out_degree_preserved": false,
+      "leaky_nnz_preserved": false,
+      "note": "leaky permute_configuration is EXPECTED to FAIL in-degree and/or nnz preservation; this confirms the strict swap is a genuine remediation."
+    }
+  },
+  "F2": {
+    "gate": "F2_atanas_parse_smoke",
+    "PASS": true,
+    "n_files_parsed": 10,
+    "overlap_min": 67,
+    "overlap_max": 110,
+    "overlap_median": 85.5,
+    "per_worm": [
+      {
+        "file": "atanas_worm_01.nwb",
+        "T": 1600,
+        "n_rois": 134,
+        "n_named": 98,
+        "n_overlap_with_connectome": 94,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "ADLL",
+          "AIBL",
+          "AIBR",
+          "AIML",
+          "AIMR",
+          "AIZL",
+          "AIZR",
+          "AQR",
+          "ASEL",
+          "ASER"
+        ]
+      },
+      {
+        "file": "atanas_worm_02.nwb",
+        "T": 1600,
+        "n_rois": 142,
+        "n_named": 78,
+        "n_overlap_with_connectome": 74,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "AIBL",
+          "AIBR",
+          "AIML",
+          "AINL",
+          "AIZL",
+          "ASEL",
+          "ASGL",
+          "AUAL",
+          "AVAL",
+          "AVAR"
+        ]
+      },
+      {
+        "file": "atanas_worm_03_sub-2022-06-28-07-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 142,
+        "n_named": 86,
+        "n_overlap_with_connectome": 84,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "ADLL",
+          "AIBL",
+          "AIBR",
+          "AIML",
+          "AINL",
+          "AIZL",
+          "ASEL",
+          "ASER",
+          "ASHL",
+          "AUAL"
+        ]
+      },
+      {
+        "file": "atanas_worm_04_sub-2022-06-14-07-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 130,
+        "n_named": 89,
+        "n_overlap_with_connectome": 87,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "ADLL",
+          "AIBL",
+          "AIBR",
+          "AINL",
+          "AIYL",
+          "AIYR",
+          "AIZL",
+          "ASEL",
+          "ASER",
+          "ASGL"
+        ]
+      },
+      {
+        "file": "atanas_worm_05_sub-2022-06-14-01-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 109,
+        "n_named": 79,
+        "n_overlap_with_connectome": 78,
+        "velocity_present": true,
+        "overlap_sample": [
+          "AIBL",
+          "AIBR",
+          "AIZL",
+          "ASEL",
+          "ASHL",
+          "AUAL",
+          "AVAR",
+          "AVDL",
+          "AVEL",
+          "AVER",
+          "AVHL",
+          "AVJL"
+        ]
+      },
+      {
+        "file": "atanas_worm_06_sub-2022-07-15-06-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 128,
+        "n_named": 71,
+        "n_overlap_with_connectome": 68,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADER",
+          "ADLL",
+          "AIAR",
+          "AIBL",
+          "AINL",
+          "AIYL",
+          "AIYR",
+          "AIZL",
+          "ALA",
+          "AQR",
+          "ASEL"
+        ]
+      },
+      {
+        "file": "atanas_worm_07_sub-2022-07-15-12-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 132,
+        "n_named": 94,
+        "n_overlap_with_connectome": 91,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "AIBL",
+          "AIBR",
+          "AIML",
+          "AIMR",
+          "AINL",
+          "AIYL",
+          "AIYR",
+          "AIZL",
+          "ASEL",
+          "ASGL"
+        ]
+      },
+      {
+        "file": "atanas_worm_08_sub-2022-08-02-01-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 152,
+        "n_named": 115,
+        "n_overlap_with_connectome": 110,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "AIBL",
+          "AIBR",
+          "AIML",
+          "AIMR",
+          "AINL",
+          "AIYL",
+          "AIZL",
+          "AIZR",
+          "ASEL",
+          "ASGL"
+        ]
+      },
+      {
+        "file": "atanas_worm_09_sub-2022-07-20-01-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 144,
+        "n_named": 97,
+        "n_overlap_with_connectome": 95,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADAL",
+          "ADEL",
+          "ADLL",
+          "AIBL",
+          "AIBR",
+          "AIML",
+          "AIMR",
+          "AIYL",
+          "AIYR",
+          "AIZR",
+          "ASEL",
+          "ASER"
+        ]
+      },
+      {
+        "file": "atanas_worm_10_sub-2022-07-26-01-SWF702.nwb",
+        "T": 1600,
+        "n_rois": 133,
+        "n_named": 71,
+        "n_overlap_with_connectome": 67,
+        "velocity_present": true,
+        "overlap_sample": [
+          "ADEL",
+          "AIAL",
+          "AIAR",
+          "AIBL",
+          "AIBR",
+          "AINL",
+          "AINR",
+          "ASEL",
+          "ASGL",
+          "ASHL",
+          "AUAL",
+          "AVAL"
+        ]
+      }
+    ]
+  },
+  "F3": {
+    "gate": "F3_positive_control_scaffold",
+    "PASS": true,
+    "R_real_synthetic": 1.0,
+    "R_shuffle_synthetic": 0.1295,
+    "note": "scaffold validity: with ground-truth structure, real >> shuffle. The R>=0.5 acceptance threshold is evaluated in the HEAVY job on real model covariance, not here."
+  },
+  "ALL_FAST_PASS": true,
+  "heavy_run_unblocked": true
+}

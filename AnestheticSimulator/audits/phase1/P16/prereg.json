@@ -1,0 +1,64 @@
+{
+  "block_id": "P16",
+  "title": "Held-out structure->activity exam: V1 connectome vs STRICT degree-preserving double-edge-swap, scored against Atanas calcium covariance",
+  "frozen_utc": "2026-06-12",
+  "gated_on": "P8 fly verdict = PASS (docs/P8_match2b_reconciliation.md: fly 26% in (5%,30%], signal survives airtight 2-coordinate control). Weaker structural prior than the 4.76% headline implied; worm now also carries signal, so the expected delta-R from the connectome is SMALL. Pre-accepted NULL is Bayesian-likely (user's own connectome~shuffled prior at d=4/8/16).",
+  "premise_under_test": "Does the SPECIFIC wiring of the V1 worm connectome (Cook 2019, connectome.npz W_chem_per_edge) explain held-out Atanas calcium covariance BETTER than a strict degree-preserving rewire that destroys specific wiring while preserving every first-order graph statistic the readout already controls for? The model side is spontaneous (no-anesthetic) Brian2 LIF runs; the data side is the partial-correlation covariance of named-neuron GCaMP traces. If V1 only matches the held-out covariance to the extent a degree-matched null does, V1's structural claim collapses to MEAN-FIELD (first-order degree statistics), not specific synaptic wiring.",
+
+  "scoring_definition": {
+    "model_observable": "Per simulated neuron, bin spikes (bin_dt_s=0.5s) over the record window, convolve with a GCaMP6-like kernel (single-exponential, tau_decay frozen below) to produce a model dF/F-proxy trace. Across n_seeds spontaneous runs, build the model covariance/partial-correlation matrix over the set of neurons that are BOTH in the connectome AND named in the Atanas recording (overlap set).",
+    "data_observable": "Atanas processing/CalciumActivity/SignalCalciumImResponseSeries/data (T x 134), restricted to named neurons (processing/CalciumActivity/NeuronIDs/labels nonempty), after global-mean + motion (velocity) regression, then partial correlation controlling for per-neuron rate proxy and in/out degree. Streamed via h5py partial reads; raw imaging volumes NEVER loaded.",
+    "score_R": "R = Spearman correlation between the off-diagonal entries of the model partial-correlation matrix and the data partial-correlation matrix, over the overlap-set neuron pairs present in BOTH model and data. Higher R = the model's covariance structure better matches held-out activity covariance.",
+    "delta_R": "delta_R = R(real connectome) - R(strict-shuffle null). Per shuffle seed s (n_seeds>=20), compute R(real) - R(shuffle_s); bootstrap/seed distribution gives a CI on delta_R.",
+    "noise_floor": "model-internal noise floor = the distribution of R(real_seedA) vs R(real_seedB) DISAGREEMENT mapped to a delta-R-equivalent: specifically the 95th percentile of |R(real, half-seeds-A) - R(real, half-seeds-B)| under seed resampling. delta_R must clear THIS floor, not 0, to count as structure beyond model stochasticity."
+  },
+
+  "frozen_hyperparameters": {
+    "gcamp_kernel": "single-exponential decay, tau_decay_s = 1.5 (GCaMP6f-class, frozen a priori); rise instantaneous at bin resolution; kernel normalized to unit area. Applied to 0.5s-binned spike counts.",
+    "bin_dt_s": 0.5,
+    "record_start_s": 10.0,
+    "regression": "data side: regress out (i) global mean trace and (ii) instantaneous velocity (processing/Behavior/velocity) and |velocity| from each neuron trace via OLS, use residuals. model side: regress out global mean trace only (no velocity covariate exists in sim).",
+    "scoring_method": "partial correlation: invert the (regularized, ridge eps=1e-3 on standardized traces) covariance to a precision matrix, normalize to partial correlations; ADDITIONALLY control rate + in-degree + out-degree by including them as nuisance regressors on the vectorized pairwise score (partial-correlation-of-pair residualized on |rate_i-rate_j|, in/out-degree-product). MANDATORY per roadmap WB0.",
+    "n_seeds": 20,
+    "shuffle_seeds": 20,
+    "glu_sign_arms": ["per_edge_glu_signs_TRUE", "per_edge_glu_signs_FALSE"],
+    "n_worms_scored": 10,
+    "spontaneous": "no anesthetic, no genotype; alpha irrelevant. dose=0 / profile-empty => apply_anesthetic adds 0 pA (total_pa==0) and snare absent => bit-identical to bare brain.run().",
+    "sim_duration_s": 70.0
+  },
+
+  "strict_shuffle_invariants": {
+    "name": "permute_double_edge_swap",
+    "requirement": "NEW operator; MUST NOT reuse the leaky permute_configuration (which shuffles only post-indices => scrambles in-degree, and uses += => collapses ~edges on collision). The strict swap preserves, EXACTLY and per the invariance unit test (HARD GATE, BLOCKS RUN): (1) per-node IN-degree, (2) per-node OUT-degree, (3) the global weight multiset (sorted nonzero |w| identical, per sign), (4) per-SIGN edge count (n_pos, n_neg each preserved), (5) the SELF-LOOP set (autapses; the connectome has 34) preserved bit-identically as a FROZEN invariant set -- self-loops are degenerate for a degree-preserving swap and are held out of the swap pool, NOT rewired, NOT zeroed, NOT created, (6) no parallel-edge collapse (each swap rejected if it would create a duplicate or self-loop). Swaps are done WITHIN each sign class on OFF-DIAGONAL edges only, so signs never migrate and degrees are exactly conserved.",
+    "unit_test_rule": "On connectome.npz W_chem_per_edge (and W_chem), after >= 20*E attempted swaps: assert in-degree vector identical, out-degree vector identical, sorted |w| multiset identical (per sign), n_pos/n_neg identical, diagonal (self-loop set) bit-identical to original, total nonzero count identical to original, AND the swapped matrix is NOT bit-identical to the original (it must actually randomize the off-diagonal). HARD: any failure BLOCKS the heavy run. NEGATIVE CONTROL: confirm the leaky permute_configuration FAILS in-degree/nnz preservation on the same matrix."
+  },
+
+  "gates": {
+    "Gate-A": {
+      "name": "delta-R structure-vs-shuffle",
+      "rule": "delta_R = R(real) - R(strict double-edge-swap), n_seeds>=20.",
+      "decision_rule": "CI-lower(delta_R) > noise_floor => PASS (specific wiring does measurable work beyond degree statistics; HIGH VALUE, replicate on Kato/Zimmer). CI-lower(delta_R) <= noise_floor => NULL/DEFLATE (V1 structural claim collapses to mean-field; pre-accepted, publishable per user's connectome~shuffled prior). R(real) >= 0.6 => TOO_SPECIAL HALT-FOR-LEAK (implausibly high held-out fit through a GCaMP+downsample+regression bottleneck => suspect observation-model leak / circular overlap; halt and audit before any claim). CI straddles 0 => INCONCLUSIVE-BY-POWER (report, add worms or shuffle seeds).",
+      "noise_floor_def": "95th percentile of seed-split R-disagreement (see scoring_definition.noise_floor). Frozen procedure, not a number."
+    },
+    "Gate-B": {
+      "name": "sign-robustness across both glu-sign arms",
+      "rule": "Run the full delta_R computation under BOTH use_per_edge_glu_signs=True and =False.",
+      "decision_rule": "Gate-A verdict must AGREE in direction across both arms to be ROBUST. If PASS in one arm and NULL in the other => FRAGILE: report as sign-assignment-dependent, downgrade to weakly-informative. Accept either way; the disagreement itself is the finding."
+    },
+    "Gate-C": {
+      "name": "positive control: scorer recovers known structure through the observation bottleneck",
+      "rule": "Inject a KNOWN ground-truth covariance structure (use the real connectome's own model covariance from a held-out seed block as synthetic 'data'), pass it through the SAME GCaMP-kernel + downsample + global/motion-regression + partial-correlation pipeline, and ask whether the scorer recovers R(real) >> R(shuffle).",
+      "decision_rule": "positive control recovers at R >= 0.5 => scorer is VALID; a Gate-A NULL is then genuinely informative (structure absent, not undetectable). positive control R < 0.5 => the OBSERVATION PIPELINE destroys recoverable structure => any Gate-A NULL is WEAKLY-INFORMATIVE-ONLY (cannot distinguish 'no structure' from 'pipeline too lossy'). Accept either way; this gate calibrates the interpretation of Gate-A."
+    }
+  },
+
+  "fast_preconditions": {
+    "F1_strict_shuffle_invariance_unit_test": "HARD, BLOCKS RUN. Build permute_double_edge_swap, run on real connectome.npz, assert all 6 invariants + actual-randomization. Must PASS before heavy run.",
+    "F2_atanas_parse_smoke": "Open atanas_worm_01.nwb via h5py partial read; confirm SignalCalciumImResponseSeries/data (T x 134), NeuronIDs/labels, velocity present; extract named-neuron overlap with connectome names; confirm overlap-set size >= 10 (else underpowered). NEVER load raw imaging volume.",
+    "F3_positive_control_scaffold": "Build + dry-run the Gate-C positive-control pipeline on a TINY synthetic covariance (no Brian2): confirm the GCaMP-kernel + regression + partial-correlation + Spearman scorer runs end to end and that real >> shuffle on synthetic-with-structure. (Full Gate-C with real model covariance runs in the heavy job.)"
+  },
+
+  "anti_target_engineering": "All thresholds (noise_floor as a frozen procedure, R>=0.6 too-special, R>=0.5 positive-control, n_seeds>=20, tau_decay=1.5s, partial-correlation controlling rate+in/out-degree) are fixed from observation-model + graph structure BEFORE any heavy run. Gate-A is two-sided and accept-either-way: a NULL (V1 deflates to mean-field) is the Bayesian-likely, pre-accepted, publishable outcome. The R>=0.6 too-special floor exists precisely so a leak cannot fake a PASS. No retuning of kernel/threshold after seeing delta_R.",
+
+  "non_destructive": "NEW module src/state_validation/p16_structure_activity_exam.py; NEW strict permute_double_edge_swap (does NOT touch m2_connectome_permutation.permute_configuration); NEW artifacts under artifacts/p16/. No frozen operator, ensemble, or connectome file is mutated. Spontaneous runs go through the UNMODIFIED phase_g_state_validator.run_single with an empty profile (total_pa==0)."
+}

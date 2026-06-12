@@ -1,0 +1,10 @@
+{
+  "gate": "G4_WB0_writepath",
+  "n_syn_write_lines": 2,
+  "syn_channel_class_keys": [
+    "snare_cooperativity"
+  ],
+  "n_orthogonal_synaptic_channels": 1,
+  "verdict": "PASS",
+  "rule": "n_synaptic_channels == 1 AND channel == 'snare_cooperativity' => PASS; otherwise => FAIL (operator has >1 orthogonal synaptic lever; the SNARE-only falsifier mis-specified, re-scope)."
+}

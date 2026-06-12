@@ -1,0 +1,23 @@
+{
+  "block": "P20",
+  "stage": "WB1_cert + GATE-B-fidelity",
+  "n_cases": 81,
+  "WB1_analytic_certificate": {
+    "block_I_max_err_pA": 1.0658141036401503e-14,
+    "block_I_max_nonuniform_pA": 1.0658141036401503e-14,
+    "block_I_additive_translation_ok": true,
+    "block_S_max_err_ratio": 3.3306690738754696e-16,
+    "block_S_max_nonuniform": 4.440892098500626e-16,
+    "block_S_multiplicative_ok": true,
+    "threshold": 1e-09,
+    "verdict": "PASS"
+  },
+  "GATE_B_gao_multiplicative_precondition": {
+    "max_err_synaptic_ratio_vs_mult": 3.3306690738754696e-16,
+    "fidelity_tol": 1e-06,
+    "min_mult_minus_add_separation": 0.03409090909090917,
+    "separable_from_additive_null": true,
+    "verdict": "PASS",
+    "note": "Load-bearing structural half of GATE-B settled here on the realized syn.w ratio; the heavy battery only confirms the dose-response shape."
+  }
+}

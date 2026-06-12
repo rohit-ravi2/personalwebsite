@@ -1,0 +1,53 @@
+{
+  "block": "P20",
+  "stage": "smoke",
+  "n_cases": 5,
+  "all_finite": true,
+  "rows": [
+    {
+      "gene": "gas-1",
+      "volatile": "halothane",
+      "dose": 100.0,
+      "seed": 42,
+      "quiescent_fraction": 0.020833333333333332,
+      "command_rate_hz": 7.432291666666667,
+      "network_rate_hz": 2.132361111111111
+    },
+    {
+      "gene": "gas-1",
+      "volatile": "halothane",
+      "dose": 1000.0,
+      "seed": 42,
+      "quiescent_fraction": 1.0,
+      "command_rate_hz": 0.3854166666666667,
+      "network_rate_hz": 0.1634722222222222
+    },
+    {
+      "gene": "goa-1",
+      "volatile": "halothane",
+      "dose": 100.0,
+      "seed": 42,
+      "quiescent_fraction": 0.0,
+      "command_rate_hz": 21.236979166666668,
+      "network_rate_hz": 7.315833333333333
+    },
+    {
+      "gene": "goa-1",
+      "volatile": "halothane",
+      "dose": 1000.0,
+      "seed": 42,
+      "quiescent_fraction": 0.5,
+      "command_rate_hz": 2.9453125,
+      "network_rate_hz": 0.8208333333333333
+    },
+    {
+      "gene": "WT",
+      "volatile": "halothane",
+      "dose": 1000.0,
+      "seed": 42,
+      "quiescent_fraction": 0.9791666666666666,
+      "command_rate_hz": 0.6770833333333334,
+      "network_rate_hz": 0.25027777777777777
+    }
+  ]
+}

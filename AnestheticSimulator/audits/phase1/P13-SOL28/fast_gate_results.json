@@ -1,0 +1,57 @@
+{
+  "block": "P13-SOL28",
+  "fast_gates": {
+    "G1": {
+      "gate": "G1_interval_provenance",
+      "verdict": "PASS",
+      "derivation": {
+        "tau_ms": 10.0,
+        "C_mem_pF": 100.0,
+        "v_rest_mV": -25.0,
+        "v_thr_mV": -10.0,
+        "g_leak_nS": 10.0,
+        "D_mV": 15.0,
+        "g_leak_times_D_pA": 150.0,
+        "block_fraction_lo": 0.5,
+        "block_fraction_hi": 0.8,
+        "interval_lo_pA": 75.0,
+        "interval_hi_pA": 120.0,
+        "legacy_pA": 40.0,
+        "legacy_block_fraction": 0.26666666666666666,
+        "legacy_below_lo": true
+      },
+      "checks": {
+        "tau_ms==10.0": true,
+        "C_mem_pF==100.0": true,
+        "v_rest_mV==-25.0": true,
+        "v_thr_mV==-10.0": true,
+        "g_leak_nS==10.0": true,
+        "D_mV==15.0": true,
+        "g_leak*D==150.0": true,
+        "interval_lo==75.0": true,
+        "interval_hi==120.0": true,
+        "legacy_40_below_lo": true,
+        "legacy_outside_interval": true
+      }
+    },
+    "G3": {
+      "gate": "G3_substitution_leak_screen",
+      "nca_pa": 75.0,
+      "verdict": "PASS",
+      "fingerprint": {
+        "nca_block_now": 75.0,
+        "non_nca_sha_before": "54788ddcf622669910f9f6738d8b84167346a3e80f96c1982c26d345388c5478",
+        "non_nca_sha_after": "54788ddcf622669910f9f6738d8b84167346a3e80f96c1982c26d345388c5478",
+        "non_nca_sha_expected": "54788ddcf622669910f9f6738d8b84167346a3e80f96c1982c26d345388c5478",
+        "non_nca_unchanged": true
+      },
+      "baseline_nca": 40.0,
+      "checks": {
+        "baseline_nca==40.0": true,
+        "baseline_non_nca_hash_matches": true,
+        "override_set_nca": true,
+        "non_nca_byte_identical": true
+      }
+    }
+  }
+}

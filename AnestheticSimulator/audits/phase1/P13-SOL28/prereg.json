@@ -1,0 +1,102 @@
+{
+  "block": "P13-SOL28",
+  "title": "nca biophysics-frozen interval magnitude sweep (LOCAL, load-bearing half of P13)",
+  "date_frozen": "2026-06-12",
+  "roadmap": "AnestheticSimulator/docs/wf2_gated_fix_roadmap.md  (lines 108, 239-244)",
+  "scope": "LOCAL only. Settles whether the nca_block current MAGNITUDE matters to the worm quorum, independent of the Greene SOL27 ESMFold/structure half. Does NOT wait on Greene.",
+  "foundation": {
+    "operator": "V1 rank-2 (P18 certified): QF=G(total_pa, snare_factor); total_pa = alpha * sum_{non-SNARE classes}(-sat_pa*engagement).",
+    "nca_role": "nca_block is one of the 7 worm mechanism classes; its sat_pa scalar is DEFAULT_PER_CLASS_PA_AT_SATURATION['nca_block'] (legacy 40 pA). It sums into total_pa (it is NOT the SNARE multiplicative coordinate).",
+    "passing_subset_definition": "Stage-1 halothane subset is a PASS iff Hill-fit predicted EC50 gives max(pred/pub, pub/pred) <= 2.0, pub=340 uM worm, frozen alpha=0.13, doses=[10,30,100,200,350,500,1000,3000] uM, seeds=[42,137,219,331,443], 30s LIF sims. This pass criterion is REUSED unchanged from v7_subset_search (PREREG_HASH 533b624a...).",
+    "nca_quorum_subsets": "The 64 worm subsets (of 127) that CONTAIN nca_block. (2^6 = 64, confirmed empirically.)"
+  },
+  "frozen_disk_constants": {
+    "source_file": "scripts/brain/lif_brain.py",
+    "tau_ms": 10.0,
+    "C_mem_pF": 100.0,
+    "v_rest_mV": -25.0,
+    "v_thr_mV": -10.0,
+    "derived_g_leak_nS": "C_mem/tau = 100/10 = 10.0",
+    "derived_D_mV": "v_thr - v_rest = -10 - (-25) = 15.0",
+    "derived_g_leak_times_D_pA": "10.0 nS * 15.0 mV = 150.0 pA"
+  },
+  "interval_derivation": {
+    "formula": "I_block(block_fraction) = block_fraction * g_leak * D = block_fraction * 150.0 pA",
+    "block_fraction_lo": 0.5,
+    "block_fraction_hi": 0.8,
+    "interval_lo_pA": 75.0,
+    "interval_hi_pA": 120.0,
+    "legacy_pA": 40.0,
+    "legacy_block_fraction": 0.26667,
+    "legacy_below_lo": true,
+    "rationale": "block_fraction in [0.5,0.8] = a substantial-but-incomplete NALCN/NCA leak block. 40 pA legacy maps to bf=0.267, BELOW the lo edge, so the interval cannot be accused of trivially bracketing the hand-set legacy value."
+  },
+  "frozen_non_nca_scalars": {
+    "complex_i_block": 60.0,
+    "complex_ii_block": 20.0,
+    "k2p_potentiation": 30.0,
+    "gaba_potentiation": 30.0,
+    "glucl_potentiation": 20.0,
+    "nachr_antagonism": 30.0,
+    "snare_cooperativity": 50.0,
+    "non_nca_sha256": "54788ddcf622669910f9f6738d8b84167346a3e80f96c1982c26d345388c5478"
+  },
+  "baseline_reference": {
+    "source": "artifacts/v7_subset_search/v7_stage1_halothane.csv (worm rows; nca=40 pA legacy)",
+    "n_nca_containing_subsets": 64,
+    "n_nca_containing_passing_baseline": 15,
+    "baseline_universality": "All 15 baseline-passing nca subsets contain SNARE; 14/15 also contain Complex-I. SNARE-OR-ComplexI universality holds at baseline (15/15).",
+    "note": "Baseline is RE-READ from the frozen artifact; not re-simulated. G2 compares the re-sim at nca=75 pA against this frozen baseline count."
+  },
+  "design": {
+    "what_is_re_simulated": "64 nca-containing worm subsets, 8 doses, 5 seeds = 2560 LIF sims at nca=75 pA (lo edge of the interval). Each sim already returns all 3 endpoints, so '64 subsets x 3 endpoints' = these 2560 sims read out on 3 metrics.",
+    "three_endpoints": ["quiescent_fraction", "command_mean_firing_rate_hz", "network_mean_firing_rate_hz"],
+    "primary_endpoint_for_pass": "quiescent_fraction (drives Hill EC50 + pass, identical to v7_subset_search). command/network rates are the leak-screen + diagnostic endpoints.",
+    "edge_choice": "nca=75 pA is the WORST-CASE (lo) edge: smallest magnitude in the interval, hence the strongest test of whether the quorum survives. If 75 pA survives, the whole [75,120] interval survives a fortiori (monotone hyperpolarizing). 120 pA (hi) is a confirmatory secondary run.",
+    "nonlinear": "QF is a nonlinear LIF readout of total_pa; cannot be recomputed arithmetically from the baseline -> a real re-sim is required.",
+    "override_mechanism": "NEW code path patches ONLY DEFAULT_PER_CLASS_PA_AT_SATURATION['nca_block'] in-process at run start. Frozen operator apply_anesthetic is NOT edited. All 7 non-nca entries are left untouched and asserted byte-identical (G3)."
+  },
+  "gates": {
+    "G1_interval_provenance": {
+      "statement": "The interval [75,120] pA is the closed form block_fraction*g_leak*D of the FROZEN disk constants, byte-identical on re-derivation from scripts/brain/lif_brain.py.",
+      "pass_rule": "Re-parsed (tau,C_mem,v_rest,v_thr) yield g_leak=10.0 nS, D=15.0 mV, g_leak*D=150.0 pA EXACTLY; 0.5*150=75.0 and 0.8*150=120.0 EXACTLY; legacy 40 pA -> bf 0.26667 < 0.5.",
+      "fail_rule": "Any constant differs from frozen value, OR 75/120 not reproduced exactly, OR legacy 40 pA lands inside [75,120].",
+      "two_sided": true,
+      "type": "FAST"
+    },
+    "G2_quorum_survival": {
+      "statement": "At nca=75 pA, the number of passing nca-containing subsets is >= 80% of the frozen baseline count (15), AND SNARE-OR-ComplexI universality holds (every passing nca subset contains SNARE or Complex-I).",
+      "pass_rule": "n_passing_75pA >= ceil(0.8*15) = 12  AND  every 75 pA-passing nca subset contains snare_cooperativity OR complex_i_block.",
+      "fail_rule": "n_passing_75pA < 12  (the quorum was resting on the hand-set 40 pA scalar -> DEFLATE the nca contribution),  OR universality broken (a passing subset relies on neither SNARE nor Complex-I).",
+      "accept_either_way": "PASS => nca magnitude is robust across the biophysically-derived interval, the quorum does not depend on the legacy hand-set value. FAIL => honest deflation: report that nca's quorum membership was scalar-dependent; the magnitude DOES matter and is uncalibratable (NALCN no Kd) -> Tier4-adjacent parked residue.",
+      "two_sided": true,
+      "type": "HEAVY",
+      "evaluated_by": "the 2560-sim re-sim"
+    },
+    "G3_substitution_leak_screen": {
+      "statement": "The 7 non-nca per-class scalars are byte-identical between the baseline operator and the nca-override run; only nca_block changed.",
+      "pass_rule": "sha256 of the non-nca scalar dict == 54788ddcf622669910f9f6738d8b84167346a3e80f96c1982c26d345388c5478 in BOTH baseline and override processes; nca_block == 75.0 in override, 40.0 in baseline.",
+      "fail_rule": "Any non-nca scalar mutated by the override path (leak), OR the override failed to set nca_block to 75.0.",
+      "two_sided": true,
+      "type": "FAST"
+    }
+  },
+  "fast_gates_run_now": ["G1_interval_provenance", "G3_substitution_leak_screen", "build_rank_smoke", "bit_identical_regression"],
+  "additional_fast_preconditions": {
+    "build_rank_smoke": "A 1-subset x 2-dose x 1-seed smoke re-sim runs to completion under nca=75 pA in the ml env (harness wiring works).",
+    "bit_identical_regression": "When nca override is set BACK to 40.0 (legacy), one smoke sim is bit-identical to the frozen-operator baseline path (proves the NEW code path is a pure scalar swap, not a behavior change)."
+  },
+  "heavy_run": {
+    "what": "64 nca-containing worm subsets x 8 doses x 5 seeds = 2560 LIF sims at nca=75 pA (primary) [+ optional 2560 at 120 pA confirmatory].",
+    "env": "/home/rohit/miniconda3/envs/ml/bin/python",
+    "workers": 12,
+    "evaluates": "G2_quorum_survival",
+    "est_minutes_primary": 95
+  },
+  "non_destructive_guarantees": [
+    "No edits to phase_g_state_validator.apply_anesthetic or any frozen operator.",
+    "No edits to v7_* ensembles or their frozen artifacts.",
+    "Override is an in-process scalar patch in a NEW module; baseline artifact v7_stage1_halothane.csv is read-only.",
+    "All new artifacts under artifacts/p13_sol28/ ; all audit docs under audits/phase1/P13-SOL28/."
+  ]
+}
