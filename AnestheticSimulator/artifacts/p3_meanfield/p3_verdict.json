@@ -1,0 +1,71 @@
+{
+  "block": "P3",
+  "pipeline": "p3_meanfield",
+  "prereg": "/mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/audits/phase1/P3/prereg.json",
+  "fluctuation_scaling": {
+    "K_grid": [
+      10,
+      20,
+      40,
+      80,
+      160
+    ],
+    "N": 2000,
+    "n_seeds": 5,
+    "rows": [
+      {
+        "K": 10,
+        "cv2_mean": 0.1162970851729456,
+        "cv2_std": 0.004360014608559688,
+        "cv2_x_K": 1.162970851729456
+      },
+      {
+        "K": 20,
+        "cv2_mean": 0.060410479751205705,
+        "cv2_std": 0.0014534903159773643,
+        "cv2_x_K": 1.208209595024114
+      },
+      {
+        "K": 40,
+        "cv2_mean": 0.029130664681984088,
+        "cv2_std": 0.000863676452802278,
+        "cv2_x_K": 1.1652265872793635
+      },
+      {
+        "K": 80,
+        "cv2_mean": 0.013960494156248237,
+        "cv2_std": 0.0004160069077259392,
+        "cv2_x_K": 1.116839532499859
+      },
+      {
+        "K": 160,
+        "cv2_mean": 0.0068294547753135395,
+        "cv2_std": 0.00024668203287632235,
+        "cv2_x_K": 1.0927127640501664
+      }
+    ],
+    "loglog_slope": -1.0293365502440037,
+    "loglog_r2": 0.9985820392355148,
+    "expected_slope": -1.0,
+    "band": [
+      -1.3,
+      -0.7
+    ],
+    "G_P3_1_verdict": "PASS"
+  },
+  "mouse_median_collapse": {
+    "p8_percentiles": {
+      "worm": 28.000000000000004,
+      "fly": 26.0,
+      "mouse": 38.0
+    },
+    "mouse_percentile_pct": 38.0,
+    "band": [
+      25.0,
+      75.0
+    ],
+    "G_P3_2_verdict": "PASS",
+    "note": "worm/fly below-median deviations are the real-connectome residual (P16), not a contradiction."
+  },
+  "overall": "PASS"
+}
