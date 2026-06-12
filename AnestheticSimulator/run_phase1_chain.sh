@@ -26,8 +26,8 @@ $NOTIFY "AnesthSim P4 SNARE-falsifier DONE" "AnesthSim chain" 2>/dev/null || tru
 wait $P17PID 2>/dev/null || true
 
 # P20 full-core ensemble (serial)
-log "P20 heavy"
-$PY src/state_validation/p20_two_block_reachability.py heavy > /tmp/p20.log 2>&1 || log "P20 FAILED"
+log "P20 battery"
+$PY src/state_validation/p20_two_block_reachability.py battery > /tmp/p20.log 2>&1 || log "P20 FAILED"
 $NOTIFY "AnesthSim P20 reachability DONE" "AnesthSim chain" 2>/dev/null || true
 
 # P13-SOL28 full-core ensemble (serial, last)

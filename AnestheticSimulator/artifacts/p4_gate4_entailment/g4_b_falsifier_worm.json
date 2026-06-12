@@ -1,0 +1,30 @@
+{
+  "gate": "G4_B_snare_falsifier",
+  "organism": "worm",
+  "non_immobilizer_total_pa_band_abs": 3.545454545454546,
+  "pseudo_ni_total_pa": 0.0,
+  "precondition_max_dQF_snareon_minus_off": 0.10416666666666666,
+  "precondition_threshold": 0.2,
+  "pseudo_ni_max_qf": 0.10416666666666666,
+  "immobilization_threshold": 0.5,
+  "qf_snare_off_by_dose": {
+    "30.0": 0.0,
+    "100.0": 0.0,
+    "300.0": 0.0,
+    "1000.0": 0.0,
+    "3000.0": 0.0,
+    "10000.0": 0.0,
+    "30000.0": 0.0
+  },
+  "qf_snare_only_by_dose": {
+    "30.0": 0.0,
+    "100.0": 0.0,
+    "300.0": 0.0,
+    "1000.0": 0.008333333333333333,
+    "3000.0": 0.03749999999999999,
+    "10000.0": 0.09166666666666667,
+    "30000.0": 0.10416666666666666
+  },
+  "verdict": "UNINTERPRETABLE_snare_lever_inert",
+  "rule": "Heavy (one synthetic compound dose-response, <1hr, ml env). Build a SNARE-ONLY pseudo-non-immobilizer: a synthetic profile with total_pa PINNED inside the non-immobilizer band (target |total_pa| <= the frozen trans-DCE / hexafluoroethane max |total_pa| at any tested dose, i.e. effectively ~0 current shift) while ONLY snare_cooperativity is engaged (driven to its strongest realizable engagement across the Eger dose grid). PRECONDITION (positive control): a SNARE-lever-sufficiency probe must show SNARE-max moves QF by >= 0.2 from the snare-off baseline at matched total_pa; if it does NOT, the falsifier is UNINTERPRETABLE (the synaptic lever is inert in this substrate -- report honestly, fall back to the Part-A demonstration). If the precondition passes: run the SNARE-only pseudo-NI dose-response; pseudo_NI max_qf >= 0.5 => OUTCOME-A (SNARE alone manufactures immobilization-level quiescence => the non-immobilizer call is NOT secured by total_pa alone => DEMOTE / sharpen 8.4's claim that non-immobilizers fail BECAUSE they lack total_pa). pseudo_NI max_qf < 0.5 => OUTCOME-B (SNARE alone cannot cross the immobilization threshold => the orthogonal lever does NOT rescue a non-immobilizer => RETAIN that total_pa is the load-bearing discriminator; narrowly retains 8.4's mechanism even under entailment)."
+}

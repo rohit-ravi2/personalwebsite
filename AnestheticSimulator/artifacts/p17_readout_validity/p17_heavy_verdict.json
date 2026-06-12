@@ -1,0 +1,250 @@
+{
+  "block": "P17",
+  "mode": "heavy",
+  "Q1_data_sign": {
+    "kato": {
+      "modality": "kato_labeled_states",
+      "n_worms_used": 5,
+      "n_id_controlled": 5,
+      "mean_t_signcorr": 0.23419143321456737,
+      "ci95": [
+        0.19102699885394264,
+        0.26983543440082886
+      ],
+      "ci_excludes_0": true,
+      "ci_side": "supporting",
+      "per_worm": [
+        {
+          "worm": 0,
+          "cmd_neurons": [
+            "AVAL",
+            "AVAR",
+            "AVER",
+            "AVEL",
+            "AIBR",
+            "AVBR",
+            "AIBL",
+            "RIMR",
+            "AVBL",
+            "RIBL",
+            "RIML"
+          ],
+          "id_control_pass": true,
+          "s_active_minus_immobile": -0.2585944473992935,
+          "t_signcorr": 0.2585944473992935
+        },
+        {
+          "worm": 1,
+          "cmd_neurons": [
+            "AVAR",
+            "AVAL",
+            "AVER",
+            "AVEL",
+            "AIBR",
+            "AVBR",
+            "RIBR",
+            "AVBL",
+            "AIBL",
+            "RIBL",
+            "RIMR",
+            "RIML"
+          ],
+          "id_control_pass": true,
+          "s_active_minus_immobile": -0.15934740679265824,
+          "t_signcorr": 0.15934740679265824
+        },
+        {
+          "worm": 2,
+          "cmd_neurons": [
+            "AVAL",
+            "AVER",
+            "AIBR",
+            "AVEL",
+            "AVBR",
+            "AVBL",
+            "AIBL",
+            "RIMR",
+            "RIML",
+            "RIBL",
+            "AVAR",
+            "RIBR"
+          ],
+          "id_control_pass": true,
+          "s_active_minus_immobile": -0.269368824313279,
+          "t_signcorr": 0.269368824313279
+        },
+        {
+          "worm": 3,
+          "cmd_neurons": [
+            "AVAR",
+            "AVAL",
+            "AVEL",
+            "AVER",
+            "AIBL",
+            "AIBR",
+            "RIBR",
+            "AVBR",
+            "RIBL",
+            "AVBL",
+            "RIMR",
+            "RIML"
+          ],
+          "id_control_pass": true,
+          "s_active_minus_immobile": -0.20772394957845952,
+          "t_signcorr": 0.20772394957845952
+        },
+        {
+          "worm": 4,
+          "cmd_neurons": [
+            "AVAR",
+            "AVAL",
+            "AVER",
+            "AVEL",
+            "AIBR",
+            "AVBR",
+            "AIBL",
+            "RIBR",
+            "RIBL",
+            "RIMR",
+            "AVBL",
+            "RIML"
+          ],
+          "id_control_pass": true,
+          "s_active_minus_immobile": -0.27592253798914645,
+          "t_signcorr": 0.27592253798914645
+        }
+      ]
+    },
+    "atanas": {
+      "modality": "atanas_pose",
+      "n_worms_used": 10,
+      "n_id_controlled": 10,
+      "mean_t_signcorr": -0.01066199752021348,
+      "ci95": [
+        -0.03787764224630907,
+        0.017957374941983944
+      ],
+      "ci_excludes_0": false,
+      "ci_side": "straddles",
+      "per_worm": [
+        {
+          "worm": 0,
+          "id_control_pass": true,
+          "vel_valley": 0.025009670616885655,
+          "s_active_minus_immobile": 0.022560775075668005,
+          "t_signcorr": -0.022560775075668005
+        },
+        {
+          "worm": 1,
+          "id_control_pass": true,
+          "vel_valley": 0.015971185339744766,
+          "s_active_minus_immobile": -0.08296921907742616,
+          "t_signcorr": 0.08296921907742616
+        },
+        {
+          "worm": 2,
+          "id_control_pass": true,
+          "vel_valley": 0.012899756445943072,
+          "s_active_minus_immobile": 0.02283388467215708,
+          "t_signcorr": -0.02283388467215708
+        },
+        {
+          "worm": 3,
+          "id_control_pass": true,
+          "vel_valley": 0.01957044268951648,
+          "s_active_minus_immobile": 0.015147334906313037,
+          "t_signcorr": -0.015147334906313037
+        },
+        {
+          "worm": 4,
+          "id_control_pass": true,
+          "vel_valley": 0.023613454791738958,
+          "s_active_minus_immobile": 0.06348105724810227,
+          "t_signcorr": -0.06348105724810227
+        },
+        {
+          "worm": 5,
+          "id_control_pass": true,
+          "vel_valley": 0.014130908114117201,
+          "s_active_minus_immobile": 0.01313310991477934,
+          "t_signcorr": -0.01313310991477934
+        },
+        {
+          "worm": 6,
+          "id_control_pass": true,
+          "vel_valley": 0.017798669479606444,
+          "s_active_minus_immobile": 0.08196004977988702,
+          "t_signcorr": -0.08196004977988702
+        },
+        {
+          "worm": 7,
+          "id_control_pass": true,
+          "vel_valley": 0.013322946970404863,
+          "s_active_minus_immobile": -0.04786606738416688,
+          "t_signcorr": 0.04786606738416688
+        },
+        {
+          "worm": 8,
+          "id_control_pass": true,
+          "vel_valley": 0.15606947956619832,
+          "s_active_minus_immobile": 0.015132541567610347,
+          "t_signcorr": -0.015132541567610347
+        },
+        {
+          "worm": 9,
+          "id_control_pass": true,
+          "vel_valley": 0.025084146795504112,
+          "s_active_minus_immobile": 0.003206508499210725,
+          "t_signcorr": -0.003206508499210725
+        }
+      ]
+    },
+    "verdict": "FAIL_OR_AMBIGUOUS"
+  },
+  "Q2_causal_AVA_silencing": {
+    "data_half": {
+      "wt_revsus_occupancy_mean": 0.34060223794406863,
+      "wt_ci": [
+        0.3187190959208288,
+        0.36380099871204435
+      ],
+      "hiscl_reversal_occupancy_mean": 0.3552197264786364,
+      "hiscl_ci": [
+        0.28055582654909256,
+        0.4323013316848442
+      ],
+      "hiscl_quiescence_occupancy_mean": 0.25762347203617103,
+      "diff_wt_minus_hiscl": -0.01461748853456779,
+      "diff_ci95": [
+        -0.09572082467919166,
+        0.061634804860965835
+      ],
+      "ci_excludes_0": false,
+      "ci_side": "straddles",
+      "note": "HisCl carries NO per-neuron AVA trace (numeric IDs); test is on the labeled behavioral-state distribution, which is the readout variable."
+    },
+    "verdict": "AMBIGUOUS"
+  },
+  "Q3_threshold_valley": {
+    "data_bimodality_kato": {
+      "per_worm_deltaBIC": [
+        1273.0073934941872,
+        979.3667044897106,
+        1210.1808322917573,
+        148.73194546368575,
+        1189.271590971457
+      ],
+      "median_deltaBIC": 1189.271590971457,
+      "n_worms_deltaBIC_ge_10": 5,
+      "n_worms": 5,
+      "PART_A_pass": true
+    },
+    "model_command_rate_valley_hz": 9.174657534246576,
+    "model_bimodal": true,
+    "threshold_hz": 3.0,
+    "PART_A_pass": true,
+    "PART_B_pass": false,
+    "verdict": "FAIL"
+  },
+  "overall": "DEMOTE_readout_to_network_statistic_paper2_blocked"
+}
