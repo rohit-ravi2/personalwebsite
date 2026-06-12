@@ -1,0 +1,15 @@
+{
+  "results": [
+    {
+      "gene": "NCA-1",
+      "acc": "Q9N4D6",
+      "length": 474,
+      "device": "cpu",
+      "chunk_size": 64,
+      "pdb": "/mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/artifacts/p13_sol27_local/NCA-1_Q9N4D6_ESMFold.pdb",
+      "mean_plddt": 0.5964915912031005,
+      "wall_min": 14.46927224000295
+    }
+  ],
+  "note": "Local replacement for Greene SOL27; completeness not load-bearing (SOL28 settled nca magnitude; NALCN has no Kd; NCA-2 paralog already folded)."
+}
