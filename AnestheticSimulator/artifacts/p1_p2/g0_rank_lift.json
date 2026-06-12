@@ -1,0 +1,16 @@
+{
+  "gate": "G0_RANK_LIFT_REALIZED",
+  "verdict": "PASS",
+  "organism": "worm",
+  "l2_drive_diff_pa": 31.315011612033416,
+  "threshold_l2_pa": 1e-06,
+  "l2_drive_diff_under_x_c_ones_V1": 1.83107620297477,
+  "coord_match": {
+    "total_pa_A": -16.724170204665665,
+    "total_pa_B": -16.61845297079624,
+    "snare_factor_A": 0.7142180760467167,
+    "snare_factor_B": 0.7678343094211338,
+    "total_pa_rel_diff": 0.006321224465888576,
+    "snare_rel_diff": 0.07506983535212995
+  }
+}

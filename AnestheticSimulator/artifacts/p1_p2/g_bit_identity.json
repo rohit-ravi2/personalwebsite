@@ -1,0 +1,8 @@
+{
+  "gate": "G_BIT_IDENTITY",
+  "verdict": "PASS",
+  "n_cases": 36,
+  "max_err_per_neuron_I_ext_pa": 3.552713678800501e-15,
+  "max_err_snare_factor": 0.0,
+  "threshold": 1e-12
+}

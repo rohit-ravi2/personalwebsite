@@ -1,0 +1,26 @@
+{
+  "gate": "G_SOL7_able_to_fail",
+  "verdict": "PASS",
+  "operative_statistic": "PR (participation ratio); eta2 dropped as degenerate",
+  "identical_support_V1": {
+    "eta2": 0.0,
+    "PR": 1.0,
+    "ok": true
+  },
+  "disjoint_support": {
+    "class_A": "k2p_potentiation",
+    "class_B": "gaba_potentiation",
+    "support_overlap": 154,
+    "eta2_A": 0.9999999999999981,
+    "eta2_B": 0.9999999999999994,
+    "PR_A": 0.2806225720595508,
+    "PR_B": 0.30578597760732834,
+    "eta2_diff": 1.3322676295501878e-15,
+    "PR_diff": 0.025163405547777518,
+    "disjoint_PR_ok": true
+  },
+  "eta2_degeneracy_FINDING": {
+    "eta2_degenerate": true,
+    "explanation": "x_c rows are class-mean-constant, so any class-resolved drive has eta2==1 exactly; eta2 cannot discriminate disjoint supports. PR is the operative spread statistic. This is a prereg-statistic correction CAUGHT by the able-to-fail screen, not a silent loosening \u2014 G1 already uses PR, so no Match#3 threshold changes."
+  }
+}

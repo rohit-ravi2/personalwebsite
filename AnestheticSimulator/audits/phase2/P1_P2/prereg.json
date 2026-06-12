@@ -1,0 +1,80 @@
+{
+  "block_id": "P1_P2",
+  "title": "Minimal-delta-V2 rank-lift (CeNGEN x_c) + SOL7 freeze-statistic harness (KEYSTONE)",
+  "phase": 2,
+  "frozen_utc": "2026-06-12",
+  "repo_git_head": "e7d59ba",
+  "gated_on": "P18 PASS (V1 certified rank-2: QF = G(total_pa, snare_factor)); SOL7 WB0 (freeze spread statistic S in closed form) is a HARD PREDECESSOR of any Match#3 run.",
+  "premise": "V1's anesthetic operator broadcasts a single scalar total_pa over ALL neurons (I_ext[:] += total_pa*pA) and a single global SNARE synaptic-gain scalar. The realized per-neuron input is therefore rank-2 in (total_pa, snare_factor): every neuron sees the same drive, so cell-type-targeting (Match#3) is mathematically entailed-by-construction and was NEVER actually tested (v7 left P8/Match#3 NOT_TESTED). P1_P2 lifts the operator rank by replacing the all-ones broadcast with CeNGEN per-class expression vectors x_c (7xN, one row per non-SNARE current class), so the per-neuron drive becomes I_ext += alpha * sum_c (-sat_c * e_c) * x_c, lifting rank 2 -> min(7,N). This makes Match#3 (cell-type spread of the conserved profile vs magnitude+SNARE-matched random ensembles) a GENUINE accept-either-way test for the first time.",
+  "non_destructive_contract": {
+    "frozen_operator_untouched": "phase_g_state_validator.apply_anesthetic and apply_genotype are NOT edited. The rank-lift is a NEW function apply_anesthetic_v2 (and a new genotype path if needed) in a NEW module src/state_validation/p1_p2_rank_lift.py.",
+    "new_artifacts_only": "All outputs under audits/phase2/P1_P2/ and artifacts/p1_p2/. No v7_* ensemble artifact is overwritten.",
+    "bit_identity_regression": "apply_anesthetic_v2 with x_c == ones(N) for every class MUST produce a per-neuron I_ext delta and snare_factor BIT-IDENTICAL (L_inf <= 1e-12 pA, exact for snare) to the frozen apply_anesthetic over a battery of >=12 (profile,dose) cases. This is gate G_BIT_IDENTITY and is HARD: fail => the new path is not a faithful superset of V1 and HALTS the block."
+  },
+  "x_c_construction": {
+    "source": "CeNGEN mean-TPM matrix /home/rohit/Desktop/C-Elegans/data/expression/cengen/derived/expression_neuron_mean.csv (class x WBGene), gene names via WS297 gene_association.wb. Per-neuron via neuron_to_class (build_cengen_panel.neuron_to_class) on the 300 connectome names (order == connectome.npz names == LIFBrain.names, verified True).",
+    "marker_genes_per_class_FROZEN": {
+      "complex_i_block": "x_c = ones by biology (mitochondrial Complex I / ATP coupling is ubiquitous; NOT a cell-type-resolved channel). Justification frozen: global metabolic class.",
+      "complex_ii_block": "x_c = ones by biology (Complex II ubiquitous metabolic). Frozen global.",
+      "k2p_potentiation": ["twk-18", "twk-7", "twk-30", "twk-40", "unc-58", "twk-2", "twk-8"],
+      "nca_block": ["nca-2", "unc-77", "unc-80"],
+      "gaba_potentiation": ["unc-49", "lgc-35", "lgc-36", "lgc-37", "lgc-38", "exp-1", "gab-1"],
+      "glucl_potentiation": ["avr-14", "avr-15", "glc-1", "glc-2", "glc-3", "glc-4"],
+      "nachr_antagonism": ["acr-2", "acr-5", "acr-14", "acr-16", "unc-38", "unc-29", "unc-63", "lev-1", "lev-8"]
+    },
+    "snare_gating_FROZEN": "SNARE (snare_cooperativity) remains a SYNAPTIC-gain channel (not I_ext). In V2 it is gated by PRESYNAPTIC unc-64 (syntaxin) expression on the source neuron of each synapse: per-edge factor = 1 + (snare_max-1)*e_snare*x_unc64[presyn]. With x_unc64 == ones this reduces EXACTLY to V1's global syn.w *= factor. unc-64 marker WBGene00006798 confirmed present in CSV.",
+    "tpm_to_x_transform_FROZEN": "Per class c, aggregate marker TPM per neuron i = MAX over the class's marker genes of class-mean TPM (max, not sum, to avoid gene-count bias). Then x_c[i] = clip(tpm_i / threshold_c, 0, 1) where threshold_c = the class's CeNGEN T-level expression threshold; FROZEN as threshold = the 75th percentile of nonzero class-mean TPM for that class's marker set (label-free, computed from the CSV BEFORE any sim, hash recorded in artifacts/p1_p2/x_c.json). Neurons whose CeNGEN class is absent from the CSV get x_c = 0 for that class (recorded in coverage). Rationale frozen: a soft [0,1] expression gate, monotone in TPM, identical procedure for all 5 resolved classes; the 2 metabolic classes are ones by the biology rule above.",
+    "ones_fallback_forbidden_for_resolved": "The 5 resolved channel classes MUST use the TPM-derived x_c (NOT ones); only complex_i/ii are ones-by-biology. This is what makes the rank-lift real (G0)."
+  },
+  "spread_statistic_SOL7_WB0_FROZEN": {
+    "name": "S = between-class variance fraction eta^2 of the realized per-neuron drive (label-free participation-ratio-equivalent).",
+    "closed_form": "Let d_i = realized per-neuron I_ext delta (pA) under a profile at the anchor dose (the SUM over classes of alpha*(-sat_c*e_c)*x_c[i]). Partition neurons by CeNGEN class label k. eta^2 = SS_between / SS_total where SS_between = sum_k n_k*(mean_k(d) - mean(d))^2 and SS_total = sum_i (d_i - mean(d))^2. eta^2 in [0,1]: 0 = drive identical across cell types (V1 broadcast), ->1 = drive perfectly stratified by cell type. CLOSED FORM, computed from d alone, NO simulation. This is the LABEL-AWARE statistic for the able-to-fail screen and the spread-percentile gate. (NOTE: the Match#3 SPATIAL gate G1 below uses a LABEL-FREE participation ratio PR as its primary statistic per the roadmap SOL1 WB0; eta^2 is the SOL7 between-cell-type-variance-fraction harness statistic. BOTH are frozen here; distance-to-template variants are FORBIDDEN.)",
+    "participation_ratio_FROZEN": "PR(d) = (sum_i |d_i|)^2 / (N * sum_i d_i^2), in (0,1]; PR=1 iff all |d_i| equal (V1 broadcast => PR=1 exactly), PR< 1 iff drive concentrated on a sub-population. Match#3 conserved statistic = PR of the conserved profile's per-neuron drive; percentile = fraction of magnitude+SNARE-matched random ensembles whose PR is LOWER (more concentrated) than conserved.",
+    "able_to_fail_screen_FROZEN": "Pseudo-test proving S can both fire and not fire, BEFORE biology: (a) DISJOINT-SUPPORT profiles: two synthetic profiles whose nonzero x_c support is disjoint MUST give DIFFERENT eta^2 (and different PR) -> assert |eta2_A - eta2_B| > 1e-6. (b) IDENTICAL-SUPPORT profiles: two profiles with IDENTICAL x_c (e.g. both all-ones, i.e. V1) MUST give the SAME eta^2 (= 0) and SAME PR (= 1) -> assert eta2==0 within 1e-12 and PR==1 within 1e-12. Fail of either => the statistic is broken; HALT."
+  },
+  "gates": {
+    "G_BIT_IDENTITY": {
+      "type": "regression, HARD, build-only",
+      "rule": "apply_anesthetic_v2 with ALL x_c forced to ones(N) reproduces frozen apply_anesthetic's per-neuron I_ext delta to L_inf <= 1e-12 pA AND snare synaptic factor to 1e-12, over >=12 (profile,dose) cases (conserved + >=10 random, SNARE-present and SNARE-absent, multiple doses).",
+      "threshold_pa": 1e-12,
+      "on_fail": "HALT P1_P2; the new operator path is not a faithful superset of V1; the rank-lift cannot be trusted."
+    },
+    "G0_RANK_LIFT_REALIZED": {
+      "type": "build-only, no heavy sim, FROZEN two-sided, gates G1",
+      "rule": "Construct two DISTINCT random profiles A,B with EQUAL (total_pa, snare_gain) at the anchor dose (matched to 1e-6 relative via the corrected v7_match2b sampler), using the REAL TPM-derived x_c. Compute their per-neuron drive vectors q_A, q_B (the realized I_ext delta per neuron). PASS iff ||q_A - q_B||_2 > 1e-6 pA (the rank-lift produced distinct per-neuron drive for equal scalar coordinates => rank actually > 2). FAIL iff ||q_A - q_B||_2 <= 1e-6 (the lift bought nothing; still rank-2 => Match#3 remains entailed-by-construction and MUST NOT be reported as a real test).",
+      "threshold_l2_pa": 1e-6,
+      "on_fail": "HALT: G1 is NOT evaluated; the V2 build did not lift rank; report 'rank-lift not realized', do not run the Match#3 ensemble."
+    },
+    "G1_MATCH3_SPATIAL_SPECIAL": {
+      "type": "heavy (ensemble), FROZEN three-sided, gated on G0 PASS",
+      "statistic": "conserved-profile participation-ratio PR percentile = fraction of magnitude+SNARE-matched random ensembles whose per-neuron-drive PR is LOWER (more cell-type-concentrated) than the conserved profile's PR, per organism (worm 300, fly 2952; mouse EXCLUDED = random graph).",
+      "decision_rule": "PR_percentile in (1%, 10%] => PASS (first non-by-construction cell-type-targeting positive: the conserved multi-class identity concentrates drive on a cell-type sub-population more than magnitude-matched randoms). PR_percentile > 10% => NULL/DEFLATE (cell-type spread does NOT establish targeting beyond magnitude; ledger states 'V2 rank-lift does NOT establish cell-type specificity'). PR_percentile <= 1% => TOO_SPECIAL leak (suspect a construction artifact pinning the conserved profile; quarantine and audit x_c). Accept whichever lands.",
+      "bands": {"pass_lo_excl_pct": 1.0, "pass_hi_incl_pct": 10.0, "too_special_le_pct": 1.0, "null_gt_pct": 10.0}
+    },
+    "G2_MATCH3_NOT_ENTAILED": {
+      "type": "heavy (ensemble), FROZEN, confirmatory-independence",
+      "rule": "Var(PR over the magnitude+SNARE-matched random surrogates) > 1e-9 per organism. If the surrogate PR is (near-)constant then PR is pinned by the magnitude coordinates and G1's percentile is not an independent spatial test (entailed-by-magnitude). PASS = Var > 1e-9 (PR carries spatial information not fixed by total_pa+snare). FAIL = Var <= 1e-9 (demote G1 to entailed-by-magnitude).",
+      "threshold_var": 1e-9
+    },
+    "G_SOL7_able_to_fail": {
+      "type": "build-only, FROZEN two-sided, HARD PREDECESSOR of any run",
+      "rule": "The able_to_fail_screen above: disjoint-support => different (eta^2, PR); identical-support (V1 all-ones) => eta^2==0 and PR==1. PASS iff BOTH hold within tolerance. FAIL => the spread statistic is not live on this substrate; HALT (cannot run Match#3, would be can-only-succeed).",
+      "thresholds": {"disjoint_min_eta2_diff": 1e-6, "identical_eta2_abs": 1e-12, "identical_pr_abs_from_1": 1e-12}
+    }
+  },
+  "sol8_followon_FLAG": {
+    "name": "SOL8 NeuroPAL external grounding",
+    "status": "FOLLOW-ON sub-step, separate streaming job, NOT in this fast workflow.",
+    "scope": "Stream NeuroPAL (~815MB) + Atanas quiescence bouts; gate G1_neuropal_join_correctness (per-class Jaccard>=0.5 for >=5/7 classes; HARD, fail HALTS + re-freeze x_c), G2 quiescence-structure (Spearman(S_V2, natural-quiescence-drop) above gene-marginal-preserving structured null; one-directional), G3 bout-yield fork (n_worms>=6 full / 3-5 descriptive / <3 park-G2). Runs ONLY after this block's G0+G1 land. Held-out NWB ~25-27GB each: h5py partial reads only.",
+    "data_on_disk": "data/external/neuropal, data/external/atanas2023"
+  },
+  "heavy_run": {
+    "what": "Match#3 ensemble: per organism, draw N_ENS magnitude+SNARE-matched random profiles (reuse v7_match2b corrected sampler), compute per-neuron-drive PR for each + conserved, derive PR-percentile (G1) and Var(PR) (G2). NO LIF sim is strictly required for the PR statistic (drive is closed-form from x_c); the ensemble cost is the rejection sampling + (optionally) the confirmatory QF re-sim to tie PR-spread to a behavioral readout. The frozen design runs the closed-form PR percentile (fast) AND the confirmatory LIF QF ensemble (heavy) on worm(300)+fly(2952).",
+    "organisms": ["worm", "fly"],
+    "mouse_excluded": "random graph (P3 territory) -> no CeNGEN identity to target.",
+    "n_ensembles_per_organism": 50,
+    "tol_pct": 5.0,
+    "rng_seed": 20260612
+  },
+  "anti_target_engineering": "All gate thresholds, the spread statistic (eta^2 + PR), the x_c TPM->[0,1] transform, the marker-gene sets, and the SNARE unc-64 gating are FROZEN in THIS file BEFORE the module is implemented and BEFORE any run. G1 is three-sided (PASS/NULL/too-special) and accept-either-way; a worm NULL (connectome~shuffled prior) is explicitly acceptable and publishable as 'V2 does NOT establish cell-type specificity in worm'. The bit-identity gate guarantees V2 is a strict superset of V1, so no claim is changed by re-tuning."
+}

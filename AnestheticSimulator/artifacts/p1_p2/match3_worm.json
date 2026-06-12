@@ -1,0 +1,9 @@
+{
+  "organism": "worm",
+  "n_ensembles": 50,
+  "PR_conserved": 0.8748856882528365,
+  "PR_percentile_pct": 46.0,
+  "Var_PR_surrogates": 0.0024545037185385436,
+  "G1_MATCH3_SPATIAL_SPECIAL": "NULL_DEFLATE",
+  "G2_MATCH3_NOT_ENTAILED": "PASS"
+}

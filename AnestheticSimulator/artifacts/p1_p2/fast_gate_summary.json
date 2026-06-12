@@ -1,0 +1,8 @@
+{
+  "fast_gates": {
+    "sol7": "PASS",
+    "bit_identity": "PASS",
+    "g0": "PASS"
+  },
+  "x_c_sha": "f6f55a43cb29c57047111ccf54d1900ae78c31a6d996becd33b6b1905af1470c"
+}
