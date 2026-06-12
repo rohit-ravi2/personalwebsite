@@ -1,7 +1,7 @@
 ---
 title: "Anesthesia Pipeline — Network-State Validation"
 startDate: 2026-04-15
-description: "Connectome-constrained network-state validator for C. elegans anesthesia. Predicts immobilization EC50, mutant phenotypes, and Eger non-immobilizer specificity from literature-grounded multi-target perturbation profiles applied to a 300-neuron Brian2 brain."
+description: "Network-state validator for volatile anesthesia on a substrate-agnostic LIF integrator. Predicts EC50s, mutant magnitudes, and Eger non-immobilizer specificity from literature-grounded multi-target perturbation profiles across three independent organism calibrations (worm Cook 2019, fly Winding 2023, mouse generic random graph)."
 tags: ["Computational Pharmacology", "Anesthesia", "Connectomics", "Network Models", "Research"]
 image:
   url: /images/projects/anesthesia-pipeline-cover.svg
@@ -12,9 +12,37 @@ import { NetworkStateValidator } from "../../components/react/NetworkStateValida
 
 ## Thesis
 
-General anesthesia is a *network-level* state transition driven by **coordinated partial perturbation at conserved targets** (SNARE release, Complex I, K2P channels, nAChR, NCA leak, GABA-A potentiation), not a single-target binding event. Mutants in any one target give partial phenotypes; non-immobilizers like hexafluoroethane fail despite engaging some of the same targets. Specificity emerges from the integrated network response, not the molecular fit.
+General anesthesia is driven by **coordinated partial perturbation across a multi-class conserved-target ensemble** (SNARE release, Complex I, K2P channels, nAChR, NCA leak, GABA-A potentiation), not a single-target binding event. Mutants in any one target give partial phenotypes; non-immobilizers like hexafluoroethane lack engagement at the high-magnitude classes the architecture requires. V5 + V7 adversarial controls narrow what's load-bearing — the LIF substrate is largely interchangeable across organisms; mutant *direction* is carried by the perturbation table's sign convention alone; Eger non-immobilizer specificity is entailed by correct volatile EC50 prediction. A **2026-06-12 preregistered, accept-either-way gated re-examination** (see *Adversarial close-out* below) corrected several headline claims downward: the V1 operator is provably **rank-2** (every profile collapses to a current scalar + a synaptic-gain scalar); the dramatic *worm-anchor-overfit / fly-uniquely-special / mouse-magnitude-driven* trichotomy was a **control-bug artifact** (corrected percentiles worm 28% / fly 26% / mouse 38% — worm ≈ fly, both modestly significant; mouse marginal); cell-type targeting tested on a rank-lifted substrate returns a **null** on worm; and the immobilization readout is **not held-out-validated** as behavioral quiescence. The earned contribution is **within-organism volatile EC50 precision ~3× tighter than Meyer-Overton** and mutant magnitude prediction inside literature bands; whether the *specific* conserved targets are load-bearing (vs one magnitude-matched ensemble among many) is **not established on this substrate**.
 
 The validator operationalises this directly. Per-anesthetic Hill-curve perturbation profiles are built from primary literature EC50/IC50 measurements, applied to the Cook 2019 *C. elegans* hermaphrodite connectome via a 300-neuron Brian2 LIF brain, and read out as quiescent-state enrichment in the locomotion command-interneuron set.
+
+## Adversarial close-out (2026-06-12) — what the gated re-examination corrected
+
+A preregistered, accept-either-way gated re-examination — every fix capable of *deflating* a claim, with leak floors and pre-written fail branches — certified the foundation and corrected several headline claims to exactly what the evidence licenses. Full record: [`SESSION_CLOSEOUT_2026-06-12.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/SESSION_CLOSEOUT_2026-06-12.md).
+
+**Foundation — the operator is rank-2 (P18).** A static + dynamic certificate proves the V1 perturbation operator collapses every anesthetic/genotype profile to two scalars: a uniform hyperpolarizing current `total_pa` and a single global synaptic gain `snare_factor` — QF = G(total_pa, snare_factor), max per-neuron non-uniformity 2.7e-16. This is the lens for everything else: the network *cannot, by construction,* distinguish which specific targets are engaged from the aggregate magnitude of two coordinates.
+
+**The Sub-Q1 trichotomy was a control artifact (P8).** The original Match #2 null matched only an aggregate-pA scalar that (a) added a phantom 50 pA SNARE *current* the operator never applies and (b) never matched the actual `snare_factor` (≈0.75, a synaptic *cut*). A corrected two-coordinate null (verified to reproduce the operator to 7e-15) overturns the dramatic pattern:
+
+| organism | original Match #2 | corrected Match #2b | significance |
+|---|---|---|---|
+| worm | 0% ("anchor-overfit") | **28%** | p = 0.0013 |
+| fly | 4.8% ("uniquely special") | **26%** | p = 0.0005 |
+| mouse | 46% | **38%** | p = 0.06 |
+
+Worm is **not** anchor-overfit and fly is **not** uniquely special; both show a modest, significant conserved-profile advantage (~26–28%), mouse marginal. A mean-field theorem (P3: per-neuron input CV² ∝ 1/K, slope −1.03, R² 0.999) shows mouse-at-median is a *derived* consequence of the structureless graph, not a failed test, and predicts the compression of all three toward the median.
+
+**Cell-type targeting — tested on a rank-lifted V2 substrate → NULL (P1_P2).** The minimal-delta-V2 keystone replaces the all-ones broadcast with CeNGEN per-class expression vectors, raising operator rank so Match #3 becomes testable for the first time (built non-destructively; bit-identical to V1 when expression = ones). On worm, the conserved profile's cell-type spread sits at the **46th percentile** of magnitude-matched surrogates — lifting the rank did *not* reveal conserved-target cell-type specificity. (Fly cannot be tested — no *Drosophila* cell-type-expression atlas exists.)
+
+**The behavioral readout is not held-out-validated (P17).** Scored against held-out neural + behavioral data (Kato; Atanas / NeuroPAL), the command-interneuron quiescent-fraction / 3 Hz immobilization readout is **demoted to a network statistic, not validated behavioral quiescence** — Kato labeled states support it but Atanas pose-correlation straddles zero and the threshold-valley test fails. The Paper-2 (anesthetic vs natural quiescence) bridge is blocked pending a re-grounded readout.
+
+**Molecular-layer occupancy — engagement robust, saturation inflated (P11).** Vina Kd and the clinical EC50 are both aqueous-referenced; the shipped occupancy multiplied concentration by the partition coefficient (Kp = 250) without scaling Kd — a frame double-count, since Kp cancels when applied consistently. Corrected: multi-target *engagement* is robust (29/30 targets > 10% at 1× EC50) but *saturation* collapses (0/30 at > 90% vs 26/30 before) → moderate partial occupancy ~0.25–0.5, not saturating.
+
+**Calibration honesty narrowed (P7).** Git archaeology shows the `sat_pa` magnitude ladder's a-priori provenance is undecidable and the 3 Hz cutoff value was hardcoded *after* the preregistration. "One free parameter (α)" narrows to "one fitted scalar conditional on a ladder of undecidable provenance and a post-prereg cutoff value." See [`PROVENANCE.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/PROVENANCE.md).
+
+**One constructive positive (P20).** Three mutant phenotypes (gas-1, unc-79, unc-80) have literature magnitudes the rank-2 operator structurally *cannot* express — routed to the metabolic (Tier4) or cell-type-expression (V2) substrate. The model names epistasis it cannot capture and points to the substrate feature each needs. (Separately, P13-SOL28 confirmed the 4–6 class quorum is robust to the biophysically-corrected NCA current magnitude.)
+
+**Net.** The core thesis survives — a multi-class quorum (4–6 classes; SNARE-or-Complex-I universal) reproduces MAC, and anesthetics discriminatively engage a biologically-motivated target panel. But the project's own substrate, even after the rank-lift built to test it, does **not** establish that the *specific* cell-type-resolved target identities are load-bearing rather than one magnitude-matched ensemble. The sections below are the V5–V7 record; where they conflict with this close-out (notably the Sub-Q1 percentiles and the "worm anchor-overfit / fly uniquely special" reading), **this close-out supersedes them.**
 
 ## Interactive: V3 ensemble explorer
 
@@ -33,7 +61,7 @@ Five tabs over the V3 worm ensemble + V4 fly cross-species ensemble. Pick a vola
 
 - **Perturbation profiles** for 9 compounds × 8 mechanism classes built from Mihic 1997, Patel & Honoré 1999, Forman 1996, Stewart 2000, Hanley 2002, Lu 2007, Belelli 1997, plus Eger 2001 for non-immobilizers. Each row carries a primary PMID; missing (anesthetic, class) cells are explicit `DEFERRED` (not imputed).
 - **Mutant baseline shifts** (Complex I rate factor for *gas-1*, *gas-2*, *nduf-6*, *ndus-8*, *nuo-1* per Kayser 2001; NCA leak factor for *unc-79*, *unc-80* per Sedensky 1992; synaptic weight scaling for Gαo loss-of-function in *goa-1*, *dgk-1* per Lackner 1999, Nurrish 1999).
-- **One free calibration parameter** (α = 0.13), tuned only against halothane WT (Crowder 1996, EC50 = 340 µM aqueous). All downstream gates use the same locked α.
+- **One free calibration parameter** (α = 0.13), tuned only against halothane WT (Crowder 1996, EC50 = 340 µM aqueous). All downstream gates use the same locked α. *(P7 close-out caveat: this narrows to "one fitted scalar conditional on a `sat_pa` magnitude ladder of undecidable a-priori provenance and a 3 Hz quiescence cutoff whose value was hardcoded post-preregistration" — see Adversarial close-out.)*
 - **Ensemble protocol**: 60 s simulation × 5 seeds per (anesthetic, dose, genotype). 545 sims total; 8-core parallel; 23 min wall on RTX 4060 Ti host.
 
 ## Validation gates
@@ -41,11 +69,17 @@ Five tabs over the V3 worm ensemble + V4 fly cross-species ensemble. Pick a vola
 | Gate | Test | Predicted | Published | Error / score |
 |---|---|---|---|---|
 | 1 | Halothane WT calibration | **317 µM** | 340 µM | **1.07×** |
-| 2 | Isoflurane WT — held out, no re-tuning | **291 µM** | 290 µM | **1.002× (essentially exact)** |
-| 3 | Mutant directional accuracy (n=9) | — | — | **9 / 9 correct (100%)** |
-| 4 | Eger non-immobilizer specificity (n=3) | — | — | **3 / 3 correct** |
+| 2 | Isoflurane WT — held out, no re-tuning | **291 µM** | 290 µM | **1.002×** |
+| 3 | Mutant directional accuracy (n=9) | — | — | **9 / 9 correct (100%)** † |
+| 4 | Eger non-immobilizer specificity (n=3) | — | — | **3 / 3 correct** ‡ |
 
 Calibration uses one anchor and one parameter. Held-out tests then run with no further tuning.
+
+The four fold-errors above are point predictions from 5-seed ensembles. Worm isoflurane is the only one whose 95% bootstrap CI [276, 310] contains the published value; worm halothane CI [297, 334], fly halothane [343, 373], and fly iso [315, 328] all sit just outside published at current seed count (see *Adversarial controls* below). **Mouse bootstrap CIs now computed** (halothane WT 296.9 µM [289.9, 307.4], isoflurane WT 273.2 µM [268.8, 277.6]) — both published anchors sit just outside the tight CIs, extending the precise-but-just-outside pattern to all three organisms (published-inside-CI tally 1/6 across WT volatile anchors).
+
+† Sign-only V5 baseline (no network integration) reproduces 32/35 mutant directions across worm + fly + mouse, indistinguishable from the validator. The 9 / 9 directional score is real but not network-distinctive — direction is carried by the perturbation table's sign convention. Magnitude (the in-band column of the mutant detail table) is where the validator does work the sign baseline cannot.
+
+‡ V7 Sub-Q2 stage-attrition analysis shows zero attrition from Stage 2 (isoflurane) to Stage 3 (Eger) across worm, fly, and mouse — every subset that produces correct halothane AND isoflurane EC50s at frozen α also correctly classifies the Eger non-immobilizers. Gate 4 is entailed by Gates 1 + 2 via the perturbation table's structural sparseness on non-immobilizers; it is not an independent positive result.
 
 ## Mutant directional accuracy — Gate 3 detail
 
@@ -75,6 +109,8 @@ The Eger 2001 panel was designed to falsify lipophilic-pocket-fit theories of an
 
 Same architecture, same α, no compound-specific tuning. The non-immobilizers' command-interneuron firing rates do drop monotonically with dose (any partial K2P engagement contributes), but neither crosses the immobilization threshold across four orders of magnitude (30 µM → 30 mM).
 
+**V7 framing update — Gate 4 is entailed by Gates 1 + 2.** V7 Sub-Q2 stage-attrition analysis shows zero attrition from Stage 2 (isoflurane held-out) to Stage 3 (Eger) across worm, fly, and mouse — every subset that produces correct halothane AND isoflurane EC50s at frozen α also correctly classifies the Eger non-immobilizers. The discrimination is entailed by the perturbation table's structural sparseness on non-immobilizers (cis-DCE engages SNARE / Complex I / NCA; trans-DCE and hexafluoroethane do not), not by an additional capability of the integration substrate. The result is real; the credit belongs to the perturbation table's sparseness rather than to network-state dynamics.
+
 ## What this replaces
 
 An earlier project iteration built a binding-occupancy → kinetic-shift → network → behavior chain driven by AutoDock Vina docking against AlphaFold structures of 30 *C. elegans* anesthetic targets. That pipeline failed three diagnostic tests:
@@ -99,15 +135,19 @@ The architecture transfers to *Drosophila larva* (Winding 2023 connectome, 2,952
 | 4 — Eger non-immobilizer specificity | 3 / 3 | 3 / 3 | 3 / 3 |
 | α (free parameter, single-anchor) | 0.13 | 0.060 | 0.10 |
 
-## What survived adversarial controls — V5 + V5+ findings
+## What survived adversarial controls — V5 + V5+ + V7 findings
 
-V5 M2 (connectome permutation) and V5+ (no-integration sign-only baseline + Meyer-Overton baseline) jointly narrow what's actually load-bearing in the architecture:
+V5 M2 (connectome permutation) and V5+ (no-integration sign-only baseline + Meyer-Overton baseline), now joined by V7's four pre-registered controls (Sub-Q2 mechanism-subset search, Sub-Q1 random-ensemble nulls, V5 M3 parameter sensitivity, V5 M4 anchor-swap cross-validation), jointly narrow what's actually load-bearing in the architecture:
 
 **The substrate is largely interchangeable.** V5 M2: fly result transfers to fully randomized graphs (P1, P2, P3 all pass Gate 1 at frozen α). Mouse V6 uses a generic random graph by design. Worm V3 needs at minimum cell-type-aggregate connectivity (P3 passes; P1, P2 fail). The "cross-phylum" framing was over-claiming organism-specific structural recovery.
 
 **Gate 3 directional accuracy is largely sign-propagation.** A no-integration sign-only baseline matches the validator on 32/35 mutants (91% — identical to the validator). Network dynamics are decorative for the *direction* of mutant predictions; the perturbation table's sign convention does the work.
 
 **Cross-organism MAC similarity at ~340-350 µM is largely Meyer-Overton.** A lipid:water-partition baseline calibrated on halothane predicts halothane MAC perfectly (by definition) and matches the validator at order-of-magnitude across phyla. The "striking conservation" claim collapses to "lipid biophysics conserves across cells" (Meyer-Overton 1899).
+
+**V7 Sub-Q2 + Sub-Q1 sharpen the conserved-target claim and narrow it further.** The architecture requires a 4–6 class minimum sufficient subset per organism (worm 5, mouse 4, fly 6); no 1-/2-/3-class subset passes anywhere. SNARE OR Complex I appears in 100% of all-stages-passing subsets across all three organisms (25/25, exceeding the pre-registered 75% threshold). Pre-registered P2 and P5 were **falsified** in the brittle-to-low-subset-counts direction. On the random-ensemble null: fly conserved ensemble retains class-identity specificity beyond aggregate magnitude (Match #2 percentile 4.8%); mouse is **median** percentile (46%, P7 violated — substrate/magnitude over-explains in mouse); worm shows **anchor-overfit** at 0% percentile (P6 floor crossed). Cross-organism reading: **fly is the cleanest case for class-identity specificity; mouse is magnitude-driven; worm is anchor-overfit.**
+
+**V7 M3 + M4 — sensitivity and cross-cal hold.** OAT: 9 load-bearing parameters across organisms, max halothane fold-error under any ±50% single-parameter perturbation = 1.44× (well inside 2× pass band). LHS (worm only): 95% CI [178, 448] µM with median 311.6 µM well-anchored — lower tail wider than pre-registered [200, 600] (M3c deviation) but falsification range [100, 1000] not crossed. M4 anchor swap: re-calibrating α on isoflurane MAC gives the same α value at grid resolution in all three organisms; halothane prediction with iso-anchored α is within 1.05–1.21× of published. Calibration generalizes anchor-to-anchor cleanly.
 
 **Where the architecture genuinely beats Meyer-Overton:**
 
@@ -121,15 +161,15 @@ V5 M2 (connectome permutation) and V5+ (no-integration sign-only baseline + Meye
 
 ## Honest single-line claim, post-controls
 
-> A literature-anchored conserved-target Hill perturbation table, integrated through a generic LIF substrate (no specific connectome required), recovers held-out volatile EC50s ~3× tighter than Meyer-Overton, predicts mutant magnitudes inside literature bands for several mutants in each organism, and correctly classifies Eger non-immobilizers across worm, fly, and mouse with one free parameter calibrated per organism.
+> A literature-anchored conserved-target Hill perturbation table, integrated through a substrate-agnostic LIF integrator, recovers held-out volatile EC50s ~3× tighter than Meyer-Overton across worm, fly, and mouse with one free parameter calibrated per organism. The architecture requires a 4–6 class minimum sufficient subset per organism (V7 Sub-Q2); SNARE or Complex I is universal across all 25 all-stages-passing subsets. Fly retains class-identity specificity beyond aggregate magnitude (V7 Sub-Q1 Match #2 percentile 4.8%); mouse does not (46% — median). Worm conserved is anchor-overfit at frozen α (0% percentile = below pre-registered "too-special" floor). Calibration generalizes anchor-to-anchor at grid resolution (V5 M4). Eger non-immobilizer specificity is entailed by correct volatile EC50 prediction (V7 Sub-Q2 stage attrition), not an independent capability.
 
-The architecture is largely substrate-agnostic. The mechanism map is what does the work. Cross-organism MAC similarity is consistent with Meyer-Overton (lipid biophysics) and not strong evidence of conserved targets on its own. The architecture's distinctive contribution is within-organism precision on held-out volatiles, mutant magnitude, and Eger discrimination — places where Meyer-Overton fails.
+The architecture is largely substrate-agnostic. The mechanism map is what does the work, at the 4–6 class quorum scale. Cross-organism MAC similarity is consistent with Meyer-Overton (lipid biophysics) and not strong evidence of conserved targets on its own. The architecture's distinctive contribution is **within-organism volatile EC50 precision and mutant magnitude prediction**; cross-organism class-identity specificity is established only in fly and (with anchor caveat) worm — not in mouse under V1 substrate.
 
 **V6 mouse scope**: LRR / immobilization phenotype only. Higher-order mammalian features (cortical EEG burst suppression, NREM-like slow oscillations, gamma suppression, consciousness disruption) are NOT in the architecture and not claimed.
 
 Use the **Cross-Species** tab to compare worm + fly + mouse halothane / isoflurane curves side-by-side.
 
-## Adversarial controls (V5) — what survives, what doesn't
+## V5 adversarial controls — bootstrap CIs and connectome permutation
 
 Honest follow-on testing reveals where the V3/V4 result is genuinely structural and where it is over-determined:
 
@@ -148,11 +188,66 @@ The "connectome-constrained" framing was over-claiming. **The worm result requir
 
 The conserved-substrate hypothesis itself survives: the perturbation-table + network-integration architecture recovers behavioral phenotypes from molecular pharmacology in both organisms. What's narrower than the original claim: the *specific* Cook 2019 / Winding 2023 wiring is NOT the load-bearing structural feature in either organism.
 
+## V7 adversarial controls — minimum sufficient subsets and random-ensemble nulls
+
+V7 extends V6 with four pre-registered adversarial controls (Sub-Q2 mechanism-subset search, Sub-Q1 random-ensemble nulls, V5 M3 parameter sensitivity, V5 M4 calibration cross-validation). Pre-registration locked 2026-05-05, hash `533b624a…`, commit `4061f4f`. Frozen α throughout (worm 0.13, fly 0.060, mouse 0.10); no recalibration in V7 scope. Closeout doc: [`v7_final_summary.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/v7_final_summary.md).
+
+**Sub-Q2 — minimum sufficient mechanism subset.** All 317 non-empty subsets of the conserved-target mechanism classes tested (127 worm + 127 fly + 63 mouse, dropping `glucl_potentiation` for mouse — no mammalian ortholog). Three-stage gating: halothane (Stage 1) → isoflurane held-out (Stage 2) → Eger non-immobilizers (Stage 3). 12,680 sims, ~410 min wall.
+
+| organism | Stage 1 → 2 → 3 passers | smallest passing subset | necessary classes (100% intersection) |
+|---|---|---|---|
+| worm | 20 → 14 → **14** | 5 classes | `snare_cooperativity`; (`complex_i_block` OR `nca_block`) universal as substitution pair |
+| fly | 5 → 3 → **3** | 6 classes | Complex I, GABA-A, K2P, nAChR, NCA (n=3, statistically loose) |
+| mouse | 8 → 8 → **8** | 4 classes | `complex_i_block` AND `nca_block` |
+
+Three findings:
+
+- **Smallest passing subset is 4–6 classes per organism** (worm 5 / mouse 4 / fly 6); no 1-, 2-, or 3-class subset passes anywhere. Pre-registered P2 (≥1 two-class subset passes) and P5 (smallest passer 2–3 classes) **falsified** — the architecture is brittle to subset removal at low subset counts; redundancy exists at higher mechanism-class counts but not at lower ones.
+- **SNARE OR Complex I appears in 25/25 (100%) of all-stages-passing subsets** across all three organisms (P3 confirmed at 100%, exceeding the pre-registered 75% threshold). This is the cleanest cross-organism structural finding in V7.
+- **Zero attrition from Stage 2 to Stage 3** in any organism: every subset that produces correct halothane AND isoflurane EC50s also correctly classifies Eger non-immobilizers. Gate 4 specificity is **entailed by Gates 1 + 2** via perturbation-table sparseness on non-immobilizers, not an independent positive result.
+
+Worm Stage 1 → Stage 2 attrition (20 → 14, 30%) is anchor-specific — six worm subsets that produced correct halothane failed isoflurane held-out. Mouse attrition is 0% past Stage 1 — once mouse halothane is correct, iso and Eger are entailed. This pattern reappears in Sub-Q1 below.
+
+> **⚠ Superseded by the 2026-06-12 close-out (P8).** The Match #2 percentiles in this section came from a control that mismatched the rank-2 operator (phantom SNARE current + unmatched `snare_factor`). The corrected two-coordinate Match #2b gives worm 28% / fly 26% / mouse 38% — worm is *not* anchor-overfit, fly is *not* uniquely special. Read the table below as the historical V7 result; the close-out at the top of this page is authoritative.
+
+**Sub-Q1 — random-ensemble nulls.** 50 random ensembles per organism per match level. Match #1: count-matched to the conserved ensemble (same `n_active` classes, random class identity, random EC50 / max_effect / Hill_n from V6 distributions). Match #2: count + total perturbation magnitude matched within ±5%. Match #3 (cell-type spread): **was NOT TESTABLE in V1** — all mechanism classes hit all neurons uniformly via `resolve_target_neurons` returning `range(brain.N)`, so Match #3 reduced to Match #2. **Now TESTED on the rank-lifted V2 substrate (P1_P2, 2026-06-12): worm conserved cell-type spread sits at the 46th percentile of magnitude-matched surrogates — a NULL.** Lifting the operator rank did not reveal cell-type-resolved conserved-target specificity on worm; fly remains untestable (no *Drosophila* expression atlas).
+
+| organism | Match #1 (count) | Match #2 (count + magnitude) | reading |
+|---|---|---|---|
+| **worm** | **0.0%** | **0.0%** | anchor-overfit — P6 falsification floor (≤10%) crossed |
+| fly | 5.6% | 4.8% | cleanest class-identity specificity — tightens when magnitude controlled |
+| **mouse** | 28.0% | **46.0%** | magnitude-driven — P7 violation (mouse conserved at median when magnitude controlled) |
+
+Percentile rank = fraction of random ensembles whose halothane fold-error is *better* (lower) than the conserved ensemble's. Three-organism reading: **fly is the cleanest case for class-identity specificity; mouse is magnitude-driven; worm is anchor-overfit.** Both deviations are honest — they say class identity carries information in fly (and partially in worm with anchor caveat), but not in mouse under V1's generic random graph.
+
+**V5 M3 — parameter sensitivity.** OAT (one-at-a-time, all organisms): max single-parameter |sensitivity index| = 0.84; 9 parameters with |S| > 0.3 (load-bearing); max halothane fold-error under any ±50% perturbation = 1.44×. M3a / M3b **PASS**. LHS (worm only, 100 joint samples in ±50% box): 95% CI on predicted halothane EC50 = [178, 448] µM, median 311.6 µM. M3c **DEVIATION**: low tail extends below the pre-registered tight range [200, 600] but well inside the falsification range [100, 1000]. Median well-anchored; deviation is in tail width, not central tendency. The architecture is robust to single-parameter perturbation; LHS lower-tail width is ~22 µM wider than pre-registered.
+
+**V5 M4 — calibration cross-validation (anchor swap).** Re-calibrate α on isoflurane MAC (target ≈ 290 µM), predict halothane EC50 at iso-anchored α. At α-grid resolution, iso-anchored α = halothane-anchored α in all three organisms (0% diff). Predicted halothane EC50 at iso-anchored α: 323.5 µM worm (1.05×), 361.7 µM fly (1.06×), 288.2 µM mouse (1.21×). M4a / M4b **PASS** all three. The calibration generalizes anchor-to-anchor at the resolution of the search — the cleanest positive result in V7.
+
+**Pre-registered deviation summary.** 3 confirmations (P1 no 1-class subset, P3 SNARE-OR-Complex-I universal, P4 GluCl invertebrate-only); 4 falsifications (P2 brittle to 2-class subsets, P5 smallest passer 4–6, P6 worm anchor-overfit, P7 mouse magnitude-explained); 1 not testable in V1 (P8 cell-type spread); 3 sensitivity outcomes (M3a / M3b PASS, M3c DEVIATION in lower-tail width); 2 cross-cal PASS (M4a / M4b). Full table in [`v7_final_summary.md §6`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/v7_final_summary.md). Inter-organism redundancy detail in [`v7_redundancy_analysis.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/v7_redundancy_analysis.md).
+
+## Future work and Paper 2 positioning
+
+V7's adversarial controls constrain what the next paper can defensibly claim. Two findings drive the framing:
+
+- **Sub-Q1 P7 mouse violation** (46% percentile vs magnitude-matched randoms) says the V6 generic random graph cannot distinguish class identity from aggregate magnitude in mouse. Anything that produces the right halothane response on the mouse substrate also produces the right isoflurane and Eger responses.
+- **Sub-Q1 P6 worm violation** (0% percentile) says worm's specificity is partially anchor-tuning artifact.
+
+**Paper 2 (planned)** — a bridge experiment in the V3 *C. elegans* simulator testing whether anesthetic-induced quiescence and natural reduced-activity states (lethargus, sleep-like) share underlying machinery at the network-state level. Pre-registration will commit:
+
+- The primary bridge test sits in **worm and fly substrates**, where V7 demonstrates class-identity specificity (worm with anchor caveat; fly cleanest at 4.8% Match #2 percentile).
+- **Mouse is contingent on V2 substrate extension** with cell-type-resolved targeting. V1 generic random graph cannot test cell-type-specific shared machinery.
+- **Match #3 (cell-type spread)** becomes a real test only once V2 substrate exists with CeNGEN-resolved targeting.
+
+**Framework-paper claims about thermodynamic necessity of reversible reduced-activity states** are out of V7 and Paper 2 scope. They are contingent on positive Paper 2 results plus substrate extension that makes Sub-Q1 Match #3 testable. V7 does not test, and does not establish, framework-level claims about *why* anesthetic susceptibility is conserved across complex eukaryotes — it establishes the methodological substrate on which such claims could be tested.
+
 ## Status
 
-- **V3 worm ensemble shipped + V4 fly cross-species ensemble shipped.** All four gates pass in both organisms.
+- **V3 worm + V4 fly + V6 mouse three-organism validator shipped.** All four gates pass in all three organisms with V5 + V5+ + V7 adversarial-control caveats per sections above.
+- **V7 closeout complete (2026-05-12).** Pre-registration locked 2026-05-05 (hash `533b624a…`, commit `4061f4f`). Sub-Q2 + Sub-Q1 + V5 M3 + V5 M4 ran 2026-05-05 to 2026-05-08. Closeout docs: [`v7_final_summary.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/v7_final_summary.md), [`v7_redundancy_analysis.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/v7_redundancy_analysis.md), [`v7_preregistration.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/v7_preregistration.md).
+- **Adversarial close-out complete (2026-06-12).** Preregistered, accept-either-way gated re-examination: foundation certified rank-2 (P18); deflations P7 (α honesty) / P8 (Sub-Q1 trichotomy) / P11 (occupancy saturation) / P1_P2 (cell-type-targeting worm-null) / P17 (behavioral readout); mean-field theorem (P3); robustness pass (P13-SOL28 nca quorum); constructive positive (P20 → V2/Tier4 routing); one fabrication caught before shipping. See [`SESSION_CLOSEOUT_2026-06-12.md`](https://github.com/rohit-ravi2/personalwebsite/blob/main/AnestheticSimulator/docs/SESSION_CLOSEOUT_2026-06-12.md). Audit harnesses + verdicts under [`AnestheticSimulator/audits/`](https://github.com/rohit-ravi2/personalwebsite/tree/main/AnestheticSimulator/audits).
 - **Repo**: [`AnestheticSimulator/`](https://github.com/rohit-ravi2/personalwebsite/tree/main/AnestheticSimulator) (public). Built at $0 external spend on an RTX 4060 Ti.
-- **Open work**: per-mutant Complex I factor refinement (currently *nduf-6 / ndus-8 / nuo-1* share an estimate; per-gene primary-literature factors would differentiate them); FlyBase driver-line NT data integration to replace V1's cell-type heuristic; full adult Drosophila (FlyWire ~140K neurons) substrate as a follow-on.
+- **Open work**: re-ground the behavioral readout (P17 demote → re-validate against a held-out target before any Paper-2 bridge); build a *Drosophila* cell-type-expression atlas to make fly Match #3 testable (the one data-gated payoff organism); write the P16 held-out structure→activity scoring loop (strict shuffle + fast gates done, heavy path stubbed); regenerate Wave-P occupancy magnitudes under the corrected reference frame (P11); per-mutant Complex I factor refinement (*nduf-6 / ndus-8 / nuo-1* share an estimate); React `AnesthesiaPipeline.tsx` interactive update to surface the corrected Sub-Q1 / close-out results.
 
 <details>
 <summary className="cursor-pointer text-sm font-medium text-zinc-700 mt-6">Sources & attribution</summary>
