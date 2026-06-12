@@ -1,0 +1,32 @@
+{
+  "block_id": "P11",
+  "title": "Wave-P K_p reference-frame recompute — does the partition double-count inflate Gate C.1?",
+  "frozen_utc": "2026-06-12",
+  "premise_under_test": "Occupancy = C/(C+Kd) requires C and Kd in the SAME reference frame. Vina's Kd is aqueous-1M-standard-state referenced (affinity_to_kd_uM: Kd=exp(dG/RT)*1e6). The comparator is the clinical AQUEOUS EC50. The shipped phase_c_occupancy line 152 sets conc_eff = Kp*conc_aq for membrane targets WITHOUT also scaling Kd, mixing frames. If both are scaled consistently the Kp cancels: (Kp*C)/(Kp*C + Kp*Kd) = C/(C+Kd). So the physically correct occupancy is the Kp-FREE one (M0); the shipped full-Kp (M2) over-counts. M1 (sqrt-Kp) is a bracketing intermediate.",
+  "models": {
+    "M0_no_Kp": "partition exponent 0 (conc_eff = conc_aq everywhere). DECISION-BINDING.",
+    "M1_sqrt_Kp": "partition exponent 0.5 for membrane_embedded targets only (bracketing).",
+    "M2_full_Kp": "partition exponent 1.0 for membrane_embedded targets only = the SHIPPED model."
+  },
+  "method": "Reuse the FROZEN per-(anesthetic,gene) predicted_Kd_uM, ec50, Kp, compartment from artifacts/occupancy/best_pocket_per_target.csv. Recompute occupancy at halothane 1xEC50 under M0/M1/M2 by varying ONLY the partition factor (Kp**exp, applied to membrane_embedded targets exactly as the shipped code gates it). Do NOT re-dock, do NOT change Kd.",
+  "denominator_freeze": "30 halothane (gene) pairs = the realized Gate-C.1 panel (membrane_embedded 26, membrane_interfacial 2, aqueous_intracellular 2). Hash-locked. The 30-vs-32 Tier1 gap (NCA-1/UNC-80 missing structures) is the P13 hole, flagged not patched.",
+  "gates": {
+    "G_P11_1_engagement_survival": {
+      "rule": "Under M0 (correct frame), count halothane genes with occupancy > 0.10 at 1xEC50, and census saturation (occ > 0.90).",
+      "pass": "n_M0(>10%) >= 5 AND saturation_M0 < saturation_M2 (the multi-target ENGAGEMENT survives the frame correction, while the saturating-occupancy magnitude was Kp-inflated).",
+      "deflate": "n_M0(>10%) < 5 => the 30/30 multi-target headline was Kp-manufactured.",
+      "halt_methodological": "if n_M0 == 30 AND saturation_M0 == saturation_M2 (still all saturated with NO Kp) => methodological error in the recompute, HALT and review."
+    },
+    "G_P11_2_frame_fragility": {
+      "rule": "Frame-fragility spread = n_M2(>10%) - n_M0(>10%).",
+      "robust": "spread <= 2 (the engagement COUNT is frame-robust)",
+      "fragile": "spread >= 5 (the count itself depends on the partition frame)"
+    },
+    "G_P11_3_pseudo_test_screen": {
+      "rule": "Prove the gate is live on BOTH branches: >=1 halothane pair clears 10% under M0 (no Kp) AND >=1 pair that clears 10% ONLY because of Kp (i.e., M2>10% but M0<=10%). If the second set is empty, Kp changes nothing here and the deflation claim is vacuous; if the first is empty, M0 is trivially all-fail.",
+      "pass": "both non-empty OR explicitly reported empty with interpretation"
+    }
+  },
+  "claim_impact": "The Wave-P sat_pa ladder is hand-set and DECOUPLED from Vina (phase_g_state_validator.py:24), so a P11 deflation does NOT flip any V1 network quorum/percentile — this is a MOLECULAR-LAYER honesty finding only. Expected: the >10% engagement count likely survives (EC50 ~ Kd magnitude, so occ ~0.25-0.5 >> 0.1 even without Kp), but the SATURATING occupancy (~0.99, 30/30) was a Kp double-count artifact; corrected magnitudes are moderate partial occupancy. Any 'saturating / maximal multi-target occupancy' language must be corrected to 'moderate partial occupancy'; the multi-target DISCRIMINATION claim stands.",
+  "anti_target_engineering": "M0 designated decision-binding from the standard-state argument BEFORE the recompute; the >10% threshold and >=5 floor are the original Gate-C.1 values. A deflation (n_M0<5) is accepted; equally, a robust survival (the honest likely outcome) is reported as-is, including that it does NOT rescue the saturation magnitude."
+}

@@ -1,0 +1,332 @@
+{
+  "block": "P11",
+  "pipeline": "p11_kp_reframe",
+  "prereg": "/mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/audits/phase1/P11/prereg.json",
+  "n_halothane_pairs": 30,
+  "engagement_counts_gt_10pct": {
+    "M0_no_Kp": 29,
+    "M1_sqrt_Kp": 30,
+    "M2_full_Kp": 30
+  },
+  "saturation_counts_gt_90pct": {
+    "M0_no_Kp": 0,
+    "M1_sqrt_Kp": 7,
+    "M2_full_Kp": 26
+  },
+  "frame_fragility_spread_M2_minus_M0": 1,
+  "gates": {
+    "G_P11_1_engagement_survival": "PASS",
+    "G_P11_2_frame_fragility": "ROBUST",
+    "G_P11_3_pseudo_test_screen": {
+      "verdict": "PASS",
+      "n_clears_M0": 29,
+      "n_kp_only_genes": 1,
+      "kp_only_genes": [
+        "SNB-1"
+      ]
+    }
+  },
+  "interpretation": "Multi-target ENGAGEMENT (>10%) count under correct frame M0 = 29/30; shipped M2 = 30/30. Saturation (>90%): M0=0, M2=26. The sat_pa ladder is decoupled from Vina, so this is a molecular-layer honesty finding only; no V1 network flip.",
+  "per_gene": [
+    {
+      "gene": "ACR-16",
+      "kd_uM": 357.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.4875,
+      "occ_M1_sqrt_Kp": 0.9377,
+      "occ_M2_full_Kp": 0.9958
+    },
+    {
+      "gene": "ACR-2",
+      "kd_uM": 984.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2567,
+      "occ_M1_sqrt_Kp": 0.8452,
+      "occ_M2_full_Kp": 0.9886
+    },
+    {
+      "gene": "AVR-14",
+      "kd_uM": 984.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2567,
+      "occ_M1_sqrt_Kp": 0.8452,
+      "occ_M2_full_Kp": 0.9886
+    },
+    {
+      "gene": "AVR-15",
+      "kd_uM": 423.1,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.4456,
+      "occ_M1_sqrt_Kp": 0.927,
+      "occ_M2_full_Kp": 0.995
+    },
+    {
+      "gene": "EXP-1",
+      "kd_uM": 984.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2567,
+      "occ_M1_sqrt_Kp": 0.8452,
+      "occ_M2_full_Kp": 0.9886
+    },
+    {
+      "gene": "GAS-1",
+      "kd_uM": 1634.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.1722,
+      "occ_M1_sqrt_Kp": 0.7669,
+      "occ_M2_full_Kp": 0.9811
+    },
+    {
+      "gene": "GLC-1",
+      "kd_uM": 1934.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.1495,
+      "occ_M1_sqrt_Kp": 0.7354,
+      "occ_M2_full_Kp": 0.9778
+    },
+    {
+      "gene": "GLC-2",
+      "kd_uM": 1934.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.1495,
+      "occ_M1_sqrt_Kp": 0.7354,
+      "occ_M2_full_Kp": 0.9778
+    },
+    {
+      "gene": "LEV-1",
+      "kd_uM": 301.9,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.5297,
+      "occ_M1_sqrt_Kp": 0.9468,
+      "occ_M2_full_Kp": 0.9965
+    },
+    {
+      "gene": "MEV-1",
+      "kd_uM": 1165.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2259,
+      "occ_M1_sqrt_Kp": 0.8219,
+      "occ_M2_full_Kp": 0.9865
+    },
+    {
+      "gene": "NCA-2",
+      "kd_uM": 1165.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2259,
+      "occ_M1_sqrt_Kp": 0.8219,
+      "occ_M2_full_Kp": 0.9865
+    },
+    {
+      "gene": "NLF-1",
+      "kd_uM": 1934.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.1495,
+      "occ_M1_sqrt_Kp": 0.7354,
+      "occ_M2_full_Kp": 0.9778
+    },
+    {
+      "gene": "NUO-1",
+      "kd_uM": 1165.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2259,
+      "occ_M1_sqrt_Kp": 0.8219,
+      "occ_M2_full_Kp": 0.9865
+    },
+    {
+      "gene": "NUO-2",
+      "kd_uM": 423.1,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.4456,
+      "occ_M1_sqrt_Kp": 0.927,
+      "occ_M2_full_Kp": 0.995
+    },
+    {
+      "gene": "NUO-3",
+      "kd_uM": 501.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.4043,
+      "occ_M1_sqrt_Kp": 0.9148,
+      "occ_M2_full_Kp": 0.9941
+    },
+    {
+      "gene": "NUO-4",
+      "kd_uM": 984.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2567,
+      "occ_M1_sqrt_Kp": 0.8452,
+      "occ_M2_full_Kp": 0.9886
+    },
+    {
+      "gene": "RIC-4",
+      "kd_uM": 2290.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_interfacial",
+      "occ_M0_no_Kp": 0.1293,
+      "occ_M1_sqrt_Kp": 0.1293,
+      "occ_M2_full_Kp": 0.1293
+    },
+    {
+      "gene": "SNB-1",
+      "kd_uM": 5328.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.06,
+      "occ_M1_sqrt_Kp": 0.5022,
+      "occ_M2_full_Kp": 0.941
+    },
+    {
+      "gene": "SNT-1",
+      "kd_uM": 1934.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_interfacial",
+      "occ_M0_no_Kp": 0.1495,
+      "occ_M1_sqrt_Kp": 0.1495,
+      "occ_M2_full_Kp": 0.1495
+    },
+    {
+      "gene": "TWK-18",
+      "kd_uM": 831.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2903,
+      "occ_M1_sqrt_Kp": 0.8661,
+      "occ_M2_full_Kp": 0.9903
+    },
+    {
+      "gene": "TWK-29",
+      "kd_uM": 593.1,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.3644,
+      "occ_M1_sqrt_Kp": 0.9006,
+      "occ_M2_full_Kp": 0.9931
+    },
+    {
+      "gene": "TWK-7",
+      "kd_uM": 1165.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2259,
+      "occ_M1_sqrt_Kp": 0.8219,
+      "occ_M2_full_Kp": 0.9865
+    },
+    {
+      "gene": "UNC-13",
+      "kd_uM": 2290.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "aqueous_intracellular",
+      "occ_M0_no_Kp": 0.1293,
+      "occ_M1_sqrt_Kp": 0.1293,
+      "occ_M2_full_Kp": 0.1293
+    },
+    {
+      "gene": "UNC-18",
+      "kd_uM": 357.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "aqueous_intracellular",
+      "occ_M0_no_Kp": 0.4875,
+      "occ_M1_sqrt_Kp": 0.4875,
+      "occ_M2_full_Kp": 0.4875
+    },
+    {
+      "gene": "UNC-29",
+      "kd_uM": 984.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2567,
+      "occ_M1_sqrt_Kp": 0.8452,
+      "occ_M2_full_Kp": 0.9886
+    },
+    {
+      "gene": "UNC-38",
+      "kd_uM": 831.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2903,
+      "occ_M1_sqrt_Kp": 0.8661,
+      "occ_M2_full_Kp": 0.9903
+    },
+    {
+      "gene": "UNC-49",
+      "kd_uM": 1634.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.1722,
+      "occ_M1_sqrt_Kp": 0.7669,
+      "occ_M2_full_Kp": 0.9811
+    },
+    {
+      "gene": "UNC-63",
+      "kd_uM": 357.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.4875,
+      "occ_M1_sqrt_Kp": 0.9377,
+      "occ_M2_full_Kp": 0.9958
+    },
+    {
+      "gene": "UNC-64",
+      "kd_uM": 2711.0,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.1114,
+      "occ_M1_sqrt_Kp": 0.6648,
+      "occ_M2_full_Kp": 0.9691
+    },
+    {
+      "gene": "UNC-79",
+      "kd_uM": 984.4,
+      "ec50_uM": 340.0,
+      "kp": 250.0,
+      "compartment": "membrane_embedded",
+      "occ_M0_no_Kp": 0.2567,
+      "occ_M1_sqrt_Kp": 0.8452,
+      "occ_M2_full_Kp": 0.9886
+    }
+  ]
+}
