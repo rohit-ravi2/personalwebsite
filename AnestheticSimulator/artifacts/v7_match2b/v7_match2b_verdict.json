@@ -1,0 +1,65 @@
+{
+  "block": "P8",
+  "pipeline": "v7_match2b",
+  "prereg": "/mnt/ssd4tb/Desktop/website/personalwebsite/AnestheticSimulator/audits/phase1/P8/prereg.json",
+  "tol_pct": 5.0,
+  "rng_seed": 20260612,
+  "conserved_coords": {
+    "worm": {
+      "total_pa": -16.21418315492261,
+      "snare_factor": 0.75,
+      "n_active": 8
+    },
+    "fly": {
+      "total_pa": -7.483469148425819,
+      "snare_factor": 0.75,
+      "n_active": 8
+    },
+    "mouse": {
+      "total_pa": -11.607285834803282,
+      "snare_factor": 0.7463768115942029,
+      "n_active": 7
+    }
+  },
+  "conserved_fold_error": {
+    "worm": 1.0509646254176128,
+    "fly": 1.0638680582778743,
+    "mouse": 1.2145733375998224
+  },
+  "n_jointly_matched": {
+    "worm": 50,
+    "fly": 50,
+    "mouse": 50
+  },
+  "rejection_failures": 0,
+  "percentile_rank_pct": {
+    "worm": 28.000000000000004,
+    "fly": 26.0,
+    "mouse": 38.0
+  },
+  "G2_null_density": {
+    "worm": {
+      "n_jointly_matched": 50,
+      "enough": true
+    },
+    "fly": {
+      "n_jointly_matched": 50,
+      "enough": true
+    },
+    "mouse": {
+      "n_jointly_matched": 50,
+      "enough": true
+    }
+  },
+  "G3_fly_survival": {
+    "fly_percentile_pct": 26.0,
+    "verdict": "PASS",
+    "rule": "fly_percentile in (5%, 30%] => PASS (class identity does measurable work beyond the airtight two-coordinate magnitude control \u2014 fly's last clean positive SURVIVES). fly_percentile > 30% => DEFLATE (fly was two-coordinate-magnitude-driven; the cross-organism conservation framing loses its single quantified anchor). fly_percentile <= 5% => TOO_SPECIAL quarantine (anchor-overfit leak; treat like worm). Accept whichever lands."
+  },
+  "prior_match2_for_reference": {
+    "worm": 0.0,
+    "fly": 4.76,
+    "mouse": 46.0
+  },
+  "wall_minutes": 126.96885557969411
+}
