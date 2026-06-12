@@ -1,0 +1,8 @@
+{
+  "gate": "G1_formula_fidelity",
+  "n_cases": 33,
+  "max_err_total_pa": 7.105427357601002e-15,
+  "max_err_snare_factor": 4.440892098500626e-16,
+  "threshold": 1e-09,
+  "verdict": "PASS"
+}

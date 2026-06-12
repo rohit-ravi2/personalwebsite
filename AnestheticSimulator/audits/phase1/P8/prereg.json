@@ -1,0 +1,39 @@
+{
+  "block_id": "P8",
+  "title": "Corrected two-coordinate (total_pa, snare_factor) Match#2b null",
+  "frozen_utc": "2026-06-12",
+  "premise_under_test": "The shipped Match#2 control matched only _aggregate_pa_at_dose, which (a) ADDS a phantom SNARE 50 pA current term the operator never applies (operator routes SNARE to a synaptic-weight multiplier, NOT I_ext) and (b) leaves the actual snare_factor coordinate UNMATCHED. The rank-2 operator (P18 PASS) has exactly two sufficient-statistic coordinates: total_pa (I_ext broadcast over non-SNARE classes) and snare_factor (global synaptic gain). Match#2b rejection-samples random ensembles matching BOTH coordinates of the conserved profile, then re-asks whether the conserved profile's halothane EC50 precision is special beyond the airtight two-coordinate magnitude control.",
+  "operator_coordinate_definitions": {
+    "total_pa": "alpha_calib * sum over cls in {complex_i_block, complex_ii_block, nachr_antagonism, nca_block, gaba_potentiation, glucl_potentiation, k2p_potentiation} of (-DEFAULT_PER_CLASS_PA_AT_SATURATION[cls] * engagement(dose)); SNARE and any other class contribute 0. engagement(dose)=dose^n/(dose^n+ec50^n). Mirrors phase_g_state_validator.apply_anesthetic lines 308-324.",
+    "snare_factor": "1.0 if snare_cooperativity absent or engagement<=0 or max_effect None, else 1.0 + (snare_max - 1.0) * engagement_snare(dose). Mirrors apply_anesthetic lines 327-335.",
+    "match_dose": "organism clinical halothane anchor dose (ORG_CONFIG[org]['halothane_pub']), matching the single-dose-anchor design of the original Match#2."
+  },
+  "gates": {
+    "G1_formula_fidelity": {
+      "rule": "The Python operator-mirror functions must reproduce the REAL operator's realized total_pa (I_ext delta / pA after apply_anesthetic) and snare_factor (syn_exc.w post/pre ratio) to within 1e-9 absolute, over a battery of >=12 profiles (conserved + random, multiple doses, SNARE-present and SNARE-absent), on the worm SeededLIFBrain. HARD GATE: must PASS before the overnight ensemble run launches.",
+      "threshold": 1e-9,
+      "on_fail": "HALT P8; do not run the ensemble; the sampler does not faithfully reproduce the operator."
+    },
+    "G2_null_density": {
+      "rule": "Pure-Python dry-run: rejection-sample the joint two-coordinate null; require >= 20 accepted jointly-matched draws per organism within the rejection cap, else the null is under-powered.",
+      "n_min": 20,
+      "on_fail": "report INDETERMINATE for that organism (cannot certify the percentile); raise the cap once and re-check before declaring."
+    },
+    "G3_fly_survival": {
+      "rule": "Load-bearing gate. Recompute the conserved-ensemble percentile rank (fraction of joint-matched random ensembles whose halothane EC50 fold-error is BETTER (lower) than the conserved profile's) for FLY against the corrected two-coordinate null.",
+      "decision_rule": "fly_percentile in (5%, 30%] => PASS (class identity does measurable work beyond the airtight two-coordinate magnitude control — fly's last clean positive SURVIVES). fly_percentile > 30% => DEFLATE (fly was two-coordinate-magnitude-driven; the cross-organism conservation framing loses its single quantified anchor). fly_percentile <= 5% => TOO_SPECIAL quarantine (anchor-overfit leak; treat like worm). Accept whichever lands.",
+      "also_report": "worm + mouse percentiles for context (prior Match#2: worm 0% anchor-overfit, fly 4.76%, mouse 46% magnitude-driven). Expected: worm stays ~0%, mouse stays high; fly is the live deflation risk."
+    }
+  },
+  "protocol": {
+    "n_ensembles_per_organism": 50,
+    "doses_uM": [10.0, 30.0, 100.0, 200.0, 350.0, 500.0, 1000.0, 3000.0],
+    "seeds": [42, 137, 219],
+    "joint_match_tol_pct": 5.0,
+    "rejection_cap": 20000,
+    "rng_seed": 20260612,
+    "organisms": ["worm", "fly", "mouse"],
+    "outputs": "artifacts/v7_match2b/ (NEW artifacts; the original v7_match2_* are NOT overwritten — the flawed control is superseded and documented, not deleted)"
+  },
+  "anti_target_engineering": "All thresholds above are fixed from the operator structure + the original Match#2 design BEFORE the run. G3 is two-sided and accept-either-way: a fly DEFLATE (removing the project's last clean positive) is an explicit, acceptable outcome and is the reason this block is run first in Phase 1."
+}

@@ -1,0 +1,23 @@
+{
+  "worm": {
+    "conserved_total_pa": -16.21418315492261,
+    "conserved_snare_factor": 0.75,
+    "n_active": 8,
+    "accepted_of_50": 50,
+    "enough": true
+  },
+  "fly": {
+    "conserved_total_pa": -7.483469148425819,
+    "conserved_snare_factor": 0.75,
+    "n_active": 8,
+    "accepted_of_50": 50,
+    "enough": true
+  },
+  "mouse": {
+    "conserved_total_pa": -11.607285834803282,
+    "conserved_snare_factor": 0.7463768115942029,
+    "n_active": 7,
+    "accepted_of_50": 50,
+    "enough": true
+  }
+}
