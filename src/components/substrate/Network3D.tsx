@@ -322,9 +322,138 @@ function SomaInstances({
 }
 
 // ---------------------------------------------------------------------------
-// Edge layers — gap (ohmic, symmetric) and chem (signed). Built once as
-// LineSegments with per-vertex colour; toggled by `visible`.
+// Edge layers — gap (ohmic, symmetric) and chem (signed).
+//
+// HYBRID rendering for depth legibility (FIX round 1, 2026-06-19):
+//   · The strongest edges (top-N by |w|) are upgraded to solid 3D geometry so
+//     they read with depth/occlusion instead of flat 1px lines:
+//       - chem  → CURVED ARC tubes (quadratic Bézier bowed off the chord);
+//                 the bow encodes pre→post direction (arc bows toward post) and
+//                 separates the dense central neuropil so edges don't overlap.
+//       - gap   → STRAIGHT tubes (ohmic, symmetric — no direction to encode).
+//     All strong tubes for a family are merged into ONE BufferGeometry with
+//     per-vertex colour (signed/innexin-weighted) — a single draw call, no
+//     per-edge React nodes.
+//   · The long tail stays as LineSegments (cheap, fills in the fine structure).
+//
+// Tube radius scales with |w| so the dominant routes are visually heaviest.
 // ---------------------------------------------------------------------------
+
+// How many of the strongest edges per family get promoted to tubes. Sized from
+// the weight distribution (chem |w|≥~12 ≈ top 400; gap w≥~3 ≈ top 400) — heavy
+// enough to be the visible backbone, light enough to stay one merged mesh.
+const CHEM_TUBE_COUNT = 400;
+const GAP_TUBE_COUNT = 400;
+
+// Build a merged tube geometry from a list of edges. Each edge becomes either a
+// straight tube (bow = 0) or a quadratic-Bézier arc (bow > 0) bowed off the
+// chord. Vertex colours are baked in (alpha pre-multiplied) to match the line
+// fallback's additive look. Returns one BufferGeometry (single draw call).
+function buildTubeGeometry(
+  tubes: Array<{
+    a: THREE.Vector3;
+    b: THREE.Vector3;
+    color: THREE.Color;
+    alpha: number;
+    radius: number;
+    bow: number; // 0 = straight, >0 = arc height as a fraction of chord length
+  }>,
+  radialSegments: number,
+  pathSegments: number,
+): THREE.BufferGeometry {
+  if (tubes.length === 0) return new THREE.BufferGeometry();
+  const geoms: THREE.BufferGeometry[] = [];
+  const up = new THREE.Vector3(0, 1, 0);
+  const altUp = new THREE.Vector3(1, 0, 0);
+  for (const tu of tubes) {
+    const chord = new THREE.Vector3().subVectors(tu.b, tu.a);
+    const len = chord.length();
+    if (len < 1e-5) continue;
+    let curve: THREE.Curve<THREE.Vector3>;
+    if (tu.bow > 0) {
+      // Pick an offset direction roughly perpendicular to the chord so the arc
+      // bows out of the dense central line; deterministic (no flicker).
+      const dir = chord.clone().normalize();
+      let perp = new THREE.Vector3().crossVectors(dir, up);
+      if (perp.lengthSq() < 1e-4) perp = new THREE.Vector3().crossVectors(dir, altUp);
+      perp.normalize();
+      const mid = new THREE.Vector3()
+        .addVectors(tu.a, tu.b)
+        .multiplyScalar(0.5)
+        .addScaledVector(perp, len * tu.bow);
+      curve = new THREE.QuadraticBezierCurve3(tu.a.clone(), mid, tu.b.clone());
+    } else {
+      curve = new THREE.LineCurve3(tu.a.clone(), tu.b.clone());
+    }
+    const seg = tu.bow > 0 ? pathSegments : 1;
+    const g = new THREE.TubeGeometry(curve, seg, tu.radius, radialSegments, false);
+    const vc = g.getAttribute("position").count;
+    const colArr = new Float32Array(vc * 3);
+    const r = tu.color.r * tu.alpha;
+    const gg = tu.color.g * tu.alpha;
+    const bb = tu.color.b * tu.alpha;
+    for (let i = 0; i < vc; i++) {
+      colArr[i * 3] = r;
+      colArr[i * 3 + 1] = gg;
+      colArr[i * 3 + 2] = bb;
+    }
+    g.setAttribute("color", new THREE.BufferAttribute(colArr, 3));
+    geoms.push(g);
+  }
+  if (geoms.length === 0) return new THREE.BufferGeometry();
+  const merged = mergeBufferGeometries(geoms);
+  geoms.forEach((g) => g.dispose());
+  return merged ?? new THREE.BufferGeometry();
+}
+
+// Minimal non-indexed BufferGeometry merge (position + color only). Avoids
+// pulling in three/examples BufferGeometryUtils for one call. All inputs are
+// non-indexed TubeGeometries with matching attributes.
+function mergeBufferGeometries(
+  geoms: THREE.BufferGeometry[],
+): THREE.BufferGeometry | null {
+  let totalPos = 0;
+  for (const g of geoms) {
+    const p = g.getAttribute("position");
+    const idx = g.getIndex();
+    totalPos += idx ? idx.count : p.count;
+  }
+  const pos = new Float32Array(totalPos * 3);
+  const col = new Float32Array(totalPos * 3);
+  let o = 0;
+  for (const g of geoms) {
+    const p = g.getAttribute("position") as THREE.BufferAttribute;
+    const c = g.getAttribute("color") as THREE.BufferAttribute;
+    const idx = g.getIndex();
+    if (idx) {
+      for (let i = 0; i < idx.count; i++) {
+        const v = idx.getX(i);
+        pos[o * 3] = p.getX(v);
+        pos[o * 3 + 1] = p.getY(v);
+        pos[o * 3 + 2] = p.getZ(v);
+        col[o * 3] = c.getX(v);
+        col[o * 3 + 1] = c.getY(v);
+        col[o * 3 + 2] = c.getZ(v);
+        o++;
+      }
+    } else {
+      for (let i = 0; i < p.count; i++) {
+        pos[o * 3] = p.getX(i);
+        pos[o * 3 + 1] = p.getY(i);
+        pos[o * 3 + 2] = p.getZ(i);
+        col[o * 3] = c.getX(i);
+        col[o * 3 + 1] = c.getY(i);
+        col[o * 3 + 2] = c.getZ(i);
+        o++;
+      }
+    }
+  }
+  const merged = new THREE.BufferGeometry();
+  merged.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  merged.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  merged.computeVertexNormals();
+  return merged;
+}
 
 function buildEdgeGeometry(
   segments: Array<{
@@ -394,65 +523,132 @@ function EdgeLayers({
     [edges.chem],
   );
 
-  const gapGeom = useMemo(() => {
-    const blue = new THREE.Color("#4f86c6");
-    const segs = edges.gap
-      .filter((g) => g.a !== g.b)
-      .map((g) => ({
+  // Split each family into the strongest edges (→ tubes) and the long tail
+  // (→ lines). Strongest = largest |w|; the tail keeps the fine connectome
+  // structure cheap. Self-loops are dropped in both layers.
+  const blue = useMemo(() => new THREE.Color("#4f86c6"), []);
+  const excit = useMemo(() => new THREE.Color("#3a9e63"), []); // depol (sign +1)
+  const inhib = useMemo(() => new THREE.Color("#d6486a"), []); // hyperpol (-1)
+
+  // --- GAP: straight tubes for the strong, lines for the tail. ---
+  const { gapTubeGeom, gapLineGeom } = useMemo(() => {
+    const valid = edges.gap.filter((g) => g.a !== g.b);
+    const sorted = [...valid].sort((a, b) => b.w - a.w);
+    const strong = sorted.slice(0, GAP_TUBE_COUNT);
+    const tail = sorted.slice(GAP_TUBE_COUNT);
+    const tubes = strong.map((g) => {
+      const wn = g.w / maxGap;
+      return {
         a: nodePos[g.a],
         b: nodePos[g.b],
         color: blue,
-        alpha: 0.18 + 0.55 * (g.w / maxGap),
-      }));
-    return buildEdgeGeometry(segs);
-  }, [edges.gap, nodePos, maxGap]);
+        alpha: 0.45 + 0.5 * wn,
+        radius: 0.018 + 0.075 * wn,
+        bow: 0, // ohmic / symmetric — no direction, keep straight
+      };
+    });
+    const lineSegs = tail.map((g) => ({
+      a: nodePos[g.a],
+      b: nodePos[g.b],
+      color: blue,
+      alpha: 0.16 + 0.4 * (g.w / maxGap),
+    }));
+    return {
+      gapTubeGeom: buildTubeGeometry(tubes, 6, 1),
+      gapLineGeom: buildEdgeGeometry(lineSegs),
+    };
+  }, [edges.gap, nodePos, maxGap, blue]);
 
-  const chemGeom = useMemo(() => {
-    const excit = new THREE.Color("#3a9e63"); // depolarising (sign +1)
-    const inhib = new THREE.Color("#d6486a"); // hyperpolarising (sign -1)
-    const segs = edges.chem
-      .filter((c) => c.s !== c.t)
-      .map((c) => ({
+  // --- CHEM: curved-arc tubes for the strong (arc bows to convey direction +
+  // depth), lines for the tail. ---
+  const { chemTubeGeom, chemLineGeom } = useMemo(() => {
+    const valid = edges.chem.filter((c) => c.s !== c.t);
+    const sorted = [...valid].sort((a, b) => Math.abs(b.w) - Math.abs(a.w));
+    const strong = sorted.slice(0, CHEM_TUBE_COUNT);
+    const tail = sorted.slice(CHEM_TUBE_COUNT);
+    const tubes = strong.map((c) => {
+      const wn = Math.abs(c.w) / maxChem;
+      return {
         a: nodePos[c.s],
         b: nodePos[c.t],
         color: c.sign >= 0 ? excit : inhib,
-        alpha: 0.1 + 0.5 * (Math.abs(c.w) / maxChem),
-      }));
-    return buildEdgeGeometry(segs);
-  }, [edges.chem, nodePos, maxChem]);
+        alpha: 0.4 + 0.5 * wn,
+        radius: 0.016 + 0.06 * wn,
+        bow: 0.16, // arc height ≈16% of chord — depth + pre→post separation
+      };
+    });
+    const lineSegs = tail.map((c) => ({
+      a: nodePos[c.s],
+      b: nodePos[c.t],
+      color: c.sign >= 0 ? excit : inhib,
+      alpha: 0.09 + 0.4 * (Math.abs(c.w) / maxChem),
+    }));
+    return {
+      chemTubeGeom: buildTubeGeometry(tubes, 5, 10),
+      chemLineGeom: buildEdgeGeometry(lineSegs),
+    };
+  }, [edges.chem, nodePos, maxChem, excit, inhib]);
 
   useEffect(() => {
     return () => {
-      gapGeom.dispose();
-      chemGeom.dispose();
+      gapTubeGeom.dispose();
+      gapLineGeom.dispose();
+      chemTubeGeom.dispose();
+      chemLineGeom.dispose();
     };
-  }, [gapGeom, chemGeom]);
+  }, [gapTubeGeom, gapLineGeom, chemTubeGeom, chemLineGeom]);
 
   return (
     <group>
       {showChem && (
-        <lineSegments geometry={chemGeom}>
-          <lineBasicMaterial
-            vertexColors
-            transparent
-            opacity={0.55}
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-            toneMapped={false}
-          />
-        </lineSegments>
+        <>
+          <mesh geometry={chemTubeGeom}>
+            <meshStandardMaterial
+              vertexColors
+              transparent
+              opacity={0.9}
+              roughness={0.5}
+              metalness={0.05}
+              depthWrite
+              toneMapped={false}
+            />
+          </mesh>
+          <lineSegments geometry={chemLineGeom}>
+            <lineBasicMaterial
+              vertexColors
+              transparent
+              opacity={0.5}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+              toneMapped={false}
+            />
+          </lineSegments>
+        </>
       )}
       {showGap && (
-        <lineSegments geometry={gapGeom}>
-          <lineBasicMaterial
-            vertexColors
-            transparent
-            opacity={0.7}
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-            toneMapped={false}
-          />
-        </lineSegments>
+        <>
+          <mesh geometry={gapTubeGeom}>
+            <meshStandardMaterial
+              vertexColors
+              transparent
+              opacity={0.92}
+              roughness={0.45}
+              metalness={0.08}
+              depthWrite
+              toneMapped={false}
+            />
+          </mesh>
+          <lineSegments geometry={gapLineGeom}>
+            <lineBasicMaterial
+              vertexColors
+              transparent
+              opacity={0.6}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+              toneMapped={false}
+            />
+          </lineSegments>
+        </>
       )}
     </group>
   );

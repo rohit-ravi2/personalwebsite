@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import HeroCell3D, { type FrameState } from "./HeroCell3D";
+import { type GlyphSignatures } from "./GlyphGeometry";
 import Network3D, {
   type NetClock,
   type NetworkColorMode,
@@ -166,6 +167,7 @@ type DataBundle = {
   positions: NetworkPositions;
   edges: NetworkEdges;
   trajectory: Trajectory;
+  glyphSignatures: GlyphSignatures;
 };
 
 // ----------------------------------------------------------------------------
@@ -211,6 +213,7 @@ const DATA_FILES: Record<keyof DataBundle, string> = {
   positions: "/data/network_positions.json",
   edges: "/data/network_edges.json",
   trajectory: "/data/trajectory.json",
+  glyphSignatures: "/data/glyph_signatures.json",
 };
 
 // ----------------------------------------------------------------------------
@@ -410,6 +413,7 @@ function Scene({
         <HeroCell3D
           morph={data.heroMorph}
           gbar={data.heroGbar}
+          signatures={data.glyphSignatures}
           records={heroRecords}
           frame={frame}
           hovered={hovered}
@@ -1132,7 +1136,10 @@ function Ready({
               Hero molecular geometry is live: AVA membrane recoloured by the real
               voltage trajectory (Ca²⁺ glow), with channel / receptor / pump /
               transporter glyphs sized by gbar and styled by status (ON · default-OFF
-              dimmed · ORPHANED wireframe · NOT-INTEGRATED red dashed).
+              dimmed · ORPHANED wireframe · NOT-INTEGRATED red dashed). The three
+              geometry records are pinned as cross-highlightable diamond markers on
+              the soma — incl. the default-OFF <span className="font-mono">geo_em_override</span>{" "}
+              (opt-in EM C_m override, VB6-only; AVA does not use it), shown amber/wireframe.
             </>
           ) : (
             <>

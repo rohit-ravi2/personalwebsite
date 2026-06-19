@@ -3,6 +3,13 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html, Line } from "@react-three/drei";
 import * as THREE from "three";
+import {
+  type GlyphSignature,
+  type GlyphSignatures,
+  ParametricGlyphBody,
+  StructureGlyph,
+  signatureKey,
+} from "./GlyphGeometry";
 
 /**
  * HeroCell3D — the molecular HERO CELL (AVA) rendered 1:1 from the Tier4
@@ -330,6 +337,9 @@ function membraneAnchors(
 // Glyph — a single rendered structure (channel / pump / receptor / etc.)
 // ---------------------------------------------------------------------------
 
+// Re-exported for any consumer that imports the signatures type from HeroCell3D.
+export type { GlyphSignatures } from "./GlyphGeometry";
+
 type GlyphSpec = {
   rec: InventoryRecord;
   pos: THREE.Vector3;
@@ -337,6 +347,9 @@ type GlyphSpec = {
   size: number; // base radius in scene units
   color: string;
   shape: "barrel" | "cap" | "disc" | "wedge" | "cluster";
+  // AlphaFold/PDB-derived shape signature (when a structure exists for this
+  // record); drives a structure-derived LatheGeometry instead of a primitive.
+  sig?: GlyphSignature;
 };
 
 function Glyph({
@@ -354,7 +367,7 @@ function Glyph({
   onSelect: (id: string) => void;
   frame: React.MutableRefObject<FrameState>;
 }) {
-  const { rec, pos, normal, size, color, shape } = spec;
+  const { rec, pos, normal, size, color, shape, sig } = spec;
   const style = STATUS_STYLE[rec.status];
   const groupRef = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshStandardMaterial>(null);
@@ -415,11 +428,17 @@ function Glyph({
         onSelect(rec.id);
       }}
     >
-      {/* MISSING → red dashed ghost outline rendered in-place */}
+      {/* MISSING → red dashed ghost outline rendered in-place.
+          Otherwise: if an AlphaFold/PDB signature exists, revolve a
+          structure-derived LatheGeometry; else a refined parametric glyph. */}
       {rec.status === "missing" ? (
         <MissingGhost size={size} />
-      ) : (
-        <GlyphBody shape={shape} size={size}>
+      ) : sig ? (
+        <StructureGlyph
+          sig={sig}
+          size={size}
+          showPore={rec.category === "channel" || rec.category === "receptor"}
+        >
           <meshStandardMaterial
             ref={matRef}
             color={baseColor}
@@ -431,7 +450,21 @@ function Glyph({
             roughness={0.4}
             metalness={0.15}
           />
-        </GlyphBody>
+        </StructureGlyph>
+      ) : (
+        <ParametricGlyphBody shape={shape} size={size}>
+          <meshStandardMaterial
+            ref={matRef}
+            color={baseColor}
+            emissive={baseColor}
+            emissiveIntensity={style.emissiveBoost}
+            transparent={style.opacity < 1 || style.wireframe}
+            opacity={style.opacity}
+            wireframe={style.wireframe}
+            roughness={0.4}
+            metalness={0.15}
+          />
+        </ParametricGlyphBody>
       )}
 
       {/* hover/selected tooltip */}
@@ -465,53 +498,8 @@ function Glyph({
   );
 }
 
-function GlyphBody({
-  shape,
-  size,
-  children,
-}: {
-  shape: GlyphSpec["shape"];
-  size: number;
-  children: React.ReactNode;
-}) {
-  switch (shape) {
-    case "barrel": // ion channel — transmembrane barrel
-      return (
-        <mesh>
-          <cylinderGeometry args={[size, size * 0.8, size * 2.0, 8]} />
-          {children}
-        </mesh>
-      );
-    case "cap": // pump — capped dome
-      return (
-        <mesh>
-          <sphereGeometry args={[size, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.6]} />
-          {children}
-        </mesh>
-      );
-    case "disc": // receptor — broad disc on the surface
-      return (
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[size * 1.2, size * 1.2, size * 0.7, 16]} />
-          {children}
-        </mesh>
-      );
-    case "wedge": // transporter — angular cotransporter
-      return (
-        <mesh>
-          <coneGeometry args={[size, size * 1.8, 5]} />
-          {children}
-        </mesh>
-      );
-    case "cluster": // gap junction / release — clustered box
-      return (
-        <mesh>
-          <boxGeometry args={[size * 1.4, size * 1.4, size * 1.4]} />
-          {children}
-        </mesh>
-      );
-  }
-}
+// (GlyphBody superseded by ParametricGlyphBody / StructureGlyph in
+// ./GlyphGeometry — see the AlphaFold-informed glyph upgrade.)
 
 // MISSING structures: a red dashed wire ghost in-place (NOT integrated).
 function MissingGhost({ size }: { size: number }) {
@@ -542,64 +530,390 @@ function MissingGhost({ size }: { size: number }) {
 }
 
 // ---------------------------------------------------------------------------
-// Ion pools — translucent 3D volumes inside the soma.
+// Ion compartments — every ion_compartment inventory record rendered 1:1 as a
+// dedicated, status-coded, click-cross-highlightable 3D structure (not just the
+// generic Na/K/Ca/Cl blobs + one glia shell). Each glyph carries its own
+// {id, status, provenance} and reacts to the shared `hovered`/`selected` id
+// exactly like the membrane glyphs.
+//
+// Structure family is chosen per record so the spatial topology is legible:
+//   ion_singlepool   → 4 well-mixed Na/K/Ca/Cl blobs inside the soma (ON)
+//   ion_tissue_buf   → thin inline buffer shell hugging the membrane (ON)
+//   ion_spatial_k    → 3 nested ghost shells (submembrane / bulk / K_out) (OFF)
+//   ion_spatial_ca   → 2 nested ghost shells (submembrane / bulk)        (OFF)
+//   ion_glia_buffer  → outer wireframe sink shell, sink-only              (ORPHANED)
+//   ion_compartments → wireframe lattice box (Contract-B interface)       (ORPHANED)
+//   ion_osmotic      → pulsing volume-regulation halo                     (ORPHANED)
+//   ion_perisynaptic → submembrane band girdle                           (ORPHANED)
+//   ion_ephaptic     → external field arc                                 (ORPHANED)
 // ---------------------------------------------------------------------------
 
-function IonPools({ center, soma }: { center: THREE.Vector3; soma: THREE.Vector3 }) {
-  // Four offset blobs labelled Na/K/Ca/Cl inside the soma volume.
-  const pools = [
-    { ion: "Na", color: "#d63c8a", off: new THREE.Vector3(0.4, 0.3, 0.2), r: 0.5 },
-    { ion: "K", color: "#3c6fd6", off: new THREE.Vector3(-0.4, 0.2, -0.3), r: 0.6 },
-    { ion: "Ca", color: "#d6743c", off: new THREE.Vector3(0.1, -0.4, 0.35), r: 0.35 },
-    { ion: "Cl", color: "#3cb7d6", off: new THREE.Vector3(-0.25, -0.3, -0.2), r: 0.4 },
-  ];
+const ION_BLOB_COLOR: Record<string, string> = {
+  Na: "#d63c8a",
+  K: "#3c6fd6",
+  Ca: "#d6743c",
+  Cl: "#3cb7d6",
+};
+
+// A wrapper that makes any compartment sub-tree interactive + status-coded and
+// wires it to the shared hover/select id, with a tooltip carrying provenance.
+function CompartmentGlyph({
+  rec,
+  soma,
+  radius,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+  labelOffset,
+  children,
+}: {
+  rec: InventoryRecord;
+  soma: THREE.Vector3;
+  radius: number;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+  labelOffset: number;
+  children: (style: StatusStyle, isHi: boolean) => React.ReactNode;
+}) {
+  const style = STATUS_STYLE[rec.status];
+  const isHi = hovered === rec.id || selected === rec.id;
+  const groupRef = useRef<THREE.Group>(null);
+  useFrame(() => {
+    const g = groupRef.current;
+    if (!g) return;
+    // subtle scale pop on highlight so the compartment "lifts" like a glyph
+    const target = isHi ? 1.08 : 1.0;
+    g.scale.lerp(new THREE.Vector3(target, target, target), 0.15);
+  });
   return (
-    <group position={soma}>
-      {pools.map((p) => (
-        <mesh key={p.ion} position={p.off}>
-          <sphereGeometry args={[p.r, 20, 20]} />
-          <meshStandardMaterial
-            color={p.color}
-            transparent
-            opacity={0.22}
-            roughness={0.6}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
+    <group
+      ref={groupRef}
+      position={soma}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(rec.id);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        setHovered(null);
+        document.body.style.cursor = "auto";
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(rec.id);
+      }}
+    >
+      {children(style, isHi)}
+      {isHi && (
+        <Html
+          center
+          distanceFactor={28}
+          position={[0, radius * labelOffset, 0]}
+          zIndexRange={[40, 0]}
+        >
+          <div className="pointer-events-none w-52 rounded-lg border border-white/50 bg-white/90 p-2 text-left shadow-lg backdrop-blur-md">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[0.72rem] font-semibold text-emerald-950">{rec.name}</span>
+              <span className="shrink-0 font-mono text-[0.55rem] uppercase text-emerald-900/50">
+                {rec.status === "off"
+                  ? "default-OFF"
+                  : rec.status === "missing"
+                    ? "NOT INTEGRATED"
+                    : rec.status}
+              </span>
+            </div>
+            <p className="mt-0.5 text-[0.62rem] leading-snug text-emerald-900/70">{rec.subtype}</p>
+            <p className="mt-1 text-[0.6rem] leading-snug text-emerald-900/60">{rec.physical_desc}</p>
+            <p className="mt-1 font-mono text-[0.55rem] leading-snug text-emerald-900/45">
+              {rec.file.split("/").slice(-2).join("/")}:{rec.line}
+            </p>
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Cleft + glia OUTER shell wrapping the soma.
-// ---------------------------------------------------------------------------
+// Resolve the ion_compartment records into a lookup so each glyph renders the
+// REAL emitted status/provenance (no hand-authored status).
+function IonCompartments({
+  records,
+  soma,
+  radius,
+  frame,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  records: InventoryRecord[];
+  soma: THREE.Vector3;
+  radius: number;
+  frame: React.MutableRefObject<FrameState>;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const byId = useMemo(() => {
+    const m = new Map<string, InventoryRecord>();
+    for (const r of records) if (r.category === "ion_compartment") m.set(r.id, r);
+    return m;
+  }, [records]);
 
-function GliaShell({ soma, radius }: { soma: THREE.Vector3; radius: number }) {
+  const common = { soma, radius, hovered, selected, setHovered, onSelect };
+  const osmoticRef = useRef<THREE.Mesh>(null);
+
+  // Osmotic halo gentle breathing to read as "volume regulation".
+  useFrame(() => {
+    const m = osmoticRef.current;
+    if (!m) return;
+    const f = frame.current;
+    const s = 1 + 0.04 * Math.sin(f.t * 0.9);
+    m.scale.setScalar(s);
+  });
+
+  const singlepool = byId.get("ion_singlepool");
+  const tissueBuf = byId.get("ion_tissue_buf");
+  const spatialK = byId.get("ion_spatial_k");
+  const spatialCa = byId.get("ion_spatial_ca");
+  const gliaBuf = byId.get("ion_glia_buffer");
+  const compartments = byId.get("ion_compartments");
+  const osmotic = byId.get("ion_osmotic");
+  const perisyn = byId.get("ion_perisynaptic");
+  const ephaptic = byId.get("ion_ephaptic");
+
+  // deterministic offsets for the four well-mixed single-pool blobs
+  const blobOffsets: Record<string, THREE.Vector3> = {
+    Na: new THREE.Vector3(0.4, 0.3, 0.2),
+    K: new THREE.Vector3(-0.4, 0.2, -0.3),
+    Ca: new THREE.Vector3(0.1, -0.4, 0.35),
+    Cl: new THREE.Vector3(-0.25, -0.3, -0.2),
+  };
+  const blobR: Record<string, number> = { Na: 0.5, K: 0.6, Ca: 0.35, Cl: 0.4 };
+
   return (
-    <group position={soma}>
-      {/* synaptic cleft — thin gap shell */}
-      <mesh>
-        <sphereGeometry args={[radius * 1.18, 32, 32]} />
-        <meshStandardMaterial
-          color="#bcd3c4"
+    <group>
+      {/* ion_singlepool — ON: the 4 well-mixed intracellular blobs (status-coded) */}
+      {singlepool && (
+        <CompartmentGlyph rec={singlepool} {...common} labelOffset={1.0}>
+          {(style) => (
+            <>
+              {(["Na", "K", "Ca", "Cl"] as const).map((ion) => (
+                <mesh key={ion} position={blobOffsets[ion]}>
+                  <sphereGeometry args={[blobR[ion], 20, 20]} />
+                  <meshStandardMaterial
+                    color={ION_BLOB_COLOR[ion]}
+                    transparent
+                    opacity={0.16 + 0.14 * style.opacity}
+                    roughness={0.6}
+                    depthWrite={false}
+                  />
+                </mesh>
+              ))}
+            </>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_tissue_buf — ON: thin inline buffer shell hugging the membrane */}
+      {tissueBuf && (
+        <CompartmentGlyph rec={tissueBuf} {...common} labelOffset={1.12}>
+          {(style) => (
+            <mesh>
+              <sphereGeometry args={[radius * 1.08, 28, 28]} />
+              <meshStandardMaterial
+                color={style.baseColor}
+                transparent
+                opacity={0.06 + 0.05 * style.opacity}
+                roughness={0.5}
+                side={THREE.BackSide}
+                depthWrite={false}
+              />
+            </mesh>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_spatial_k — OFF: 3-pool nested ghost shells (submembrane/bulk/K_out) */}
+      {spatialK && (
+        <CompartmentGlyph rec={spatialK} {...common} labelOffset={1.5}>
+          {(style) => (
+            <>
+              {[0.78, 1.0, 1.42].map((f, i) => (
+                <mesh key={i}>
+                  <sphereGeometry args={[radius * f, 22, 22]} />
+                  <meshStandardMaterial
+                    color={ION_BLOB_COLOR.K}
+                    transparent
+                    opacity={style.opacity * (0.1 - i * 0.02)}
+                    wireframe={i === 2}
+                    side={THREE.DoubleSide}
+                    depthWrite={false}
+                  />
+                </mesh>
+              ))}
+            </>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_spatial_ca — OFF: 2-pool nested ghost shells (submembrane/bulk) */}
+      {spatialCa && (
+        <CompartmentGlyph rec={spatialCa} {...common} labelOffset={1.32}>
+          {(style) => (
+            <>
+              {[0.7, 0.95].map((f, i) => (
+                <mesh key={i}>
+                  <sphereGeometry args={[radius * f, 22, 22]} />
+                  <meshStandardMaterial
+                    color={ION_BLOB_COLOR.Ca}
+                    transparent
+                    opacity={style.opacity * (0.12 - i * 0.04)}
+                    wireframe={i === 1}
+                    side={THREE.DoubleSide}
+                    depthWrite={false}
+                  />
+                </mesh>
+              ))}
+            </>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_glia_buffer — ORPHANED: outer wireframe sink shell (no return path) */}
+      {gliaBuf && (
+        <CompartmentGlyph rec={gliaBuf} {...common} labelOffset={1.6}>
+          {(style) => (
+            <mesh>
+              <sphereGeometry args={[radius * 1.34, 24, 24]} />
+              <meshStandardMaterial
+                color={style.baseColor}
+                transparent
+                opacity={0.06 + 0.06 * style.opacity}
+                wireframe
+                depthWrite={false}
+              />
+            </mesh>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_compartments — ORPHANED: wireframe lattice box (Contract-B interface) */}
+      {compartments && (
+        <CompartmentGlyph rec={compartments} {...common} labelOffset={1.7}>
+          {(style) => (
+            <mesh>
+              <boxGeometry
+                args={[radius * 2.7, radius * 2.7, radius * 2.7, 3, 3, 3]}
+              />
+              <meshStandardMaterial
+                color={style.baseColor}
+                transparent
+                opacity={0.18 + 0.2 * style.opacity}
+                wireframe
+                depthWrite={false}
+              />
+            </mesh>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_osmotic — ORPHANED: pulsing volume-regulation halo */}
+      {osmotic && (
+        <CompartmentGlyph rec={osmotic} {...common} labelOffset={1.85}>
+          {(style) => (
+            <mesh ref={osmoticRef}>
+              <sphereGeometry args={[radius * 1.22, 26, 26]} />
+              <meshStandardMaterial
+                color={style.baseColor}
+                transparent
+                opacity={0.05 + 0.07 * style.opacity}
+                wireframe
+                side={THREE.DoubleSide}
+                depthWrite={false}
+              />
+            </mesh>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_perisynaptic — ORPHANED: submembrane band girdle around the soma */}
+      {perisyn && (
+        <CompartmentGlyph rec={perisyn} {...common} labelOffset={1.45}>
+          {(style) => (
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              {/* a thin equatorial band: torus hugging just outside the membrane */}
+              <torusGeometry args={[radius * 1.1, radius * 0.12, 12, 48]} />
+              <meshStandardMaterial
+                color={style.baseColor}
+                transparent
+                opacity={0.18 + 0.25 * style.opacity}
+                wireframe={style.wireframe}
+                roughness={0.5}
+                depthWrite={false}
+              />
+            </mesh>
+          )}
+        </CompartmentGlyph>
+      )}
+
+      {/* ion_ephaptic — ORPHANED: external field arc (extracellular coupling) */}
+      {ephaptic && (
+        <CompartmentGlyph rec={ephaptic} {...common} labelOffset={1.95}>
+          {(style) => <EphapticArc radius={radius} style={style} />}
+        </CompartmentGlyph>
+      )}
+    </group>
+  );
+}
+
+// Ephaptic coupling: a set of field-line arcs bowing out from the membrane,
+// rendered as dashed lines per status (extracellular potential coupling).
+function EphapticArc({ radius, style }: { radius: number; style: StatusStyle }) {
+  const arcs = useMemo(() => {
+    const out: THREE.Vector3[][] = [];
+    const nArcs = 5;
+    for (let a = 0; a < nArcs; a++) {
+      const ang = (a / nArcs) * Math.PI * 2;
+      const pts: THREE.Vector3[] = [];
+      const seg = 24;
+      for (let i = 0; i <= seg; i++) {
+        const t = i / seg; // 0..1 along the arc
+        const phi = Math.PI * t; // 0..pi latitude sweep
+        const rr = radius * (1.0 + 0.55 * Math.sin(phi)); // bulge out at equator
+        pts.push(
+          new THREE.Vector3(
+            Math.cos(ang) * rr * Math.sin(phi),
+            radius * Math.cos(phi) * 1.1,
+            Math.sin(ang) * rr * Math.sin(phi),
+          ),
+        );
+      }
+      out.push(pts);
+    }
+    return out;
+  }, [radius]);
+  return (
+    <group>
+      {arcs.map((pts, i) => (
+        <Line
+          key={i}
+          points={pts}
+          color={style.baseColor}
+          lineWidth={1.4}
           transparent
-          opacity={0.07}
-          side={THREE.BackSide}
-          depthWrite={false}
+          opacity={0.35 + 0.4 * style.opacity}
+          dashed
+          dashScale={5}
+          dashSize={0.14}
+          gapSize={0.1}
         />
-      </mesh>
-      {/* glia — outer K-sink shell (sink-only; the spatial siphon is MISSING) */}
-      <mesh>
-        <sphereGeometry args={[radius * 1.32, 24, 24]} />
-        <meshStandardMaterial
-          color="#9fb6a6"
-          transparent
-          opacity={0.05}
-          wireframe
-          depthWrite={false}
-        />
-      </mesh>
+      ))}
     </group>
   );
 }
@@ -703,16 +1017,551 @@ function FlowParticles({
 }
 
 // ---------------------------------------------------------------------------
-// WCM metabolism badge — AVA-only proteome marker.
+// Geometry markers — the 3 geometry records made individually cross-
+// highlightable in 3D (not just in the legend).
+//
+//   geo_percell    (ON)          — per-cell C_m / surf / vol; the membrane shell
+//                                  itself. Marker pinned at the soma equator.
+//   geo_morphology (ON)          — EM-derived µm morphology frame; marker at the
+//                                  soma centroid (the frame origin).
+//   geo_em_override (default-OFF) — opt-in EM C_m override, VB6 ONLY. Surfaced
+//                                  here as an explicit dimmed/amber marker so the
+//                                  default-OFF, AVA-does-NOT-use-it fact is
+//                                  visible in the scene, not buried in the legend.
+//
+// Each marker shares the `hovered`/`selected`/`onSelect` ids with the legend so
+// clicking the row highlights the marker and vice-versa.
 // ---------------------------------------------------------------------------
 
-function WcmBadge({ soma, radius }: { soma: THREE.Vector3; radius: number }) {
+function GeometryMarker({
+  rec,
+  pos,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  rec: InventoryRecord;
+  pos: THREE.Vector3;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const isHi = hovered === rec.id || selected === rec.id;
+  const style = STATUS_STYLE[rec.status];
+  const color = rec.status === "on" ? CATEGORY_COLOR.geometry : style.baseColor;
+
+  useFrame(() => {
+    const g = groupRef.current;
+    if (!g) return;
+    const target = isHi ? 1.5 : 1.0;
+    g.scale.lerp(new THREE.Vector3(target, target, target), 0.18);
+  });
+
+  // Short label so the EM-override default-OFF status is legible at a glance.
+  const tag =
+    rec.id === "geo_em_override"
+      ? "EM override · VB6 · OFF"
+      : rec.id === "geo_morphology"
+        ? "EM µm frame"
+        : "per-cell Cm/surf/vol";
+
+  return (
+    <group
+      ref={groupRef}
+      position={pos}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(rec.id);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        setHovered(null);
+        document.body.style.cursor = "auto";
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(rec.id);
+      }}
+    >
+      {/* small diamond marker (octahedron) — wireframe when default-OFF */}
+      <mesh>
+        <octahedronGeometry args={[0.32, 0]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={isHi ? 0.6 : style.emissiveBoost}
+          transparent
+          opacity={rec.status === "on" ? (isHi ? 1 : 0.85) : style.opacity}
+          wireframe={rec.status !== "on"}
+          roughness={0.45}
+          metalness={0.1}
+        />
+      </mesh>
+
+      {/* persistent compact tag (always shown so the default-OFF EM override is
+          discoverable without hovering); upgrades to a full panel on highlight */}
+      {isHi ? (
+        <Html center distanceFactor={28} position={[0, 0.9, 0]} zIndexRange={[40, 0]}>
+          <div className="pointer-events-none w-52 rounded-lg border border-white/50 bg-white/90 p-2 text-left shadow-lg backdrop-blur-md">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[0.72rem] font-semibold text-emerald-950">{rec.name}</span>
+              <span className="shrink-0 font-mono text-[0.55rem] uppercase text-emerald-900/50">
+                {rec.status === "off" ? "default-OFF" : rec.status}
+              </span>
+            </div>
+            <p className="mt-0.5 text-[0.62rem] leading-snug text-emerald-900/70">{rec.subtype}</p>
+            <p className="mt-1 text-[0.6rem] leading-snug text-emerald-900/60">{rec.physical_desc}</p>
+            <p className="mt-1 font-mono text-[0.55rem] leading-snug text-emerald-900/45">
+              {rec.file.split("/").slice(-2).join("/")}:{rec.line}
+            </p>
+          </div>
+        </Html>
+      ) : (
+        <Html center distanceFactor={32} position={[0, 0.55, 0]} zIndexRange={[20, 0]}>
+          <div
+            className={`pointer-events-none whitespace-nowrap rounded border px-1.5 py-0.5 text-[0.55rem] font-medium shadow-sm backdrop-blur-sm ${
+              rec.status === "on"
+                ? "border-emerald-600/30 bg-white/80 text-emerald-900/80"
+                : "border-amber-500/45 bg-amber-50/85 text-amber-900/90"
+            }`}
+          >
+            {tag}
+          </div>
+        </Html>
+      )}
+    </group>
+  );
+}
+
+function GeometryMarkers({
+  records,
+  somaPos,
+  somaR,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  records: InventoryRecord[];
+  somaPos: THREE.Vector3;
+  somaR: number;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const geoRecs = useMemo(
+    () => records.filter((r) => r.category === "geometry"),
+    [records],
+  );
+
+  // Deterministic, distinct anchor per geometry record around the soma so the
+  // three markers don't overlap.
+  const placement: Record<string, THREE.Vector3> = useMemo(() => {
+    const m: Record<string, THREE.Vector3> = {};
+    // geo_morphology → soma centroid (frame origin)
+    m["geo_morphology"] = somaPos.clone();
+    // geo_percell → soma equator, +X side (the membrane shell / passive ID)
+    m["geo_percell"] = somaPos
+      .clone()
+      .add(new THREE.Vector3(somaR * 1.45, 0, 0));
+    // geo_em_override → opposite side, slightly up; default-OFF & VB6-only
+    m["geo_em_override"] = somaPos
+      .clone()
+      .add(new THREE.Vector3(-somaR * 1.35, somaR * 0.9, 0));
+    return m;
+  }, [somaPos, somaR]);
+
+  return (
+    <group>
+      {geoRecs.map((rec) => (
+        <GeometryMarker
+          key={rec.id}
+          rec={rec}
+          pos={placement[rec.id] ?? somaPos}
+          hovered={hovered}
+          selected={selected}
+          setHovered={setHovered}
+          onSelect={onSelect}
+        />
+      ))}
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Metabolism markers — ALL THREE metabolism records get a 3D presence so the
+// audit is legible in-place (not just in the legend):
+//
+//   met_wcm_ava_proteome  (status ON)  → amber WCM proteome badge above soma
+//   met_atp_vars          (status OFF) → dimmed mitochondrion glyph INSIDE the
+//                                        soma (declared but inert state vars)
+//   met_icel1314          (status OFF) → ghosted reaction-network badge beside
+//                                        the soma (46-reaction FBA, flag-OFF)
+//
+// Each is hover/click cross-highlighted via the shared `hovered`/`selected`
+// ids, exactly like the membrane & geometry markers, so clicking the legend
+// row lights up the marker and vice-versa.
+// ---------------------------------------------------------------------------
+
+// Shared tooltip body for the metabolism markers (mirrors the glyph tooltip).
+function MetaTooltip({ rec, offsetY }: { rec: InventoryRecord; offsetY: number }) {
+  return (
+    <Html center distanceFactor={28} position={[0, offsetY, 0]} zIndexRange={[40, 0]}>
+      <div className="pointer-events-none w-56 rounded-lg border border-white/50 bg-white/90 p-2 text-left shadow-lg backdrop-blur-md">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[0.72rem] font-semibold text-emerald-950">{rec.name}</span>
+          <span className="shrink-0 font-mono text-[0.55rem] uppercase text-emerald-900/50">
+            {rec.status === "off"
+              ? "default-OFF"
+              : rec.status === "missing"
+                ? "NOT INTEGRATED"
+                : rec.status}
+          </span>
+        </div>
+        <p className="mt-0.5 text-[0.62rem] leading-snug text-emerald-900/70">{rec.subtype}</p>
+        <p className="mt-1 text-[0.6rem] leading-snug text-emerald-900/60">{rec.physical_desc}</p>
+        <p className="mt-1 font-mono text-[0.55rem] leading-snug text-emerald-900/45">
+          {rec.file.split("/").slice(-2).join("/")}:{rec.line}
+        </p>
+      </div>
+    </Html>
+  );
+}
+
+// Dimmed mitochondrion glyph — a cristae-ribbed capsule sitting inside the soma
+// volume. Rendered for the OFF `met_atp_vars` record (ATP/NADH/mito state vars
+// declared but inert), so it reads as "the powerhouse is modelled but dark".
+function MitochondrionGlyph({
+  rec,
+  soma,
+  radius,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  rec: InventoryRecord;
+  soma: THREE.Vector3;
+  radius: number;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const isHi = hovered === rec.id || selected === rec.id;
+  const style = STATUS_STYLE[rec.status]; // off → dimmed
+  const color = CATEGORY_COLOR.metabolism;
+
+  // Offset to a quiet corner of the soma interior so it does not sit on the
+  // ion pools; oblong long-axis tilted for readability.
+  const center = useMemo(
+    () =>
+      new THREE.Vector3(
+        soma.x - radius * 0.18,
+        soma.y - radius * 0.12,
+        soma.z + radius * 0.22,
+      ),
+    [soma, radius],
+  );
+  const len = radius * 0.95;
+  const rad = radius * 0.26;
+
+  useFrame(() => {
+    const g = groupRef.current;
+    if (!g) return;
+    const target = isHi ? 1.4 : 1.0;
+    g.scale.lerp(new THREE.Vector3(target, target, target), 0.18);
+  });
+
+  // A few cristae discs along the long axis to read as a mitochondrion.
+  const cristae = useMemo(() => {
+    const out: number[] = [];
+    const n = 4;
+    for (let i = 0; i < n; i++) out.push((i / (n - 1) - 0.5) * len * 0.9);
+    return out;
+  }, [len]);
+
+  return (
+    <group
+      ref={groupRef}
+      position={center}
+      rotation={[0.5, 0.3, 0.9]}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(rec.id);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        setHovered(null);
+        document.body.style.cursor = "auto";
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(rec.id);
+      }}
+    >
+      {/* outer membrane — dimmed capsule */}
+      <mesh>
+        <capsuleGeometry args={[rad, len, 8, 16]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={isHi ? 0.35 : 0.05}
+          transparent
+          opacity={isHi ? 0.6 : style.opacity}
+          roughness={0.5}
+          metalness={0.1}
+        />
+      </mesh>
+      {/* cristae — ribbed inner discs, faint */}
+      {cristae.map((y, i) => (
+        <mesh key={i} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[rad * 0.82, rad * 0.12, 6, 14]} />
+          <meshStandardMaterial
+            color={color}
+            transparent
+            opacity={isHi ? 0.5 : 0.22}
+            roughness={0.6}
+          />
+        </mesh>
+      ))}
+      {isHi && <MetaTooltip rec={rec} offsetY={len * 0.5 + radius * 0.5} />}
+    </group>
+  );
+}
+
+// Ghosted reaction-network badge — a small wireframe node-and-edge graph that
+// reads as a metabolic flux network, for the OFF `met_icel1314` record
+// (46-reaction iCEL1314 FBA subset; build flag default False).
+function ReactionNetworkBadge({
+  rec,
+  soma,
+  radius,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  rec: InventoryRecord;
+  soma: THREE.Vector3;
+  radius: number;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const isHi = hovered === rec.id || selected === rec.id;
+  const color = CATEGORY_COLOR.metabolism;
+
+  // Deterministic little graph: nodes on a jittered spiral + a few edges.
+  const { nodes, edges } = useMemo(() => {
+    const nN = 7;
+    const nodes: THREE.Vector3[] = [];
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < nN; i++) {
+      const a = golden * i;
+      const rr = 0.45 + (0.35 * ((i * 7) % 5)) / 5;
+      nodes.push(
+        new THREE.Vector3(Math.cos(a) * rr, ((i % 3) - 1) * 0.35, Math.sin(a) * rr),
+      );
+    }
+    const edges: [THREE.Vector3, THREE.Vector3][] = [];
+    for (let i = 0; i < nN - 1; i++) edges.push([nodes[i], nodes[i + 1]]);
+    edges.push([nodes[0], nodes[3]]);
+    edges.push([nodes[2], nodes[5]]);
+    edges.push([nodes[1], nodes[6]]);
+    return { nodes, edges };
+  }, []);
+
+  // Sit just outside the soma, opposite the WCM badge.
+  const center = useMemo(
+    () =>
+      new THREE.Vector3(soma.x + radius * 1.55, soma.y - radius * 0.2, soma.z),
+    [soma, radius],
+  );
+  const s = radius * 0.7;
+
+  useFrame(() => {
+    const g = groupRef.current;
+    if (!g) return;
+    const target = isHi ? 1.35 : 1.0;
+    g.scale.lerp(new THREE.Vector3(target * s, target * s, target * s), 0.18);
+    g.rotation.y += 0.0015; // slow idle drift so the graph reads as 3D
+  });
+
+  return (
+    <group
+      ref={groupRef}
+      position={center}
+      scale={[s, s, s]}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(rec.id);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        setHovered(null);
+        document.body.style.cursor = "auto";
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(rec.id);
+      }}
+    >
+      {/* edges + nodes are in local units; the group scale (s) + hover pulse
+          are both applied in useFrame so they compose cleanly. */}
+      {edges.map((e, i) => (
+        <Line
+          key={`e-${i}`}
+          points={[e[0], e[1]]}
+          color={color}
+          lineWidth={isHi ? 1.6 : 1.0}
+          transparent
+          opacity={isHi ? 0.75 : 0.4}
+        />
+      ))}
+      {/* nodes — faint wireframe spheres (reactions/metabolites) */}
+      {nodes.map((p, i) => (
+        <mesh key={`n-${i}`} position={p}>
+          <sphereGeometry args={[0.12, 10, 10]} />
+          <meshStandardMaterial
+            color={color}
+            emissive={color}
+            emissiveIntensity={isHi ? 0.4 : 0.0}
+            transparent
+            opacity={isHi ? 0.85 : 0.5}
+            wireframe={!isHi}
+            roughness={0.6}
+          />
+        </mesh>
+      ))}
+      <Html center distanceFactor={30} position={[0, 1.1, 0]}>
+        <div
+          className={`pointer-events-none whitespace-nowrap rounded-md border px-2 py-0.5 text-[0.55rem] font-medium shadow backdrop-blur-sm ${
+            isHi
+              ? "border-amber-600/60 bg-amber-50 text-amber-900"
+              : "border-amber-700/25 bg-amber-50/55 text-amber-900/55"
+          }`}
+        >
+          iCEL1314 · 46-rxn FBA (default-OFF)
+        </div>
+      </Html>
+      {isHi && <MetaTooltip rec={rec} offsetY={1.7} />}
+    </group>
+  );
+}
+
+// WCM proteome badge — AVA-only proteome marker (status ON). Record-linked so it
+// cross-highlights with the legend like the other metabolism markers.
+function WcmBadge({
+  rec,
+  soma,
+  radius,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  rec: InventoryRecord | undefined;
+  soma: THREE.Vector3;
+  radius: number;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const isHi = rec != null && (hovered === rec.id || selected === rec.id);
   return (
     <Html center distanceFactor={30} position={[soma.x, soma.y + radius * 1.7, soma.z]}>
-      <div className="pointer-events-none whitespace-nowrap rounded-md border border-amber-500/40 bg-amber-50/90 px-2 py-0.5 text-[0.6rem] font-medium text-amber-900 shadow backdrop-blur-sm">
+      <div
+        className={`whitespace-nowrap rounded-md border px-2 py-0.5 text-[0.6rem] font-medium shadow backdrop-blur-sm transition-colors ${
+          isHi
+            ? "border-amber-600/70 bg-amber-100 text-amber-950"
+            : "border-amber-500/40 bg-amber-50/90 text-amber-900"
+        } ${rec ? "cursor-pointer" : "pointer-events-none"}`}
+        onMouseEnter={() => rec && setHovered(rec.id)}
+        onMouseLeave={() => rec && setHovered(null)}
+        onClick={() => rec && onSelect(rec.id)}
+      >
         WCM proteome · AVA-only (metabolism vars declared, inert)
       </div>
     </Html>
+  );
+}
+
+// MetabolismMarkers — picks the 3 metabolism records out of the inventory and
+// renders the right marker per id, so the metabolism audit is fully present in
+// 3D (the OFF mitochondrion + OFF reaction network, plus the ON WCM badge).
+function MetabolismMarkers({
+  records,
+  somaPos,
+  somaR,
+  hovered,
+  selected,
+  setHovered,
+  onSelect,
+}: {
+  records: InventoryRecord[];
+  somaPos: THREE.Vector3;
+  somaR: number;
+  hovered: string | null;
+  selected: string | null;
+  setHovered: (id: string | null) => void;
+  onSelect: (id: string) => void;
+}) {
+  const byId = useMemo(() => {
+    const m = new Map<string, InventoryRecord>();
+    for (const r of records) if (r.category === "metabolism") m.set(r.id, r);
+    return m;
+  }, [records]);
+
+  const atp = byId.get("met_atp_vars");
+  const icel = byId.get("met_icel1314");
+  const wcm = byId.get("met_wcm_ava_proteome");
+
+  return (
+    <group>
+      {atp && (
+        <MitochondrionGlyph
+          rec={atp}
+          soma={somaPos}
+          radius={somaR}
+          hovered={hovered}
+          selected={selected}
+          setHovered={setHovered}
+          onSelect={onSelect}
+        />
+      )}
+      {icel && (
+        <ReactionNetworkBadge
+          rec={icel}
+          soma={somaPos}
+          radius={somaR}
+          hovered={hovered}
+          selected={selected}
+          setHovered={setHovered}
+          onSelect={onSelect}
+        />
+      )}
+      <WcmBadge
+        rec={wcm}
+        soma={somaPos}
+        radius={somaR}
+        hovered={hovered}
+        selected={selected}
+        setHovered={setHovered}
+        onSelect={onSelect}
+      />
+    </group>
   );
 }
 
@@ -723,6 +1572,7 @@ function WcmBadge({ soma, radius }: { soma: THREE.Vector3; radius: number }) {
 export default function HeroCell3D({
   morph,
   gbar,
+  signatures,
   records,
   frame,
   hovered,
@@ -732,6 +1582,7 @@ export default function HeroCell3D({
 }: {
   morph: HeroMorphology;
   gbar: HeroChannelGbar;
+  signatures?: GlyphSignatures;
   records: InventoryRecord[];
   frame: React.MutableRefObject<FrameState>;
   hovered: string | null;
@@ -822,6 +1673,8 @@ export default function HeroCell3D({
           : undefined;
       const color =
         (fam && FAMILY_COLOR[fam]) || CATEGORY_COLOR[rec.category] || "#2f7a52";
+      // AlphaFold/PDB-derived shape signature, keyed by bare channel id.
+      const sig = signatures?.signatures?.[signatureKey(rec.id)];
       return {
         rec,
         pos: a.pos,
@@ -829,17 +1682,43 @@ export default function HeroCell3D({
         size,
         color,
         shape: shapeFor(rec.category),
+        sig,
       };
     });
-  }, [glyphRecords, anchors, gbarById, maxG, gbar]);
+  }, [glyphRecords, anchors, gbarById, maxG, gbar, signatures]);
 
   return (
     <group>
       <MembraneShell morph={morph} frame={frame} center={center} />
-      <IonPools center={center} soma={somaPos} />
-      <GliaShell soma={somaPos} radius={somaR} />
+      <IonCompartments
+        records={records}
+        soma={somaPos}
+        radius={somaR}
+        frame={frame}
+        hovered={hovered}
+        selected={selected}
+        setHovered={setHovered}
+        onSelect={onSelect}
+      />
       <FlowParticles soma={somaPos} radius={somaR} frame={frame} />
-      <WcmBadge soma={somaPos} radius={somaR} />
+      <GeometryMarkers
+        records={records}
+        somaPos={somaPos}
+        somaR={somaR}
+        hovered={hovered}
+        selected={selected}
+        setHovered={setHovered}
+        onSelect={onSelect}
+      />
+      <MetabolismMarkers
+        records={records}
+        somaPos={somaPos}
+        somaR={somaR}
+        hovered={hovered}
+        selected={selected}
+        setHovered={setHovered}
+        onSelect={onSelect}
+      />
       {specs.map((spec) => (
         <Glyph
           key={spec.rec.id}
