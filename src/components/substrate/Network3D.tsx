@@ -39,11 +39,15 @@ export type NetworkCell = {
   z: number;
   class: string;
   has_morphology: boolean;
+  // EM sphere-equiv soma radius (µm); null when the cell has no soma segments.
+  soma_r_um: number | null;
 };
 
 export type NetworkPositions = {
   n_cells: number;
   n_with_position: number;
+  n_with_soma_r?: number;
+  soma_r_um_median?: number | null;
   cells: NetworkCell[];
 };
 
@@ -86,6 +90,10 @@ export type CellChannelRow = {
   dominant_family: string;
   cm_pF?: number;
   e_leak_mV?: number;
+  // MODULE names (gbar>0) of every channel/receptor this cell expresses. Match
+  // the inventory record id suffix (chan_<module>) so a clicked channel/receptor
+  // legend row can cross-highlight the exact set of expressing somata.
+  channels_expressed?: string[];
 };
 
 export type NetworkColorMode = "voltage" | "family";
@@ -142,7 +150,7 @@ function SomaInstances({
   colorMode,
   familyByCell,
   hovered,
-  selected,
+  selectedIndices,
   setHovered,
   onSelect,
   trajIndexByCell,
@@ -153,7 +161,10 @@ function SomaInstances({
   colorMode: NetworkColorMode;
   familyByCell: Map<string, string>;
   hovered: string | null;
-  selected: string | null;
+  // Cell-instance indices to cross-highlight. For a single selected cell this
+  // is one index; for a selected CHANNEL/RECEPTOR record it is every soma
+  // expressing that channel (gbar>0). Empty when nothing maps into the network.
+  selectedIndices: number[];
   setHovered: (id: string | null) => void;
   onSelect: (id: string) => void;
   trajIndexByCell: Int32Array;
@@ -163,6 +174,7 @@ function SomaInstances({
   const tmpColor = useRef(new THREE.Color());
   const tmpMat = useRef(new THREE.Matrix4());
   const dummy = useRef(new THREE.Object3D());
+  const selSetRef = useRef<Set<number>>(new Set());
 
   // Static base layout: place each instance at its scaled µm centroid.
   const center = useMemo(() => {
@@ -172,8 +184,31 @@ function SomaInstances({
     return c;
   }, [positions, n]);
 
-  // Per-instance base radius — fixed; soma differences are not in this data.
+  // Geometry base radius (the shared sphere); per-instance size variation is
+  // applied as a scale factor below so the InstancedMesh stays one draw call.
   const baseR = 0.42;
+
+  // Per-instance soma-size scale — REAL EM-measured variation.
+  // network_positions.json carries soma_r_um (sphere-equiv radius from the
+  // cell's soma surface area, morphology/loader.py:soma_segments). We scale
+  // each glyph by soma_r_um / median, clamped to keep the dense neuropil
+  // legible. Cells with no soma data (soma_r_um null) fall back to 1.0.
+  const sizeScale = useMemo(() => {
+    const med = positions.soma_r_um_median ?? null;
+    const arr = new Float32Array(n);
+    positions.cells.forEach((p, i) => {
+      const r = p.soma_r_um;
+      if (med && med > 0 && r != null && r > 0) {
+        // sqrt-compress the ratio so the ~3.7× radius spread reads as a
+        // clear-but-not-overwhelming ~1.9× glyph spread; clamp the tails.
+        const s = Math.sqrt(r / med);
+        arr[i] = Math.min(1.6, Math.max(0.62, s));
+      } else {
+        arr[i] = 1.0;
+      }
+    });
+    return arr;
+  }, [positions, n]);
 
   // Family colours (static, mode === "family").
   const familyColors = useMemo(() => {
@@ -199,7 +234,7 @@ function SomaInstances({
         (p.y - center.y) * SCALE,
         (p.z - center.z) * SCALE,
       );
-      d.scale.setScalar(1);
+      d.scale.setScalar(sizeScale[i]);
       d.updateMatrix();
       mesh.setMatrixAt(i, d.matrix);
     });
@@ -211,7 +246,7 @@ function SomaInstances({
       );
     }
     mesh.instanceColor.needsUpdate = true;
-  }, [positions, center, n]);
+  }, [positions, center, n, sizeScale]);
 
   // Per-frame recolour (voltage / Ca) or static family tint + hover scale.
   useFrame(() => {
@@ -223,8 +258,13 @@ function SomaInstances({
     const ic = mesh.instanceColor.array as Float32Array;
     const hiIdx =
       hovered != null ? positions.cells.findIndex((c) => c.cell === hovered) : -1;
-    const selIdx =
-      selected != null ? positions.cells.findIndex((c) => c.cell === selected) : -1;
+    // Selected set: a single soma (cell name) OR every soma expressing a
+    // selected channel/receptor record. A soft sinusoidal pulse keeps a large
+    // multi-cell selection legible as one coordinated group.
+    const selSet = selSetRef.current;
+    selSet.clear();
+    for (const idx of selectedIndices) if (idx >= 0) selSet.add(idx);
+    const pulse = 0.5 + 0.5 * Math.sin(clock.current.t * 4.0);
 
     for (let i = 0; i < n; i++) {
       if (colorMode === "voltage") {
@@ -247,12 +287,23 @@ function SomaInstances({
         ic[i * 3 + 1] = familyColors[i * 3 + 1];
         ic[i * 3 + 2] = familyColors[i * 3 + 2];
       }
+      // Selected (incl. channel-expressing) somata pulse warm-amber so a
+      // multi-cell channel/receptor selection reads as one highlighted set.
+      if (selSet.has(i)) {
+        const k = 0.35 + 0.45 * pulse;
+        ic[i * 3] = ic[i * 3] * (1 - k) + 0.92 * k;
+        ic[i * 3 + 1] = ic[i * 3 + 1] * (1 - k) + 0.62 * k;
+        ic[i * 3 + 2] = ic[i * 3 + 2] * (1 - k) + 0.18 * k;
+      }
     }
     mesh.instanceColor.needsUpdate = true;
 
-    // Hover / select pop — rescale just the highlighted instances.
-    for (const idx of [hiIdx, selIdx]) {
-      if (idx < 0) continue;
+    // Hover / select pop — rescale highlighted instances. The selected set may
+    // be one soma or many (every cell expressing a clicked channel); selected
+    // somata gently pulse in size, the hovered soma pops to a fixed size.
+    const highlighted = new Set<number>(selSet);
+    if (hiIdx >= 0) highlighted.add(hiIdx);
+    for (const idx of highlighted) {
       const p = positions.cells[idx];
       const d = dummy.current;
       d.position.set(
@@ -260,14 +311,16 @@ function SomaInstances({
         (p.y - center.y) * SCALE,
         (p.z - center.z) * SCALE,
       );
-      d.scale.setScalar(idx === selIdx ? 2.1 : 1.7);
+      const selPop = selSet.has(idx) ? 1.75 + 0.45 * pulse : 1.0;
+      const hoverPop = idx === hiIdx ? 1.7 : 1.0;
+      d.scale.setScalar(Math.max(selPop, hoverPop) * sizeScale[idx]);
       d.updateMatrix();
       mesh.setMatrixAt(idx, d.matrix);
     }
     // Reset any previously-scaled instance that is no longer highlighted.
     const prev = (mesh as unknown as { _prevHi?: number[] })._prevHi ?? [];
     for (const idx of prev) {
-      if (idx === hiIdx || idx === selIdx || idx < 0) continue;
+      if (highlighted.has(idx) || idx < 0) continue;
       const p = positions.cells[idx];
       const d = dummy.current;
       d.position.set(
@@ -275,11 +328,11 @@ function SomaInstances({
         (p.y - center.y) * SCALE,
         (p.z - center.z) * SCALE,
       );
-      d.scale.setScalar(1);
+      d.scale.setScalar(sizeScale[idx]);
       d.updateMatrix();
       mesh.setMatrixAt(idx, d.matrix);
     }
-    (mesh as unknown as { _prevHi?: number[] })._prevHi = [hiIdx, selIdx];
+    (mesh as unknown as { _prevHi?: number[] })._prevHi = Array.from(highlighted);
     mesh.instanceMatrix.needsUpdate = true;
   });
 
@@ -915,6 +968,37 @@ export default function Network3D({
     [positions.cells, hovered],
   );
 
+  // Resolve `selected` into the set of soma instance indices to cross-highlight
+  // (FIX round 3, 2026-06-19 — the legend↔network cross-highlight gap).
+  //   · `selected` is a CELL NAME (e.g. "AVAL")  → that one soma.
+  //   · `selected` is a CHANNEL/RECEPTOR record id ("chan_<module>", emitted by
+  //     emit_substrate_inventory.py) → every soma whose channels_expressed
+  //     (gbar>0, from emit_viz_assets.py) contains that module. This is exact,
+  //     not a family approximation. Pump / transporter / ion-compartment /
+  //     geometry / metabolism records carry no per-soma expression in this data,
+  //     so they stay hero-scoped and map to the empty set here (network
+  //     selection is cell- + channel/receptor-scoped).
+  const selectedIndices = useMemo(() => {
+    if (!selected) return [];
+    // Direct cell-name match first.
+    const direct = positions.cells.findIndex((c) => c.cell === selected);
+    if (direct >= 0) return [direct];
+    // Channel/receptor record id → expressing cells.
+    if (selected.startsWith("chan_")) {
+      const mod = selected.slice("chan_".length);
+      const idxByCell = new Map(positions.cells.map((c, i) => [c.cell, i]));
+      const out: number[] = [];
+      for (const r of channelTable) {
+        if (r.channels_expressed?.includes(mod)) {
+          const i = idxByCell.get(r.cell);
+          if (i != null) out.push(i);
+        }
+      }
+      return out;
+    }
+    return [];
+  }, [selected, positions.cells, channelTable]);
+
   return (
     <group>
       <EdgeLayers
@@ -931,7 +1015,7 @@ export default function Network3D({
         colorMode={colorMode}
         familyByCell={familyByCell}
         hovered={hovered}
-        selected={selected}
+        selectedIndices={selectedIndices}
         setHovered={setHovered}
         onSelect={onSelect}
         trajIndexByCell={somaTrajIndex}

@@ -124,12 +124,15 @@ type NetworkCell = {
   z: number;
   class: string;
   has_morphology: boolean;
+  soma_r_um: number | null;
 };
 
 type NetworkPositions = {
   provenance: Record<string, unknown>;
   n_cells: number;
   n_with_position: number;
+  n_with_soma_r?: number;
+  soma_r_um_median?: number | null;
   cells: NetworkCell[];
 };
 
