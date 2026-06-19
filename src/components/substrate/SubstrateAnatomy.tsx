@@ -3,7 +3,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import HeroCell3D, { type FrameState } from "./HeroCell3D";
-import { type GlyphSignatures } from "./GlyphGeometry";
+import {
+  type GlyphSignatures,
+  type HemichannelSignature,
+} from "./GlyphGeometry";
 import Network3D, {
   type NetClock,
   type NetworkColorMode,
@@ -168,6 +171,7 @@ type DataBundle = {
   edges: NetworkEdges;
   trajectory: Trajectory;
   glyphSignatures: GlyphSignatures;
+  hemichannel: HemichannelSignature;
 };
 
 // ----------------------------------------------------------------------------
@@ -214,6 +218,7 @@ const DATA_FILES: Record<keyof DataBundle, string> = {
   edges: "/data/network_edges.json",
   trajectory: "/data/trajectory.json",
   glyphSignatures: "/data/glyph_signatures.json",
+  hemichannel: "/data/hemichannel_signature.json",
 };
 
 // ----------------------------------------------------------------------------
@@ -414,6 +419,7 @@ function Scene({
           morph={data.heroMorph}
           gbar={data.heroGbar}
           signatures={data.glyphSignatures}
+          hemichannel={data.hemichannel}
           records={heroRecords}
           frame={frame}
           hovered={hovered}

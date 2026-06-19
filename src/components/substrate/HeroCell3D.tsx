@@ -6,6 +6,8 @@ import * as THREE from "three";
 import {
   type GlyphSignature,
   type GlyphSignatures,
+  type HemichannelSignature,
+  HemichannelGlyph,
   ParametricGlyphBody,
   StructureGlyph,
   signatureKey,
@@ -350,6 +352,9 @@ type GlyphSpec = {
   // AlphaFold/PDB-derived shape signature (when a structure exists for this
   // record); drives a structure-derived LatheGeometry instead of a primitive.
   sig?: GlyphSignature;
+  // Innexin hemichannel signature (gap junctions only); drives a hexameric
+  // ring-of-subunits glyph instead of the generic "cluster" icosahedron.
+  hemi?: HemichannelSignature;
 };
 
 function Glyph({
@@ -367,7 +372,7 @@ function Glyph({
   onSelect: (id: string) => void;
   frame: React.MutableRefObject<FrameState>;
 }) {
-  const { rec, pos, normal, size, color, shape, sig } = spec;
+  const { rec, pos, normal, size, color, shape, sig, hemi } = spec;
   const style = STATUS_STYLE[rec.status];
   const groupRef = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshStandardMaterial>(null);
@@ -429,10 +434,25 @@ function Glyph({
       }}
     >
       {/* MISSING → red dashed ghost outline rendered in-place.
+          Gap junctions with an innexin hemichannel signature → hexameric ring.
           Otherwise: if an AlphaFold/PDB signature exists, revolve a
           structure-derived LatheGeometry; else a refined parametric glyph. */}
       {rec.status === "missing" ? (
         <MissingGhost size={size} />
+      ) : hemi ? (
+        <HemichannelGlyph hemi={hemi} size={size}>
+          <meshStandardMaterial
+            ref={matRef}
+            color={baseColor}
+            emissive={baseColor}
+            emissiveIntensity={style.emissiveBoost}
+            transparent={style.opacity < 1 || style.wireframe}
+            opacity={style.opacity}
+            wireframe={style.wireframe}
+            roughness={0.4}
+            metalness={0.15}
+          />
+        </HemichannelGlyph>
       ) : sig ? (
         <StructureGlyph
           sig={sig}
@@ -491,6 +511,25 @@ function Glyph({
             <p className="mt-1 font-mono text-[0.55rem] leading-snug text-emerald-900/45">
               {rec.file.split("/").slice(-2).join("/")}:{rec.line}
             </p>
+            {sig && (
+              <p className="mt-1 font-mono text-[0.55rem] leading-snug text-sky-900/55">
+                fold: {sig.gene}
+                {sig.match && (
+                  <span
+                    className={
+                      sig.match === "exact"
+                        ? "ml-1 rounded bg-emerald-600/15 px-1 text-emerald-800"
+                        : sig.match === "paralog"
+                          ? "ml-1 rounded bg-amber-500/15 px-1 text-amber-800"
+                          : "ml-1 rounded bg-slate-500/15 px-1 text-slate-700"
+                    }
+                  >
+                    {sig.match}
+                  </span>
+                )}{" "}
+                ({sig.n_ca} CA · {sig.n_chains}c)
+              </p>
+            )}
           </div>
         </Html>
       )}
@@ -1573,6 +1612,7 @@ export default function HeroCell3D({
   morph,
   gbar,
   signatures,
+  hemichannel,
   records,
   frame,
   hovered,
@@ -1583,6 +1623,7 @@ export default function HeroCell3D({
   morph: HeroMorphology;
   gbar: HeroChannelGbar;
   signatures?: GlyphSignatures;
+  hemichannel?: HemichannelSignature;
   records: InventoryRecord[];
   frame: React.MutableRefObject<FrameState>;
   hovered: string | null;
@@ -1675,17 +1716,25 @@ export default function HeroCell3D({
         (fam && FAMILY_COLOR[fam]) || CATEGORY_COLOR[rec.category] || "#2f7a52";
       // AlphaFold/PDB-derived shape signature, keyed by bare channel id.
       const sig = signatures?.signatures?.[signatureKey(rec.id)];
+      // Innexin gap junctions get the hexameric hemichannel glyph (derived from
+      // the AF2-multimer unc7/unc9). Applied to the integrated (ON) gap-junction
+      // channels; the OFF rectification modifier keeps the abstract cluster.
+      const hemi =
+        rec.category === "gap_junction" && rec.status === "on"
+          ? hemichannel
+          : undefined;
       return {
         rec,
         pos: a.pos,
         normal: a.normal,
-        size,
+        size: hemi ? size * 1.25 : size, // hemichannel ring reads at full size
         color,
         shape: shapeFor(rec.category),
         sig,
+        hemi,
       };
     });
-  }, [glyphRecords, anchors, gbarById, maxG, gbar, signatures]);
+  }, [glyphRecords, anchors, gbarById, maxG, gbar, signatures, hemichannel]);
 
   return (
     <group>

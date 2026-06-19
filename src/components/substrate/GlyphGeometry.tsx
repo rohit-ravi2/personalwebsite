@@ -29,6 +29,12 @@ import * as THREE from "three";
 export type GlyphSignature = {
   pdb: string;
   gene: string;
+  /** Structural provenance: "exact" (channel's own gene PDB), "paralog" (close
+   * same-subfamily worm paralog), or "family" (distant family fold proxy).
+   * Optional for back-compat with schema_version 1 signatures. */
+  match?: "exact" | "paralog" | "family";
+  /** Human-readable note on the structure source / fold rationale. */
+  note?: string;
   n_ca: number;
   n_residues: number;
   n_chains: number;
@@ -51,6 +57,39 @@ export type GlyphSignatures = {
 };
 
 export type GlyphShape = "barrel" | "cap" | "disc" | "wedge" | "cluster";
+
+// ---------------------------------------------------------------------------
+// Innexin gap-junction HEMICHANNEL signature (emitted by
+// visualization/emit_hemichannel_signature.py from the AF2-multimer unc7/unc9
+// heterodimer). The per-subunit silhouette is structure-derived; the C6
+// hexameric ring is imposed from innexin biology (see ring_provenance), so the
+// gap junction renders as a real ring-of-subunits hemichannel instead of a
+// generic "cluster" icosahedron.
+// ---------------------------------------------------------------------------
+
+export type HemichannelSubunit = {
+  chain: string;
+  n_ca: number;
+  outer_profile: number[];
+  pore_frac: number;
+  aspect: number;
+  height_A: number;
+  radius_A: number;
+};
+
+export type HemichannelSignature = {
+  schema_version: number;
+  generated: string;
+  generator: string;
+  source_pdb: string;
+  n_subunits: number;
+  n_bins: number;
+  ring_radius_A: number;
+  inter_chain_centroid_A: number;
+  subunits: Record<string, HemichannelSubunit>;
+  ring_provenance: string;
+  note: string;
+};
 
 // Map an inventory record id (chan_*/recep_*) to the signature key used by the
 // emitter (bare channel id, e.g. "slo1").
@@ -247,4 +286,127 @@ export function ParametricGlyphBody({
         </mesh>
       );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Innexin gap-junction hemichannel glyph — a C6 ring of structure-derived
+// innexin subunits around a central pore.
+// ---------------------------------------------------------------------------
+
+/**
+ * Build a LatheGeometry for ONE innexin subunit from a hemichannel subunit
+ * silhouette. Unlike buildLatheGeometry (which spans the whole glyph radius),
+ * each subunit is a slimmer revolved lobe (it is one of N around the ring), so
+ * the radius is scaled down and the subunit reads as a distinct lobe rather
+ * than filling the whole footprint.
+ */
+function buildSubunitLathe(
+  sub: HemichannelSubunit,
+  subRadius: number,
+  height: number,
+): THREE.LatheGeometry {
+  const prof = sub.outer_profile;
+  const n = prof.length;
+  const sm = prof.map((_, i) => {
+    const a = prof[Math.max(0, i - 1)];
+    const b = prof[i];
+    const c = prof[Math.min(n - 1, i + 1)];
+    return (a + 2 * b + c) / 4;
+  });
+  const pts: THREE.Vector2[] = [];
+  pts.push(new THREE.Vector2(0.0001, -height / 2));
+  for (let i = 0; i < n; i++) {
+    const y = -height / 2 + (i / (n - 1)) * height;
+    const r = Math.max(0.04, sm[i]) * subRadius;
+    pts.push(new THREE.Vector2(r, y));
+  }
+  pts.push(new THREE.Vector2(0.0001, height / 2));
+  const geo = new THREE.LatheGeometry(pts, 28);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+/**
+ * HemichannelGlyph — renders an innexin gap-junction hemichannel (innexon) as a
+ * hexameric (C6, n_subunits from the signature) ring of structure-derived
+ * subunit lathes around an open central pore. Replaces the generic "cluster"
+ * icosahedron for unc-7 / unc-9 gap junctions. The ring axis is the local +Y
+ * (membrane normal), matching the other glyphs' orientation convention.
+ *
+ * The subunit silhouette is taken from the AF2-multimer (real fold); the ring
+ * count + radial placement encode the hexameric innexon biology. A thin pore
+ * cylinder marks the conduction pathway down the channel axis.
+ */
+export function HemichannelGlyph({
+  hemi,
+  size,
+  children,
+}: {
+  hemi: HemichannelSignature;
+  size: number;
+  children: React.ReactNode;
+}) {
+  // Prefer the larger unc-7 fold as the representative subunit silhouette; fall
+  // back to whatever subunit is present.
+  const sub = useMemo(() => {
+    const subs = hemi.subunits;
+    return subs["unc-7"] ?? Object.values(subs)[0];
+  }, [hemi]);
+
+  const n = Math.max(3, hemi.n_subunits || 6);
+  // Geometry budget: the whole hemichannel footprint ~ size*1.2. Subunit lobes
+  // sit on a ring of radius ringR with each lobe radius subR; choose so lobes
+  // touch into a closed wall without overlapping too hard.
+  const ringR = size * 0.62;
+  const subR = size * 0.46;
+  // squat assembly: membrane-spanning, slightly taller than wide
+  const height = size * 1.7;
+
+  const geo = useMemo(
+    () => (sub ? buildSubunitLathe(sub, subR, height) : null),
+    [sub, subR, height],
+  );
+
+  const angles = useMemo(
+    () => Array.from({ length: n }, (_, i) => (i / n) * Math.PI * 2),
+    [n],
+  );
+
+  if (!geo || !sub) {
+    // defensive: degrade to a clustered node if the signature is malformed
+    return (
+      <mesh>
+        <icosahedronGeometry args={[size * 1.05, 1]} />
+        {children}
+      </mesh>
+    );
+  }
+
+  return (
+    <group>
+      {angles.map((a, i) => (
+        <mesh
+          key={i}
+          geometry={geo}
+          position={[Math.cos(a) * ringR, 0, Math.sin(a) * ringR]}
+        >
+          {children}
+        </mesh>
+      ))}
+      {/* open central pore down the channel axis (BackSide dark lumen) */}
+      <mesh>
+        <cylinderGeometry
+          args={[size * 0.2, size * 0.2, height * 1.04, 24, 1, true]}
+        />
+        <meshStandardMaterial
+          color="#0b1f17"
+          transparent
+          opacity={0.6}
+          side={THREE.BackSide}
+          roughness={0.9}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
 }
