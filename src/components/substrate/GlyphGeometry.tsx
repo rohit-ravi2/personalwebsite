@@ -59,6 +59,48 @@ export type GlyphSignatures = {
 export type GlyphShape = "barrel" | "cap" | "disc" | "wedge" | "cluster";
 
 // ---------------------------------------------------------------------------
+// TRUE backbone surface meshes (emitted by visualization/emit_backbone_meshes.py
+// from the CA backbone of the EXACT-fold PDBs). Unlike the lathe signature
+// (a revolved silhouette), these are indexed triangle tubes swept along the real
+// folded CA trace, per chain, so the EXACT glyphs render the actual backbone
+// shape rather than a rotationally-symmetric profile.
+// ---------------------------------------------------------------------------
+
+export type BackboneChainMesh = {
+  chain: string;
+  n_spine: number;
+  n_vertices: number;
+  n_triangles: number;
+  /** flat [x,y,z, x,y,z, ...] in a normalised frame (longest extent == 1,
+   * centered, principal axis aligned to +Y). */
+  positions: number[];
+  normals: number[];
+  indices: number[];
+};
+
+export type BackboneMesh = {
+  pdb: string;
+  gene: string;
+  match: "exact";
+  note?: string;
+  n_ca: number;
+  n_chains: number;
+  chains: BackboneChainMesh[];
+};
+
+export type BackboneMeshes = {
+  schema_version: number;
+  generated: string;
+  generator: string;
+  decimation: { max_spine: number; radial_div: number; smooth_passes: number };
+  n_meshes: number;
+  total_vertices: number;
+  total_triangles: number;
+  note: string;
+  meshes: Record<string, BackboneMesh>;
+};
+
+// ---------------------------------------------------------------------------
 // Innexin gap-junction HEMICHANNEL signature (emitted by
 // visualization/emit_hemichannel_signature.py from the AF2-multimer unc7/unc9
 // heterodimer). The per-subunit silhouette is structure-derived; the C6
@@ -171,6 +213,78 @@ export function StructureGlyph({
       {showPore && (
         <mesh>
           <cylinderGeometry args={[poreR, poreR, height * 1.02, 20, 1, true]} />
+          <meshStandardMaterial
+            color="#0b1f17"
+            transparent
+            opacity={0.55}
+            side={THREE.BackSide}
+            roughness={0.9}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TRUE backbone-mesh glyph (EXACT folds only). Builds a THREE.BufferGeometry per
+// chain from the emitted indexed triangle tube and renders the real folded
+// backbone path. The mesh frame is already normalised (longest extent == 1,
+// centered, principal axis -> +Y), so we scale by `size` to match the lathe
+// glyphs' footprint, and add the same dark pore lumen down the +Y axis so
+// conducting channels still read as barrels.
+// ---------------------------------------------------------------------------
+
+function buildBackboneGeometry(chain: BackboneChainMesh): THREE.BufferGeometry {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(chain.positions, 3),
+  );
+  if (chain.normals && chain.normals.length === chain.positions.length) {
+    geo.setAttribute(
+      "normal",
+      new THREE.Float32BufferAttribute(chain.normals, 3),
+    );
+  }
+  geo.setIndex(chain.indices);
+  if (!chain.normals || chain.normals.length !== chain.positions.length) {
+    geo.computeVertexNormals();
+  }
+  return geo;
+}
+
+export function BackboneGlyph({
+  mesh,
+  size,
+  showPore,
+  children,
+}: {
+  mesh: BackboneMesh;
+  size: number;
+  showPore: boolean;
+  children: React.ReactNode;
+}) {
+  // The emitted frame is normalised to extent 1; match the lathe footprint by
+  // scaling so the glyph spans ~size*2 (lathe height ~ size*2). The principal
+  // axis is +Y, so the multi-chain pore-forming bundle stands membrane-normal.
+  const s = size * 2.0;
+  const geos = useMemo(
+    () => mesh.chains.map((c) => buildBackboneGeometry(c)),
+    [mesh],
+  );
+  return (
+    <group scale={[s, s, s]}>
+      {geos.map((geo, i) => (
+        <mesh key={i} geometry={geo}>
+          {children}
+        </mesh>
+      ))}
+      {showPore && (
+        <mesh>
+          {/* normalised frame: full height ~1, so pore tube spans ~1.05 */}
+          <cylinderGeometry args={[0.07, 0.07, 1.05, 20, 1, true]} />
           <meshStandardMaterial
             color="#0b1f17"
             transparent

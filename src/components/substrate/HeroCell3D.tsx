@@ -7,6 +7,9 @@ import {
   type GlyphSignature,
   type GlyphSignatures,
   type HemichannelSignature,
+  type BackboneMesh,
+  type BackboneMeshes,
+  BackboneGlyph,
   HemichannelGlyph,
   ParametricGlyphBody,
   StructureGlyph,
@@ -355,6 +358,9 @@ type GlyphSpec = {
   // Innexin hemichannel signature (gap junctions only); drives a hexameric
   // ring-of-subunits glyph instead of the generic "cluster" icosahedron.
   hemi?: HemichannelSignature;
+  // TRUE backbone surface mesh (EXACT folds only); when present it renders the
+  // real folded CA-trace tube per chain instead of the revolved lathe.
+  backbone?: BackboneMesh;
 };
 
 function Glyph({
@@ -372,7 +378,7 @@ function Glyph({
   onSelect: (id: string) => void;
   frame: React.MutableRefObject<FrameState>;
 }) {
-  const { rec, pos, normal, size, color, shape, sig, hemi } = spec;
+  const { rec, pos, normal, size, color, shape, sig, hemi, backbone } = spec;
   const style = STATUS_STYLE[rec.status];
   const groupRef = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshStandardMaterial>(null);
@@ -435,6 +441,7 @@ function Glyph({
     >
       {/* MISSING → red dashed ghost outline rendered in-place.
           Gap junctions with an innexin hemichannel signature → hexameric ring.
+          EXACT folds with a true backbone mesh → real folded CA-trace tube.
           Otherwise: if an AlphaFold/PDB signature exists, revolve a
           structure-derived LatheGeometry; else a refined parametric glyph. */}
       {rec.status === "missing" ? (
@@ -453,6 +460,24 @@ function Glyph({
             metalness={0.15}
           />
         </HemichannelGlyph>
+      ) : backbone ? (
+        <BackboneGlyph
+          mesh={backbone}
+          size={size}
+          showPore={rec.category === "channel" || rec.category === "receptor"}
+        >
+          <meshStandardMaterial
+            ref={matRef}
+            color={baseColor}
+            emissive={baseColor}
+            emissiveIntensity={style.emissiveBoost}
+            transparent={style.opacity < 1 || style.wireframe}
+            opacity={style.opacity}
+            wireframe={style.wireframe}
+            roughness={0.4}
+            metalness={0.15}
+          />
+        </BackboneGlyph>
       ) : sig ? (
         <StructureGlyph
           sig={sig}
@@ -528,6 +553,11 @@ function Glyph({
                   </span>
                 )}{" "}
                 ({sig.n_ca} CA · {sig.n_chains}c)
+                {backbone && (
+                  <span className="ml-1 rounded bg-sky-600/15 px-1 text-sky-800">
+                    true backbone mesh
+                  </span>
+                )}
               </p>
             )}
           </div>
@@ -1613,6 +1643,7 @@ export default function HeroCell3D({
   gbar,
   signatures,
   hemichannel,
+  backboneMeshes,
   records,
   frame,
   hovered,
@@ -1624,6 +1655,7 @@ export default function HeroCell3D({
   gbar: HeroChannelGbar;
   signatures?: GlyphSignatures;
   hemichannel?: HemichannelSignature;
+  backboneMeshes?: BackboneMeshes;
   records: InventoryRecord[];
   frame: React.MutableRefObject<FrameState>;
   hovered: string | null;
@@ -1723,6 +1755,10 @@ export default function HeroCell3D({
         rec.category === "gap_junction" && rec.status === "on"
           ? hemichannel
           : undefined;
+      // TRUE backbone mesh for EXACT folds. Gap junctions keep the hemichannel
+      // ring (hemi takes priority in the render), so skip backbone for those.
+      const backbone =
+        !hemi ? backboneMeshes?.meshes?.[signatureKey(rec.id)] : undefined;
       return {
         rec,
         pos: a.pos,
@@ -1732,9 +1768,19 @@ export default function HeroCell3D({
         shape: shapeFor(rec.category),
         sig,
         hemi,
+        backbone,
       };
     });
-  }, [glyphRecords, anchors, gbarById, maxG, gbar, signatures, hemichannel]);
+  }, [
+    glyphRecords,
+    anchors,
+    gbarById,
+    maxG,
+    gbar,
+    signatures,
+    hemichannel,
+    backboneMeshes,
+  ]);
 
   return (
     <group>
