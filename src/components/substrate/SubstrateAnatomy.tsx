@@ -6,6 +6,7 @@ import HeroCell3D, { type FrameState } from "./HeroCell3D";
 import {
   type GlyphSignatures,
   type HemichannelSignature,
+  type BackboneMeshes,
 } from "./GlyphGeometry";
 import Network3D, {
   type NetClock,
@@ -162,6 +163,11 @@ type Trajectory = {
   V_mV: number[][]; // [frame][cell]
   Ca_uM: number[][]; // [frame][cell]
   hero_flows: { I_Na: number[]; I_K: number[]; I_Ca: number[]; pump: number[] };
+  // Per-cell ionic currents for the FULL network, [frame][cell], integer units
+  // of (1/net_flow_scale) uA/cm^2 (divide by net_flow_scale to get uA/cm^2).
+  // Optional: older trajectory.json (hero-only flows) won't carry it.
+  net_flow_scale?: number;
+  net_flows?: { I_Na: number[][]; I_K: number[][]; I_Ca: number[][]; pump: number[][] };
   units: Record<string, string>;
   provenance: Record<string, unknown>;
 };
@@ -175,6 +181,7 @@ type DataBundle = {
   trajectory: Trajectory;
   glyphSignatures: GlyphSignatures;
   hemichannel: HemichannelSignature;
+  backboneMeshes: BackboneMeshes;
 };
 
 // ----------------------------------------------------------------------------
@@ -222,6 +229,7 @@ const DATA_FILES: Record<keyof DataBundle, string> = {
   trajectory: "/data/trajectory.json",
   glyphSignatures: "/data/glyph_signatures.json",
   hemichannel: "/data/hemichannel_signature.json",
+  backboneMeshes: "/data/glyph_backbone_meshes.json",
 };
 
 // ----------------------------------------------------------------------------
@@ -423,6 +431,7 @@ function Scene({
           gbar={data.heroGbar}
           signatures={data.glyphSignatures}
           hemichannel={data.hemichannel}
+          backboneMeshes={data.backboneMeshes}
           records={heroRecords}
           frame={frame}
           hovered={hovered}
@@ -812,8 +821,10 @@ export default function SubstrateAnatomy() {
             electrical substrate: every channel, receptor, pump, transporter, gap
             junction, and ion compartment actually present in the Brian2 model,
             each carrying an honest status read straight from the assemble path.
-            Voltage colour and Ca²⁺ glow are driven by a real Brian2 trajectory —
-            never illustrative unless flagged.
+            Voltage colour, soma glow, and ion-flow are driven by a real Brian2
+            trajectory — soma glow and flow speed track each cell's actual
+            transmembrane ionic current (per-cell I<sub>Na</sub>/I<sub>K</sub>/I
+            <sub>Ca</sub>/pump), never illustrative unless flagged.
           </p>
           {load.phase === "ready" && (
             <p className="mt-2 max-w-3xl font-mono text-[0.68rem] leading-snug text-emerald-900/45">
@@ -1157,9 +1168,10 @@ function Ready({
               trajectory (or tinted by dominant channel family). Gap junctions
               (ohmic, innexin-typed) and signed chem synapses (excitatory green /
               inhibitory rose) are independently toggleable; ion-flow packets
-              travel pre→post along the strongest chem edges, driven by live
-              source-cell depolarisation. Hover a soma for its identity, channel
-              count and passive parameters.
+              travel pre→post along the strongest chem edges, their speed driven
+              by the source cell's real total ionic current (per-cell
+              I<sub>Na</sub>/I<sub>K</sub>/I<sub>Ca</sub>/pump from the substrate).
+              Hover a soma for its identity, channel count and passive parameters.
             </>
           )}
         </p>

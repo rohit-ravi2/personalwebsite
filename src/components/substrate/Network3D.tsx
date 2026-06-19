@@ -12,17 +12,21 @@ import * as THREE from "three";
  *   - 300 soma rendered as an InstancedMesh at REAL EM µm soma centroids
  *     (network_positions.json — morphology/loader.py:soma_centroid_um).
  *   - Per-cell colour driven LIVE by the REAL whole-network Brian2 voltage
- *     trajectory (trajectory.json — V_mV[frame][cell]); Ca²⁺ drives an
- *     emissive boost. A second "channel family" colour mode tints each soma by
- *     its dominant gbar family (hero_channel_gbar.cell_channel_table).
+ *     trajectory (trajectory.json — V_mV[frame][cell]); the emissive soma glow
+ *     is driven by each cell's REAL total transmembrane ionic-current magnitude
+ *     (trajectory.json net_flows — per-cell I_Na/I_K/I_Ca/pump, network_builder
+ *     .py:380-423), falling back to Ca²⁺ when net_flows is absent. A second
+ *     "channel family" colour mode tints each soma by its dominant gbar family
+ *     (hero_channel_gbar.cell_channel_table).
  *   - Connectome edges from network_edges.json (artifacts/connectome.npz):
  *       · gap junctions  — ohmic, innexin-typed, symmetric (blue)
  *       · chem synapses  — signed (excitatory green / inhibitory rose), width
  *                          by |w|, neurotransmitter-typed
  *     Both layers are independently toggleable.
  *   - Network-wide ion-flow particle layer: packets travel presynaptic →
- *     postsynaptic along the most active chem edges, speed/brightness driven by
- *     the live source-cell depolarisation rate from the real trajectory.
+ *     postsynaptic along the strongest chem edges, packet speed driven by the
+ *     source cell's REAL total ionic-current magnitude (net_flows), falling back
+ *     to the source-cell depolarisation-rate proxy when net_flows is absent.
  *
  * Per-frame recolour / particle motion is written imperatively inside
  * useFrame so it never triggers a React re-render.
@@ -80,6 +84,11 @@ export type Trajectory = {
   cells: string[];
   V_mV: number[][];
   Ca_uM: number[][];
+  // Per-cell ionic currents for the FULL network (FIX round 4), [frame][cell],
+  // integer units of (1/net_flow_scale) uA/cm^2. Optional — falls back to the
+  // voltage-derived proxy when absent (older trajectory.json).
+  net_flow_scale?: number;
+  net_flows?: { I_Na: number[][]; I_K: number[][]; I_Ca: number[][]; pump: number[][] };
 };
 
 export type CellChannelRow = {
@@ -223,6 +232,48 @@ function SomaInstances({
     return arr;
   }, [positions, familyByCell, n]);
 
+  // Per-cell total transmembrane ionic-current MAGNITUDE per frame, normalised
+  // to [0,1] (FIX round 4). When trajectory.json carries net_flows (real per-
+  // cell I_Na/I_K/I_Ca/pump), the soma glow is driven by actual ionic flux
+  // |I_Na|+|I_K|+|I_Ca|+|pump| rather than Ca²⁺ alone — current-accurate. The
+  // 95th-percentile of the magnitude is used as the normaliser so a few high-
+  // flux cells don't wash the rest out. Null when net_flows is absent (older
+  // trajectory.json) → caller falls back to the Ca²⁺-derived glow.
+  const fluxByFrameCell = useMemo<Float32Array | null>(() => {
+    const nf = traj.net_flows;
+    const scale = traj.net_flow_scale ?? 20.0;
+    if (!nf || !nf.I_Na) return null;
+    const F = traj.n_frames;
+    const C = traj.n_cells;
+    const out = new Float32Array(F * C); // raw |I| magnitude in uA/cm^2
+    const samples: number[] = [];
+    for (let f = 0; f < F; f++) {
+      const na = nf.I_Na[f];
+      const k = nf.I_K[f];
+      const ca = nf.I_Ca[f];
+      const pu = nf.pump[f];
+      if (!na) continue;
+      for (let c = 0; c < C; c++) {
+        const mag =
+          (Math.abs(na[c] ?? 0) +
+            Math.abs(k[c] ?? 0) +
+            Math.abs(ca[c] ?? 0) +
+            Math.abs(pu[c] ?? 0)) /
+          scale; // int units → uA/cm^2
+        out[f * C + c] = mag;
+        if ((f & 7) === 0) samples.push(mag); // subsample for the percentile
+      }
+    }
+    // Robust normaliser: 95th percentile of sampled magnitudes (min 1 uA/cm^2).
+    samples.sort((a, b) => a - b);
+    const p95 = samples.length
+      ? samples[Math.min(samples.length - 1, Math.floor(samples.length * 0.95))]
+      : 1;
+    const norm = Math.max(1, p95);
+    for (let i = 0; i < out.length; i++) out[i] = Math.min(1, out[i] / norm);
+    return out;
+  }, [traj]);
+
   // Initialise transforms + instanceColor buffer once.
   useEffect(() => {
     const mesh = meshRef.current;
@@ -272,10 +323,16 @@ function SomaInstances({
         const v = ti >= 0 ? Vrow?.[ti] : undefined;
         if (Number.isFinite(v)) {
           voltageColor(v as number, tmpColor.current);
-          // Ca²⁺ brightens (mild) so active cells pop.
-          const ca = ti >= 0 ? Carow?.[ti] : 0;
-          const caN = Math.min(1, Math.max(0, ((ca ?? 0) - 0.2) / 1.5));
-          tmpColor.current.offsetHSL(0, 0, 0.12 * caN);
+          // Glow brightens active cells. Current-accurate when net_flows is
+          // present (total ionic flux magnitude); else Ca²⁺-derived fallback.
+          if (fluxByFrameCell && ti >= 0) {
+            const fluxN = fluxByFrameCell[fi * traj.n_cells + ti] ?? 0;
+            tmpColor.current.offsetHSL(0, 0, 0.18 * fluxN);
+          } else {
+            const ca = ti >= 0 ? Carow?.[ti] : 0;
+            const caN = Math.min(1, Math.max(0, ((ca ?? 0) - 0.2) / 1.5));
+            tmpColor.current.offsetHSL(0, 0, 0.12 * caN);
+          }
         } else {
           tmpColor.current.set("#3a3f33"); // no-data soma — dark olive
         }
@@ -708,8 +765,9 @@ function EdgeLayers({
 }
 
 // ---------------------------------------------------------------------------
-// Network ion-flow particles — packets travel pre→post along the most active
-// chem edges; speed/brightness driven by the live source-cell depolarisation.
+// Network ion-flow particles — packets travel pre→post along the strongest
+// chem edges; speed driven by the source cell's real total ionic-current
+// magnitude (net_flows), with a source-cell depolarisation-rate fallback.
 // ---------------------------------------------------------------------------
 
 function NetworkFlow({
@@ -783,22 +841,73 @@ function NetworkFlow({
   // Track previous-frame V per source so we can estimate depolarisation rate.
   const prevV = useRef<Float32Array>(new Float32Array(edgeMeta.length));
 
+  // CURRENT-ACCURATE drive (FIX round 4): when trajectory.json carries per-cell
+  // net_flows, the packet speed is driven by the SOURCE CELL's real total ionic-
+  // current magnitude (|I_Na|+|I_K|+|I_Ca|+|pump|), normalised by its 95th
+  // percentile, rather than the voltage-derived proxy. A presynaptic cell that is
+  // actually moving charge (large transmembrane current) pushes its packets
+  // faster — physically the right driver for ion flow. Falls back to the V proxy
+  // when net_flows is absent.
+  const hasFlows = !!traj.net_flows?.I_Na;
+  const fluxNorm = useMemo(() => {
+    const nf = traj.net_flows;
+    const scale = traj.net_flow_scale ?? 20.0;
+    if (!nf?.I_Na) return 1;
+    const samples: number[] = [];
+    for (let f = 0; f < traj.n_frames; f += 8) {
+      const na = nf.I_Na[f], k = nf.I_K[f], ca = nf.I_Ca[f], pu = nf.pump[f];
+      if (!na) continue;
+      for (const m of edgeMeta) {
+        const c = m.srcTraj;
+        if (c < 0) continue;
+        samples.push(
+          (Math.abs(na[c] ?? 0) + Math.abs(k[c] ?? 0) +
+            Math.abs(ca[c] ?? 0) + Math.abs(pu[c] ?? 0)) / scale,
+        );
+      }
+    }
+    samples.sort((a, b) => a - b);
+    const p95 = samples.length
+      ? samples[Math.min(samples.length - 1, Math.floor(samples.length * 0.95))]
+      : 1;
+    return Math.max(1e-3, p95);
+  }, [traj, edgeMeta]);
+
   useFrame((_s, delta) => {
     const p = ref.current;
     if (!p || !active) return;
     const fi = clock.current.frameIndex % traj.n_frames;
     const Vrow = traj.V_mV[fi];
+    const nf = traj.net_flows;
+    const fScale = traj.net_flow_scale ?? 20.0;
+    const naRow = hasFlows ? nf!.I_Na[fi] : undefined;
+    const kRow = hasFlows ? nf!.I_K[fi] : undefined;
+    const caRow = hasFlows ? nf!.I_Ca[fi] : undefined;
+    const puRow = hasFlows ? nf!.pump[fi] : undefined;
     const pos = geom.getAttribute("position") as THREE.BufferAttribute;
     const t = clock.current.t;
     for (let i = 0; i < edgeMeta.length; i++) {
       const m = edgeMeta[i];
-      const v = m.srcTraj >= 0 ? Vrow?.[m.srcTraj] : -70;
-      const vv = Number.isFinite(v) ? (v as number) : -70;
-      // depolarisation drive: how far above rest, plus instantaneous rate.
-      const dRate = Math.abs(vv - prevV.current[i]);
-      prevV.current[i] = vv;
-      const depol = Math.min(1, Math.max(0, (vv + 75) / 45));
-      const speed = 0.12 + depol * 0.9 + Math.min(0.6, dRate * 0.4);
+      let speed: number;
+      if (hasFlows && naRow && m.srcTraj >= 0) {
+        const c = m.srcTraj;
+        const mag =
+          (Math.abs(naRow[c] ?? 0) +
+            Math.abs(kRow![c] ?? 0) +
+            Math.abs(caRow![c] ?? 0) +
+            Math.abs(puRow![c] ?? 0)) /
+          fScale; // uA/cm^2
+        const drive = Math.min(1.4, mag / fluxNorm);
+        speed = 0.12 + drive * 1.0;
+      } else {
+        // Voltage-derived fallback (older trajectory.json without net_flows).
+        const v = m.srcTraj >= 0 ? Vrow?.[m.srcTraj] : -70;
+        const vv = Number.isFinite(v) ? (v as number) : -70;
+        const dRate = Math.abs(vv - prevV.current[i]);
+        prevV.current[i] = vv;
+        const depol = Math.min(1, Math.max(0, (vv + 75) / 45));
+        speed = 0.12 + depol * 0.9 + Math.min(0.6, dRate * 0.4);
+      }
       let u = (m.phase + t * speed * 0.25) % 1;
       if (u < 0) u += 1;
       pos.setXYZ(
