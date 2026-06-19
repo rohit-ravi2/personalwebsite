@@ -1,0 +1,62 @@
+---
+title: "Tier4 Substrate Anatomy — a whole-cell electrical substrate, rendered from code"
+startDate: 2026-06-19
+description: "An interactive 3D anatomy of the C. elegans Tier4 whole-cell electrical substrate. Every channel, receptor, pump, transporter, gap junction, and ion compartment actually present in the Brian2 model is rendered 1:1 from code with an honest ON / default-OFF / ORPHANED / NOT-INTEGRATED status."
+tags: ["Computational Neuroscience", "Whole-Cell Modeling", "Three.js", "C. elegans", "Biophysics", "Research"]
+image:
+  url: /images/projects/c-elegans-cover.png
+  alt: "C. elegans Tier4 substrate anatomy — 3D rendering of the whole-cell electrical model"
+---
+
+import SubstrateAnatomy from "../../components/substrate/SubstrateAnatomy";
+
+## What this is
+
+A code-grounded 3D anatomy of the *C. elegans* **Tier4 whole-cell electrical
+substrate** — the Brian2 model that puts CeNGEN-scaled ion channels, ligand-gated
+receptors, pumps, transporters, gap junctions, and single-pool ion dynamics onto
+300 cells at their real morphological positions.
+
+The design principle is **honesty about completeness**. Every structure is
+rendered with a status read straight from the assemble path:
+
+- **ON** — integrated and active on the default assemble path
+- **default-OFF** — integrated but a build flag is needed to flip it on
+- **ORPHANED** — module exists / registers but is *not* on the assemble path
+- **NOT INTEGRATED** — known-missing structure, diagnosed by audit
+
+Nothing is illustrative unless it is explicitly flagged as such. The voltage
+colour and Ca²⁺ glow are driven by a **real Brian2 trajectory** emitted from the
+model, not hand-authored.
+
+<SubstrateAnatomy client:only="react" />
+
+## How to read it
+
+Two views share one data bundle:
+
+- **Hero cell — AVA** at full molecular detail: per-segment morphology
+  (soma / axon / dendrite) plus its channel, receptor, and pump complement with
+  per-channel gbar (CeNGEN TPM × γ × C_global).
+- **Network — 300 cells** at their real µm soma positions, wired by the actual
+  connectome (chemical + gap-junction edges), coloured live by the substrate's
+  own voltage trajectory.
+
+The completeness panel on the right is the **audit, rendered**: status chips
+filter the inventory, and every structure carries its `file:line` provenance.
+
+## Known-missing structure
+
+Three structures are deliberately marked **NOT INTEGRATED** and cited to the
+substrate audits (`docs/SUBSTRATE_LIMITER_AUDIT_2026-06-19.md`,
+`docs/K_PARTITION_DISCRIMINATOR_VERDICT.md`):
+
+1. **Spatial glial K-siphon** — current glia is a K *sink* only, with no return
+   path to the cell interior.
+2. **Multi-compartment cleft ↔ reservoir** with a grounded K_in source
+   (the local-nkcc route was ruled out).
+3. **Grounded γ_NCA** — a regenerative inward N-shape with a first-principles
+   conductance rather than a stability-floor placeholder.
+
+These are the foundation gaps the substrate work is converging on, shown in red
+rather than hidden.
