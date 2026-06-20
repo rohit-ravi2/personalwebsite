@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import HeroCell3D, { type FrameState } from "./HeroCell3D";
+import SchematicHero from "./SchematicHero";
 import {
   type GlyphSignatures,
   type HemichannelSignature,
@@ -370,6 +371,8 @@ function TrajectoryClock({
 
 function Scene({
   view,
+  heroMode,
+  activeCategory,
   data,
   frame,
   netClock,
@@ -383,8 +386,11 @@ function Scene({
   showGap,
   showChem,
   showFlow,
+  showEdges,
 }: {
   view: View;
+  heroMode: HeroMode;
+  activeCategory: string | null;
   data: DataBundle;
   frame: React.MutableRefObject<FrameState>;
   netClock: React.MutableRefObject<NetClock>;
@@ -398,6 +404,7 @@ function Scene({
   showGap: boolean;
   showChem: boolean;
   showFlow: boolean;
+  showEdges: boolean;
 }) {
   // Hero glyph set = intrinsic + ligand-gated + pumps/transporters/etc. that
   // live on a single cell, PLUS the MISSING ghosts. (Network-only / pure ion
@@ -409,7 +416,16 @@ function Scene({
 
   return (
     <Canvas
-      camera={{ position: [0, 0, view === "hero" ? 14 : 28], fov: 45, near: 0.1, far: 2000 }}
+      camera={{
+        position: [
+          0,
+          0,
+          view === "network" ? 28 : heroMode === "schematic" ? 30 : 14,
+        ],
+        fov: 45,
+        near: 0.1,
+        far: 2000,
+      }}
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
     >
@@ -426,19 +442,31 @@ function Scene({
         speed={speed}
       />
       {view === "hero" ? (
-        <HeroCell3D
-          morph={data.heroMorph}
-          gbar={data.heroGbar}
-          signatures={data.glyphSignatures}
-          hemichannel={data.hemichannel}
-          backboneMeshes={data.backboneMeshes}
-          records={heroRecords}
-          frame={frame}
-          hovered={hovered}
-          selected={selected}
-          setHovered={setHovered}
-          onSelect={onSelect}
-        />
+        heroMode === "schematic" ? (
+          <SchematicHero
+            records={heroRecords}
+            frame={frame}
+            hovered={hovered}
+            selected={selected}
+            activeCategory={activeCategory}
+            setHovered={setHovered}
+            onSelect={onSelect}
+          />
+        ) : (
+          <HeroCell3D
+            morph={data.heroMorph}
+            gbar={data.heroGbar}
+            signatures={data.glyphSignatures}
+            hemichannel={data.hemichannel}
+            backboneMeshes={data.backboneMeshes}
+            records={heroRecords}
+            frame={frame}
+            hovered={hovered}
+            selected={selected}
+            setHovered={setHovered}
+            onSelect={onSelect}
+          />
+        )
       ) : (
         <Network3D
           positions={data.positions}
@@ -450,6 +478,7 @@ function Scene({
           showGap={showGap}
           showChem={showChem}
           showFlow={showFlow}
+          showEdges={showEdges}
           hovered={hovered}
           selected={selected}
           setHovered={setHovered}
@@ -777,10 +806,14 @@ function PosterCard() {
 // ----------------------------------------------------------------------------
 
 type View = "hero" | "network";
+type HeroMode = "schematic" | "dense";
 
 export default function SubstrateAnatomy() {
   const load = useSubstrateData();
   const [view, setView] = useState<View>("hero");
+  // DEFAULT hero view = the new exploded category-lane schematic (legibility).
+  // The old dense/realistic membrane render is kept behind this toggle.
+  const [heroMode, setHeroMode] = useState<HeroMode>("schematic");
   const [filter, setFilter] = useState<Status | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -791,6 +824,9 @@ export default function SubstrateAnatomy() {
   const [showGap, setShowGap] = useState(true);
   const [showChem, setShowChem] = useState(true);
   const [showFlow, setShowFlow] = useState(true);
+  // Network: edges DIMMED/off by default (declutter the 4000-edge hairball);
+  // a selected/hovered cell still reveals its own edges + 1-hop neighbours.
+  const [showEdges, setShowEdges] = useState(false);
   // Shared per-frame state, written imperatively by TrajectoryClock inside the
   // canvas and read by hero geometry — never triggers a React re-render.
   const frame = useRef<FrameState>({
@@ -862,6 +898,8 @@ export default function SubstrateAnatomy() {
             data={load.data}
             view={view}
             setView={setView}
+            heroMode={heroMode}
+            setHeroMode={setHeroMode}
             filter={filter}
             setFilter={setFilter}
             hovered={hovered}
@@ -882,6 +920,8 @@ export default function SubstrateAnatomy() {
             setShowChem={setShowChem}
             showFlow={showFlow}
             setShowFlow={setShowFlow}
+            showEdges={showEdges}
+            setShowEdges={setShowEdges}
           />
         )}
       </div>
@@ -929,6 +969,8 @@ function Ready({
   data,
   view,
   setView,
+  heroMode,
+  setHeroMode,
   filter,
   setFilter,
   hovered,
@@ -949,10 +991,14 @@ function Ready({
   setShowChem,
   showFlow,
   setShowFlow,
+  showEdges,
+  setShowEdges,
 }: {
   data: DataBundle;
   view: View;
   setView: (v: View) => void;
+  heroMode: HeroMode;
+  setHeroMode: (m: HeroMode) => void;
   filter: Status | null;
   setFilter: (s: Status | null) => void;
   hovered: string | null;
@@ -973,9 +1019,19 @@ function Ready({
   setShowChem: (b: boolean) => void;
   showFlow: boolean;
   setShowFlow: (b: boolean) => void;
+  showEdges: boolean;
+  setShowEdges: (b: boolean) => void;
 }) {
   const traj = data.trajectory;
   const dataIsReal = traj.real && !traj.illustrative;
+
+  // Isolation: when a record is selected, isolate its CATEGORY in the schematic
+  // scene (others recede). Resolve the selected id → its inventory category.
+  const activeCategory = useMemo(() => {
+    if (!selected) return null;
+    const all = [...data.inventory.records, ...data.inventory.missing];
+    return all.find((r) => r.id === selected)?.category ?? null;
+  }, [selected, data.inventory]);
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
@@ -983,22 +1039,53 @@ function Ready({
       <div className="flex flex-col gap-3">
         {/* Toolbar: view toggle + provenance badges */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex rounded-xl border border-white/50 bg-white/55 p-1 backdrop-blur-md">
-            {(["hero", "network"] as View[]).map((v) => (
-              <button
-                key={v}
-                onClick={() => setView(v)}
-                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
-                  view === v
-                    ? "bg-emerald-700 text-primary-foreground shadow-sm"
-                    : "text-emerald-900/70 hover:bg-white/60"
-                }`}
-              >
-                {v === "hero"
-                  ? `Hero cell · ${data.heroMorph.cell}`
-                  : `Network · ${data.positions.n_cells} cells`}
-              </button>
-            ))}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex rounded-xl border border-white/50 bg-white/55 p-1 backdrop-blur-md">
+              {(["hero", "network"] as View[]).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+                    view === v
+                      ? "bg-emerald-700 text-primary-foreground shadow-sm"
+                      : "text-emerald-900/70 hover:bg-white/60"
+                  }`}
+                >
+                  {v === "hero"
+                    ? `Hero cell · ${data.heroMorph.cell}`
+                    : `Network · ${data.positions.n_cells} cells`}
+                </button>
+              ))}
+            </div>
+
+            {/* Hero render mode — schematic (lanes, DEFAULT) vs dense 3D (beauty) */}
+            {view === "hero" && (
+              <div className="inline-flex rounded-xl border border-white/50 bg-white/55 p-1 backdrop-blur-md">
+                {(
+                  [
+                    ["schematic", "Schematic (lanes)"],
+                    ["dense", "Dense 3D (beauty)"],
+                  ] as [HeroMode, string][]
+                ).map(([m, label]) => (
+                  <button
+                    key={m}
+                    onClick={() => setHeroMode(m)}
+                    className={`rounded-lg px-3 py-1.5 text-[0.78rem] font-medium transition-colors ${
+                      heroMode === m
+                        ? "bg-emerald-700 text-primary-foreground shadow-sm"
+                        : "text-emerald-900/70 hover:bg-white/60"
+                    }`}
+                    title={
+                      m === "schematic"
+                        ? "Exploded category lanes — spaced, labelled, legible; spot what's missing"
+                        : "Realistic gbar-density single-membrane render (poster mode)"
+                    }
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -1027,6 +1114,8 @@ function Ready({
           <div className="h-[68vh] min-h-[420px] w-full">
             <Scene
               view={view}
+              heroMode={heroMode}
+              activeCategory={activeCategory}
               data={data}
               frame={frame}
               netClock={netClock}
@@ -1040,6 +1129,7 @@ function Ready({
               showGap={showGap}
               showChem={showChem}
               showFlow={showFlow}
+              showEdges={showEdges}
             />
           </div>
 
@@ -1113,6 +1203,31 @@ function Ready({
             {/* edge / flow toggles (network) */}
             {view === "network" && (
               <div className="flex items-center gap-1 rounded-lg bg-white/85 px-1.5 py-1 backdrop-blur-sm">
+                {/* master edges toggle: OFF = declutter (only selected cell +
+                    1-hop neighbours reveal edges); ON = show all edges. */}
+                <button
+                  onClick={() => setShowEdges(!showEdges)}
+                  className={`flex items-center gap-1 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold transition-opacity ${
+                    showEdges
+                      ? "text-emerald-900 opacity-100"
+                      : "text-emerald-900/55 opacity-80"
+                  } hover:bg-emerald-700/10`}
+                  title={
+                    showEdges
+                      ? "All edges shown (4000-edge hairball)"
+                      : "Edges hidden — hover/select a cell to reveal its edges + 1-hop neighbours"
+                  }
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{
+                      backgroundColor: showEdges ? "#444" : "transparent",
+                      border: "1px solid #444",
+                    }}
+                  />
+                  {showEdges ? "all edges" : "edges on select"}
+                </button>
+                <span className="mx-0.5 h-3 w-px bg-emerald-900/15" />
                 {(
                   [
                     ["gap", showGap, setShowGap, "gap", "#4f86c6"],
@@ -1152,26 +1267,41 @@ function Ready({
         {/* Scene status note */}
         <p className="text-[0.7rem] italic text-emerald-900/45">
           {view === "hero" ? (
-            <>
-              Hero molecular geometry is live: AVA membrane recoloured by the real
-              voltage trajectory (Ca²⁺ glow), with channel / receptor / pump /
-              transporter glyphs sized by gbar and styled by status (ON · default-OFF
-              dimmed · ORPHANED wireframe · NOT-INTEGRATED red dashed). The three
-              geometry records are pinned as cross-highlightable diamond markers on
-              the soma — incl. the default-OFF <span className="font-mono">geo_em_override</span>{" "}
-              (opt-in EM C_m override, VB6-only; AVA does not use it), shown amber/wireframe.
-            </>
+            heroMode === "schematic" ? (
+              <>
+                Exploded category lanes — a cutaway cross-section in three zones
+                (extracellular · membrane · cytoplasm). Every structure gets ONE
+                spaced, labelled glyph in its sub-family row, with gbar(AVA) shown
+                as a small bar + number (never as instance count), and status read
+                straight from the assemble path (ON solid · default-OFF dim ·
+                ORPHANED wireframe · NOT-INTEGRATED red dashed ghost in its slot).
+                Click a legend row or zone header to ISOLATE a category; hover any
+                glyph for its <span className="font-mono">file:line</span>{" "}
+                provenance. V/Ca from the real trajectory drive a subtle per-glyph
+                tint. Switch to <em>Dense 3D</em> for the realistic membrane render.
+              </>
+            ) : (
+              <>
+                Dense 3D (beauty) — AVA membrane recoloured by the real voltage
+                trajectory (Ca²⁺ glow), with channel / receptor / pump / transporter
+                glyphs sized by gbar and styled by status (ON · default-OFF dimmed ·
+                ORPHANED wireframe · NOT-INTEGRATED red dashed). The realistic
+                single-membrane render is kept here as the poster view; switch to{" "}
+                <em>Schematic (lanes)</em> for the legible exploded layout.
+              </>
+            )
           ) : (
             <>
               Network is live: {data.positions.n_cells} soma at real EM µm
               centroids, each recoloured by the whole-network Brian2 voltage
-              trajectory (or tinted by dominant channel family). Gap junctions
-              (ohmic, innexin-typed) and signed chem synapses (excitatory green /
-              inhibitory rose) are independently toggleable; ion-flow packets
-              travel pre→post along the strongest chem edges, their speed driven
-              by the source cell's real total ionic current (per-cell
+              trajectory (or tinted by dominant channel family). Edges are hidden by
+              default to declutter the connectome hairball — hover or select a cell
+              to reveal its edges + 1-hop neighbours, or toggle <em>all edges</em>.
+              Gap junctions (ohmic, innexin-typed) and signed chem synapses
+              (excitatory green / inhibitory rose) are independently toggleable;
+              ion-flow packets travel pre→post along the strongest chem edges, their
+              speed driven by the source cell's real total ionic current (per-cell
               I<sub>Na</sub>/I<sub>K</sub>/I<sub>Ca</sub>/pump from the substrate).
-              Hover a soma for its identity, channel count and passive parameters.
             </>
           )}
         </p>

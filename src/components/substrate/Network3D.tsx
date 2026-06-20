@@ -603,13 +603,34 @@ function EdgeLayers({
   center,
   showGap,
   showChem,
+  showEdges,
+  revealedNodes,
 }: {
   edges: NetworkEdges;
   positions: NetworkPositions;
   center: THREE.Vector3;
   showGap: boolean;
   showChem: boolean;
+  // master edges flag: true → render the full connectome; false → declutter and
+  // render ONLY edges that touch a revealed node (selected/hovered cell + 1-hop).
+  showEdges: boolean;
+  revealedNodes: Set<number>;
 }) {
+  // When decluttered, keep an edge only if one endpoint is a revealed node.
+  const keepGap = useMemo(
+    () =>
+      showEdges
+        ? (_g: GapEdge) => true
+        : (g: GapEdge) => revealedNodes.has(g.a) || revealedNodes.has(g.b),
+    [showEdges, revealedNodes],
+  );
+  const keepChem = useMemo(
+    () =>
+      showEdges
+        ? (_c: ChemEdge) => true
+        : (c: ChemEdge) => revealedNodes.has(c.s) || revealedNodes.has(c.t),
+    [showEdges, revealedNodes],
+  );
   // Map edge node indices (network_edges.names order) to scene positions.
   const nodePos = useMemo(() => {
     const byName = new Map(positions.cells.map((c) => [c.cell, c]));
@@ -642,7 +663,7 @@ function EdgeLayers({
 
   // --- GAP: straight tubes for the strong, lines for the tail. ---
   const { gapTubeGeom, gapLineGeom } = useMemo(() => {
-    const valid = edges.gap.filter((g) => g.a !== g.b);
+    const valid = edges.gap.filter((g) => g.a !== g.b && keepGap(g));
     const sorted = [...valid].sort((a, b) => b.w - a.w);
     const strong = sorted.slice(0, GAP_TUBE_COUNT);
     const tail = sorted.slice(GAP_TUBE_COUNT);
@@ -667,12 +688,12 @@ function EdgeLayers({
       gapTubeGeom: buildTubeGeometry(tubes, 6, 1),
       gapLineGeom: buildEdgeGeometry(lineSegs),
     };
-  }, [edges.gap, nodePos, maxGap, blue]);
+  }, [edges.gap, nodePos, maxGap, blue, keepGap]);
 
   // --- CHEM: curved-arc tubes for the strong (arc bows to convey direction +
   // depth), lines for the tail. ---
   const { chemTubeGeom, chemLineGeom } = useMemo(() => {
-    const valid = edges.chem.filter((c) => c.s !== c.t);
+    const valid = edges.chem.filter((c) => c.s !== c.t && keepChem(c));
     const sorted = [...valid].sort((a, b) => Math.abs(b.w) - Math.abs(a.w));
     const strong = sorted.slice(0, CHEM_TUBE_COUNT);
     const tail = sorted.slice(CHEM_TUBE_COUNT);
@@ -697,7 +718,7 @@ function EdgeLayers({
       chemTubeGeom: buildTubeGeometry(tubes, 5, 10),
       chemLineGeom: buildEdgeGeometry(lineSegs),
     };
-  }, [edges.chem, nodePos, maxChem, excit, inhib]);
+  }, [edges.chem, nodePos, maxChem, excit, inhib, keepChem]);
 
   useEffect(() => {
     return () => {
@@ -1005,6 +1026,7 @@ export default function Network3D({
   showGap,
   showChem,
   showFlow,
+  showEdges,
   hovered,
   selected,
   setHovered,
@@ -1019,6 +1041,7 @@ export default function Network3D({
   showGap: boolean;
   showChem: boolean;
   showFlow: boolean;
+  showEdges: boolean;
   hovered: string | null;
   selected: string | null;
   setHovered: (id: string | null) => void;
@@ -1108,6 +1131,54 @@ export default function Network3D({
     return [];
   }, [selected, positions.cells, channelTable]);
 
+  // Edge-node adjacency (edges.names order) for the 1-hop reveal-on-select.
+  const adjacency = useMemo(() => {
+    const adj: Set<number>[] = edges.names.map(() => new Set<number>());
+    for (const g of edges.gap) {
+      if (g.a === g.b) continue;
+      adj[g.a]?.add(g.b);
+      adj[g.b]?.add(g.a);
+    }
+    for (const c of edges.chem) {
+      if (c.s === c.t) continue;
+      adj[c.s]?.add(c.t);
+      adj[c.t]?.add(c.s);
+    }
+    return adj;
+  }, [edges]);
+
+  // Map a cell name → its edge-node index (edges.names order).
+  const edgeIdxByName = useMemo(() => {
+    const m = new Map<string, number>();
+    edges.names.forEach((nm, i) => m.set(nm, i));
+    return m;
+  }, [edges.names]);
+
+  // Revealed nodes = (selected cells ∪ hovered cell) and their 1-hop neighbours,
+  // in edges.names order. When `showEdges` is true this is unused (all edges
+  // render); when false it is the declutter focus set.
+  const revealedNodes = useMemo(() => {
+    const out = new Set<number>();
+    if (showEdges) return out;
+    const seeds: number[] = [];
+    // selected cells (selectedIndices are positions.cells indices → resolve name)
+    for (const pi of selectedIndices) {
+      const nm = positions.cells[pi]?.cell;
+      const ei = nm != null ? edgeIdxByName.get(nm) : undefined;
+      if (ei != null) seeds.push(ei);
+    }
+    if (hovered) {
+      const ei = edgeIdxByName.get(hovered);
+      if (ei != null) seeds.push(ei);
+    }
+    for (const s of seeds) {
+      out.add(s);
+      const nbrs = adjacency[s];
+      if (nbrs) for (const n of nbrs) out.add(n);
+    }
+    return out;
+  }, [showEdges, selectedIndices, hovered, positions.cells, edgeIdxByName, adjacency]);
+
   return (
     <group>
       <EdgeLayers
@@ -1116,6 +1187,8 @@ export default function Network3D({
         center={center}
         showGap={showGap}
         showChem={showChem}
+        showEdges={showEdges}
+        revealedNodes={revealedNodes}
       />
       <SomaInstances
         positions={positions}
