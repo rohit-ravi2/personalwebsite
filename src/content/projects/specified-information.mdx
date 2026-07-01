@@ -1,0 +1,75 @@
+---
+title: "Where is the 'blueprint' in the C. elegans connectome?"
+startDate: 2026-07-01
+description: "A worm's genome is far too small to store its ~7,000 wiring connections one by one — yet the wiring is nearly the same in every animal. So where is the information that specifies it? This is the log of a systematic hunt: a dozen candidate 'hidden codes' tested and ruled out, and the surprisingly simple thing that was left standing."
+tags: ["Computational Neuroscience", "Connectomics", "C. elegans", "Information Theory", "Research"]
+image:
+  url: /images/projects/specified-information-cover.png
+  alt: "Where is the blueprint in the C. elegans connectome — a decomposition of reproducible wiring into contact geometry, developmental timing, and a small transmitter bias, with the falsified hidden-code hypotheses"
+---
+
+import InvestigationLog from "../../components/react/InvestigationLog";
+import SpecificationLedger from "../../components/react/SpecificationLedger";
+
+## The puzzle
+
+*C. elegans* is the only animal whose entire nervous system has been mapped, connection
+by connection. Its wiring is famously **reproducible** — build a fresh worm and you get
+essentially the same diagram, roughly the same ~7,000 chemical synapses in roughly the
+same places, every time.
+
+That reproducibility is the puzzle. The worm's genome is tiny. It cannot possibly store a
+literal list of "neuron A connects to neuron B" for every connection — there simply isn't
+room. So the wiring must be **generated** from something much more compact: a rulebook, a
+molecular address system, a developmental program. Somewhere there is *specified
+information* that the genome executes to build the same brain twice.
+
+The obvious question — and the one this project chased — is **where that information
+actually lives.** Is there a hidden "wiring code" waiting to be found? Or is the wiring a
+by-product of simpler things, with no code at all?
+
+This page is the honest log of the hunt. It reads as a sequence of hypotheses, each one
+tested with pre-registered pass/fail gates and proper statistical controls, and each one
+either kept or ruled out — with the reason it failed, and how that failure pointed to the
+next thing to try.
+
+## The investigation
+
+<InvestigationLog client:visible />
+
+## What survived
+
+After a dozen candidate "hidden codes" were tested and dissolved, three ordinary things
+were left carrying essentially all of the reproducible wiring. The chart below is the
+accounting: how far each factor gets you, and where the animal-to-animal noise floor sits.
+
+<SpecificationLedger client:visible />
+
+## The honest bottom line
+
+The reproducible worm connectome does **not** appear to hide a compact molecular blueprint.
+Wherever a hidden code could have lived — gene-similarity matching, a learned pairing
+grammar, a gene-regulatory generator, a lineage rulebook, a bioelectric field — a proper
+control dissolved it into one of three plain ingredients:
+
+- **physical contact** (who touches whom, and how much),
+- **developmental timing** (when each neuron is born — you cannot wire a cell before it
+  exists), and
+- a **small sender-side transmitter bias.**
+
+Together these explain the reliable "strong core" of the wiring right up to the
+animal-to-animal noise ceiling. The weak, one-off connections that vary between animals
+behave like tolerated noise, not like missing instructions.
+
+Put simply: the genome seems to specify a **physical-and-temporal scaffold**, not an
+edge-by-edge wiring table. The "specified information" is distributed across contact,
+timing, and stabilization — not stored as a hidden code.
+
+<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
+A note on honesty: this is a rigorous <em>decomposition</em>, not a discovered blueprint.
+That contact dominates wiring echoes Brittin et al. (2021); that the wiring is reproducible
+echoes Witvliet et al. (2021). The contribution here is the noise-ceiling framing, the
+developmental-timing mediation, the controlled transmitter bias, and — most of all — the
+systematic ruling-out of the hidden-code hypotheses with the right nulls. Negative results,
+done carefully, are results.
+</p>
