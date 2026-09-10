@@ -1,0 +1,214 @@
+---
+title: "Bendy bodies, restless minds — a correlation we can measure but cannot yet explain"
+startDate: 2026-09-10
+description: "People with unusually flexible joints get migraines about twice as often as everyone else, and are diagnosed with ADHD around five times as often. The association is real, replicated, and partly genetic. This is the log of an attempt to find the mechanism behind it — the elegant explanation that turned out to be wrong, the things we could rule out, and the one thread still worth pulling."
+tags: ["Human Genetics", "Statistical Genetics", "Connective Tissue", "Neuroscience", "Bioinformatics", "Research"]
+image:
+  url: /images/projects/hypermobility-brain-cover.png
+  alt: "Bendy bodies, restless minds — an ordered connective-tissue lattice and a neural network, joined by a dashed link marked with a question mark, above the measured associations and the explanations ruled out"
+---
+
+<div style={{border: "1px solid rgba(245,158,11,0.35)", background: "rgba(245,158,11,0.07)", borderRadius: "10px", padding: "0.95rem 1.15rem", margin: "0 0 2rem", fontSize: "0.94rem", lineHeight: 1.65}}>
+<strong style={{color: "#b45309"}}>Work in progress.</strong> This is an open line of
+inquiry, not a finished result. The correlation described below is solid and independently
+replicated. The mechanism behind it is not known — and the most promising explanation was
+tested here and failed. This page is a status report, and it will be updated as the
+work continues.
+</div>
+
+## Where this started
+
+The question came from a practicing physician in the family, who had noticed something
+across years of seeing patients: the people who could bend their thumbs back to their
+wrists, who described themselves as double-jointed, who dislocated shoulders reaching for
+things on high shelves — those same patients seemed unusually likely to also have
+migraines, attention problems, anxiety, chronic pain, and a stubborn constellation of
+symptoms that no single specialist owned.
+
+That is a clinical hunch, and clinical hunches are usually wrong. This one is not.
+
+## What hypermobility is
+
+Some people's joints move further than most people's do. It is measured with a nine-point
+checklist — can you bend your little finger back past ninety degrees, can you touch your
+thumb to your forearm, do your elbows and knees hyperextend, can you put your palms flat
+on the floor with straight legs. Score high enough and you are "hypermobile."
+
+At the mild end this is just a way bodies vary, and it is common. At the more severe end
+it becomes hypermobile Ehlers-Danlos syndrome, where the loose joints come with chronic
+pain, frequent dislocations, fatigue, digestive problems, and dizziness on standing.
+
+The tissue involved is connective tissue — collagen and the surrounding scaffolding that
+holds the body together. So a joint problem. Structural. Mechanical. Nothing obviously to
+do with the brain.
+
+## The correlation is real
+
+This is the part that keeps being confirmed, and it is genuinely strange.
+
+**Migraine.** In a study of more than 1.6 million young adults screened at military
+conscription — a setting where nobody self-selects into a clinic, and where most of the
+participants were male — hypermobile people had roughly **double** the odds of migraine.
+That design matters, because most hypermobility research happens in specialist clinics
+full of people who sought out a diagnosis, which is a recipe for spurious associations.
+Conscription screening dodges that entirely, and the effect survives.
+
+**ADHD.** Swedish national health registers, covering nearly twelve thousand people with
+connective tissue diagnoses, found ADHD at about **five and a half times** the expected
+rate. It replicated across two separate diagnostic codes, and it held up when the same
+group physically examined joints in a psychiatric sample rather than relying on medical
+records.
+
+**Fibromyalgia.** A 2026 study across two and a half million people measured the
+*genetic* correlation between fibromyalgia and hypermobility at **0.79** — on a scale
+where 1.0 would mean identical genetic influences. That is not a mild statistical
+relationship. That is two conditions sharing most of their genetic architecture.
+
+So: a connective tissue difference in the limbs travels with headaches, attention, pain
+and mood. Nobody disputes the association anymore. The open question is *why*.
+
+## The beautiful explanation, and why we tested it
+
+There is an idea in this space that is almost too elegant to resist.
+
+The brain has its own connective tissue. Certain neurons are wrapped in structures called
+perineuronal nets — a mesh of the same broad family of molecules that makes up
+cartilage and ligament. These nets are the brain's brake on plasticity. During
+development, while the nets are still thin, circuits rewire easily. As the nets thicken
+and lock into place, the window closes and learning gets harder. Dissolve them
+experimentally in an adult animal and you can reopen a childhood-like window.
+
+So the hypothesis writes itself. If a person's scaffolding molecules are built a little
+differently, you would get looser ligaments **and** thinner brain nets from the same
+underlying cause. A bendy body and a bendy mind, as siblings rather than as cause and
+effect. It would explain the whole cluster in one stroke.
+
+We built the pipeline to test it properly. Using published genetic data from hundreds of
+thousands of people, we asked a specific question: do the genes that build connective
+tissue carry more of the inherited risk for ADHD, autism, anxiety and depression than
+ordinary genes do?
+
+## It failed, cleanly
+
+Nothing survived. Not close.
+
+The cleanest way to say it: in depression, about 2.33% of all human genes reach
+statistical significance. Among connective tissue genes, the figure was **2.26%**. They
+were being hit at exactly the background rate, which is what "no relationship" looks like.
+
+We had also built in a control — sets of random genes matched for length, because
+connective tissue genes are unusually long and long genes produce false positives. One of
+the random control sets scored *better* than our real candidate set. Whatever signal we
+thought we saw was indistinguishable from noise.
+
+Two independent findings support that null. A separate group ran a comparable analysis on
+depression in eight hundred thousand people and got the same nothing. And, more
+decisively, someone had already measured the thing the theory predicts: researchers put
+people with Ehlers-Danlos syndrome through motor learning tasks, four separate times
+across four different experimental setups, and their brain plasticity came back
+**completely normal** every time.
+
+Then a look at the underlying biology finished it off. Perineuronal nets turn out to
+contain no collagen at all. They are built by neurons themselves, out of a different
+molecular family, in a part of the brain physically separate from where the
+connective tissue genes are active. The two gene sets do not overlap and are not
+co-regulated. The elegant explanation was not underpowered. It was anatomically wrong.
+
+It did not help that two of the molecules involved share a family name — tenascin-X causes
+a form of Ehlers-Danlos, tenascin-R sits in perineuronal nets — while being unrelated
+genes on different chromosomes. That coincidence made the story look more connected than
+it was.
+
+## What we did find
+
+Along the way the analysis produced results of its own.
+
+We estimated, apparently for the first time, how heritable clinically diagnosed
+hypermobility is from common genetic variants: about **9%**. Modest, but real and
+statistically solid.
+
+We then measured how much genetic architecture hypermobility shares with the surgical
+conditions that loose connective tissue causes — hernias, varicose veins, pelvic organ
+prolapse. All three came back positive, in the range of **0.24 to 0.28**.
+
+The interesting part was the internal structure. Those three conditions are only weakly
+related to *each other* — varicose veins and prolapse share almost nothing. Yet
+hypermobility sits equally close to all three, nearer to the centre of that space than
+any of them are to one another. Hypermobility appears to be a better single readout of
+general connective tissue looseness than any of the conditions doctors actually operate on.
+
+We also found a specific gene worth watching. A variant in PIEZO1 — which encodes a
+protein that lets cells physically sense being stretched — had been reported as associated
+with joint flexibility in a study that was never replicated. Tested against an independent
+Finnish population, it came back positive, modestly but in the right direction. The same
+genetic location is overwhelmingly associated with varicose veins. It looks like a genuine
+hub for tissue looseness.
+
+## Things that turned out not to be true
+
+A large part of the value here was subtraction. Along the way, several widely repeated
+claims did not survive checking:
+
+- The often-quoted figure that hypermobile people have **seven times** the rate of autism
+  comes from the wrong patient group. In the population that actually corresponds to
+  hypermobility, the figure is about **1.4 times** — and a community sample of schoolchildren
+  found no relationship at all.
+- The idea that hypermobile people have poor proprioception — a worse sense of where their
+  limbs are — is contested rather than established. Two systematic reviews disagree, the
+  larger body of evidence finds nothing, and three studies found hypermobile people
+  performed *better*. The deficit tracks having symptoms, not having flexible joints.
+- The claimed link to floppy heart valves is largely an artefact of 1980s imaging. When
+  patients were re-scanned with modern equipment, five of seven prior diagnoses disappeared.
+- Loose joints do not wear out early. Across more than eight thousand people in community
+  studies, hypermobility is associated with **less** osteoarthritis, not more.
+
+## The thread still worth pulling
+
+Two things came out of this that point somewhere.
+
+The first is a reframe. Every study that measured plasticity in hypermobile people
+measured how *far* they adapted, and found it normal. Nobody has measured how *fast*.
+That distinction matters, because there is a principled reason to expect speed to differ.
+A hypermobile limb is genuinely less predictable — the joint has more play, and the same
+muscle command produces a more variable result. In any system that learns from experience,
+operating in a more variable world rationally calls for updating faster. If that is right,
+hypermobile people should learn motor tasks *more quickly* and forget them sooner. Nobody
+has ever run that experiment. The prediction is the opposite of the deficit framing the
+field has assumed for forty years.
+
+The second is chemistry. The forms of Ehlers-Danlos caused by problems making sugar chains
+— rather than problems making collagen fibres — are the ones whose genes are actually
+active in the brain. Independently, the single strongest genetic signal in a study of
+119,000 people with back pain turned out to be an enzyme that attaches sulfate to those
+same sugar chains. And there is one gene, aggrecan, whose partial loss causes joint
+laxity *and* which is required for perineuronal nets to work — one gene, both phenotypes,
+each published separately and never connected.
+
+That is not a mechanism yet. It is a coincidence that keeps happening in the same place.
+
+## The honest bottom line
+
+The correlation between flexible joints and this cluster of neurological and psychiatric
+conditions is real, replicated in populations that avoid the usual biases, and partly
+genetic. We can measure it.
+
+We cannot explain it. The most attractive molecular explanation is now ruled out, and
+ruled out for a specific and instructive reason rather than for lack of data. What
+connects a loose ligament to a migraine remains unknown.
+
+Settling it needs data that does not exist yet — a study measuring learning speed rather
+than learning extent, and access to cohorts that hold both joint measurements and
+molecular data on the same people. Both are identified. Neither has been done. This page
+will be updated when they are.
+
+<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
+A note on what is ours and what is not: the migraine, ADHD and fibromyalgia associations
+are established findings from other groups, verified here rather than discovered. The
+original contributions are the heritability estimate for diagnosed hypermobility, the
+genetic correlations with hernia, varicose veins and prolapse and their internal structure,
+the PIEZO1 replication, and the negative results — the gene-set analysis, the gene-length
+diagnostic that explains why earlier positive claims in this area do not survive proper
+correction, and the demonstration that a widely-used brain gene set is not specific to the
+structures it names. Negative results, done carefully, are results. Everything numerical
+above traces to a logged analysis or a cited paper.
+</p>
