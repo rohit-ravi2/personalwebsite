@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Where you store fat, and which organ pays for it — peripheral and visceral fat depots with a fading arrow to the brain routed through a blood-pressure gauge, and a solid direct arrow to the kidney">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fafafa"/>
+      <stop offset="1" stop-color="#f3f4f6"/>
+    </linearGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#94a3b8" stop-opacity="0.85"/>
+      <stop offset="0.55" stop-color="#94a3b8" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#94a3b8" stop-opacity="0.12"/>
+    </linearGradient>
+    <marker id="solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/>
+    </marker>
+    <marker id="faint" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8" fill-opacity="0.35"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- title -->
+  <text x="70" y="86" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#111827">Where you store fat,</text>
+  <text x="70" y="136" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#111827">and which organ pays for it</text>
+  <line x1="70" y1="164" x2="250" y2="164" stroke="#0f766e" stroke-width="3"/>
+
+  <!-- ---------- left: the body and its depots ---------- -->
+  <g transform="translate(150,235)">
+    <!-- torso -->
+    <path d="M40,0 C74,0 92,20 92,48 L92,132 C92,152 84,164 74,176 L74,250 C74,262 64,270 52,270 L28,270 C16,270 6,262 6,250 L6,176 C-4,164 -12,152 -12,132 L-12,48 C-12,20 6,0 40,0 Z"
+          fill="#e5e7eb" stroke="#cbd5e1" stroke-width="2"/>
+    <!-- visceral depot -->
+    <ellipse cx="40" cy="104" rx="30" ry="24" fill="#f97316" fill-opacity="0.55"/>
+    <text x="40" y="109" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#7c2d12">visceral</text>
+    <!-- peripheral / gluteofemoral depot -->
+    <ellipse cx="40" cy="214" rx="42" ry="30" fill="#0f766e" fill-opacity="0.35"/>
+    <text x="40" y="211" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#134e4a">gluteofemoral</text>
+    <text x="40" y="228" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#134e4a">(safe storage)</text>
+  </g>
+  <text x="190" y="556" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#475569">storage capacity</text>
+
+  <!-- ---------- top path: to the brain, via blood pressure, fading ---------- -->
+  <path d="M300,300 C400,220 440,196 520,196" fill="none" stroke="url(#fade)" stroke-width="5" marker-end="url(#faint)"/>
+  <!-- BP gauge -->
+  <g transform="translate(600,196)">
+    <circle r="40" fill="#ffffff" stroke="#64748b" stroke-width="3"/>
+    <path d="M-26,12 A30,30 0 0 1 26,12" fill="none" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>
+    <line x1="0" y1="10" x2="17" y2="-13" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+    <circle r="4" fill="#334155"/>
+    <text x="0" y="62" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#334155">blood pressure</text>
+    <text x="0" y="80" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#64748b">carries ~half</text>
+  </g>
+  <path d="M680,196 C760,196 790,178 850,166" fill="none" stroke="url(#fade)" stroke-width="5" marker-end="url(#faint)"/>
+
+  <!-- brain -->
+  <g transform="translate(960,150)" opacity="0.5">
+    <path d="M-52,10 C-62,-14 -44,-38 -20,-38 C-10,-54 16,-56 30,-42 C56,-44 70,-22 60,0 C70,18 54,40 30,38 C16,52 -12,50 -22,34 C-46,34 -60,20 -52,10 Z"
+          fill="#e2e8f0" stroke="#94a3b8" stroke-width="2.5"/>
+    <path d="M-24,-26 C-8,-14 -8,10 -22,24 M6,-38 C2,-14 12,8 4,36 M32,-32 C26,-12 38,6 30,30"
+          fill="none" stroke="#94a3b8" stroke-width="2"/>
+  </g>
+  <text x="960" y="232" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="19" fill="#64748b">brain small vessels</text>
+  <text x="960" y="256" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#94a3b8">no direct effect (p = 0.13)</text>
+
+  <!-- ---------- bottom path: to the kidney, direct and solid ---------- -->
+  <path d="M300,400 C520,436 700,452 850,458" fill="none" stroke="#0f766e" stroke-width="6" marker-end="url(#solid)"/>
+  <text x="560" y="428" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#0f766e">direct</text>
+
+  <!-- kidney -->
+  <g transform="translate(960,458)">
+    <path d="M18,-46 C50,-46 62,-22 62,0 C62,24 48,46 18,46 C-8,46 -24,30 -24,14 C-24,4 -16,-2 -8,-2 C-16,-2 -24,-10 -24,-18 C-24,-34 -8,-46 18,-46 Z"
+          fill="#ccfbf1" stroke="#0f766e" stroke-width="3"/>
+    <path d="M-6,0 C10,-10 26,-6 40,4" fill="none" stroke="#0f766e" stroke-width="2.5"/>
+  </g>
+  <text x="960" y="542" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="19" fill="#0f766e">kidney small vessels</text>
+  <text x="960" y="566" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#0d9488">albuminuria, p ≈ 10⁻⁴</text>
+
+  <text x="70" y="596" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#94a3b8">Mendelian randomisation · the hypothesis survived, but pointed at a different organ</text>
+</svg>

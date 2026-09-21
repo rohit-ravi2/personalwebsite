@@ -1,0 +1,259 @@
+---
+title: "Where you store fat, and which organ pays for it"
+startDate: 2026-09-21
+description: "Diabetes roughly doubles the risk of vascular dementia, and nobody can say why. This is the log of a long attempt to test one specific answer — that the problem is not how much fat you carry but where your body can safely put it. The idea survived, narrowed three times, and ended up pointing at a different organ than the one we were aiming at."
+tags: ["Human Genetics", "Statistical Genetics", "Mendelian Randomization", "Diabetes", "Neuroscience", "Bioinformatics", "Research"]
+image:
+  url: /images/projects/diabetes-brain-kidney-cover.svg
+  alt: "Where you store fat, and which organ pays for it — a body silhouette with peripheral and visceral fat depots, arrows running to a brain and a kidney, the brain arrow routed through a blood-pressure gauge and fading, the kidney arrow direct and solid"
+---
+
+<div style={{border: "1px solid rgba(245,158,11,0.35)", background: "rgba(245,158,11,0.07)", borderRadius: "10px", padding: "0.95rem 1.15rem", margin: "0 0 2rem", fontSize: "0.94rem", lineHeight: 1.65}}>
+<strong style={{color: "#b45309"}}>Work in progress, and partly self-corrected.</strong> This
+is a status report on an open line of inquiry. The central hypothesis was narrowed three
+times — twice because of errors found in our own analysis, once because a better-designed
+model contradicted an earlier one. While the narrowing was happening, another group
+published the original headline. What is recorded below is what survived all of that,
+including the parts that did not.
+</div>
+
+## Where this started
+
+People with type 2 diabetes get dementia at roughly twice the rate of people without it.
+Not only Alzheimer's — a large share is *vascular* dementia, the kind caused by the slow
+accumulation of damage to the brain's smallest blood vessels.
+
+That much is not controversial. What nobody can say is **why**. The obvious answer is high
+blood sugar, and the obvious answer appears to be wrong: when you test it genetically,
+glucose and HbA1c do essentially nothing to vascular dementia risk, even though diabetes
+clearly moves both. Something else about diabetes is doing the damage.
+
+This project spent months trying to find out what.
+
+## The tool
+
+You cannot randomise people to diabetes. But nature has already run something close to a
+randomised trial: everyone is dealt a random genetic hand at conception, and some of those
+hands nudge people toward higher blood sugar, or more belly fat, or higher blood pressure.
+Because the shuffle happens before birth, it is not confounded by diet, income, or exercise
+the way an observational study is.
+
+The method that exploits this is called **Mendelian randomisation**. Used carelessly it
+produces confident nonsense, so most of the work here is not running the analysis — it is
+the negative controls, the instrument-strength diagnostics, and the checks for whether a
+result is real or an artifact of the machinery.
+
+## The beautiful idea
+
+Here is the hypothesis this project was built to test.
+
+Fat is not simply harmful. Your body has a *safe place* to store it — the subcutaneous fat
+on your hips and thighs, the gluteofemoral depot. That tissue is metabolically calm. What
+appears to be dangerous is running out of room there. When the safe depot is full, or small,
+or genetically limited, surplus lipid has nowhere good to go. It spills into places it
+should not be: the liver, the muscle, the space around the organs, the blood.
+
+This reframes obesity. The question is not *how much* fat you carry; it is **how much you
+can safely put away**. On this account, the reason two people with the same BMI have
+completely different metabolic fates is that one of them has more storage capacity.
+
+The prediction: limited storage capacity should damage the small vessels — in the brain, in
+the kidney — while leaving the heart comparatively alone, because heart disease tracks fat
+*quantity*.
+
+## The parts that held up
+
+**Storage capacity is a real, measurable thing, and it is not just BMI in disguise.** When
+you put fat *distribution* and total *body mass* into the same model as competing
+explanations, they separate cleanly and go to different organs: distribution carries the
+small-vessel effects, body mass carries heart failure. Adjusting one for the other
+strengthens rather than weakens the result, which is the opposite of what you would see if
+it were a statistical artifact.
+
+**The molecular signature is unmistakable.** We measured what 48 different circulating
+molecules do in response to good versus failed storage. Ninety-five of those relationships
+held under two independent statistical estimators. And the two directions are near-perfect
+mirror images: good storage lowers triglycerides, large VLDL particles and branched-chain
+amino acids, and **raises** LDL particle diameter. Failed storage does exactly the reverse,
+producing the small, dense LDL that is the classic signature of metabolic disease.
+
+That mirror symmetry is the strongest evidence in the project that the construct is real
+rather than a statistical shadow. Two instruments built by different groups from different
+data, pointing in opposite directions, moving the same molecules oppositely.
+
+**The heart is genuinely spared.** Across every version of the exposure and every
+statistical method, cardioembolic stroke and heart failure came back null — while total
+body fat hit both hard in the same analyses. Negative controls behaving like negative
+controls is what licenses believing the positives.
+
+## The first narrowing: blood pressure
+
+The cerebral effect was real, but it was not *direct*.
+
+Roughly half of the path from storage failure to small-vessel brain disease runs through
+blood pressure — about 52% for small-vessel stroke, 45% for lacunar stroke. And when we
+built the properly identified model, putting storage capacity, diabetes liability and blood
+pressure in together, the storage term **disappeared at the brain** (p=0.13) while blood
+pressure remained overwhelming.
+
+This is a mechanism, not a refutation. If poor storage raises blood pressure and blood
+pressure injures the brain's penetrating arterioles, that is still a storage-capacity story
+— it just has a named conduit, and the conduit is one we already know how to treat. But the
+stronger and more interesting claim, that storage failure reaches the brain by some private
+route of its own, did not survive.
+
+## The second narrowing: our own broken code
+
+Two errors in our own analysis had been quietly shaping the results.
+
+The first was a **placeholder standard error**. The canonical published instrument for this
+hypothesis ships effect sizes but no error estimates, so every model using it had been run
+with a stand-in value of 1.0. That is harmless for the effect estimates, but it silently
+destroyed the one diagnostic that tells you whether a multi-exposure model is trustworthy at
+all. For months, that number had been printing as ~0.0002 — which looks like catastrophic
+failure but actually meant *no information*. Rebuilding the same genetic variants from a
+different dataset that does report errors made the diagnostic computable for the first time,
+and the models that had looked unusable turned out to be fine.
+
+The second was a **flipped effect allele**, and the instructive part is that we made it
+twice. The brain-imaging dataset used for white-matter damage reports its effects relative to
+the second listed allele, not the first. Read it the natural way and every directional
+statement about white matter comes out backwards.
+
+We found this in July, wrote it up, proved it three ways — a positive control at a known
+collagen gene, a genetic-correlation sign test, and the server's own documentation — and
+filed the conclusion. Seven weeks later a new session wrote fresh extraction code, took the
+same natural reading, and reintroduced the identical bug. It survived about six hours and one
+batch of reports before three checks caught it again.
+
+The corrected numbers are an exact mirror: one key result read −0.041 before the fix and
++0.041 after, with the p-value, F-statistic and every other quantity identical. P-values
+survive a sign flip, so no conclusion about *whether* something mattered changed.
+
+The useful lesson is not "be careful with allele coding." We *were* careful, documented it,
+and it still recurred, because prose in a file does not intercept the next person writing a
+loader. The fix that actually works is a checked-in reader for that file with an assertion on
+a known-positive control — blood pressure must come out as increasing white-matter damage —
+so the bug cannot survive a test run. That is now in place.
+
+## The third narrowing: a wall that was not there
+
+One line of work had been formally marked as impossible. The claim on file was that
+peripheral insulin sensitivity — how well your muscle and fat actually take up glucose —
+could not be studied, because the available data yielded only two usable genetic markers.
+
+That number had been taken from the wrong file. The companion dataset, adjusted for body
+mass, yields **eight**, and they are strong. More to the point, look at where they sit:
+**PPARG**, the master regulator of fat-cell expansion and the target of an entire class of
+diabetes drugs. **GLUT4**, the transporter that actually moves glucose into muscle. **IRS1**
+and **COBLL1**, the canonical insulin-signalling and fat-distribution genes.
+
+This is the storage hypothesis written out in genes, assembled without reference to the
+variant lists anyone had used before. And when we finally ran it, it gave the cleanest
+answer in the entire project — but not the answer we were looking for.
+
+## What it actually found: the kidney
+
+Peripheral insulin resistance causes **albuminuria** — protein leaking into the urine, the
+earliest sign of damage to the kidney's filtering vessels. It does so strongly
+(p≈10⁻⁴), robustly to every statistical method we tried, and robustly to dropping any single
+genetic marker.
+
+And it does **nothing** to the brain. Small-vessel stroke p=0.20. Lacunar stroke p=0.41.
+White matter damage p=0.92.
+
+So the organ that limited storage capacity demonstrably reaches is the kidney, not the
+brain. The brain effect exists but runs through blood pressure; the kidney effect is direct.
+The two organs had been grouped together for most of this project as a single "small vessel"
+story. With better tools they come apart.
+
+We then spent a while trying to break that kidney result, because it is now the headline:
+
+- **Is it a measurement artifact?** Urine protein is reported as a *ratio* to creatinine,
+  and creatinine tracks muscle mass — and this instrument is built partly from muscle genes.
+  If the variants shrink muscle, the ratio rises with no real leak. Tested against a
+  450,000-person study of lean mass: no significant effect, and pointing the *opposite*
+  way from what the artifact would require.
+- **Is it an artifact of studying only diabetics?** Selecting on having diabetes can
+  manufacture false associations. Correcting for it, the effect survives — and it is also
+  present in the general population, where the correction does not apply at all.
+
+Neither check was in the original analysis. Both came from reading the criticism literature
+on this exact method, which is worth doing before rather than after.
+
+## Things that turned out not to be true
+
+Subtraction again did a lot of the work:
+
+- **Storage capacity does not reach vascular dementia.** An earlier result said it did
+  (p=0.03). With eight times as many genetic markers it is p=0.18 — a small-sample artifact,
+  retracted.
+- **It does not affect cognition** — not general intelligence, not reaction time. Total body
+  fat does, but that is a different axis.
+- **It does not affect white-matter damage** in any version of the exposure.
+- **The "brain and kidney share one microvascular vulnerability" framing was premature.** It
+  was graded as supported in an earlier write-up. The two organs behave differently under
+  every stress test we applied.
+- **High blood sugar is not the carrier.** Glucose and HbA1c do essentially nothing to
+  vascular dementia even though diabetes moves both substantially.
+
+And one finding that should be taken more seriously than it has been: in the only adequately
+powered non-European population available — 5,532 East Asian small-vessel stroke cases — the
+storage signal **does not replicate**. That cannot be waved away as European genetic
+instruments failing to transfer, because in the very same analysis, instruments for visceral
+fat and for BMI transferred fine. Either the architecture genuinely differs across
+populations, or the European result is inflated. That question is open and it is the largest
+outstanding threat to everything above.
+
+## On being scooped, and what is actually ours
+
+While this was going on, another group published the headline. Myserlis and colleagues, in
+*Neurology* in 2025, ran the same gluteofemoral fat instruments against the same stroke
+subtypes and reached the same conclusion we did about mediation — that ordinary vascular
+risk factors carry most of the effect.
+
+That is worth stating plainly rather than burying. Our cerebral result is a **replication**,
+not a discovery. Arriving second at the same answer by an independent route is genuinely
+useful information about whether the answer is right, and it is not a contribution to the
+literature.
+
+What that paper did not do — and what remains unclaimed — is the kidney. It used coronary
+disease and carotid thickening as positive controls and no renal endpoint at all. And
+nobody, as far as we can find, has used a post-challenge insulin-sensitivity measure as a
+genetic instrument for anything, because the necessary dataset only recently existed.
+
+## The honest bottom line
+
+Diabetes damages the brain's small vessels. It does so substantially through blood pressure
+rather than through blood sugar, and the "safe fat storage" idea — attractive, mechanistic,
+and genuinely supported in its molecular details — explains the **kidney** better than it
+explains the brain.
+
+The single largest obstacle is not analytical. It is that **the necessary dataset does not
+exist anywhere in the world**. To ask whether something raises stroke risk *specifically
+among diabetics*, you need a study where the comparison group also has diabetes. We
+enumerated every endpoint definition in FinnGen across three data releases — roughly five
+thousand — and every study in the GWAS Catalog. Exactly twelve require the control group to
+have diabetes. All twelve are eye, kidney, or nerve. **None is the brain.** The largest
+published study of brain white matter within diabetes anywhere is 465 people.
+
+Creating that endpoint is not a new experiment. It is a definition-file change in a biobank
+that already runs precisely this machinery for diabetic retinopathy and diabetic kidney
+disease. It needs no new participants and no new consent. It is the cheapest high-value
+thing anyone could do for this question, and nobody has asked for it.
+
+That is the ask this work ends on.
+
+<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
+A note on what is ours and what is not: the diabetes–dementia association and the
+gluteofemoral-fat–stroke result are established findings from other groups — the latter
+published by Myserlis et al. in <em>Neurology</em> (2025) while this work was in progress,
+and reproduced here independently rather than discovered. The original contributions are the
+peripheral-insulin-sensitivity instrument and its brain-versus-kidney dissociation, the
+48-molecule signature of failed storage and its mirror symmetry, the enumeration proving no
+within-diabetes cerebral endpoint exists, the East Asian non-replication, and the negative
+results — including three corrections to our own earlier claims. Negative results, done
+carefully, are results; so are retractions of your own work. Everything numerical above
+traces to a logged analysis, and the analysis code and claim ledgers are kept with the
+project.
+</p>
