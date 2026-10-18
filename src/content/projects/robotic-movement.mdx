@@ -44,6 +44,13 @@ and which simulator settings a result depends on.
 
 <Clip src="/videos/robotic-movement/throw-3-robot-derived-windup.mp4" caption="A wind-up derived from the robot's own body, refined by search: hips swivel on planted feet, the arm trails the trunk." note="Historical render: this version exceeded the wrist's rated speed and is not a valid speed figure. The same construction under the honest actuator limits reaches 20-23 m/s." />
 
+<Clip src="/videos/robotic-movement/throw-ball-flight.mp4" caption="The same construction under the honest actuator limits, at full search budget: 22.6 m/s release, valid at both time steps. Ball flight drawn from the release state." note="Ball flight is computed drag-free from the release state." />
+<Clip src="/videos/robotic-movement/throw-capacity-whatif.mp4" caption="Change the body, and the technique reorganises: halve the arm's torque and the hips and trunk take over; halve the legs' torque and the arm does more of the work." note="What-if bodies (torque scaled), not robot capability." />
+
+## Kicking
+
+<Clip src="/videos/robotic-movement/kick-ball.mp4" caption="G1 kicks a simulated football from one-foot support: 11.8 m/s ball speed. The weight shift, foot lift and hip-to-foot sequencing came out of the construction, not a script." />
+
 ## Running
 
 <Pair>
@@ -54,6 +61,8 @@ and which simulator settings a result depends on.
 <Clip src="/videos/robotic-movement/sprint-apollo-heldout.mp4" caption="Apptronik Apollo, a robot never used while building the method: 2.4 m/s with no code changes. With the body-derived starting motion removed, the same search never finds a valid gait." note="Apollo's joint speed ratings are not published and were assumed." />
 <Clip src="/videos/robotic-movement/sprint-h1-whatif-ankle-x4.mp4" caption="What-if body: H1 with four-times-stronger ankles reaches 5.1 m/s. The stock ankle is too weak to push off through the foot." note="Modified body, not robot capability." />
 </Pair>
+
+<Clip src="/videos/robotic-movement/race-four-robots.mp4" caption="Same code, four bodies: G1, H1 and Apollo running side by side; Booster T1 cannot run at its published ratings, which the spec-derived ceiling predicted before any search." note="Lag and contact settings as labelled on each lane." />
 
 ## Carrying with the body's structure
 
