@@ -40,6 +40,8 @@ and which simulator settings a result depends on.
 <Clip src="/videos/robotic-movement/jump-h1-landed.mp4" caption="The same pipeline on a second robot, the Unitree H1." />
 </Pair>
 
+<Clip src="/videos/robotic-movement/box-jump-fail.mp4" caption="A failure, shown as one: jumping onto a box. The G1 reaches the top of a 0.20 m box but arrives moving forward and cannot stop on it. Neither the G1 nor the H1 held any box from 0.20 m up." note="The landing controller holds forward speeds up to 0.3 m/s with ideal motors, but none once a 10 ms motor lag is included. This is open, not closed." />
+
 ## Throwing
 
 <Clip src="/videos/robotic-movement/throw-3-robot-derived-windup.mp4" caption="A wind-up derived from the robot's own body, refined by search: hips swivel on planted feet, the arm trails the trunk." note="Historical render: this version exceeded the wrist's rated speed and is not a valid speed figure. The same construction under the honest actuator limits reaches 20-23 m/s." />
@@ -47,9 +49,20 @@ and which simulator settings a result depends on.
 <Clip src="/videos/robotic-movement/throw-ball-flight.mp4" caption="The same construction under the honest actuator limits, at full search budget: 22.6 m/s release, valid at both time steps. Ball flight drawn from the release state." note="Ball flight is computed drag-free from the release state." />
 <Clip src="/videos/robotic-movement/throw-capacity-whatif.mp4" caption="Change the body, and the technique reorganises: halve the arm's torque and the hips and trunk take over; halve the legs' torque and the arm does more of the work." note="What-if bodies (torque scaled), not robot capability." />
 
+### Throwing at a target
+
+The goal is no longer "as fast as possible" but "land the ball within 0.5 m of a target". The body is the stock G1, its motors are held to their published torque ratings with a 10 ms response lag, and the ball is free once released.
+
+<Pair>
+<Clip src="/videos/robotic-movement/throw-target-10m.mp4" caption="10 m target: the ball lands 0.12 m from the centre (9.4 m/s release). It still hits on 14 of 16 randomized versions of the robot and its start that the search never saw." note="The hand holds the ball by an attachment until release, not a finger grip. Ball flight is drag-free. One smaller independent check passed only 2 of 4, so the margin is thin." />
+<Clip src="/videos/robotic-movement/throw-target-15m.mp4" caption="15 m target: hit on the nominal robot (0.42 m from the centre, 11.5 m/s), but not reliably. Only 7 of 16 randomized versions land inside the circle." note="Shown as a limit, not a result. At this distance a 2% change in release speed moves the ball half a metre." />
+</Pair>
+
 ## Kicking
 
-<Clip src="/videos/robotic-movement/kick-ball.mp4" caption="G1 kicks a simulated football from one-foot support: 11.8 m/s ball speed. The weight shift, foot lift and hip-to-foot sequencing came out of the construction, not a script." />
+<Clip src="/videos/robotic-movement/kick-ball.mp4" caption="G1 kicks a simulated football from one-foot support: 11.8 m/s ball speed. The weight shift, foot lift and hip-to-foot sequencing came out of the construction, not a script." note="Earlier, looser checks: this kick was not tested against the joint-stop and after-the-kick balance checks used below." />
+
+<Clip src="/videos/robotic-movement/kick-goal-5m.mp4" caption="Aimed kick into a 2 m goal 5 m away, on the stock G1 with rated torques and a 10 ms motor lag: 4.9 m/s, scored on all 16 randomized versions it was tested on and on 4 more from an independent check." note="Honest limits: the robot falls after every kick. Only 1 of the 12 goal setups tried passes this reliably, and the angled goals found nothing valid. The ankles hitting their joint stops are what limits it. A small sphere on the foot (an attachment) makes the ball contact." />
 
 ## Running
 
@@ -64,9 +77,29 @@ and which simulator settings a result depends on.
 
 <Clip src="/videos/robotic-movement/race-four-robots.mp4" caption="Same code, four bodies: G1, H1 and Apollo running side by side; Booster T1 cannot run at its published ratings, which a dynamic model computed from its specification also predicts." note="Lag and contact settings as labelled on each lane." />
 
+## Walking
+
+Walking is the dull-looking hard case: a periodic gait with both feet sharing the load at every step, no sliding, steady speed and heading. Both robots use their stock bodies and published motor ratings with a 10 ms motor lag, and each walk was checked at two physics time steps.
+
+<Pair>
+<Clip src="/videos/robotic-movement/walk-g1.mp4" caption="Unitree G1 walking at 0.72 m/s. It passes 14 of 16 held-out disturbances: heavier or lighter limbs, start errors, slower motors, lower friction and shoves." note="The controller is given the robot's true centre of mass, which a real robot would have to estimate." />
+<Clip src="/videos/robotic-movement/walk-h1.mp4" caption="Unitree H1 walking at 0.99 m/s, same code: 15 of 16 held-out disturbances pass." note="The H1's ankle runs at its torque rating." />
+</Pair>
+<Clip src="/videos/robotic-movement/walk-g1-shove-fail.mp4" caption="A failure: a sideways shove from the other side at the wrong moment of the stride knocks the G1 over. Sideways push recovery works only in some phases of the step, so it is not claimed." />
+
+## Walking with a load on the head
+
+The body-derived arm-balance law from the standing head carry, now while walking at 0.75 m/s. The load is a free object resting on the head, not attached.
+
+<Pair>
+<Clip src="/videos/robotic-movement/walk-headcarry-15kg.mp4" caption="G1 with hands walking 8.3 m with a free 15 kg pot on its head. The pot stays within 2 cm of the head top, and all 16 tested disturbances pass." note="The pot is placed at rest at the start. With the balance law switched off it falls within 0.6 s." />
+<Clip src="/videos/robotic-movement/walk-headcarry-20kg.mp4" caption="20 kg at the same speed: a valid carry, but not a reliable one (12 of 16 disturbances pass)." />
+</Pair>
+<Clip src="/videos/robotic-movement/walk-headcarry-20kg-drop.mp4" caption="Why 20 kg is not reliable: if the pot is 10% heavier than the controller assumes, it slides off within the first second. At the start of the walk the waist motors are already at their torque rating." note="The proposed fix, starting from a stand and ramping up the stride, is untested." />
+
 ## Carrying with the body's structure
 
-<Clip src="/videos/robotic-movement/headcarry-pot-40kg.mp4" caption="G1 with hands: a free 40 kg pot resting on its head, kept there by the arms. The balancing law is built from the arm's own geometry and motor limits. Hands-only carrying tops out at 6-8 kg." />
+<Clip src="/videos/robotic-movement/headcarry-box-32kg-lag.mp4" caption="G1 with hands, standing: a free 32 kg box resting on its head, kept there by the arms, with a 10 ms motor lag. The balancing law is built from the arm's own geometry and motor limits. Second half: the same posture with the law switched off, and the box falls in under a second. Hands-only carrying tops out at 6-8 kg." note="Requires a cap on the servo gains (a controller choice). Without motor lag, a 40 kg pot also holds. With lag, 40 kg is fragile." />
 <Clip src="/videos/robotic-movement/luggage-tip-and-roll.mp4" caption="A 45 kg bag is too heavy to lift; the search tips it onto its wheels and leans it against the hips instead, a use of the body nobody specified." note="Hands attached to the handle (not a finger grip)." />
 
 ## Manipulation
