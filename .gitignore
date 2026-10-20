@@ -59,3 +59,18 @@ scripts/brain/artifacts/phase0_postvolt_peredge_*_traces/
 # NEURON compiled mods
 **/x86_64/
 *.so
+
+# working notes (kept locally, not published)
+/AnestheticSimulator/commit_proposal.md
+/AnestheticSimulator/docs/HANDOFF_next_session.md
+/AnestheticSimulator/docs/SESSION_CLOSEOUT_2026-06-12.md
+/AnestheticSimulator/integration/notebooks_handoff.md
+/AnestheticSimulator/integration/production_simulator_handoff.md
+/AnestheticSimulator/integration/wave2_handoff.md
+/commit_proposal.md
+/docs/claude-chat-context.md
+/docs/new-session-primer.md
+/scripts/brain/artifacts/handoffs/session_1_handoff_2026-04-26.md
+/scripts/brain/artifacts/handoffs/session_3_handoff_2026-04-26.md
+/scripts/brain/wave2/artifacts/agentic_loop_log.md
+/CONTRIBUTION.md
