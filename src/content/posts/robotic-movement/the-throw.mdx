@@ -1,0 +1,61 @@
+---
+title: "The throw: the animation that changed the project"
+startDate: 2026-10-05
+description: "A throw that exaggerated a baseball technique beyond human range, why it became the core of the project, and the kick that followed."
+tags: ["Robotics", "Simulation", "Humanoids", "Biomechanics"]
+draft: true
+order: 3
+---
+
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page sections: [Throwing](/projects/robotic-movement/#throwing) and [Kicking](/projects/robotic-movement/#kicking).
+
+## Why a throw
+
+A throw is the nearest thing to a tennis serve that I could simulate without a racquet: independent muscle groups integrated into one kinetic chain, ending in something light moving very fast. The first results already said something. The full chain roughly doubled ball speed over an arm-only throw, and the legs switched on by themselves once the demanded speed exceeded what the arm could supply. Speed built from the hips to the hand without that sequence being programmed anywhere.
+
+## The animation
+
+Then I watched one of the throws, and it stopped me. The arm lagged back to load up, the body twisted further than any person could, and the whole thing whipped forward into release. It was a baseball throw, but hyper-optimised: the technique exaggerated beyond human flexibility, exploiting exactly the advantages of the robot's own form. That was precisely what I had set out to show. Nobody told it to throw like a pitcher, and nobody told it to go past one. It found both.
+
+<Clip src="/videos/robotic-movement/throw-3-robot-derived-windup.mp4" caption="The animation: a wind-up derived from the robot's own body, refined by search. Historical render: this version ran the wrist beyond its rated speed, so its release speed is not a valid figure." />
+
+The measurements matched what I saw. The arm is cocked back about 200 ms before release and held while the legs and trunk drive. The pelvis turns about 96°, roughly twice a pitcher's, swivelling on planted feet. The elbow hyperextends 23°, which no human elbow allows, and the wrist snaps at about 4,000° per second. The legs do two-thirds of the work.
+
+I also did not trust the release speed of that version, and I was right not to: the wrist ran past its rated speed. That number is retired. The technique was not.
+
+## The core of the project
+
+Some of the later, more carefully controlled throws scored better on the raw numbers, and for a moment that animation was treated as a historical curiosity. I think that misses the point entirely. The chance that a movement could organise itself that way, to that degree of sophistication, by accident is absurd. That animation is the core of the whole project.
+
+What generalises is the principle inside it. Not an elegant "unified law of movement" written in mathematics, but something more practical and, to me, more striking: a construction that takes a robot's own body and a physical goal and produces whole-body technique with little to no training data. The elegance is in the real-world implementation. That it can be done at all is the result.
+
+So we rebuilt it under honest motor limits and tested what it actually depends on:
+
+- **The technique only appears with enough search.** At the full budget of 38,400 simulated trials, the whole-body throw emerges every time. At 2,400 trials the search finds a valid throw, but an arm-led one.
+- **It reproduces.** Every seed rediscovered the same organisation: the pelvis swivelling on planted feet, a large waist turn, and speed amplified from about 15 rad/s at the pelvis to 70 to 86 rad/s at the hand. The best valid release is 22.6 m/s, inside the motors' ratings.
+- **The beyond-human shoulder was used, not needed.** Clipped to a human shoulder range, the throw compensated with a bigger waist turn.
+- **Change the body and the technique reorganises.** Weaken the legs and the arm takes over. Weaken the arm and the hips and trunk take over. The arm on its own caps near 13 m/s. That is the tennis argument, computed.
+
+<Clip src="/videos/robotic-movement/throw-ball-flight.mp4" caption="The same construction under the honest actuator limits, at full search budget: 22.6 m/s release, valid at both time steps." />
+<Clip src="/videos/robotic-movement/throw-capacity-whatif.mp4" caption="Change the body, and the technique reorganises. What-if bodies (torque scaled), not robot capability." />
+
+## Aiming it
+
+Speed alone is not a skill. Asked to land the ball within 0.5 m of a target instead, on the stock G1 with its rated motors and a 10 ms response lag, the throw hits a 10 m target 0.12 m from the centre. At 15 m it hits on the nominal robot but not reliably, so I show that one as a limit.
+
+<Clip src="/videos/robotic-movement/throw-target-10m.mp4" caption="Aimed throw: 10 m target. The hand holds the ball by an attachment until release, not a finger grip." />
+
+## The kick
+
+The kick was the first test of whether the principle carries over to a different chain. Given only "send the ball fast from one foot", it came out strictly sequenced: pelvis, thigh, shank, foot. The weight shift and the foot lift followed from the need to balance on one leg; none of it was written as a sequence of phases. It is the same proximal-to-distal chain as the serve, found from scratch in a different limb.
+
+<Clip src="/videos/robotic-movement/kick-ball.mp4" caption="G1 kicks a simulated football from one-foot support: 11.8 m/s ball speed (earlier, looser checks)." />
+
+Previous: [Jumping](/posts/robotic-movement/jumping/). Next: [Running](/posts/robotic-movement/running/).

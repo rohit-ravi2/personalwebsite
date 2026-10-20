@@ -4,7 +4,7 @@ import MDXLayout from "../../layouts/MDXLayout.astro";
 
 
 /**
-  This is the dynamic route for projects
+  Dynamic route for posts, including posts in subfolders (/posts/<folder>/<post>)
  **/
 export async function getStaticPaths() {
   const postEntries = await getCollection('posts');
@@ -18,5 +18,10 @@ const {Content} = await entry.render();
 ---
 
 <MDXLayout frontmatter={entry.data}>
+  {entry.data.draft && (
+    <p style="border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.07);border-radius:10px;padding:0.6rem 1rem;font-size:0.92rem;">
+      <strong style="color:#b45309">Draft.</strong> Not yet reviewed.
+    </p>
+  )}
   <Content/>
 </MDXLayout>

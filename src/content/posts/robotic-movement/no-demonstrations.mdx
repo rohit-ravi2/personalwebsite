@@ -1,0 +1,40 @@
+---
+title: "No demonstrations: the low-data principle"
+startDate: 2026-10-07
+description: "Why the project derives movement from a robot's own specification instead of human motion data, and exactly what that claim does and does not cover."
+tags: ["Robotics", "Simulation", "Humanoids", "Data"]
+draft: true
+order: 7
+---
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page section: [How these movements were made](/projects/robotic-movement/#how-these-movements-were-made-no-demonstrations-no-learned-policy).
+
+## Human-like, but not copied
+
+Humanoids are useful because they are shaped like us and do the things we do, so a general framework of robot movement should look, more or less, like a general framework of optimal human movement. That is the north star, and it is not trivial: well-funded companies are working on it right now and have not solved it.
+
+The difference is in how. The dominant approach is mass data collection: people in sensor suits, with their motion retargeted onto the robot, task by task. But a human optimum is optimal for a body of tendons and muscle, not for electric motors with different torque-speed characteristics and no elastic energy storage. I wanted to derive the movement from the robot's own specification instead, and to do it in a way that generalises across tasks rather than one task at a time. That is a fundamentally different bet.
+
+## The low-data aspect
+
+The part of this I think is most undersold is how little data it needs. It was never clear that a consumer humanoid could be given useful, sophisticated movement with little to no training data. The throw showed that it can, and that fact matters more to me than any single speed or height.
+
+## What the claim covers, exactly
+
+Because it is a strong claim, I checked it against the code.
+
+- **No human motion data.** None of the pipelines behind the current results loads any: the throw, strike and kick, the sprint, walking, head carry, the aimed throw and the box jump.
+- **One deliberate exception.** A recorded human jump, replayed on the G1, appears as a comparison baseline. The jump the robot derived from its own body beat it.
+- **No learned models.** There are no neural networks anywhere in the pipeline. It is physics plus optimisation.
+- **What it does use.** Each technique is found from 2,400 to 38,400 simulated trials that the search generates for itself, minutes to a few hours on a desktop CPU. That is compute, not a dataset, and it is the whole cost of a new skill on a new body. Some structure is supplied by hand, such as "wind up, then release", along with the balance controllers and the simulator settings. The movements themselves are found, not authored.
+
+| | Typical learned-robot approach | This work |
+|---|---|---|
+| Human demonstrations | collected per skill | **none** |
+| Learned model | large neural policy | **none** |
+| New robot | recollect data, retrain | **same code, new specification** |
+| What the robot needs | a dataset | **its own specification and a goal** |
+
+Everything here is simulation; nothing has run on hardware yet. The next step for this claim is to show the same construction holding up on a real robot.
+
+Previous: [Manipulation](/posts/robotic-movement/manipulation/).

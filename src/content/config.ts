@@ -54,6 +54,10 @@ const postCollection = defineCollection({
       .optional(),
     tags: z.array(z.string()).optional(),
     canonical: z.string().optional(),
+    // Drafts are built and listed with a "Draft" marker, but kept off the home page.
+    draft: z.boolean().optional(),
+    // Optional position within a folder (series); lower comes first.
+    order: z.number().optional(),
   }),
 });
 

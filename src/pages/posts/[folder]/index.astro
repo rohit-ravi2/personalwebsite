@@ -1,0 +1,35 @@
+---
+import ProjectCard from 'src/components/ProjectCard.astro'
+import { getCollection } from "astro:content";
+import IndexPageLayout from "../../../layouts/IndexPageLayout.astro";
+import { groupByFolder, folderTitle, FOLDER_META, cardHeading } from "../../../lib/postFolders";
+
+// One index page per top-level blog subfolder: /posts/<folder>/
+export async function getStaticPaths() {
+  const { folders } = groupByFolder(await getCollection('posts'));
+  return [...folders.entries()]
+    .filter(([folder]) => !folder.includes('/'))
+    .map(([folder, list]) => ({ params: { folder }, props: { folder, list } }));
+}
+
+const { folder, list } = Astro.props;
+const title = folderTitle(folder);
+const description = FOLDER_META[folder]?.description ?? `Posts in ${title}.`;
+---
+
+<IndexPageLayout title={title} description={description} subTitle={title}>
+  <p class="text-sm text-muted-foreground mb-4">{description}</p>
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {list.map((entity: any) => (
+      <ProjectCard
+        key={entity.data.title}
+        href={'/posts/' + entity.slug}
+        heading={cardHeading(entity)}
+        subheading={entity.data.description}
+        altText={entity?.data?.image?.alt}
+        imagePath={entity?.data?.image?.url}
+        dateStart={entity.data.startDate}
+      />
+    ))}
+  </div>
+</IndexPageLayout>

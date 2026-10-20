@@ -1,0 +1,53 @@
+---
+title: "Running and the spec-derived ceiling"
+startDate: 2026-10-12
+description: "Max sprint speed as the cleanest test of deriving movement from a body's specification, the ankle that turned out to be the wall, and a robot the method had never seen."
+tags: ["Robotics", "Simulation", "Humanoids", "Locomotion"]
+draft: true
+order: 4
+---
+
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page sections: [Running](/projects/robotic-movement/#running) and [Walking](/projects/robotic-movement/#walking).
+
+## Physics efficiency first
+
+After the throw, the obvious question was whether its principle carries to other movements. Honestly evaluated, some of the tasks we were reaching for were the wrong shape for this stage. Catching was a bad test, wiping tasks were too, and even throwing is hard. Before chores or tasks, I wanted a solid, repeatable result on the core claim: derive the best movement a body can produce from the nature of its own components.
+
+Max sprint speed is the cleanest version of that test. It is one number, forward speed, with no object, no grasp and no task semantics. Everything that limits it comes from the body: leg geometry, motor torque and speed, mass distribution and ground contact. It also looks good, and it has outside comparators: each robot's documented top speed.
+
+My first target was 25 to 30 mph, the figures I had seen quoted for these robots. That turned out to be sensationalism. 25 to 30 mph is 11 to 13 m/s, sprinter territory, well beyond what these motors are rated for. The real target became the documented speeds.
+
+<Clip src="/videos/robotic-movement/sprint-g1.mp4" caption="Unitree G1, stock body, running." />
+<Clip src="/videos/robotic-movement/sprint-h1.mp4" caption="Unitree H1, same code, no changes: 3.2 m/s, against its documented record of 3.3 m/s. Depends on a stiffer foot-contact setting than the simulator default." />
+
+## Pushing off the ground
+
+Running is not just moving in a running shape. It is pushing off the ground, over and over, in a repeating kinetic chain. That nuance felt like the reason we could not get more speed, and it turned out to be exactly right.
+
+At their stock ankle ratings, neither the G1 nor the H1 can push off through the foot at all. The peak ground force, about 1.6 times body weight, acting through a 14 to 15 cm toe lever, needs more torque than their 50 Nm and 40 Nm ankles can give. A foot-lever model said the H1's ankle would need to be about 2.9 times stronger before push-off stopped being the limit. With stronger ankles, the speed rose from 3.22 to 4.59 m/s, and above three times the ankle stopped being the limit and other joints took over. The stock ankle had quietly been the wall all along.
+
+<Clip src="/videos/robotic-movement/sprint-h1-whatif-ankle-x4.mp4" caption="What-if body: H1 with four-times-stronger ankles reaches 5.1 m/s. Modified body, not robot capability." />
+
+One correction belongs here. I had said the top speeds were predicted from each robot's specification before any search. That claim is withdrawn: the ceiling model had a sign error and leaned on a step-rate cap that was imposed by hand. The speeds the search found are real; the "predicted first" story was not. From here on the hardware specs are never altered to make a task work (what-if bodies are labelled as what-if), the gaits are checked for foot slip, and the predictors are being rebuilt with dynamics. "The body tells you how to move" is already a big claim to have substantiated. "The body tells you how much it can do" is the next one, and it is not there yet.
+
+## A robot the method had never seen
+
+The strongest test of a method is a body it was not built on. The Apptronik Apollo was never used while developing any of this. It ran at 2.44 m/s with no change to the movement code. With the body-derived starting motion removed, the same search never found a valid gait. And the Booster T1's specification said it could not run at its rated motors, and it could not.
+
+<Clip src="/videos/robotic-movement/sprint-apollo-heldout.mp4" caption="Apptronik Apollo, held out: 2.4 m/s with no code changes. Its joint speed ratings are not published and were assumed." />
+<Clip src="/videos/robotic-movement/race-four-robots.mp4" caption="Same code, four bodies." />
+
+## Walking
+
+Walking is the dull-looking hard case, and the one people assume is solved. The bar I care about is a robot that essentially never tips over. Both robots now walk on their stock bodies with a 10 ms motor lag, passing most held-out disturbances; a sideways shove at the wrong moment of the stride still knocks the G1 over, so push recovery is not claimed.
+
+<Clip src="/videos/robotic-movement/walk-g1.mp4" caption="Unitree G1 walking at 0.72 m/s, passing 14 of 16 held-out disturbances." />
+
+Previous: [The throw](/posts/robotic-movement/the-throw/). Next: [Carrying with the body](/posts/robotic-movement/carrying/).

@@ -2,12 +2,10 @@
 import ProjectCard from 'src/components/ProjectCard.astro'
 import { getCollection } from "astro:content";
 import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
+import { groupByFolder, folderTitle, FOLDER_META, cardHeading } from "../../lib/postFolders";
 
 const posts = await getCollection('posts');
-
-posts.sort((a: any, b: any) => {
-  return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
-});
+const { root, folders } = groupByFolder(posts);
 ---
 
 <IndexPageLayout title="Blog" description="Writings on AI, philosophy of mind, and the science of consciousness."
@@ -15,18 +13,45 @@ posts.sort((a: any, b: any) => {
   {posts.length === 0 ? (
     <p class="text-sm text-muted-foreground italic">First posts coming soon.</p>
   ) : (
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {posts.map((entity: any) => (
-        <ProjectCard
-          key={entity.data.title}
-          href={'/posts/' + entity.slug}
-          heading={entity.data.title}
-          subheading={entity.data.description}
-          altText={entity?.data?.image?.alt}
-          imagePath={entity?.data?.image?.url}
-          dateStart={entity.data.startDate}
-        />
+    <>
+      {root.length > 0 && (
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {root.map((entity: any) => (
+            <ProjectCard
+              key={entity.data.title}
+              href={'/posts/' + entity.slug}
+              heading={cardHeading(entity)}
+              subheading={entity.data.description}
+              altText={entity?.data?.image?.alt}
+              imagePath={entity?.data?.image?.url}
+              dateStart={entity.data.startDate}
+            />
+          ))}
+        </div>
+      )}
+      {[...folders.entries()].map(([folder, list]) => (
+        <section class="mt-10">
+          <h2 class="text-xl font-semibold tracking-tight mb-1">
+            <a href={`/posts/${folder}/`} class="hover:underline">{folderTitle(folder)}</a>
+          </h2>
+          {FOLDER_META[folder]?.description && (
+            <p class="text-sm text-muted-foreground mb-3">{FOLDER_META[folder].description}</p>
+          )}
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((entity: any) => (
+              <ProjectCard
+                key={entity.data.title}
+                href={'/posts/' + entity.slug}
+                heading={cardHeading(entity)}
+                subheading={entity.data.description}
+                altText={entity?.data?.image?.alt}
+                imagePath={entity?.data?.image?.url}
+                dateStart={entity.data.startDate}
+              />
+            ))}
+          </div>
+        </section>
       ))}
-    </div>
+    </>
   )}
 </IndexPageLayout>

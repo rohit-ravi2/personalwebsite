@@ -1,0 +1,48 @@
+---
+title: "Carrying with the body: leverage, the head and the bag"
+startDate: 2026-10-16
+description: "Leverage as a layer under the movement work: carrying on the head with the arms balancing, and a 100 lb bag the robot could not lift but found a way to move."
+tags: ["Robotics", "Simulation", "Humanoids", "Leverage"]
+draft: true
+order: 5
+---
+
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page sections: [Walking with a load on the head](/projects/robotic-movement/#walking-with-a-load-on-the-head) and [Carrying with the body's structure](/projects/robotic-movement/#carrying-with-the-bodys-structure).
+
+## Leverage
+
+There is a kind of movement understanding people have that robots do not yet: leverage. Pick up something light but awkward, like a sheet of plywood or drywall, and you instinctively turn it to the way it is easiest to hold. You use the structure of your own body, sometimes resting the sheet on your head for balance. People in many parts of the world carry heavy pots of water on their heads for the same reason: the skull holds the load up by default and passes it down through the whole body.
+
+I think this is a layer underneath what the project had been doing: understanding leverage, spatial mechanics and an object's weight distribution well enough to let the body's structure do the work. It is a subtler version of the same principle, deriving movement from the intrinsic qualities of the robot's own components.
+
+## On the head, balanced by the arms
+
+The first version used a head ring. People do not use one: they put the load on their head and use their arms to keep it balanced. That nuance, understanding balance, centre of mass and how much the body can carry, is what I wanted the robot to have. So we switched to the G1 model with hands, put a free load directly on its head with nothing attaching it, and let the arms balance it with a feedback law built from the arm's own geometry and motor limits.
+
+The head plus arms carries about five times more than the hands alone, which top out at 6 to 8 kg. A 34 kg pot held for ten seconds with the feet steady. And the arms are genuinely doing the work: switch the balance law off and every load slides off within a few seconds.
+
+<Clip src="/videos/robotic-movement/headcarry-box-32kg-lag.mp4" caption="G1 with hands, standing: a free 32 kg box on its head, kept there by the arms, with a 10 ms motor lag. Second half: the balance law switched off, and the box falls." />
+
+It also walks with the load. A free 15 kg pot stays within 2 cm of the top of the head over 8.3 m, through every disturbance tested. At 20 kg it walks but not reliably, and I show why.
+
+<Clip src="/videos/robotic-movement/walk-headcarry-15kg.mp4" caption="Walking 8.3 m with a free 15 kg pot on the head." />
+<Clip src="/videos/robotic-movement/walk-headcarry-20kg-drop.mp4" caption="Why 20 kg while walking is not reliable: a pot 10% heavier than the controller assumes slides off in the first second." />
+
+## A 100 lb bag
+
+Then the question I really wanted answered: could these robots pick up a 100 lb suitcase? On stock hardware, no. For the G1 the bag weighs more than the robot itself. So we gave it three ways to move the bag (lift and carry, drag, or tip it onto its wheels and roll it) and let the search choose.
+
+It chose tip-and-roll, and then did something nobody specified: it leaned back and rested the bag against its own hips, taking up to 370 N through that contact. The capacity model had said no static solution existed for pulling the bag toward the body. The body found one anyway, by using itself as part of the lever. That is exactly the kind of understanding I mean by leverage.
+
+The caveats matter: the hands are attached to the handle rather than gripping it, the run starts with the bag already tipped, and the robot cannot yet walk with it, so it moves the bag about a third of a metre.
+
+<Clip src="/videos/robotic-movement/luggage-tip-and-roll.mp4" caption="A 45 kg bag, too heavy to lift: tipped onto its wheels and leaned against the hips." />
+
+Previous: [Running](/posts/robotic-movement/running/). Next: [Manipulation](/posts/robotic-movement/manipulation/).

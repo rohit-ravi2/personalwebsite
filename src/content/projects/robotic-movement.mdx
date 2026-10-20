@@ -22,6 +22,13 @@ export const Pair = ({ children }) => (
   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>{children}</div>
 );
 
+export const Aside = ({ href, label = "Read the full story →", children }) => (
+  <aside style={{ borderLeft: "3px solid rgba(100,116,139,0.45)", padding: "0.15rem 0 0.15rem 0.95rem", margin: "0.5rem 0 1.5rem", fontSize: "0.94rem", lineHeight: 1.6 }}>
+    {children}
+    <a href={href} style={{ display: "inline-block", marginTop: "0.3rem", fontWeight: 500 }}>{label}</a>
+  </aside>
+);
+
 <div style={{border: "1px solid rgba(245,158,11,0.35)", background: "rgba(245,158,11,0.07)", borderRadius: "10px", padding: "0.95rem 1.15rem", margin: "0 0 2rem", fontSize: "0.94rem", lineHeight: 1.65}}>
 <strong style={{color: "#b45309"}}>Work in progress.</strong> Every clip is a replay of a stored
 simulation, checked at two physics time steps. Simulation only: nothing here has run on hardware.
@@ -29,7 +36,15 @@ Labels say when a body was modified ("what-if"), when an object is attached rath
 and which simulator settings a result depends on.
 </div>
 
+<Aside href="/posts/robotic-movement/origin-tennis/" label="Read how it started →">
+**Origin.** This started with the tennis serve. I played and coached in college, and the thing I never stopped noticing is that a skinny kid with real technique out-serves a big, strong player who only uses his arm. Technique, not strength, decides the result, and for a robot, unlike a person, the optimal technique is computable from its own specification.
+</Aside>
+
 ## How these movements were made: no demonstrations, no learned policy
+
+<Aside href="/posts/robotic-movement/no-demonstrations/">
+The part of this I think is most undersold is how little data it needs. Humanoids are usually taught by copying people in sensor suits; here the robot gets its own specification and a goal, and nothing else.
+</Aside>
 
 Nothing on this page was learned from people. No motion capture, no teleoperation, no video of
 humans, no imitation dataset, and no neural network anywhere in the pipeline. Each movement is
@@ -64,6 +79,10 @@ simulator settings. The movements themselves are found, not authored.
 
 ## Jumping
 
+<Aside href="/posts/robotic-movement/jumping/">
+I expected the robot's best jump to look nothing like a person's. Instead it found the human squat jump, exaggerated: a crouch far deeper than any of us can use, and almost twice the takeoff speed of a recorded human jump replayed on the same robot.
+</Aside>
+
 <Pair>
 <Clip src="/videos/robotic-movement/jump-1-human-retarget.mp4" caption="Start: a recorded human jump mapped onto the G1 and tracked." />
 <Clip src="/videos/robotic-movement/jump-4-robot-derived-crouch.mp4" caption="A starting strategy computed from the robot's own specification: a certified deep crouch, then full extension." />
@@ -76,6 +95,10 @@ simulator settings. The movements themselves are found, not authored.
 <Clip src="/videos/robotic-movement/box-jump-fail.mp4" caption="A failure, shown as one: jumping onto a box. The G1 reaches the top of a 0.20 m box but arrives moving forward and cannot stop on it. Neither the G1 nor the H1 held any box from 0.20 m up." note="The landing controller holds forward speeds up to 0.3 m/s with ideal motors, but none once a 10 ms motor lag is included. This is open, not closed." />
 
 ## Throwing
+
+<Aside href="/posts/robotic-movement/the-throw/">
+This is the animation that changed the project. The arm lagged back, the hips swivelled further than any person's can, and the result was a baseball throw pushed beyond human range by the robot's own form. Nobody told it to throw like a pitcher, or to go past one.
+</Aside>
 
 <Clip src="/videos/robotic-movement/throw-3-robot-derived-windup.mp4" caption="A wind-up derived from the robot's own body, refined by search: hips swivel on planted feet, the arm trails the trunk." note="Historical render: this version exceeded the wrist's rated speed and is not a valid speed figure. The same construction under the honest actuator limits reaches 20-23 m/s." />
 
@@ -93,11 +116,19 @@ The goal is no longer "as fast as possible" but "land the ball within 0.5 m of a
 
 ## Kicking
 
+<Aside href="/posts/robotic-movement/the-throw/">
+Given only "send the ball fast from one foot", the kick came out strictly sequenced, pelvis to thigh to shank to foot: the same chain as a tennis serve, found from scratch in a different limb.
+</Aside>
+
 <Clip src="/videos/robotic-movement/kick-ball.mp4" caption="G1 kicks a simulated football from one-foot support: 11.8 m/s ball speed. The weight shift, foot lift and hip-to-foot sequencing came out of the construction, not a script." note="Earlier, looser checks: this kick was not tested against the joint-stop and after-the-kick balance checks used below." />
 
 <Clip src="/videos/robotic-movement/kick-goal-5m.mp4" caption="Aimed kick into a 2 m goal 5 m away, on the stock G1 with rated torques and a 10 ms motor lag: 4.9 m/s, scored on all 16 randomized versions it was tested on and on 4 more from an independent check." note="Honest limits: the robot falls after every kick. Only 1 of the 12 goal setups tried passes this reliably, and the angled goals found nothing valid. The ankles hitting their joint stops are what limits it. A small sphere on the foot (an attachment) makes the ball contact." />
 
 ## Running
+
+<Aside href="/posts/robotic-movement/running/">
+I wanted one test of pure physics efficiency, and max sprint speed is it. The surprise was the wall: at stock ratings the ankles are too weak to push off through the foot at all, and Apollo, a robot never used to build the method, ran with no code change.
+</Aside>
 
 <Pair>
 <Clip src="/videos/robotic-movement/sprint-g1.mp4" caption="Unitree G1, stock body, running gait found from a speed ceiling computed from its specification." note="2 ms actuator lag." />
@@ -112,6 +143,10 @@ The goal is no longer "as fast as possible" but "land the ball within 0.5 m of a
 
 ## Walking
 
+<Aside href="/posts/robotic-movement/running/">
+Walking is the case people assume is solved. The bar I care about is a robot that essentially never tips over, and this section shows both how close that is and where it still fails.
+</Aside>
+
 Walking is the dull-looking hard case: a periodic gait with both feet sharing the load at every step, no sliding, steady speed and heading. Both robots use their stock bodies and published motor ratings with a 10 ms motor lag, and each walk was checked at two physics time steps.
 
 <Pair>
@@ -121,6 +156,10 @@ Walking is the dull-looking hard case: a periodic gait with both feet sharing th
 <Clip src="/videos/robotic-movement/walk-g1-shove-fail.mp4" caption="A failure: a sideways shove from the other side at the wrong moment of the stride knocks the G1 over. Sideways push recovery works only in some phases of the step, so it is not claimed." />
 
 ## Walking with a load on the head
+
+<Aside href="/posts/robotic-movement/carrying/">
+People do not carry a pot on their head with a ring. They balance it with their arms, and that is the nuance I wanted the robot to learn.
+</Aside>
 
 The body-derived arm-balance law from the standing head carry, now while walking at 0.75 m/s. The load is a free object resting on the head, not attached.
 
@@ -132,10 +171,18 @@ The body-derived arm-balance law from the standing head carry, now while walking
 
 ## Carrying with the body's structure
 
+<Aside href="/posts/robotic-movement/carrying/">
+Leverage is something people understand and robots do not yet. With the arms balancing a load on its head, the robot carries about five times what its hands can, and given a bag too heavy to lift, it leaned the bag against its own hips, which nobody specified.
+</Aside>
+
 <Clip src="/videos/robotic-movement/headcarry-box-32kg-lag.mp4" caption="G1 with hands, standing: a free 32 kg box resting on its head, kept there by the arms, with a 10 ms motor lag. The balancing law is built from the arm's own geometry and motor limits. Second half: the same posture with the law switched off, and the box falls in under a second. Hands-only carrying tops out at 6-8 kg." note="Requires a cap on the servo gains (a controller choice). Without motor lag, a 40 kg pot also holds. With lag, 40 kg is fragile." />
 <Clip src="/videos/robotic-movement/luggage-tip-and-roll.mp4" caption="A 45 kg bag is too heavy to lift; the search tips it onto its wheels and leans it against the hips instead, a use of the body nobody specified." note="Hands attached to the handle (not a finger grip)." />
 
 ## Manipulation
+
+<Aside href="/posts/robotic-movement/manipulation/">
+Laundry is the north star, but only once the movement itself generalises. Until then the rule is simple: every object solid, every grasp real or labelled as an attachment.
+</Aside>
 
 <Pair>
 <Clip src="/videos/robotic-movement/manip-brush-wrap-wipe.mp4" caption="G1 with Dex3 hands: a real finger wrap of a brush handle, then a force-controlled wipe." />

@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import { Button } from '../ui/button'
 import { formateLocalDate } from "../../lib/utils";
 
-let posts = await getCollection('posts');
+let posts = await getCollection('posts', ({ data }) => !data.draft);
 
 posts = posts.sort((a, b) => {
   return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();

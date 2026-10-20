@@ -1,0 +1,40 @@
+---
+title: "Where it started: the tennis serve"
+startDate: 2026-09-12
+description: "Why a tennis player and coach ended up building humanoid robots that find their own technique: technique beats size, and a robot's optimum is computable."
+tags: ["Robotics", "Tennis", "Biomechanics"]
+draft: true
+order: 1
+---
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page: [Robotic Movement: Progression in Generalization](/projects/robotic-movement/).
+
+## Technique beats size
+
+I played tennis in college, coached in college, and directed tournaments before that. The thing that stayed with me from all of it is the serve. You can have a huge, strong, athletic player whose serve will not break 50 mph, and a short, skinny kid with years of training who hits 100. Strength is not the bottleneck. Technique is.
+
+The trained kid serves harder because he uses a kinetic chain: from his feet to his calves, his quads, his hips, his shoulder, and only then his arm and hand. The untrained player uses his arm. No matter how much you weigh, if you cannot move that weight well, it is mechanically useless. The kid who uses his whole body keeps accelerating the racquet head through the whole movement, so in a real sense he has more mass behind the shot than the bigger player. That is F = ma, quite literally.
+
+Nobody has perfect technique. The best players are simply the ones closest to the ideal. And the ideal has a shape: use as many muscle groups as you can, in a sequence synchronised well enough that you never lose acceleration.
+
+## From a serve to a theory of movement
+
+The serve was only ever the example. Lifting a weight, sprinting, jumping, throwing: every repeatable movement that can be mechanically optimised follows the same principle. What I wanted was not a model that gets better at one movement after a million repetitions, but something closer to a generalized theory of movement mechanics, where in every situation the body looks for its most efficient way to produce the result, whether that is hitting a serve or washing dishes.
+
+## Why a robot, not a player
+
+For a person, the optimal movement exists, but you cannot compute it. You cannot measure someone's segment masses, joint ranges and torque-speed curves well enough to solve for it, so a coach is reduced to saying "use your legs". Teaching that to a kid is not something you can do mathematically.
+
+For a humanoid robot, every one of those numbers is already written down in its specification. The inverse problem nobody can solve for a human is tractable for a robot. That is the move this project makes: give a robot its own specification and a physical goal, and let it find its own technique.
+
+There is a second reason. Most humanoids today learn by copying people: humans in motion-capture suits, with the motion retargeted onto the robot. But a human optimum is optimal for a body of tendons and muscle, not for electric motors with completely different torque-speed characteristics and no elastic energy storage. Copying a person should be the wrong answer for a robot, and deriving the motion from the robot's own body should be the right one.
+
+## From the serve to the throw
+
+The project started with the vertical jump, the most studied maximal human movement. When it came time for a second task, I chose a throw. It is the closest analogue to the serve I could simulate without a racquet: the same independent muscle groups integrated into one kinetic chain, without the engineering of a racquet-ball impact. The throw turned out to be the moment the whole project came into focus.
+
+## Where it went
+
+The project has grown well past what I first expected. It started as a research question; it could become a company. A presentation or a workshop is one way to show it, but the work is not built around any single venue. It is built around one question: can a body work out how to move from a description of itself?
+
+Next in the series: [Jumping](/posts/robotic-movement/jumping/).
