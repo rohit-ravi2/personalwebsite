@@ -30,15 +30,6 @@ const experienceCollection = defineCollection({
 });
 
 // ✅ Removed `slug` (Astro auto-generates it)
-const bookCollection = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    author: z.string(),
-    readYear: z.number().optional().nullable(),
-    tags: z.array(z.string()).optional(),
-  }),
-});
 
 const postCollection = defineCollection({
   type: "content",
@@ -78,7 +69,6 @@ const certificationCollection = defineCollection({
 export const collections = {
   projects: projectCollection,
   experiences: experienceCollection,
-  books: bookCollection,
   posts: postCollection,
   certifications: certificationCollection,
 };

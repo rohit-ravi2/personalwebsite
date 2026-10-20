@@ -1,35 +1,37 @@
 export const PROFILE = {
   site: {
     SEO: {
-      title: "Rohit Ravi – AI, Philosophy, and the Science of Mind",
+      title: "Rohit Ravi – Machine Learning for Neuroscience",
       description:
-        "Undergraduate at NYU (Data Science, Philosophy minor). Research at the intersection of AI, computational neuroscience, and philosophy of mind — connectomics and neural-symbolic reasoning.",
+        "Undergraduate Researcher at NYU's Center for Data Science (Courant Institute). Machine learning for neural decoding, whole-brain neuroscience, human genetics and clinical prediction, with every result audited for leakage.",
     },
   },
   timezone: "America/New_York",
   language: "en-US",
   firstName: "Rohit",
   name: "Rohit Ravi",
-  headLine: "AI, philosophy, and the science of mind.",
+  headLine: "Machine learning for neuroscience, decoding and the science of mind.",
   headLine2:
-    "Undergraduate at NYU (Data Science, Philosophy minor). Working at the intersection of deep learning, computational neuroscience, and philosophy of mind.",
+    "Undergraduate Researcher, Center for Data Science, Courant Institute of Mathematical Sciences, New York University. I build machine-learning systems on neural, genetic and clinical data, then try to break them.",
   website: "https://www.rohitravi.com",
   repo: "https://github.com/rohit-ravi2/personalwebsite",
   avatarUrl: "/avatar.png",
   shortIntros: [
-    "Data Science @ NYU · Philosophy minor",
-    "Research: connectomics, neural-symbolic reasoning, consciousness",
+    "Undergraduate Researcher · Center for Data Science, Courant Institute, NYU",
+    "Neural decoding · whole-brain neuroscience · statistical genetics · clinical ML",
+    "B.A. Data Science, Philosophy minor"
   ],
   words: [
     "Arise, awake, and stop not till the goal is reached. — Swami Vivekananda",
   ],
   skills: [
-    "Python · PyTorch · NumPy / SciPy",
-    "Deep Learning (Transformers, GNNs, CNNs)",
-    "Graph analysis & connectomics",
-    "Statistics & experimental design",
-    "Philosophy of mind & consciousness studies",
-    "Linux · Git · Jupyter",
+    "Python · PyTorch · NumPy / SciPy · scikit-learn · LightGBM",
+    "Deep learning: transformers, GNNs, CNNs, sequence models",
+    "Neural decoding: sEMG, MEG, calcium imaging",
+    "Statistical genetics: LDSC, Mendelian randomization, MAGMA",
+    "Leakage audits, pre-registration, held-out evaluation",
+    "In-browser ML demos: ONNX Runtime, Three.js, React",
+    "Linux · Git · CUDA · Jupyter",
   ],
   links: {
     github: "https://github.com/rohit-ravi2",
@@ -49,6 +51,11 @@ export const PROFILE = {
       institution: "NYU",
     },
     {
+      category: "Coursework",
+      title: "Responsible Data Science (DS-UA 202): differential-privacy replication",
+      institution: "NYU",
+    },
+    {
       category: "Certification",
       title: "Computational Neuroscience",
       institution: "University of Washington",
@@ -65,7 +72,15 @@ export const PROFILE = {
     },
     {
       category: "Independent Research",
-      title: "C. elegans Connectomics & Transcriptomics",
+      title: "Neural decoding: Meta sEMG reanalysis, MEG speech (LibriBrain)",
+    },
+    {
+      category: "Independent Research",
+      title: "Whole-brain C. elegans: connectome, expression and activity",
+    },
+    {
+      category: "Independent Research",
+      title: "Human genetics of neurological traits (LDSC, MR)",
     },
     {
       category: "Independent Research",

@@ -17,10 +17,21 @@ const orderedGroups = [...CATEGORY_ORDER, ...[...groups.keys()].filter((k) => !C
   .filter((k) => groups.has(k))
   .map((k) => [k, groups.get(k)!] as const);
 
-const certCount = (await getCollection("certifications")).length;
+// Certifications live only in this popup; there is no /certifications page.
+const certs = (await getCollection("certifications")).sort(
+  (a, b) => b.data.issueDate.valueOf() - a.data.issueDate.valueOf(),
+);
+const rendered = await Promise.all(certs.map(async (c) => ({ cert: c, Content: (await c.render()).Content })));
+const fmt = (d: Date) => d.toLocaleDateString("en-US", { year: "numeric", month: "short", timeZone: "UTC" });
 ---
 
-<div class="mt-1 flex flex-col gap-3 text-sm">
+<button
+  type="button"
+  data-cert-open
+  class="mt-1 flex w-full flex-col gap-3 text-left text-sm cursor-pointer rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+  aria-haspopup="dialog"
+  aria-controls="cert-dialog"
+>
   {orderedGroups.map(([category, items]) => (
     <div>
       <h4 class="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-1">
@@ -36,11 +47,66 @@ const certCount = (await getCollection("certifications")).length;
           </li>
         ))}
       </ul>
-      {category === "Certification" && certCount > 0 && (
-        <a href="/certifications" class="text-xs text-primary hover:underline mt-1 inline-block">
-          View all {certCount} certifications →
-        </a>
-      )}
     </div>
   ))}
-</div>
+  <span class="text-xs text-primary hover:underline">
+    View all {certs.length} certifications →
+  </span>
+</button>
+
+<dialog
+  id="cert-dialog"
+  aria-labelledby="cert-dialog-title"
+  class="w-[min(44rem,calc(100vw-2rem))] max-h-[85vh] rounded-lg border bg-background p-0 text-foreground shadow-xl backdrop:bg-black/50"
+>
+  <div class="sticky top-0 flex items-center justify-between border-b bg-background px-5 py-3">
+    <h2 id="cert-dialog-title" class="text-base font-semibold">Certifications</h2>
+    <button type="button" data-cert-close class="rounded-md px-2 py-1 text-sm hover:bg-accent" aria-label="Close">
+      Close ✕
+    </button>
+  </div>
+  <ul class="flex flex-col divide-y px-5">
+    {rendered.map(({ cert, Content }) => (
+      <li class="py-4">
+        <p class="font-semibold leading-snug">{cert.data.title}</p>
+        <p class="text-sm text-muted-foreground">
+          {cert.data.issuer} · {fmt(cert.data.issueDate)}
+          {cert.data.courseCount && <> · {cert.data.courseCount} courses</>}
+        </p>
+        {(cert.data.verifyUrl || cert.data.pdfPath) && (
+          <p class="mt-1 flex gap-3 text-sm">
+            {cert.data.verifyUrl && <a href={cert.data.verifyUrl} target="_blank" rel="noreferrer" class="text-primary hover:underline">Verify</a>}
+            {cert.data.pdfPath && <a href={cert.data.pdfPath} target="_blank" rel="noreferrer" class="text-primary hover:underline">Certificate (PDF)</a>}
+          </p>
+        )}
+        {cert.body.trim() && (
+          <details class="mt-2 text-sm">
+            <summary class="cursor-pointer text-muted-foreground hover:text-foreground">Details</summary>
+            <div class="prose prose-sm mt-2 max-w-none overflow-x-auto">
+              <Content />
+            </div>
+          </details>
+        )}
+      </li>
+    ))}
+  </ul>
+</dialog>
+
+<script is:inline>
+  (() => {
+    function wire() {
+      const dlg = document.getElementById('cert-dialog');
+      const open = document.querySelector('[data-cert-open]');
+      if (!dlg || !open) return;
+      open.onclick = () => dlg.showModal();
+      dlg.querySelector('[data-cert-close]').onclick = () => dlg.close();
+      // Close on a click on the backdrop (outside the dialog box).
+      dlg.onclick = (e) => {
+        const r = dlg.getBoundingClientRect();
+        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+      };
+    }
+    wire();
+    document.addEventListener('astro:after-swap', wire);
+  })();
+</script>

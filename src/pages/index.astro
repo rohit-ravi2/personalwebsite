@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import IntroCard from '../components/sections/IntroCard.astro'
 import AboutMe from '../components/sections/AboutMe.astro'
 import Card from '../components/Card.astro'
-import Books from '../components/sections/Books.astro'
 import ExperienceCard from '../components/sections/ExperienceCard.astro'
 import Projects from '../components/sections/Projects.astro'
 import StudyCard from '../components/sections/StudyCard.astro'
@@ -24,7 +23,7 @@ const SITE = PROFILE.site
   >
   </div>
 
-  <h1 class="sr-only">Rohit Ravi — {PROFILE.headLine} · Data Science (Philosophy minor) at New York University</h1>
+  <h1 class="sr-only">Rohit Ravi — Undergraduate Researcher, Center for Data Science, Courant Institute of Mathematical Sciences, New York University</h1>
 
   <!-- Main Content Grid -->
   <main
@@ -68,11 +67,6 @@ const SITE = PROFILE.site
     <!-- Blog -->
     <Card colSpan="md:col-span-1 lg:col-span-6" rowSpan="md:row-span-1 lg:row-span-1" title="Blog Posts">
       <BlogCard/>
-    </Card>
-
-    <!-- Reading List -->
-    <Card colSpan="md:col-span-1 lg:col-span-3" rowSpan="md:row-span-2 lg:row-span-2" title="Reading List">
-      <Books/>
     </Card>
 
     <!-- Contact -->

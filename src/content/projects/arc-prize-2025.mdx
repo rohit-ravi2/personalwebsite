@@ -1,16 +1,16 @@
 ---
 title: "ARC Prize 2025"
 startDate: 2025-11-01
-description: "A classical program-synthesis attempt at ARC-AGI: symmetry inference, symbolic rule proposals and program search. It solved 0 of 172 public evaluation tasks exactly."
+description: "Ongoing attempt at the ARC-AGI benchmark — a pipeline-based approach to program synthesis, symmetry reasoning, and abstraction discovery."
 tags: ["ARC-AGI", "Program Synthesis", "Reasoning", "Research"]
 image:
   url: /images/projects/arc-prize-cover.png
   alt: "ARC-AGI puzzle showing a blue input grid transforming into a green output grid, with a multi-step transformation strip — Rohit Ravi's ARC Prize 2025 entry"
 ---
 
-**Status: paused. Result: 0 of 172 public evaluation tasks solved exactly.**
+**Status: work in progress.**
 
-A pipeline-oriented approach to the [ARC-AGI](https://arcprize.org/) benchmark — the François Chollet-authored test suite that requires solving novel visual reasoning puzzles from a handful of training examples each. ARC resists the standard deep-learning playbook because every task is effectively out-of-distribution.
+Iterating on a pipeline-oriented approach to the [ARC-AGI](https://arcprize.org/) benchmark — the François Chollet-authored test suite that requires solving novel visual reasoning puzzles from a handful of training examples each. ARC resists the standard deep-learning playbook because every task is effectively out-of-distribution.
 
 ## Architecture
 
@@ -18,11 +18,9 @@ Built as a series of staged pipelines, each refining the previous. Core componen
 
 - **Symmetry and transformation inference** — detect rotational, reflective, and color-permutation structure across training pairs before attempting synthesis.
 - **Multi-phase candidate generation** — symbolic rule proposals, program-space search, and learned priors running in parallel.
-- **Solution scoring** — IoU and exact-match metrics against the ARC public evaluation solutions.
+- **Solution scoring** — IoU and exact-match metrics on held-out grids; calibration against ARC evaluation solutions.
 
-## Result
-
-After eleven pipeline iterations, none of the 172 predicted output grids exactly matches its evaluation solution. Mean pixel accuracy was about 0.21. That is how far the classical DSL-plus-search playbook got for me without learned program priors, and it is the honest baseline for anything I try next. The latest notebook also ends in an unresolved error, so the pipeline is not in a runnable state.
+Current pipeline is at iteration 11 with multiple checkpoint directories per experimental phase.
 
 ## What's still open
 
@@ -30,4 +28,4 @@ After eleven pipeline iterations, none of the 172 predicted output grids exactly
 - Coverage gaps on tasks that require novel primitive composition.
 - Establishing a reliable in-distribution validation split that tracks Kaggle leaderboard behavior.
 
-The code is not public.
+Repo is local while the architecture is still in flux.
