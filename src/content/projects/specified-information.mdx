@@ -40,36 +40,49 @@ next thing to try.
 ## What survived
 
 After a dozen candidate "hidden codes" were tested and dissolved, three ordinary things
-were left carrying essentially all of the reproducible wiring. The chart below is the
-accounting: how far each factor gets you, and where the animal-to-animal noise floor sits.
+were left carrying most of the reproducible wiring. The chart below is the accounting: how
+far each factor gets you, compared against how well two adult animals agree with each other.
 
 <SpecificationLedger client:visible />
 
 ## The honest bottom line
 
-The reproducible worm connectome does **not** appear to hide a compact molecular blueprint.
-Wherever a hidden code could have lived — gene-similarity matching, a learned pairing
-grammar, a gene-regulatory generator, a lineage rulebook, a bioelectric field — a proper
-control dissolved it into one of three plain ingredients:
+At the resolution I could test (adult neurons, class-level gene expression, a handful of
+animals), the reproducible worm connectome does **not** show a distributed molecular
+blueprint. Wherever an aggregate hidden code could have lived — gene-similarity matching,
+a learned pairing grammar, a gene-regulatory generator, a lineage rulebook, a bioelectric
+field — a proper control dissolved it into one of three plain ingredients:
 
 - **physical contact** (who touches whom, and how much),
 - **developmental timing** (when each neuron is born — you cannot wire a cell before it
   exists), and
 - a **small sender-side transmitter bias.**
 
-Together these explain the reliable "strong core" of the wiring right up to the
-animal-to-animal noise ceiling. The weak, one-off connections that vary between animals
-behave like tolerated noise, not like missing instructions.
+Together these explain most of the reliable "strong core" of the wiring. An earlier
+version of this page said they explain it right up to the animal-to-animal noise ceiling.
+That was wrong: I compared against a two-adult agreement score that is only a lower bound
+on the ceiling, a richer model went past it, and on neurons held out entirely the contact
+model drops to an AUC of 0.746. What is left over is not noise either. The per-connection
+residual is reproducible (split-half reliability 0.855 across four L1 animals) and
+structured, and most of the per-neuron variation in how many connections a cell makes is
+still unexplained.
 
-Put simply: the genome seems to specify a **physical-and-temporal scaffold**, not an
-edge-by-edge wiring table. The "specified information" is distributed across contact,
-timing, and stabilization — not stored as a hidden code.
+The nulls are also narrower than they look. Every molecular test used mature mRNA at the
+level of neuron classes, so microRNAs and other small RNAs were never measured, left and
+right cells could not be told apart, and there is no surface-protein data from the time
+wiring happens. Inside those limits, some specific rules do have codes: innexin expression
+predicts gap junctions, homeobox genes predict effector identity, and one guidance pair,
+Slit–Robo (SLT-1 to SAX-3), marks reproducible synapses that form against the grain of the
+geometry, replicated on a held-out connectome.
+
+Put simply: the genome seems to specify a **physical-and-temporal scaffold** plus a sparse
+set of rule-specific codes, not an edge-by-edge wiring table, at least at the resolution
+available.
 
 <p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
 A note on honesty: this is a rigorous <em>decomposition</em>, not a discovered blueprint.
 That contact dominates wiring echoes Brittin et al. (2021); that the wiring is reproducible
-echoes Witvliet et al. (2021). The contribution here is the noise-ceiling framing, the
-developmental-timing mediation, the controlled transmitter bias, and — most of all — the
-systematic ruling-out of the hidden-code hypotheses with the right nulls. Negative results,
-done carefully, are results.
+echoes Witvliet et al. (2021). The contribution here is the developmental-timing
+mediation, the controlled transmitter bias, the systematic testing of hidden-code hypotheses
+against matched nulls, and the record of which of my own conclusions did not survive.
 </p>

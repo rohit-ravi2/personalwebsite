@@ -1,7 +1,7 @@
 ---
 title: "cfDNA Cancer Detection — A Cross-Cohort Recovery Story"
 startDate: 2026-05-12
-description: "Cell-free DNA methylation cancer detection over the Loyfer atlas. Cross-cohort AUROC on GSE122126 went from 0.217 (below random, model inverted) to 0.850 across four of five cancer types. The four mechanisms that closed the gap, and the literature check that showed they're not novel."
+description: "Cell-free DNA methylation cancer detection over the Loyfer atlas. Cross-cohort AUROC on GSE122126 (15 cancer, 4 healthy) went from 0.217 (below random, model inverted) to 0.850, with scores too saturated to use as a classifier yet. The four mechanisms that closed the gap, and the literature check that showed they're not novel."
 tags: ["cfDNA", "Methylation", "Liquid Biopsy", "Deep Learning", "Deconvolution", "Research"]
 image:
   url: /images/projects/cfdna-cancer-detection/cover.png
@@ -34,7 +34,9 @@ The fourth thing isn't a separate fix exactly. It's the cleanup that makes the f
 
 <DeconvolutionPlayground client:only="react" />
 
-Cross-cohort AUROC went to 0.850. By tissue: CRC 0.94 on n=4, BREAST 1.00 on n=3, CUP 0.94 on n=4, LUAD 0.56 on n=4. The LUAD failure is real and worth saying out loud. The four LUNG samples in GSE122126 show identical Lung-Ep-Alveo deconvolution to the four healthy controls. Either those tumors are early-stage low-shedders or atlas Lung-Ep-Alveo and Lung-Ep-Bron don't separate from baseline at the coverage GSE122126 has. I couldn't tell from the data which of those is true.
+Cross-cohort AUROC went to 0.850 on 15 cancer and 4 healthy samples. With only 4 healthy controls, an AUROC that high or higher arises by chance about 1.8% of the time (exact permutation p = 0.018 over all 3,876 label arrangements), so the ranking signal is real but thin. The scores themselves are not usable yet: all 19 fall between 0.894 and 0.9998, so at the model's 0.5 cutoff every sample, including all four healthy ones, is called cancer. The ranking works; the calibration does not.
+
+I'm not quoting a per-tissue breakdown, because the saved results don't record which sample is which tissue and I can't reproduce one. My working notes flagged the four lung samples as the weak case, with Lung-Ep-Alveo deconvolution indistinguishable from the healthy controls. Either those tumors are early-stage low-shedders or the atlas lung cell types don't separate from baseline at this coverage.
 
 In-silico stage-1 sensitivity at 99% specificity went from 0.04 (Day 2) to 0.48 (Day 3). Distribution-sampled mixtures with TCGA-derived tumor profiles taught the model to recognize smaller tumor signatures than the fixed-donor mixtures did.
 
@@ -46,6 +48,6 @@ Which is to say: I spent three days reimplementing 2024–2026 work, and the 0.8
 
 The things this project actually contributes are reproducibility-flavored, not novel. Everything was built from public sources (GEO, TCGA, the Loyfer atlas) with no dbGaP or EGA cohort access. The failure modes are documented rather than suppressed. The four-mechanism ablation is clean. None of that adds up to a paper, but the work is real and the code reproduces.
 
-Day 4 would be Platt or temperature scaling on the saturated cross-cohort scores, a separate full-coverage tissue classifier to restore the Day-2 tissue-of-origin top-1 of 0.811 (which regressed to 0.247 from multi-task pooling), PAAD harmonization since 37 of 40 TCGA-PAAD files were still downloading when this got handed off, and a real diagnostic on the LUAD failure. Either try the Lung-Ep-Alveo versus Lung-Ep-Bron subtype split, or step away from atlas defaults and pick a lung-cancer-specific marker set entirely.
+Day 4 would be Platt or temperature scaling on the saturated cross-cohort scores, a separate full-coverage tissue classifier to restore the Day-2 tissue-of-origin top-1 of 0.811 (which regressed to 0.247 from multi-task pooling), PAAD harmonization (37 of 40 TCGA-PAAD files never finished downloading), and a real diagnostic on the LUAD failure. Either try the Lung-Ep-Alveo versus Lung-Ep-Bron subtype split, or step away from atlas defaults and pick a lung-cancer-specific marker set entirely.
 
 Repo: [github.com/rohit-ravi2/cfdna-cancer-detection](https://github.com/rohit-ravi2/cfdna-cancer-detection)

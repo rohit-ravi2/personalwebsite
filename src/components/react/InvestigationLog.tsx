@@ -32,13 +32,13 @@ const ENTRIES: Entry[] = [
     tried:
       "Use physical contact — which neurons touch, and how much surface they share — to predict which connections show up reliably across different worms.",
     found:
-      "It works remarkably well: contact geometry predicts reliable wiring about as well as one animal predicts another (AUC 0.84–0.91). That upper limit is the 'noise ceiling' — no model can beat it.",
+      "It works remarkably well: contact geometry predicts reliable wiring about as well as one adult animal predicts another (AUC 0.84–0.91). I first called that the 'noise ceiling'. It turned out to be only a lower bound: a richer model went past it, and on held-out neurons contact drops to 0.746.",
     ruled:
       "Nothing yet — this is the anchor. Contact is the dominant factor in reliable wiring.",
     why:
       "You can't wire two neurons that don't touch, and where they touch a lot they usually connect. Most of the wiring is set by who is physically next to whom.",
     next:
-      "If contact explains almost everything up to the noise ceiling, is the small leftover a hidden molecular 'address code'? We went looking for it.",
+      "If contact explains most of the reliable wiring, is the leftover a hidden molecular 'address code'? We went looking for it.",
   },
   {
     n: 2,
@@ -192,9 +192,9 @@ const ENTRIES: Entry[] = [
     tried:
       "Add up everything that survived its controls and ask what it says together.",
     found:
-      "Developmental birth-timing mediates the reliable 'strong core' of wiring (+0.061 beyond contact); that core is predictable right up to the noise ceiling; and the weak, variable connections behave like tolerated noise.",
+      "Developmental birth-timing mediates the reliable 'strong core' of wiring (+0.061 beyond contact); contact plus timing predict most of that core; and what is left over is reproducible and structured, not noise.",
     ruled:
-      "The idea that the connectome hides a compact code. It doesn't — at least not one recoverable from any data we have.",
+      "A distributed molecular code, at class-level mRNA resolution (microRNAs were never measured). A few rule-specific codes are real: innexins for gap junctions, homeobox genes for effectors, and Slit–Robo at synapses that form against the geometry.",
     why:
       "Every place a hidden code could live, a proper control dissolved it into contact, timing, or plain cell identity.",
     next:

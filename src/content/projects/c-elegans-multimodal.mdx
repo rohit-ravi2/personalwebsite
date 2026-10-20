@@ -13,7 +13,7 @@ import { WormBody } from "../../components/react/WormBody";
 import { BrainBody } from "../../components/react/BrainBody";
 import { CelegansDashboard } from "../../components/react/CelegansDashboard";
 
-## Thesis
+## Starting hypothesis
 
 Local connectomic topology in *C. elegans* is largely self-determining, while gene expression acts as a modulatory refinement layer rather than a primary architect of wiring.
 
@@ -21,16 +21,16 @@ Local connectomic topology in *C. elegans* is largely self-determining, while ge
 
 <ConnectomeExplorer client:only="react" />
 
-Click any neuron class to highlight its immediate neighborhood — outgoing chemical synapses and gap junctions. Colors encode the 3-class behavioral role (sensory / inter / motor) that the expression-only classifier predicts at **92.7% accuracy** in this project.
+Click any neuron class to highlight its immediate neighborhood — outgoing chemical synapses and gap junctions. Colors encode the 3-class behavioral role (sensory / inter / motor).
 
 ## What I built
 
-A multi-modal pipeline over the hermaphrodite *C. elegans* connectome (N=91 somatic neurons with both connectivity and single-cell expression data):
+A multi-modal pipeline over the hermaphrodite *C. elegans* connectome, joining connectivity with single-cell expression data:
 
-- **GNCA (Graph Neural Cellular Automata)** predicting outgoing synaptic strength — **r = 0.987** on held-out edges. Controls: shuffled-expression r = 0.934 (topology carries the signal), graph-only r = 0.861, expression-only r = 0.27.
-- **Neuron-role classifier** — 92.7% accuracy predicting 3-class behavioral role (sensory / inter / motor) from expression alone.
-- **CCA** between expression space and motif space: canonical correlations ρ = [0.875, 0.836, 0.809].
-- **Honest null** — a PhaseD hybrid gene-graph LSTM showed `gene_causal_by_shuffle: False`: dynamics prediction doesn't improve with gene expression on this dataset.
+- **GNCA (Graph Neural Cellular Automata)** predicting outgoing synaptic strength over 838 expression-aligned nodes — r = 0.987 **in-sample** (the model was fit and scored on the same edges; there is no held-out run). The informative part is the contrast between variants fit the same way: shuffled-expression r = 0.934, graph-only r = 0.861, expression-only r = 0.27, which says topology carries most of the fit.
+- **Neuron-role classifier** — 92.7% 5-fold accuracy predicting a 3-class behavioral role (sensory / inter / motor). Two caveats: the labels came from a name-prefix heuristic, not curated annotation, and graph features were in the input alongside expression, so this is not an expression-only result.
+- **CCA** between expression space and motif space: canonical correlations ρ = [0.875, 0.836, 0.809], in-sample.
+- **A null that doesn't carry over** — a hybrid gene-graph LSTM showed no gain from gene expression (`gene_causal_by_shuffle: False`), but that test ran on synthetic dynamics. On real whole-brain recordings, a later project found expression predicts the activity of never-seen neuron classes about as well as wiring does.
 
 <img src="/images/projects/celegans-collapse-curve.png" alt="Genetic collapse curve: model correlation (red) vs. cumulative top-driver gene knockouts, alongside average probability assigned to hub neurons (navy). Performance plateaus well above chance even after 200 genes removed — evidence of genetic redundancy supporting the topology-dominant thesis." class="mx-auto max-w-2xl rounded-lg border" />
 
@@ -42,7 +42,7 @@ A multi-modal pipeline over the hermaphrodite *C. elegans* connectome (N=91 soma
 
 ## Status
 
-In progress. Draft manuscript structured around the topology-dominant / gene-modulatory framing. Target venues: *eLife*, *PLOS Computational Biology*, or *Network Neuroscience* for the main paper; NeurIPS GRL / ICLR LMRL workshops for the GNCA methods paper.
+Learning work, not a paper. The numbers above are in-sample fits, and the topology-dominant framing has not survived later held-out tests: across several of my later analyses, the measured connectome predicts activity no better than degree-matched shuffles or physical proximity.
 
 Repo is private while the work is unfinished.
 

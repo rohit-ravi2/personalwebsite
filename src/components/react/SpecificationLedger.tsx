@@ -6,7 +6,7 @@ import { useState } from "react";
  *
  * A data-grounded decomposition of what makes the reproducible C. elegans nerve-ring
  * connectome reproducible. Every number is a real result from the analysis arc
- * (contact-geometry noise-ceiling, developmental-arrival mediation, presynaptic-NT bias)
+ * (contact geometry vs two-adult agreement, developmental-arrival mediation, presynaptic-NT bias)
  * and the systematic falsification of the "hidden molecular code" hypotheses.
  *
  * No number here is illustrative. Provenance is noted per block.
@@ -62,22 +62,23 @@ export default function SpecificationLedger() {
           What makes the reproducible connectome reproducible?
         </h3>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-          Physical contact geometry and developmental birth-timing account for the reproducible
-          wiring <em>up to the animal-to-animal noise ceiling</em>, with a small real presynaptic-transmitter
-          bias. There is no recoverable molecular address code beneath it.
+          Physical contact geometry and developmental timing account for most of the reproducible
+          wiring, with a small real presynaptic-transmitter bias. At class-level resolution there is no
+          distributed molecular address code beneath it, though a few rule-specific codes are real.
         </p>
       </div>
 
       {/* Panel 1 — noise ceiling */}
       <section className="mb-8">
         <h4 className="mb-1 text-sm font-semibold text-slate-100">
-          1 · Contact geometry reaches the reproducibility ceiling
+          1 · Contact geometry vs two-adult agreement
         </h4>
         <p className="mb-4 text-xs text-slate-400">
-          The most any model can achieve is set by how well one animal's wiring predicts another's
-          (the <span className="text-slate-300">noise ceiling</span>). At every synapse threshold, contact
-          geometry <span className="text-sky-300">meets or exceeds it</span> — so the leftover is individual
-          variability, not a missing code.
+          The red mark is how well one adult's wiring predicts another's. At every synapse threshold, contact
+          geometry <span className="text-sky-300">meets or exceeds it</span>. I first read that as reaching the
+          noise ceiling. It isn't: two-adult agreement is only a lower bound on the ceiling, a richer model
+          went past it, and on held-out neurons contact drops to 0.746. The leftover is structured and
+          reproducible, not just individual variability.
         </p>
         <div className="space-y-4">
           {CEILING.map((r) => (
@@ -108,7 +109,7 @@ export default function SpecificationLedger() {
         </div>
         <div className="mt-3 flex flex-wrap gap-4 text-[11px] text-slate-500">
           <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-3 rounded-sm bg-sky-500/70" /> contact-geometry AUC</span>
-          <span className="inline-flex items-center gap-1.5"><span className="h-3 w-[2px] bg-rose-400" /> animal-to-animal noise ceiling</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-3 w-[2px] bg-rose-400" /> two-adult agreement (lower bound on the ceiling)</span>
           <span>axis: 0.50 (chance) → 1.00</span>
         </div>
       </section>
@@ -135,7 +136,7 @@ export default function SpecificationLedger() {
           <div
             className="absolute inset-y-0 bg-[repeating-linear-gradient(45deg,#334155_0,#334155_6px,#1e293b_6px,#1e293b_12px)]"
             style={{ left: `${pct(RESIDUAL.from)}%`, width: `${pct(RESIDUAL.to) - pct(RESIDUAL.from)}%` }}
-            title="residual = animal noise + unmodeled"
+            title="residual = animal-to-animal variability + reproducible unmodeled structure"
           />
           <div className="absolute inset-0 flex items-center px-3 text-[11px] text-white/90">
             <span className="font-semibold">AUC 0.50 → 0.89 across the model stack</span>
@@ -198,10 +199,10 @@ export default function SpecificationLedger() {
       <p className="mt-6 border-t border-slate-800 pt-4 text-[11px] leading-relaxed text-slate-500">
         <span className="font-semibold text-slate-400">Reading this honestly.</span>{" "}
         This is a decomposition, not a discovered blueprint. Contact-dominance echoes Brittin (2021)
-        and reproducibility echoes Witvliet (2021); the contribution here is the noise-ceiling framing,
+        and reproducibility echoes Witvliet (2021); the contribution here is
         the developmental-arrival mediation, the controlled transmitter bias, and the systematic
-        falsification of the molecular-code hypotheses. The residual is largely animal-to-animal
-        variability — <em>not</em> a hidden code waiting to be found.
+        testing of molecular-code hypotheses against matched nulls. The residual is reproducible and
+        mostly unexplained; at the resolution tested, it is not a distributed hidden code.
       </p>
     </div>
   );
