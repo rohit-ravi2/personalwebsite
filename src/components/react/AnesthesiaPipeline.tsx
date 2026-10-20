@@ -1103,7 +1103,6 @@ function NegativeControlsTable({ negative }: { negative: NegativeControls }) {
 }
 
 function CaseStudiesPanel({ data }: { data: CaseStudies }) {
-  const repoBase = "https://github.com/rohit-ravi2/personalwebsite/blob/main";
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-4 mb-4">
       <SectionHeader
@@ -1114,14 +1113,9 @@ function CaseStudiesPanel({ data }: { data: CaseStudies }) {
         {data.case_studies.map((c) => (
           <div key={c.filename} className="rounded-md border border-zinc-200 p-2.5 hover:border-zinc-400 transition-colors">
             <div className="flex items-center justify-between mb-1">
-              <a
-                href={`${repoBase}/${c.github_path}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-zinc-900 hover:text-purple-700"
-              >
-                {c.title} →
-              </a>
+              <span className="text-sm font-semibold text-zinc-900">
+                {c.title}
+              </span>
               <span className="text-[10px] text-zinc-500 font-mono">{c.word_count.toLocaleString()} words</span>
             </div>
             <p className="text-[11px] text-zinc-600 leading-snug">{c.summary}</p>
