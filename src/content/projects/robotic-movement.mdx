@@ -29,6 +29,39 @@ Labels say when a body was modified ("what-if"), when an object is attached rath
 and which simulator settings a result depends on.
 </div>
 
+## How these movements were made: no demonstrations, no learned policy
+
+Nothing on this page was learned from people. No motion capture, no teleoperation, no video of
+humans, no imitation dataset, and no neural network anywhere in the pipeline. Each movement is
+**constructed**:
+
+1. **The robot's own specification** goes in: its geometry, masses, joint limits and each motor's
+   rated torque and speed, read from the manufacturer's model.
+2. **A physical goal** goes in: release a ball fast, move the body forward, keep a load on the head.
+   The goal says *what* must happen, never *how*.
+3. **A starting motion is derived from the body**: which joint motions move the hand or the body
+   most effectively given each motor's limits.
+4. **Search on real physics** refines it, and the robot discovers the technique by trial in simulation,
+   checked against the motors' real limits at two simulation time steps.
+
+The only "experience" is simulation the system generates for itself, roughly 2,400 to 38,400 trial
+runs per technique (minutes to a few hours on a desktop CPU). That is the whole cost of a new skill
+on a new body.
+
+| | Typical learned-robot approach | This work |
+|---|---|---|
+| Human demonstrations | thousands of examples per skill | **none** |
+| Learned model | large neural policy | **none** |
+| New robot | recollect data, retrain | **same code, new spec file** |
+| What the robot needs | a dataset | **its own specification and a goal** |
+
+The one place human data appears is the first jump clip below, a recorded human jump replayed on
+the robot as a comparison baseline. The motion the robot derived from its own body beat it.
+
+What *is* supplied by hand, and stated with every result: the broad structure of some starting
+motions (for example "wind up, then release"), the balance and foot-placement controllers, and the
+simulator settings. The movements themselves are found, not authored.
+
 ## Jumping
 
 <Pair>
