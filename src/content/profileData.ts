@@ -36,6 +36,7 @@ export const PROFILE = {
   links: {
     github: "https://github.com/rohit-ravi2",
     linkedin: "https://www.linkedin.com/in/rohit-ravi2/",
+    orcid: "https://orcid.org/0009-0007-7568-0169",
     email: "mailto:rohit.ravi2@gmail.com",
     instagram: "https://instagram.com/rohitravi_",
   },

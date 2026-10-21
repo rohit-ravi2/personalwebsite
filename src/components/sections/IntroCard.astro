@@ -15,6 +15,11 @@ import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
           <li>{intro}</li>
         ))}
       </ul>
+      {PROFILE.links?.orcid && (
+        <a href={PROFILE.links.orcid} target="_blank" rel="noreferrer" class="pt-2 text-xs text-muted-foreground hover:underline">
+          ORCID {PROFILE.links.orcid.replace("https://orcid.org/", "")}
+        </a>
+      )}
     </div>
     <div class="flex gap-2 justify-center md:justify-start">
       <a href={PROFILE.links.github} aria-label="Rohit Ravi on GitHub" target="_blank" rel="noreferrer">
