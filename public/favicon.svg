@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
-  <rect width="64" height="64" rx="8" fill="#1a2a4a"/>
-  <text x="32" y="32" text-anchor="middle" dominant-baseline="central"
-        font-family="'PT Serif', 'Georgia', serif" font-weight="700" font-size="36"
-        letter-spacing="-1" fill="#f2ead3">RR</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="geometricPrecision">
+  <rect width="32" height="32" fill="#0F3B2E"/>
+  <g transform="translate(2.0350 23.4500) scale(0.010000 -0.010000)" fill="#F3EDE2">
+    <path d="M116 0H469V513H661L934 0H1321L1010 569C1175 643 1269 789 1269 995C1269 1299 1062 1490 726 1490H116ZM469 792V1204H651C817 1204 903 1134 903 995C903 856 817 792 652 792Z"/>
+    <path d="M116 0H469V513H661L934 0H1321L1010 569C1175 643 1269 789 1269 995C1269 1299 1062 1490 726 1490H116ZM469 792V1204H651C817 1204 903 1134 903 995C903 856 817 792 652 792Z" transform="translate(1356 0)"/>
+  </g>
 </svg>

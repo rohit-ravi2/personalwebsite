@@ -1,25 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1a2a4a"/>
-      <stop offset="100%" stop-color="#0f1a33"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <!-- RR mark top-left -->
-  <rect x="64" y="64" width="96" height="96" rx="14" fill="#f2ead3"/>
-  <text x="112" y="112" text-anchor="middle" dominant-baseline="central"
-        font-family="'PT Serif', 'Georgia', serif" font-weight="700" font-size="56"
-        fill="#1a2a4a" letter-spacing="-1.5">RR</text>
-  <!-- Name -->
-  <text x="64" y="340" font-family="'PT Serif', 'Georgia', serif" font-weight="700" font-size="88" fill="#f2ead3">Rohit Ravi</text>
-  <!-- Tagline -->
-  <text x="64" y="410" font-family="'PT Serif', 'Georgia', serif" font-size="42" fill="#f2ead3" fill-opacity="0.82">AI, philosophy, and the science of mind.</text>
-  <!-- Sub -->
-  <text x="64" y="510" font-family="'PT Serif', 'Georgia', serif" font-size="28" fill="#f2ead3" fill-opacity="0.6">
-    Data Science @ NYU · Philosophy minor
-  </text>
-  <text x="64" y="545" font-family="'PT Serif', 'Georgia', serif" font-size="28" fill="#f2ead3" fill-opacity="0.6">
-    rohitravi.com
-  </text>
+  <rect width="1200" height="630" fill="#F3EDE2"/>
+  <g transform="translate(80 76) scale(3.5)">
+    <g transform="translate(2.0350 23.4500) scale(0.010000 -0.010000)" fill="#F3EDE2">
+    <path d="M116 0H469V513H661L934 0H1321L1010 569C1175 643 1269 789 1269 995C1269 1299 1062 1490 726 1490H116ZM469 792V1204H651C817 1204 903 1134 903 995C903 856 817 792 652 792Z"/>
+    <path d="M116 0H469V513H661L934 0H1321L1010 569C1175 643 1269 789 1269 995C1269 1299 1062 1490 726 1490H116ZM469 792V1204H651C817 1204 903 1134 903 995C903 856 817 792 652 792Z" transform="translate(1356 0)"/>
+  </g>
+  </g>
+  <g fill="#0F3B2E" font-family="Inter, 'Liberation Sans', sans-serif">
+    <text x="80" y="392" font-weight="800" font-size="88">Rohit Ravi</text>
+    <text x="80" y="454" font-weight="400" font-size="36" fill="#244C3C">AI, philosophy, and the science of mind.</text>
+    <text x="80" y="548" font-weight="500" font-size="26" fill="#244C3C">Data Science @ NYU  ·  Philosophy minor</text>
+    <text x="80" y="584" font-weight="500" font-size="26" fill="#244C3C">rohitravi.com</text>
+  </g>
 </svg>
