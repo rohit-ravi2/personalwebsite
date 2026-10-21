@@ -31,14 +31,6 @@ import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
           </Button>
         </a>
       )}
-      {PROFILE.links?.orcid && (
-        <a href={PROFILE.links.orcid} aria-label="Rohit Ravi on ORCID" target="_blank" rel="noreferrer">
-          <Button aria-label="Rohit Ravi on ORCID">
-            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#A6CE39"/><text x="12" y="16.2" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#fff">iD</text></svg>
-            <span class="sr-only">Rohit Ravi on ORCID</span>
-          </Button>
-        </a>
-      )}
       {PROFILE.links?.email && (
         <a href={PROFILE.links.email} aria-label="Email Rohit Ravi">
           <Button aria-label="Email Rohit Ravi">
