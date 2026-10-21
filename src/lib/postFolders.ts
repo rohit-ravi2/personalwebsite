@@ -5,6 +5,11 @@ type Post = CollectionEntry<"posts">;
 // Display names for blog subfolders (src/content/posts/<folder>/...).
 // A folder without an entry here gets a title derived from its name.
 export const FOLDER_META: Record<string, { title: string; description: string }> = {
+  libribrain: {
+    title: "LibriBrain",
+    description:
+      "Decoding heard words from MEG for the LibriBrain 2026 competition: the technical results, and how the ideas came together.",
+  },
   "robotic-movement": {
     title: "Robotic Movement",
     description:
