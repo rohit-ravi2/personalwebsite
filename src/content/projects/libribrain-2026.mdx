@@ -1,0 +1,71 @@
+---
+title: "Fifty words from a magnetic field"
+startDate: 2026-09-21
+description: "Decoding which of 50 words a listener heard from 306-channel MEG, for the LibriBrain 2026 competition. Eighth on the Broad public leaderboard with no leakage, a no-brain baseline that scores 0.63, and a measured account of where the remaining distance comes from."
+tags: ["MEG", "Neural Decoding", "Neuroscience", "Machine Learning", "Kaggle", "Research"]
+image:
+  url: /images/projects/libribrain/lb_progression.png
+  alt: "Step plot of every leaderboard submission from 8 to 16 October 2026: the Broad track rises from 0.20 to 0.722 and the Deep track from 0.57 to 0.729, with the MEG-XL reference at 0.430 and the d'Ascoli et al. reference at 0.732 marked"
+---
+
+The LibriBrain 2026 competition, run by the PNPL group at Oxford, asks a narrow question about magnetoencephalography.
+Given the magnetic field recorded while a person heard a word, which of 50 words was it? The words are almost all
+function words (*the*, *was*, *not*, *they*), and a prediction counts if the true word is among its ten best guesses,
+so chance is 0.20. The Deep track has one listener with about 80 hours of recordings. The Broad track has 39 others,
+most with ten to forty minutes of labelled data and seven with none.
+
+The entry finished at **0.722 on Broad and 0.729 on Deep** on the public leaderboard, eighth on Broad. The published
+references were 0.430 (MEG-XL, pretrained on roughly 300 hours from 800 people) and 0.732 (d'Ascoli et al., supervised
+on all of the Deep subject's data). Everything ran on one 8 GB GPU over 26 days, and every experiment was written down
+with a predicted effect before it was run.
+
+<img src="/images/projects/libribrain/lb_progression.png" alt="Every public leaderboard submission for both tracks, 8 to 16 October 2026, with the best-so-far score as a step line" />
+
+## What moved the score
+
+Two changes did most of the work. Training the encoder to predict the contextual embedding of each heard word, taken
+from a large text model (T5-large, encoder block 12), carried Broad from 0.23 to 0.43. Then, against expectation,
+training on the Deep subject alone and transferring with no adaptation took Broad from 0.43 to 0.66. Adding the Broad
+subjects' own short recordings made transfer steadily worse: 0.632 locally with none of their data, 0.452 when it made
+up half of each batch.
+
+The rest came from structure in each subject's own unlabelled test rows. Balancing each subject's predicted class mass
+added 0.036 on Broad. A bigram grammar learned by expectation-maximisation from the subject's 156 test sentences added
+0.018. On Deep, re-estimating normalisation statistics on the test recording day added 0.044, because that day was
+absent from training; the same step hurt new brains. No computation ever combined rows from different subjects, which
+is the leak the organisers prohibited.
+
+## The stimulus can decode itself
+
+The first sentence-level model was given the time between words. It reached 0.51 locally, and with the timing removed
+the same model scored 0.29, no better than having no sentence context at all. It had learned word identity from
+durations in the audio, not from the brain. I removed the feature, though the rules allowed it.
+
+After the competition I measured how far timing alone goes. A classifier that sees no MEG at all, only each word's
+relative onset, the gap to the next word, its position and the sentence length, scores **0.632** on the same held-out
+blocks where the brain decoder scores about 0.70 to 0.78. On this benchmark's format the honest floor is near 0.63,
+not 0.20, and a decoder's contribution is the margin above it.
+
+## Local tests that lied
+
+Several changes looked certain locally and did nothing on the leaderboard. Fitting a per-subject input layer on each
+Broad subject's labelled data improved local accuracy in all 18 configurations tested and added 0.001 on the
+leaderboard. Time-stretch augmentation helped the Deep subject in both of two seeds and lost on the leaderboard. In
+every case the local test held out part of the same recording session used for fitting. A simulator built from real
+held-out predictions and constructed sentences, calibrated against leaderboard effects, tracked the leaderboard far
+better.
+
+<img src="/images/projects/libribrain/local_vs_lb.png" alt="Scatter of local estimate against leaderboard effect for twelve interventions: simulator estimates lie near the diagonal, same-session prose estimates fall below it, and day-novel estimates are right for class balancing but wrong in sign for batch-normalisation re-estimation" />
+
+## Where it stopped
+
+Averaging a subject's predictions over repeated hearings of the same word, using labels to group them, adds 0.14 with
+four hearings and 0.22 with sixteen, so the information exists in aggregate. Without labels those repeats cannot be
+found: same-word trials are no more alike than different words in every raw representation tested. The limit is the
+evidence a single hearing of a single word leaves in the sensors. Over the last two days, 164 post-processing ideas were
+screened against the simulator, and none moved that.
+
+A write-up of the evaluation lessons (the timing floor, shared test sentences across subjects, validation that shared
+a recording day with training) is in preparation.
+
+Code and results: [github.com/rohit-ravi2/libribrain-2026](https://github.com/rohit-ravi2/libribrain-2026)
