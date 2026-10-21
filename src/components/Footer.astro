@@ -18,6 +18,11 @@ const year = new Date().getFullYear();
           <Linkedin size={16} />
         </a>
       )}
+      {PROFILE.links?.orcid && (
+        <a href={PROFILE.links.orcid} target="_blank" rel="noreferrer" aria-label="ORCID" class="hover:opacity-80">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#A6CE39"/><text x="12" y="16.2" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#fff">iD</text></svg>
+        </a>
+      )}
       {PROFILE.links?.email && (
         <a href={PROFILE.links.email} aria-label="Email" class="hover:text-primary">
           <Mail size={16} />
