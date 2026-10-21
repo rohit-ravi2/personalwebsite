@@ -1,7 +1,7 @@
 ---
 title: "Jumping: the deep crouch"
 startDate: 2026-09-13
-description: "Why the vertical jump came first, how a jump derived from the robot's own specification beat a recorded human jump, and the box jump that still fails."
+description: "Why the vertical jump came first, how a jump derived from the robot's own specification beat a recorded human jump, and the box jump that took the longest to get right."
 tags: ["Robotics", "Simulation", "Humanoids"]
 draft: false
 order: 2
@@ -24,7 +24,7 @@ The vertical jump covers nearly everything I cared about in one movement. It is 
 
 For a while I believed the robot's optimal jump looked nothing like a person's. The plain optimiser's solutions did not crouch at all; they pushed off fast and stiff and got their speed from a huge arm swing. I asked to see the best jump animated, and it changed my mind.
 
-The best jump, the one derived from the robot's own specification, uses the human strategy, exaggerated. It drops into a 36 cm crouch with the knees folding to about 166°, where a person stops around 90 to 110°, then drives the hips, knees and ankles while swinging the arms up. It takes off at 3.6 m/s. A recorded human jump, replayed on the same robot, takes off at 1.9 m/s. The plain optimiser's solutions had not been non-human by nature; the search had simply not found the better strategy.
+The best jump, the one derived from the robot's own specification, uses the human strategy, exaggerated. It drops into a 36 cm crouch with the knees folding to about 166°, where a person stops around 90 to 110°, then drives the hips, knees and ankles while swinging the arms up. It takes off at over 3 m/s within the motors' rated speeds. A recorded human jump, replayed on the same robot, takes off at only 0.5 to 1.6 m/s. The plain optimiser's solutions had not been non-human by nature; the search had simply not found the better strategy.
 
 <Clip src="/videos/robotic-movement/jump-1-human-retarget.mp4" caption="Baseline: a recorded human jump mapped onto the G1 and tracked. The only human data in the project." />
 <Clip src="/videos/robotic-movement/jump-4-robot-derived-crouch.mp4" caption="The starting strategy computed from the robot's own specification: a certified deep crouch, then full extension." />
@@ -36,14 +36,13 @@ Watching it, I was convinced it was essentially the optimal squat jump for this 
 A jump that cannot land is not a jump. My instinct for balance came from the body: keep a line from the crown to the navel perpendicular to the floor, keep the soles parallel to it, and crouch slightly on landing to absorb the shock. The landing controller does essentially that: it sets the soles parallel to the floor in flight and yields into a damped crouch at touchdown.
 
 <Clip src="/videos/robotic-movement/jump-7-landed.mp4" caption="The deep jump, landed by a balance controller." />
-<Clip src="/videos/robotic-movement/jump-h1-landed.mp4" caption="The same pipeline on a second robot, the Unitree H1." />
 
 Once the deep crouch was found, I stopped treating maximum jump height as the goal. That test had done its job: it showed that the strategy derived from the body beats both the plain optimiser and the copied human.
 
 ## The box jump
 
-The next target is a balanced box jump, end to end: jump onto a box, land with both feet on top and stand. It does not work yet, and I would rather show that than hide it. The G1 reaches the top of a 0.20 m box but arrives moving forward and cannot stop. Clearing the gap needs about 0.6 m/s of forward speed, and the landing controller holds up to 0.5 m/s with ideal motors and none once a 10 ms motor lag is included. The fix being built is the one a person uses: place the feet ahead in flight to catch the momentum, and land with a controller that expects the lag. This is open, not closed.
+The box jump took longer than anything else here, and I am glad I did not stop at the first failure. The G1 now jumps onto a 0.20 m box, lands with both feet on top and holds its balance for three seconds, with a realistic 10 ms motor lag, and it holds up under most of the disturbances I threw at it. Two things made it work, and both are what a person does: the feet reach ahead in flight to catch the forward momentum, and the landing controller anticipates the motor lag instead of reacting to it. A 0.30 m box is still out of reach for the G1: its 35 N·m waist hits its joint stop on every hard push, which caps the takeoff.
 
-<Clip src="/videos/robotic-movement/box-jump-fail.mp4" caption="A failure, shown as one: the box jump." />
+<Clip src="/videos/robotic-movement/box-jump-g1-020.mp4" caption="Unitree G1 jumps onto a 0.20 m box, lands and holds its balance for three seconds." />
 
 Previous: [Where it started](/posts/robotic-movement/origin-tennis/). Next: [The throw](/posts/robotic-movement/the-throw/).

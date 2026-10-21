@@ -31,7 +31,7 @@ My first target was 25 to 30 mph, the figures I had seen quoted for these robots
 
 Running is not just moving in a running shape. It is pushing off the ground, over and over, in a repeating kinetic chain. That nuance felt like the reason we could not get more speed, and it turned out to be exactly right.
 
-At their stock ankle ratings, neither the G1 nor the H1 can push off through the foot at all. The peak ground force, about 1.6 times body weight, acting through a 14 to 15 cm toe lever, needs more torque than their 50 Nm and 40 Nm ankles can give. A foot-lever model said the H1's ankle would need to be about 2.9 times stronger before push-off stopped being the limit. In a what-if version of the H1 with stronger ankles (a modified body, not the real robot), the speed rose from 3.22 to 4.59 m/s, and above three times the ankle stopped being the limit and other joints took over. The stock ankle had quietly been the wall all along.
+At their stock ankle ratings, neither the G1 nor the H1 can push off through the foot at all. The peak ground force, about 1.6 times body weight, acting through a 14 to 15 cm toe lever, needs more torque than their 50 Nm and 40 Nm ankles can give. A foot-lever model said the H1's ankle would need to be about 2.9 times stronger before push-off stopped being the limit. In a what-if version of the H1 with stronger ankles (a modified body, not the real robot), the speed rose from 3.22 to 5.1 m/s, and above three times the ankle stopped being the limit and other joints took over. The stock ankle had quietly been the wall all along.
 
 <Clip src="/videos/robotic-movement/sprint-h1-whatif-ankle-x4.mp4" caption="What-if body: H1 with four-times-stronger ankles reaches 5.1 m/s. Modified body, not robot capability." />
 
@@ -39,7 +39,7 @@ One correction belongs here. I had said the top speeds were predicted from each 
 
 ## A robot the method had never seen
 
-The strongest test of a method is a body it was not built on. The Apptronik Apollo was never used while developing any of this. It ran at 2.44 m/s with no change to the movement code. With the body-derived starting motion removed, the same search never found a valid gait. And the Booster T1's specification said it could not run at its rated motors, and it could not.
+The strongest test of a method is a body it was not built on. The Apptronik Apollo was never used while developing any of this. It ran at 2.44 m/s with no change to the movement code. That run used a modified Apollo model (joint damping removed, lower sole friction) and assumed motor speed ratings, so it shows the method transferring to a new body, not what a real Apollo can do. With the body-derived starting motion removed, the same search never found a valid gait. And the Booster T1's specification said it could not run at its rated motors, and it could not.
 
 <Clip src="/videos/robotic-movement/sprint-apollo-heldout.mp4" caption="Apptronik Apollo, held out: 2.4 m/s with no code changes. Its joint speed ratings are not published and were assumed." />
 <Clip src="/videos/robotic-movement/race-four-robots.mp4" caption="Same code, four bodies." />
