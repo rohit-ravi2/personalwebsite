@@ -3,6 +3,7 @@ title: "Antibiotic Resistance — Mutation Trajectory Prediction"
 startDate: 2026-05-12
 description: "Predicting the next resistance mutation given an ordered evolution history, over ALEdb plus CARD plus deep mutational scanning data. An autoregressive transformer shows ordered history matters (top-3 0.156 → 0.527 with context), but the three-stage reranker I built on top of it does not beat its own components, and unconditional canonical-AMR top-3 stays near 0.05."
 tags: ["Antibiotic Resistance", "Directed Evolution", "Transformers", "Protein Language Models", "Bioinformatics", "Research"]
+subject: "Clinical and molecular"
 image:
   url: /images/projects/amr-mutation-trajectory/cover.png
   alt: "Canonical-AMR top-3, like for like. On all 571 test transitions: LightGBM 0.054, transformer 0.000, reranker 0.051. On the 72 where LightGBM's top-10 contains the answer: LightGBM 0.431, transformer 0.403, reranker 0.403."

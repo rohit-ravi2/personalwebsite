@@ -1,9 +1,10 @@
 ---
 import ContentTags from "../components/ContentTags.astro";
+import InProgressBadge from "../components/InProgressBadge.astro";
 import IndexPageLayout from "./IndexPageLayout.astro";
 
 const { frontmatter } = Astro.props;
-const { title, description, image, startDate, tags, canonical } = frontmatter;
+const { title, description, image, startDate, tags, canonical, inProgress } = frontmatter;
 
 const isProject = Astro.url.pathname.startsWith("/projects/");
 const pageUrl = new URL(Astro.url.pathname, Astro.site).toString();
@@ -52,9 +53,10 @@ const articleSchema = isProject
 
 <IndexPageLayout title={title} description={description} image={image} subTitle={title} canonicalURL={canonical}>
   <div class="w-full justify-center flex flex-col">
-    {tags &&
-      <div class="pb-4 mx-auto">
-        <ContentTags tags={tags}/>
+    {(inProgress || tags) &&
+      <div class="pb-4 mx-auto flex flex-wrap items-center justify-center gap-1">
+        {inProgress && <InProgressBadge />}
+        {tags && <ContentTags tags={tags}/>}
       </div>}
 
     {startDate &&

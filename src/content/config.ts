@@ -15,6 +15,8 @@ const projectCollection = defineCollection({
       })
       .optional(),
     tags: z.array(z.string()).optional(),
+    subject: z.string(),
+    inProgress: z.boolean().optional(),
   }),
 });
 

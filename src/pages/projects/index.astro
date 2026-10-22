@@ -5,31 +5,74 @@ import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
 
 
 
-// read mdx files from projects folder as entities
-const projects = await getCollection('projects');
+const SUBJECT_ORDER = [
+  "Neural decoding",
+  "Human genetics",
+  "C. elegans",
+  "Clinical and molecular",
+  "Robotics",
+  "Competitions",
+  "Vision",
+  "Reasoning",
+  "Web",
+];
 
-// sort projects by dateStart DESC
+const projects = await getCollection('projects');
 projects.sort((a: any, b: any) => {
-  return new Date(b.data.startDate) - new Date(a.data.startDate);
+  return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
 });
+
+const grouped = SUBJECT_ORDER.map((subject) => ({
+  subject,
+  items: projects.filter((project) => project.data.subject === subject),
+})).filter((group) => group.items.length > 0);
+
+const ungrouped = projects.filter((project) => !SUBJECT_ORDER.includes(project.data.subject));
 ---
 
-<IndexPageLayout title="Projects" description="Projects I have worked on recently." subTitle="My Projects">
+<IndexPageLayout title="Projects" description="Grouped by subject. Unfinished work is marked In progress." subTitle="My Projects">
   {projects.length === 0 ? (
     <p class="text-sm text-muted-foreground italic">More projects coming soon.</p>
   ) : (
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((entity: any) => (
-        <ProjectCard
-          key={entity.data.title}
-          href={'/projects/' + entity.slug}
-          heading={entity.data.title}
-          subheading={entity.data.description}
-          altText={entity?.data?.image?.alt}
-          imagePath={entity?.data?.image?.url}
-          dateStart={entity.data.startDate}
-        />
+    <div class="flex w-full flex-col gap-10">
+      {grouped.map((group) => (
+        <section class="w-full" aria-labelledby={group.subject.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>
+          <h2 id={group.subject.toLowerCase().replace(/[^a-z0-9]+/g, "-")} class="mb-3 text-xl font-semibold">
+            {group.subject}
+          </h2>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {group.items.map((entity: any) => (
+              <ProjectCard
+                href={'/projects/' + entity.slug}
+                heading={entity.data.title}
+                subheading={entity.data.description}
+                altText={entity?.data?.image?.alt}
+                imagePath={entity?.data?.image?.url}
+                dateStart={entity.data.startDate}
+                inProgress={entity.data.inProgress}
+              />
+            ))}
+          </div>
+        </section>
       ))}
+      {ungrouped.length > 0 && (
+        <section class="w-full" aria-labelledby="subject-other">
+          <h2 id="subject-other" class="mb-3 text-xl font-semibold">Other</h2>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {ungrouped.map((entity: any) => (
+              <ProjectCard
+                href={'/projects/' + entity.slug}
+                heading={entity.data.title}
+                subheading={entity.data.description}
+                altText={entity?.data?.image?.alt}
+                imagePath={entity?.data?.image?.url}
+                dateStart={entity.data.startDate}
+                inProgress={entity.data.inProgress}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )}
 </IndexPageLayout>

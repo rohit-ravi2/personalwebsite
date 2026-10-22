@@ -1,6 +1,7 @@
 ---
 import { Card as ShadcnCard } from './ui/card'
 import { Badge } from './ui/badge'
+import InProgressBadge from './InProgressBadge.astro'
 
 
 const {
@@ -12,6 +13,7 @@ const {
   imagePath,
   altText,
   dateStart,
+  inProgress = false,
 } = Astro.props
 
 
@@ -31,6 +33,11 @@ const {
       />
     )}
     <div class="flex flex-col gap-y-0.5 px-5 py-4">
+      {inProgress && (
+        <div class="mb-1">
+          <InProgressBadge />
+        </div>
+      )}
       <h3 class="text-lg font-medium line-clamp-2">{heading}</h3>
       <h4 class="text-muted-foreground line-clamp-3">{subheading}</h4>
     </div>
