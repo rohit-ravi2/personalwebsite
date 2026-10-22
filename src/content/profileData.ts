@@ -46,46 +46,5 @@ export const PROFILE = {
       title: "B.A. Data Science (Philosophy minor)",
       institution: "New York University",
     },
-    {
-      category: "Coursework",
-      title: "Advanced Topics in Data Science (DS-UA 301)",
-      institution: "NYU",
-    },
-    {
-      category: "Coursework",
-      title: "Responsible Data Science (DS-UA 202): differential-privacy replication",
-      institution: "NYU",
-    },
-    {
-      category: "Certification",
-      title: "Computational Neuroscience",
-      institution: "University of Washington",
-    },
-    {
-      category: "Certification",
-      title: "Mind and Machine",
-      institution: "CU Boulder",
-    },
-    {
-      category: "Certification",
-      title: "Meta Data Analyst",
-      institution: "Meta · 5 courses",
-    },
-    {
-      category: "Independent Research",
-      title: "Neural decoding: Meta sEMG reanalysis, MEG speech (LibriBrain)",
-    },
-    {
-      category: "Independent Research",
-      title: "Whole-brain C. elegans: connectome, expression and activity",
-    },
-    {
-      category: "Independent Research",
-      title: "Human genetics of neurological traits (LDSC, MR)",
-    },
-    {
-      category: "Independent Research",
-      title: "Neural-Symbolic Reasoning (HSDE)",
-    },
   ],
 };

@@ -4,109 +4,70 @@ import { getCollection } from "astro:content";
 
 type Study = { category: string; title: string; institution?: string };
 
-const CATEGORY_ORDER = ["Education", "Coursework", "Certification", "Independent Research"];
+const education = (PROFILE.studies as Study[]).filter((study) => study.category === "Education");
 
-const groups = new Map<string, Study[]>();
-for (const study of PROFILE.studies as Study[]) {
-  const key = study.category ?? "Other";
-  if (!groups.has(key)) groups.set(key, []);
-  groups.get(key)!.push(study);
+// Certificates that match the research and the philosophy minor lead.
+// Anything else follows by issue date.
+const LEAD = ["computational-neuroscience", "mind-and-machine", "question-reality"];
+
+const certs = (await getCollection("certifications")).sort((a, b) => {
+  const rank = (slug: string) => {
+    const index = LEAD.indexOf(slug);
+    return index === -1 ? LEAD.length : index;
+  };
+  const byRank = rank(a.slug) - rank(b.slug);
+  if (byRank !== 0) return byRank;
+  return b.data.issueDate.valueOf() - a.data.issueDate.valueOf();
+});
+
+const rows = await Promise.all(certs.map(async (cert) => {
+  const bundled = !cert.data.verifyUrl && !cert.data.pdfPath && cert.body?.trim();
+  return { cert, Content: bundled ? (await cert.render()).Content : null };
+}));
+
+const year = (d: Date) => d.toLocaleDateString("en-US", { year: "numeric", timeZone: "UTC" });
+
+function school(issuer: string) {
+  return issuer.replace(/^Coursera\s·\s/, "");
 }
-
-const orderedGroups = [...CATEGORY_ORDER, ...[...groups.keys()].filter((k) => !CATEGORY_ORDER.includes(k))]
-  .filter((k) => groups.has(k))
-  .map((k) => [k, groups.get(k)!] as const);
-
-// Certifications live only in this popup; there is no /certifications page.
-const certs = (await getCollection("certifications")).sort(
-  (a, b) => b.data.issueDate.valueOf() - a.data.issueDate.valueOf(),
-);
-const rendered = await Promise.all(certs.map(async (c) => ({ cert: c, Content: (await c.render()).Content })));
-const fmt = (d: Date) => d.toLocaleDateString("en-US", { year: "numeric", month: "short", timeZone: "UTC" });
 ---
 
-<button
-  type="button"
-  data-cert-open
-  class="mt-1 flex w-full flex-col gap-3 text-left text-sm cursor-pointer rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-  aria-haspopup="dialog"
-  aria-controls="cert-dialog"
->
-  {orderedGroups.map(([category, items]) => (
+<div class="mt-1 flex flex-col gap-3 text-sm">
+  {education.map((study) => (
     <div>
-      <h4 class="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-1">
-        {category}
-      </h4>
-      <ul class="flex flex-col gap-0.5">
-        {items.map((study) => (
-          <li class="leading-snug">
-            <span class="font-medium">{study.title}</span>
-            {study.institution && (
-              <span class="text-muted-foreground"> · {study.institution}</span>
-            )}
-          </li>
-        ))}
-      </ul>
+      <p class="font-medium leading-snug">{study.title}</p>
+      {study.institution && <p class="text-muted-foreground">{study.institution}</p>}
     </div>
   ))}
-  <span class="text-xs text-primary hover:underline">
-    View all {certs.length} certifications →
-  </span>
-</button>
 
-<dialog
-  id="cert-dialog"
-  aria-labelledby="cert-dialog-title"
-  class="w-[min(44rem,calc(100vw-2rem))] max-h-[85vh] rounded-lg border bg-background p-0 text-foreground shadow-xl backdrop:bg-black/50"
->
-  <div class="sticky top-0 flex items-center justify-between border-b bg-background px-5 py-3">
-    <h2 id="cert-dialog-title" class="text-base font-semibold">Certifications</h2>
-    <button type="button" data-cert-close class="rounded-md px-2 py-1 text-sm hover:bg-accent" aria-label="Close">
-      Close ✕
-    </button>
-  </div>
-  <ul class="flex flex-col divide-y px-5">
-    {rendered.map(({ cert, Content }) => (
-      <li class="py-4">
-        <p class="font-semibold leading-snug">{cert.data.title}</p>
-        <p class="text-sm text-muted-foreground">
-          {cert.data.issuer} · {fmt(cert.data.issueDate)}
-          {cert.data.courseCount && <> · {cert.data.courseCount} courses</>}
-        </p>
-        {(cert.data.verifyUrl || cert.data.pdfPath) && (
-          <p class="mt-1 flex gap-3 text-sm">
-            {cert.data.verifyUrl && <a href={cert.data.verifyUrl} target="_blank" rel="noreferrer" class="text-primary hover:underline">Verify</a>}
-            {cert.data.pdfPath && <a href={cert.data.pdfPath} target="_blank" rel="noreferrer" class="text-primary hover:underline">Certificate (PDF)</a>}
-          </p>
-        )}
-        {cert.body.trim() && (
-          <details class="mt-2 text-sm">
-            <summary class="cursor-pointer text-muted-foreground hover:text-foreground">Details</summary>
-            <div class="prose prose-sm mt-2 max-w-none overflow-x-auto">
-              <Content />
-            </div>
-          </details>
-        )}
-      </li>
-    ))}
+  <ul class="flex flex-col gap-2 border-t border-border pt-3">
+    {rows.map(({ cert, Content }) => {
+      const href = cert.data.verifyUrl ?? cert.data.pdfPath;
+      const detail = [
+        school(cert.data.issuer),
+        year(cert.data.issueDate),
+        cert.data.courseCount ? `${cert.data.courseCount} courses` : "",
+      ].filter(Boolean).join(", ");
+      return (
+        <li class="leading-snug">
+          {href ? (
+            <a href={href} target="_blank" rel="noreferrer" class="font-medium hover:underline">
+              {cert.data.title}
+            </a>
+          ) : (
+            <span class="font-medium">{cert.data.title}</span>
+          )}
+          <span class="block text-xs text-muted-foreground">{detail}</span>
+          {Content && (
+            <details class="mt-1">
+              <summary class="cursor-pointer text-xs text-primary hover:underline">Course certificates</summary>
+              <div class="prose prose-sm mt-2 max-w-none overflow-x-auto">
+                <Content />
+              </div>
+            </details>
+          )}
+        </li>
+      );
+    })}
   </ul>
-</dialog>
-
-<script is:inline>
-  (() => {
-    function wire() {
-      const dlg = document.getElementById('cert-dialog');
-      const open = document.querySelector('[data-cert-open]');
-      if (!dlg || !open) return;
-      open.onclick = () => dlg.showModal();
-      dlg.querySelector('[data-cert-close]').onclick = () => dlg.close();
-      // Close on a click on the backdrop (outside the dialog box).
-      dlg.onclick = (e) => {
-        const r = dlg.getBoundingClientRect();
-        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
-      };
-    }
-    wire();
-    document.addEventListener('astro:after-swap', wire);
-  })();
-</script>
+</div>

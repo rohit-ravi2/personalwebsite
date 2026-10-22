@@ -9,7 +9,9 @@ experiences.sort((a, b) => {
   return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
 });
 
-experiences = experiences.slice(0, 3);
+// Competitions already live on the projects page. The homepage card is for roles.
+const roles = experiences.filter((exp) => !exp.data.title.startsWith("Competitor"));
+experiences = (roles.length > 0 ? roles : experiences).slice(0, 3);
 ---
 
 <div class="mt-2 space-y-4">
