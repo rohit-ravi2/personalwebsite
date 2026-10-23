@@ -6,34 +6,35 @@ const thread = [
   {
     href: "/projects/asd-myelin-timing",
     kicker: "Myelin",
-    line: "A lipid-supply idea, tested, and narrowed to timing.",
+    line: "Investigating myelination and autism using human genetic data.",
   },
   {
     href: "/projects/anesthesia-pipeline",
     kicker: "Anesthesia and sleep",
-    line: "What a reduced-activity state shares with sleep, and what lets it reverse.",
+    line: "Exploring reversible changes in nervous-system activity.",
   },
   {
     href: "/projects/libribrain-2026",
     kicker: "LibriBrain",
-    line: "Which of fifty words was heard, and how much of the score is only the clock.",
+    line: "MEG decoding and the influence of timing on model evaluation.",
   },
   {
     href: "/projects/handwriting-emg",
     kicker: "Handwriting",
-    line: "Wrist EMG, 30.07% character error reproduced, 15.02% after the controls.",
+    line: "Adapting a wrist-EMG handwriting decoder to individual writers.",
   },
 ];
 ---
 
 <BaseLayout
   title="About — Rohit Ravi"
-  description="Rohit Ravi is an undergraduate researcher at NYU's Center for Data Science. An unexplained illness, and a young relative who cannot speak, are why the neural-data work exists."
+  description="How illness, philosophy, and a search for understanding led Rohit Ravi to work in machine learning, neuroscience, and computation."
 >
   <main class="mx-auto w-full max-w-3xl px-4 py-10">
     <CustomisedBreadCrumbs />
-
-    <header class="mt-8 grid items-end gap-8 md:grid-cols-[17rem_minmax(0,1fr)]">
+    <header
+      class="mt-8 grid items-end gap-8 md:grid-cols-[17rem_minmax(0,1fr)]"
+    >
       <figure class="mx-auto w-full max-w-xs md:mx-0 md:max-w-none">
         <img
           src="/images/about/rohit-ravi.jpg"
@@ -42,163 +43,236 @@ const thread = [
           height="1536"
           class="aspect-[3/4] w-full rounded-lg object-cover object-[center_18%] shadow-md"
         />
-        <figcaption class="mt-2 text-center text-xs text-muted-foreground md:text-left">
+        <figcaption
+          class="mt-2 text-center text-xs text-muted-foreground md:text-left"
+        >
           Rohit Ravi
         </figcaption>
       </figure>
       <div>
-        <p class="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">About</p>
-        <h1 class="mt-2 scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl">Rohit Ravi</h1>
+        <p
+          class="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground"
+        >
+          About
+        </p>
+        <h1
+          class="mt-2 scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl"
+        >
+          Rohit Ravi
+        </h1>
         <p class="mt-4 text-lg leading-relaxed">
-          Undergraduate researcher at the Center for Data Science, Courant Institute, New York
-          University. Data science, with a minor in philosophy.
+          I study nervous systems because I know how profoundly they can change
+          a life—and how much remains unexplained when they do.
         </p>
         <p class="mt-4 leading-relaxed text-muted-foreground">
-          The work on this site is machine learning on neural recordings, and on nervous systems
-          that look intact and still fail. It is one trail. It started because that was my
-          situation, and then because it was a child's.
+          I’m studying data science and philosophy at NYU, with research
+          interests spanning machine learning, neural computation, and biology.
+          Those interests developed through coursework, but their urgency came
+          from a severe illness that began during college. What started as a
+          search for answers about my own health grew into a broader commitment:
+          to develop the technical understanding needed to help people whose
+          suffering we still struggle to explain.
         </p>
       </div>
     </header>
-
-    <nav class="mt-10 grid gap-3 sm:grid-cols-2" aria-label="The work this page leads to">
-      {
-        thread.map((item) => (
-          <a
-            href={item.href}
-            class="rounded-lg border bg-card px-4 py-3 transition hover:border-primary"
-          >
-            <span class="block text-sm font-semibold text-primary">{item.kicker}</span>
-            <span class="mt-1 block text-sm leading-snug text-muted-foreground">{item.line}</span>
-          </a>
-        ))
-      }
-    </nav>
-
     <div class="mt-12 flex flex-col gap-12 text-base leading-relaxed">
       <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">Sophomore year</h2>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
+          Before the questions became personal
+        </h2>
         <div class="mt-4 flex flex-col gap-4">
           <p>
-            The illness arrived in the first month of sophomore year. For a stretch there was no
-            interval between attacks. Pain and vomiting ran together, and the ordinary machinery
-            of a semester, class, food, sleep, stopped being available. I saw specialists across
-            the relevant fields. Several of them added something to the regimen that helped. The
-            episodes became less frequent. Between them I could work again.
+            For much of my life, I understood progress through training. I
+            played four years of varsity tennis at Northern Highlands, and
+            during the COVID lockdown I often spent six hours a day on court.
+            Fitness, energy, and the ability to push myself were central to my
+            daily life. I expected to keep building on them.
           </p>
           <p>
-            What none of them could give me was a cause. Years later that is still the open fact.
-            The condition is manageable. It is not explained. Scans and endoscopies had found
-            nothing structurally wrong, which is a strange kind of news. It rules out a lesion
-            you can point at, and it leaves the question of where a nervous system is failing
-            when the anatomy looks ordinary.
+            Becoming ill disrupted that continuity. Activities that had once
+            been routine became inaccessible. I lost the physical capacity I had
+            depended on, and long stretches of illness narrowed the world around
+            me.
           </p>
           <p>
-            I did not have a lab. I had coursework in machine learning, and I had
-            <em>C. elegans</em>, a nervous system small enough that every cell and every wire is
-            named. The coursework was a way of keeping the question in a form that could be
-            wrong. If nothing is broken in the picture, the failure might still be genetic. It
-            might be mitochondrial, a cell that cannot pay for its own maintenance. Or the wires
-            might be fine and the failure might sit next to them, in the insulation. Myelin is
-            mostly lipid. A circuit can look intact on a scan and still conduct late, thin, or
-            out of time.
+            Treatment eventually made the condition more manageable. I’m
+            grateful for the clinicians who helped make that possible. Yet
+            relief and explanation were different things: the underlying cause
+            remained uncertain, even after consultations across specialties. I
+            was left with questions that mattered beyond any single appointment.
+            Where was the dysfunction occurring? What could explain such a large
+            change in experience and ability when conventional investigations
+            offered so little clarity?
           </p>
           <p>
-            Reading in that direction, I tried two things on myself that were not part of any
-            protocol I had been given. DHA helped. Palmitoylethanolamide with luteolin helped. I
-            am reporting that as my own experience. I am not recommending either compound, and I
-            never ran the comparison that would say how much of the change was them and how much
-            was the rest of what I was already taking. DHA has also been reported to help some
-            autistic children. That report, set next to what I had felt, is what turned a private
-            note about lipids into a project.
+            I began reading because I wanted answers. Over time, I wanted the
+            skills to investigate the questions myself.
           </p>
         </div>
       </section>
-
       <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">A relative, six years old</h2>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
+          Finding a direction
+        </h2>
         <div class="mt-4 flex flex-col gap-4">
           <p>
-            I have a relative who is six. He cannot speak, and he is in pain much of the time.
-            I knew that kind of pain from the inside, and seeing it on him is what made the
-            question urgent. I wanted to understand the machinery. I did not set out to propose
-            a treatment, and I am not second-guessing the clinicians who take care of him.
+            Alongside that search, I began exploring my roots and identity more
+            seriously. Vedanta became a source of orientation during a period
+            when much of what had previously defined my life was unavailable to
+            me. Its questions about suffering, selfhood, and consciousness had
+            an immediate personal significance.
           </p>
           <p>
-            The idea I wrote down before running anything was specific enough to fail. If the
-            supply of lipid is constitutionally weak, the circuits that myelin latest should be
-            the ones that fail first, and in people those are frontal. Autism liability and
-            white-matter microstructure can be compared in public biobank data, so the shape of
-            that prediction could be checked without waiting on a new experiment. The
-            <a href="/projects/asd-myelin-timing" class="underline hover:font-bold">myelin page</a>
-            is the log. The original form is not supported. The sharing with autism liability is
-            real as a weak global trend and absent as a frontal gradient. What survived is
-            narrower: a question about the timing of conduction, not a shortage of insulation.
-            None of that helps a six-year-old who still cannot speak. It was never expected to.
-            It is a sharper question than the one I started with, and it is the one I can
-            actually work.
+            That exploration remains an important part of my life. It also
+            deepened my interest in philosophy of mind: how subjective
+            experience relates to physical processes, what we mean by a self,
+            and what an explanation of consciousness would actually need to
+            explain. I want to examine those questions carefully, including
+            where philosophical reasoning and empirical investigation can inform
+            each other and where their methods differ.
+          </p>
+          <p>
+            My sense of how I wanted to help people changed during this period.
+            I came to see research and engineering as the avenue through which I
+            could contribute most. Machine learning, neuroscience, and
+            computation offered ways to investigate mechanisms, build useful
+            tools, and work on problems whose consequences extend across many
+            lives.
+          </p>
+          <p>
+            The uncertainty that had been so difficult to live with became a
+            reason to learn.
           </p>
         </div>
       </section>
-
       <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">Quiet, and the return from it</h2>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
+          How that became my work
+        </h2>
         <div class="mt-4 flex flex-col gap-4">
           <p>
-            In the worst episodes the pain has stopped under sedation deep enough to count as
-            anesthesia. I am leaving the names of those drugs off this site. The fact is enough
-            to force a question that is no longer about my chart. A nervous system can be driven
-            down into a quiet state and brought back. Sleep is another quiet state. So are the
-            reduced-activity states a small animal enters on its own. It is not obvious which
-            parts of the quiet are shared, or what has to remain true for the return to be
-            possible.
+            My coursework in machine learning gave me a practical starting
+            point. Working with <em>C. elegans</em> let me begin studying nervous
+            systems computationally: how connectivity, cellular properties, and activity
+            relate, and what a model can reasonably tell us about the living system
+            it represents. The notebooks were a learning pipeline, through which
+            I developed the ability to turn broad biological questions into analyses
+            and experiments.
           </p>
           <p>
-            The
-            <a href="/projects/anesthesia-pipeline" class="underline hover:font-bold">anesthesia page</a>
-            asks that on a connectome. The model has to say, before the result is looked at, what
-            a real anesthetic does to the network and what a lookalike compound that does not
-            anesthetize fails to do. A number of the early claims on that page have been
-            withdrawn in public, on the page itself. The claims that remain are the ones that
-            were still standing after the withdrawal. That is the standard I want the rest of
-            the work held to. An explanation that cannot survive contact with its own measurement
-            is the kind of explanation I had already been given.
+            My own search also drew me toward genetic, mitochondrial, and
+            myelination mechanisms. I was interested in how nervous-system
+            function can be disrupted through processes that are difficult to
+            see in a conventional structural investigation.
+          </p>
+          <p>
+            Some of that reading informed things I tried personally, including
+            DHA and palmitoylethanolamide with luteolin. I experienced benefits,
+            although that experience cannot establish which mechanism was
+            responsible or what would help someone else. It gave me further
+            questions to investigate.
+          </p>
+          <p>
+            The autism and myelination work became especially personal when I
+            saw a young relative suffering. I recognized something of the
+            helplessness I had experienced myself, and I wanted to help in
+            whatever way I could. My experience with DHA was part of what first
+            directed my attention toward lipid supply and myelination. From
+            there, the task was to examine whether the biological evidence
+            supported the initial idea—and how the question needed to change
+            when it did not.
+          </p>
+          <p>
+            My interest in anesthesia and sleep grew from another observation
+            during treatment: profound changes in nervous-system state could
+            interrupt acute suffering. That made reversibility especially
+            compelling to me. How can a nervous system enter a dramatically
+            different state and then return? What distinguishes reduced
+            activity, quiescence, sleep, and anesthesia? Computational models
+            offered a way to begin exploring those questions.
+          </p>
+          <p>
+            These projects share a personal origin, but each needs evidence
+            appropriate to its own claims. My experience helps explain why I ask
+            the questions. The research has to determine what answers they can
+            support.
           </p>
         </div>
       </section>
-
       <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">What someone else can score</h2>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
+          From biological questions to neural data
+        </h2>
         <div class="mt-4 flex flex-col gap-4">
           <p>
-            The recent decoding work is the same habit carried into data another person can
-            rerun. It is also the part a lab or a company can grade without taking my word for
-            the rest of this page.
+            As my technical skills developed, my work expanded into decoding
+            information from neural signals.
           </p>
           <p>
-            <a href="/projects/libribrain-2026" class="underline hover:font-bold">LibriBrain</a>
-            asks which of fifty words a listener heard, read from the magnetic field over the
-            scalp. The entry finished eighth on the broad public track. A baseline that uses only
-            the timing of the recording, and none of the field, scores 0.632. The full decoder
-            is higher. A large piece of what presents as neural decoding is the clock. I would
-            rather be known for that finding than for the rank.
+            LibriBrain brought me into MEG analysis and the challenge of
+            extracting useful information from noisy measurements. It also made
+            evaluation itself a central part of the work: understanding how much
+            of a model’s performance reflects the neural signal and how much can
+            be explained by timing or other features of the task.
           </p>
           <p>
-            <a href="/projects/handwriting-emg" class="underline hover:font-bold">Handwriting from the wrist</a>
-            is the other current piece. Meta released a model that reads letters from surface EMG.
-            On their ten held-out users I reproduced their character error, 30.07%. A fine-tune on
-            the writer's own data, together with a language model that had been stripped of any
-            prompt it might meet at test time, reaches 15.02%. The two gains add. They are not
-            one gain counted twice. Fine-tuning on other writers makes the model worse, which is
-            how you know the improvement belongs to the person and not to a leak in the split.
+            The wrist-EMG handwriting project explores a different interface
+            between nervous systems and computation. It asks how signals
+            associated with intended movement can support communication, and how
+            adaptation to an individual changes a model’s usefulness.
           </p>
           <p>
-            Neither project treats the illness, and neither is aimed at the boy. They are the
-            public end of a private question. When an explanation is missing, which measurements
-            are still worth trusting? I want to be hired to make those measurements. Neural data,
-            machine learning, and the willingness to publish the number that failed. The reason
-            the work is aimed at nervous systems, and at people who are still waiting for an
-            account of what is happening to them, is the illness, and him.
+            These projects are opportunities to demonstrate the engineering
+            skills behind my broader interests: working with complex data,
+            training and adapting models, designing evaluations, and
+            investigating why a result changes. They also connect to something
+            that has become deeply important to me—how computation can help
+            preserve or recover a person’s ability to act, communicate, and
+            participate in life.
+          </p>
+        </div>
+      </section>
+      <nav class="grid gap-3 sm:grid-cols-2" aria-label="Explore the research">
+        {
+          thread.map((item) => (
+            <a
+              href={item.href}
+              class="rounded-lg border bg-card px-4 py-3 transition hover:border-primary"
+            >
+              <span class="block text-sm font-semibold text-primary">
+                {item.kicker}
+              </span>
+              <span class="mt-1 block text-sm leading-snug text-muted-foreground">
+                {item.line}
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+      <section>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
+          What I want to contribute
+        </h2>
+        <div class="mt-4 flex flex-col gap-4">
+          <p>
+            I want to bring this combination of personal commitment and
+            technical ability to a research team or company working on
+            consequential problems in biology, neural systems, or machine
+            learning.
+          </p>
+          <p>
+            There is much I still want to learn. I’m looking for work that
+            demands depth: difficult data, mechanisms that remain uncertain, and
+            tools that need to function beyond a demonstration. I want
+            collaborators who care about both the quality of an explanation and
+            what it could make possible for people.
+          </p>
+          <p>
+            Illness changed the life I expected to have. It also helped clarify
+            the work I want to devote myself to. My goal is to use machine
+            learning, neuroscience, computation, and philosophy to tackle the
+            hardest problems I can contribute to solving—and, through that work,
+            make suffering more bearable.
           </p>
         </div>
       </section>
