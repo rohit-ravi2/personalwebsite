@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CustomisedBreadCrumbs from "../components/CustomisedBreadCrumbs.astro";
+---
+
+<BaseLayout
+  title="About — Rohit Ravi"
+  description="Why the neural-data work exists: an unexplained illness, a family member's suffering, and the thread from that problem to myelin, anesthesia, sleep, LibriBrain, and handwriting decoding."
+>
+  <main class="mx-auto flex w-full max-w-2xl flex-col px-4 py-10">
+    <CustomisedBreadCrumbs />
+    <h1 class="mt-6 scroll-m-20 text-3xl font-semibold tracking-tight">About</h1>
+    <div class="mt-8 flex flex-col gap-5 text-base leading-relaxed">
+      <p>
+        I am an undergraduate researcher at NYU's Center for Data Science, part of the Courant
+        Institute, studying data science with a minor in philosophy. The work on this site is
+        machine learning on neural data. This page is why that work exists.
+      </p>
+      <p>
+        In the first month of my sophomore year an illness started, and for a stretch it did not
+        stop. The pain and the vomiting were continuous. Specialists added pieces to a regimen
+        that made the episodes less frequent and the condition possible to live with. None of
+        them found the cause. They still have not. That gap is what sent me into the nervous
+        system, using the same machine-learning coursework I was already in. If an exam finds
+        nothing structurally wrong, the failure can still sit somewhere adjacent: a genetic
+        factor, a mitochondrial one, or a change downstream of the wiring, in myelination.
+      </p>
+      <p>
+        Two things I tried on my own, outside any protocol I was given, mattered in my own case.
+        DHA helped. Palmitoylethanolamide with luteolin helped. I am not recommending either of
+        them, and I am not claiming I separated their effect from the rest of what I was taking.
+        They are a personal experience. DHA is also reported to help some autistic children.
+        That report is what turned a private observation into a question about lipid supply.
+      </p>
+      <p>
+        A relative was suffering in a way I recognized from my own illness. Seeing him is what
+        made the question urgent. I am not describing his situation, and nothing on this site is
+        a treatment or a comment on his care. The
+        <a href="/projects/asd-myelin-timing" class="underline hover:font-bold">myelin project</a>
+        is a test of that lipid question against public genetic and imaging data, including the
+        parts the data did not support.
+      </p>
+      <p>
+        The same illness is why the anesthesia and sleep work is here. In acute episodes the
+        pain has stopped under sedation deep enough to count as anesthesia. I am not naming
+        those drugs. The question they raised is a technical one. A nervous system can be driven
+        into a reduced-activity state and brought back, and it is not obvious what that state
+        shares with sleep, or which parts of the change are reversible. That is what the
+        <a href="/projects/anesthesia-pipeline" class="underline hover:font-bold">anesthesia page</a>
+        is measuring, on a connectome rather than in a clinic.
+      </p>
+      <p>
+        The current end of the thread is decoding, which is work other people can check.
+        <a href="/projects/libribrain-2026" class="underline hover:font-bold">LibriBrain</a>
+        asks which of fifty words a person heard, read from the magnetic field of the brain,
+        and a large part of that score is available from the timing of the recording alone.
+        The other current piece is
+        <a href="/projects/handwriting-emg" class="underline hover:font-bold">handwriting from wrist EMG</a>,
+        on Meta's released benchmark: their model reproduced at 30.07% character error, then
+        15.02% after a personal fine-tune and a language model that were not allowed to see the test.
+        Neither project treats the illness. Both are the same habit carried into a public
+        measurement: build it, try to break it, and keep the result that survives.
+      </p>
+      <p>
+        That is the hire. The skill is neural data and machine learning. The reason it is
+        pointed at nervous systems, and at people who were not given an explanation that
+        actually accounted for what was happening to them, is the illness.
+      </p>
+    </div>
+  </main>
+</BaseLayout>
