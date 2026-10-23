@@ -60,6 +60,23 @@ const certificationCollection = defineCollection({
     title: z.string(),
     issuer: z.string(),
     issueDate: z.date(),
+    guidedProjects: z
+      .array(
+        z.object({
+          group: z.string().min(1).max(150),
+          title: z.string().min(1).max(300),
+          description: z.string().min(1).max(1500),
+          frameworks: z.array(z.string().min(1).max(100)).min(1).max(8),
+          verifyUrl: z.string().url().startsWith("https://"),
+          pdfPath: z
+            .string()
+            .regex(/^\/certifications\/[a-zA-Z0-9_-]+\.pdf$/)
+            .optional(),
+        }),
+      )
+      .min(1)
+      .max(50)
+      .optional(),
     courseCount: z.number().optional(),
     verifyUrl: z.string().optional(),
     pdfPath: z.string().optional(),

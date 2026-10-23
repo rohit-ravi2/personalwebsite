@@ -84,3 +84,12 @@ test('skill groups validate editable content and block executable links', () => 
   data.groups[0].project.href = 'javascript:alert(1)';
   assert.throws(() => assertData('src/data/skills.json', JSON.stringify(data)));
 });
+
+test('guided-project metadata validates certificates and local PDF paths', () => {
+  const metadata = `---\ntitle: Guided projects\nissuer: Project Network\nissueDate: 2025-05-19\nguidedProjects:\n  - group: Model architectures\n    title: Siamese networks\n    description: Learning similarities between inputs.\n    frameworks: [PyTorch]\n    verifyUrl: https://coursera.org/verify/example\n    pdfPath: /certifications/example.pdf\n---\n\nGuided project work.\n`;
+  const path = 'src/content/certifications/example.md';
+  assert.doesNotThrow(() => assertData(path, metadata));
+  assert.throws(() => assertData(path, metadata.replace('https://coursera.org/verify/example', 'javascript:alert(1)')));
+  assert.throws(() => assertData(path, metadata.replace('/certifications/example.pdf', '/../private/example.pdf')));
+  assert.throws(() => assertData(path, metadata.replace('frameworks: [PyTorch]', 'frameworks: []')));
+});

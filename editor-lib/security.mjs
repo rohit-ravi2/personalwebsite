@@ -95,6 +95,11 @@ export function assertData(path, content, previous = '') {
   if (data.tags !== undefined && (!Array.isArray(data.tags) || !data.tags.every(t => typeof t === 'string'))) throw new Error('Tags must be a list of text values.');
   for (const key of ['inProgress', 'draft']) if (data[key] !== undefined && typeof data[key] !== 'boolean') throw new Error(`${key} must be true or false.`);
   if (data.image !== undefined && (!data.image || typeof data.image.url !== 'string' || typeof data.image.alt !== 'string')) throw new Error('Images need a URL and alt text.');
+  if (data.guidedProjects !== undefined) {
+    const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
+    const https = value => { try { return typeof value === 'string' && new URL(value).protocol === 'https:'; } catch { return false; } };
+    if (!path.includes('/certifications/') || !Array.isArray(data.guidedProjects) || data.guidedProjects.length < 1 || data.guidedProjects.length > 50 || !data.guidedProjects.every(project => project && text(project.group, 150) && text(project.title, 300) && text(project.description, 1500) && Array.isArray(project.frameworks) && project.frameworks.length > 0 && project.frameworks.length <= 8 && project.frameworks.every(framework => text(framework, 100)) && https(project.verifyUrl) && (project.pdfPath === undefined || /^\/certifications\/[a-zA-Z0-9_-]+\.pdf$/.test(project.pdfPath)))) throw new Error('Guided projects need a group, title, description, frameworks, and HTTPS certificate link.');
+  }
   for (const key of ['canonical', 'verifyUrl', 'pdfPath']) if (data[key] !== undefined && typeof data[key] !== 'string') throw new Error(`${key} must be text.`);
   for (const key of ['courseCount', 'order']) if (data[key] !== undefined && (typeof data[key] !== 'number' || !Number.isFinite(data[key]))) throw new Error(`${key} must be a number.`);
 }

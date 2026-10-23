@@ -1,0 +1,75 @@
+---
+import { ArrowUpRight } from "lucide-react";
+import type { CollectionEntry } from "astro:content";
+interface Props {
+  projects: NonNullable<
+    CollectionEntry<"certifications">["data"]["guidedProjects"]
+  >;
+}
+const { projects } = Astro.props;
+const groups = [...new Set(projects.map((project) => project.group))];
+---
+
+<div class="mt-6 space-y-7">
+  {
+    groups.map((group) => (
+      <section aria-label={group}>
+        <h4 class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {group}
+        </h4>
+        <ul class="grid gap-3 sm:grid-cols-2">
+          {projects
+            .filter((project) => project.group === group)
+            .map((project) => (
+              <li
+                class="flex flex-col rounded-lg border bg-white/40 p-4"
+                data-guided-project
+              >
+                <h5 class="text-base font-semibold leading-snug">
+                  {project.title}
+                </h5>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                  {project.description}
+                </p>
+                <ul class="mt-4 flex flex-wrap gap-2" aria-label="Frameworks">
+                  {project.frameworks.map((framework) => (
+                    <li class="rounded-full border bg-background px-2.5 py-1 text-xs font-medium">
+                      {framework}
+                    </li>
+                  ))}
+                </ul>
+                <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                  <a
+                    href={project.verifyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="font-medium text-primary underline underline-offset-4"
+                    aria-label={`View certificate for ${project.title}`}
+                  >
+                    View certificate{" "}
+                    <span aria-hidden="true">
+                      <ArrowUpRight
+                        size={14}
+                        className="inline align-text-bottom"
+                      />
+                    </span>
+                  </a>
+                  {project.pdfPath && (
+                    <a
+                      href={project.pdfPath}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="text-muted-foreground underline underline-offset-4"
+                      aria-label={`Certificate PDF for ${project.title}`}
+                    >
+                      PDF
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
