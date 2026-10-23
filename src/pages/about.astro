@@ -1,71 +1,207 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomisedBreadCrumbs from "../components/CustomisedBreadCrumbs.astro";
+
+const thread = [
+  {
+    href: "/projects/asd-myelin-timing",
+    kicker: "Myelin",
+    line: "A lipid-supply idea, tested, and narrowed to timing.",
+  },
+  {
+    href: "/projects/anesthesia-pipeline",
+    kicker: "Anesthesia and sleep",
+    line: "What a reduced-activity state shares with sleep, and what lets it reverse.",
+  },
+  {
+    href: "/projects/libribrain-2026",
+    kicker: "LibriBrain",
+    line: "Which of fifty words was heard, and how much of the score is only the clock.",
+  },
+  {
+    href: "/projects/handwriting-emg",
+    kicker: "Handwriting",
+    line: "Wrist EMG, 30.07% character error reproduced, 15.02% after the controls.",
+  },
+];
 ---
 
 <BaseLayout
   title="About — Rohit Ravi"
-  description="Why the neural-data work exists: an unexplained illness, a family member's suffering, and the thread from that problem to myelin, anesthesia, sleep, LibriBrain, and handwriting decoding."
+  description="Rohit Ravi is an undergraduate researcher at NYU's Center for Data Science. An unexplained illness, and a young relative who cannot speak, are why the neural-data work exists."
 >
-  <main class="mx-auto flex w-full max-w-2xl flex-col px-4 py-10">
+  <main class="mx-auto w-full max-w-3xl px-4 py-10">
     <CustomisedBreadCrumbs />
-    <h1 class="mt-6 scroll-m-20 text-3xl font-semibold tracking-tight">About</h1>
-    <div class="mt-8 flex flex-col gap-5 text-base leading-relaxed">
-      <p>
-        I am an undergraduate researcher at NYU's Center for Data Science, part of the Courant
-        Institute, studying data science with a minor in philosophy. The work on this site is
-        machine learning on neural data. This page is why that work exists.
-      </p>
-      <p>
-        In the first month of my sophomore year an illness started, and for a stretch it did not
-        stop. The pain and the vomiting were continuous. Specialists added pieces to a regimen
-        that made the episodes less frequent and the condition possible to live with. None of
-        them found the cause. They still have not. That gap is what sent me into the nervous
-        system, using the same machine-learning coursework I was already in. If an exam finds
-        nothing structurally wrong, the failure can still sit somewhere adjacent: a genetic
-        factor, a mitochondrial one, or a change downstream of the wiring, in myelination.
-      </p>
-      <p>
-        Two things I tried on my own, outside any protocol I was given, mattered in my own case.
-        DHA helped. Palmitoylethanolamide with luteolin helped. I am not recommending either of
-        them, and I am not claiming I separated their effect from the rest of what I was taking.
-        They are a personal experience. DHA is also reported to help some autistic children.
-        That report is what turned a private observation into a question about lipid supply.
-      </p>
-      <p>
-        A relative was suffering in a way I recognized from my own illness. Seeing him is what
-        made the question urgent. I am not describing his situation, and nothing on this site is
-        a treatment or a comment on his care. The
-        <a href="/projects/asd-myelin-timing" class="underline hover:font-bold">myelin project</a>
-        is a test of that lipid question against public genetic and imaging data, including the
-        parts the data did not support.
-      </p>
-      <p>
-        The same illness is why the anesthesia and sleep work is here. In acute episodes the
-        pain has stopped under sedation deep enough to count as anesthesia. I am not naming
-        those drugs. The question they raised is a technical one. A nervous system can be driven
-        into a reduced-activity state and brought back, and it is not obvious what that state
-        shares with sleep, or which parts of the change are reversible. That is what the
-        <a href="/projects/anesthesia-pipeline" class="underline hover:font-bold">anesthesia page</a>
-        is measuring, on a connectome rather than in a clinic.
-      </p>
-      <p>
-        The current end of the thread is decoding, which is work other people can check.
-        <a href="/projects/libribrain-2026" class="underline hover:font-bold">LibriBrain</a>
-        asks which of fifty words a person heard, read from the magnetic field of the brain,
-        and a large part of that score is available from the timing of the recording alone.
-        The other current piece is
-        <a href="/projects/handwriting-emg" class="underline hover:font-bold">handwriting from wrist EMG</a>,
-        on Meta's released benchmark: their model reproduced at 30.07% character error, then
-        15.02% after a personal fine-tune and a language model that were not allowed to see the test.
-        Neither project treats the illness. Both are the same habit carried into a public
-        measurement: build it, try to break it, and keep the result that survives.
-      </p>
-      <p>
-        That is the hire. The skill is neural data and machine learning. The reason it is
-        pointed at nervous systems, and at people who were not given an explanation that
-        actually accounted for what was happening to them, is the illness.
-      </p>
+
+    <header class="mt-8 grid items-end gap-8 md:grid-cols-[17rem_minmax(0,1fr)]">
+      <figure class="mx-auto w-full max-w-xs md:mx-0 md:max-w-none">
+        <img
+          src="/images/about/rohit-ravi.jpg"
+          alt="Rohit Ravi, in a navy suit, standing between stone columns."
+          width="1024"
+          height="1536"
+          class="aspect-[3/4] w-full rounded-lg object-cover object-[center_18%] shadow-md"
+        />
+        <figcaption class="mt-2 text-center text-xs text-muted-foreground md:text-left">
+          Rohit Ravi
+        </figcaption>
+      </figure>
+      <div>
+        <p class="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">About</p>
+        <h1 class="mt-2 scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl">Rohit Ravi</h1>
+        <p class="mt-4 text-lg leading-relaxed">
+          Undergraduate researcher at the Center for Data Science, Courant Institute, New York
+          University. Data science, with a minor in philosophy.
+        </p>
+        <p class="mt-4 leading-relaxed text-muted-foreground">
+          The work on this site is machine learning on neural recordings, and on nervous systems
+          that look intact and still fail. It is one trail. It started because that was my
+          situation, and then because it was a child's.
+        </p>
+      </div>
+    </header>
+
+    <nav class="mt-10 grid gap-3 sm:grid-cols-2" aria-label="The work this page leads to">
+      {
+        thread.map((item) => (
+          <a
+            href={item.href}
+            class="rounded-lg border bg-card px-4 py-3 transition hover:border-primary"
+          >
+            <span class="block text-sm font-semibold text-primary">{item.kicker}</span>
+            <span class="mt-1 block text-sm leading-snug text-muted-foreground">{item.line}</span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="mt-12 flex flex-col gap-12 text-base leading-relaxed">
+      <section>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">Sophomore year</h2>
+        <div class="mt-4 flex flex-col gap-4">
+          <p>
+            The illness arrived in the first month of sophomore year. For a stretch there was no
+            interval between attacks. Pain and vomiting ran together, and the ordinary machinery
+            of a semester, class, food, sleep, stopped being available. I saw specialists across
+            the relevant fields. Several of them added something to the regimen that helped. The
+            episodes became less frequent. Between them I could work again.
+          </p>
+          <p>
+            What none of them could give me was a cause. Years later that is still the open fact.
+            The condition is manageable. It is not explained. Scans and endoscopies had found
+            nothing structurally wrong, which is a strange kind of news. It rules out a lesion
+            you can point at, and it leaves the question of where a nervous system is failing
+            when the anatomy looks ordinary.
+          </p>
+          <p>
+            I did not have a lab. I had coursework in machine learning, and I had
+            <em>C. elegans</em>, a nervous system small enough that every cell and every wire is
+            named. The coursework was a way of keeping the question in a form that could be
+            wrong. If nothing is broken in the picture, the failure might still be genetic. It
+            might be mitochondrial, a cell that cannot pay for its own maintenance. Or the wires
+            might be fine and the failure might sit next to them, in the insulation. Myelin is
+            mostly lipid. A circuit can look intact on a scan and still conduct late, thin, or
+            out of time.
+          </p>
+          <p>
+            Reading in that direction, I tried two things on myself that were not part of any
+            protocol I had been given. DHA helped. Palmitoylethanolamide with luteolin helped. I
+            am reporting that as my own experience. I am not recommending either compound, and I
+            never ran the comparison that would say how much of the change was them and how much
+            was the rest of what I was already taking. DHA has also been reported to help some
+            autistic children. That report, set next to what I had felt, is what turned a private
+            note about lipids into a project.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">A relative, six years old</h2>
+        <div class="mt-4 flex flex-col gap-4">
+          <p>
+            I have a relative who is six. He cannot speak, and he is in pain much of the time.
+            I knew that kind of pain from the inside, and seeing it on him is what made the
+            question urgent. I wanted to understand the machinery. I did not set out to propose
+            a treatment, and I am not second-guessing the clinicians who take care of him.
+          </p>
+          <p>
+            The idea I wrote down before running anything was specific enough to fail. If the
+            supply of lipid is constitutionally weak, the circuits that myelin latest should be
+            the ones that fail first, and in people those are frontal. Autism liability and
+            white-matter microstructure can be compared in public biobank data, so the shape of
+            that prediction could be checked without waiting on a new experiment. The
+            <a href="/projects/asd-myelin-timing" class="underline hover:font-bold">myelin page</a>
+            is the log. The original form is not supported. The sharing with autism liability is
+            real as a weak global trend and absent as a frontal gradient. What survived is
+            narrower: a question about the timing of conduction, not a shortage of insulation.
+            None of that helps a six-year-old who still cannot speak. It was never expected to.
+            It is a sharper question than the one I started with, and it is the one I can
+            actually work.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">Quiet, and the return from it</h2>
+        <div class="mt-4 flex flex-col gap-4">
+          <p>
+            In the worst episodes the pain has stopped under sedation deep enough to count as
+            anesthesia. I am leaving the names of those drugs off this site. The fact is enough
+            to force a question that is no longer about my chart. A nervous system can be driven
+            down into a quiet state and brought back. Sleep is another quiet state. So are the
+            reduced-activity states a small animal enters on its own. It is not obvious which
+            parts of the quiet are shared, or what has to remain true for the return to be
+            possible.
+          </p>
+          <p>
+            The
+            <a href="/projects/anesthesia-pipeline" class="underline hover:font-bold">anesthesia page</a>
+            asks that on a connectome. The model has to say, before the result is looked at, what
+            a real anesthetic does to the network and what a lookalike compound that does not
+            anesthetize fails to do. A number of the early claims on that page have been
+            withdrawn in public, on the page itself. The claims that remain are the ones that
+            were still standing after the withdrawal. That is the standard I want the rest of
+            the work held to. An explanation that cannot survive contact with its own measurement
+            is the kind of explanation I had already been given.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">What someone else can score</h2>
+        <div class="mt-4 flex flex-col gap-4">
+          <p>
+            The recent decoding work is the same habit carried into data another person can
+            rerun. It is also the part a lab or a company can grade without taking my word for
+            the rest of this page.
+          </p>
+          <p>
+            <a href="/projects/libribrain-2026" class="underline hover:font-bold">LibriBrain</a>
+            asks which of fifty words a listener heard, read from the magnetic field over the
+            scalp. The entry finished eighth on the broad public track. A baseline that uses only
+            the timing of the recording, and none of the field, scores 0.632. The full decoder
+            is higher. A large piece of what presents as neural decoding is the clock. I would
+            rather be known for that finding than for the rank.
+          </p>
+          <p>
+            <a href="/projects/handwriting-emg" class="underline hover:font-bold">Handwriting from the wrist</a>
+            is the other current piece. Meta released a model that reads letters from surface EMG.
+            On their ten held-out users I reproduced their character error, 30.07%. A fine-tune on
+            the writer's own data, together with a language model that had been stripped of any
+            prompt it might meet at test time, reaches 15.02%. The two gains add. They are not
+            one gain counted twice. Fine-tuning on other writers makes the model worse, which is
+            how you know the improvement belongs to the person and not to a leak in the split.
+          </p>
+          <p>
+            Neither project treats the illness, and neither is aimed at the boy. They are the
+            public end of a private question. When an explanation is missing, which measurements
+            are still worth trusting? I want to be hired to make those measurements. Neural data,
+            machine learning, and the willingness to publish the number that failed. The reason
+            the work is aimed at nervous systems, and at people who are still waiting for an
+            account of what is happening to them, is the illness, and him.
+          </p>
+        </div>
+      </section>
     </div>
   </main>
 </BaseLayout>
