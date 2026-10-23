@@ -2,18 +2,18 @@
 import { getCollection } from "astro:content";
 import InProgressBadge from "../InProgressBadge.astro";
 const entries = await getCollection("projects");
-const selected = ["handwriting-emg", "libribrain-2026", "asd-myelin-timing"];
+const selected = ["handwriting-emg", "libribrain-2026", "asd-myelin-timing", "robotic-movement"];
 const projects = selected
   .map((slug) => entries.find((entry) => entry.slug === slug))
   .filter(Boolean);
 ---
 
-<div class="mt-2 space-y-5">
+<div class="mt-2 grid gap-5 sm:grid-cols-2">
   {
     projects.map(
       (project) =>
         project && (
-          <article class="border-b pb-5 last:border-b-0 last:pb-0">
+          <article class="rounded-lg border bg-background/40 p-4">
             <div class="mb-1 flex flex-wrap items-center gap-2">
               <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 {project.data.subject}
@@ -34,7 +34,7 @@ const projects = selected
   }
   <a
     href="/projects"
-    class="inline-block text-sm font-semibold text-primary underline underline-offset-4"
+    class="sm:col-span-2 inline-block text-sm font-semibold text-primary underline underline-offset-4"
     >All projects <span aria-hidden="true">→</span></a
   >
 </div>

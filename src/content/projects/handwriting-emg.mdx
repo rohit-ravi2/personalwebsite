@@ -4,11 +4,17 @@ startDate: 2026-09-22
 description: "Reproducing Meta’s wrist-EMG handwriting decoder and reducing character error from 30.07% to 15.02% on ten held-out users through personalization and language-model decoding."
 tags: ["sEMG", "Neural Decoding", "Handwriting", "Machine Learning", "Research"]
 subject: "Neural decoding"
+overview: {"question": "Can user adaptation and a language model recover different errors in wrist-EMG handwriting decoding?", "contribution": "Reproduced the released checkpoint, compared adaptation strategies, and evaluated a fixed decoding recipe across ten held-out users.", "result": "Character error fell from 30.07% to 15.02%. This is offline decoding with supervised personal calibration, not an online typing or clinical result.", "links": [{"label": "Evaluation notes", "href": "/downloads/handwriting-emg/evaluation.md"}, {"label": "Results CSV", "href": "/downloads/handwriting-emg/results.csv"}, {"label": "Upstream model", "href": "https://github.com/facebookresearch/generic-neuromotor-interface"}]}
+image:
+  url: /images/projects/handwriting-emg-results.png
+  alt: "Character error rates with and without a language model across four adaptation strategies, evaluated on ten users."
 ---
 
 Meta released a generic model that reads handwriting from surface EMG at the wrist, as one task in their generic neuromotor interface. The released test split is ten users who never appear in training. Their own checkpoint, scored with their decoder, has a character error rate of 30.06%. I reproduced that number: **30.07%**.
 
 I investigated whether personalization and language-model decoding address different sources of error.
+
+![Character error rate across four adaptation strategies, with and without a language model.](/images/projects/handwriting-emg-results.png)
 
 ## What moved the error
 

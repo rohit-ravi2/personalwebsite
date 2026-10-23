@@ -1,0 +1,69 @@
+---
+const { overview, headings = [] } = Astro.props;
+const sections = headings.filter((heading) => heading.depth === 2);
+---
+
+<section
+  aria-label="Project at a glance"
+  class="mb-8 rounded-xl border bg-card p-5 sm:p-6"
+>
+  <h2
+    class="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+  >
+    At a glance
+  </h2>
+  <dl class="mt-4 space-y-4 text-sm leading-relaxed">
+    <div>
+      <dt class="font-semibold text-primary">Question</dt><dd class="mt-1">
+        {overview.question}
+      </dd>
+    </div>
+    <div>
+      <dt class="font-semibold text-primary">My contribution</dt><dd
+        class="mt-1"
+      >
+        {overview.contribution}
+      </dd>
+    </div>
+    <div>
+      <dt class="font-semibold text-primary">Result & scope</dt><dd
+        class="mt-1"
+      >
+        {overview.result}
+      </dd>
+    </div>
+  </dl>
+  <nav aria-label="Project resources" class="mt-5 flex flex-wrap gap-3">
+    {
+      overview.links.map((link) => (
+        <a
+          class="rounded-lg border px-3 py-2 text-sm font-semibold text-primary hover:bg-background focus-visible:outline"
+          href={link.href}
+        >
+          {link.label} <span aria-hidden="true">↗</span>
+        </a>
+      ))
+    }
+  </nav>
+  {
+    sections.length > 2 && (
+      <details class="mt-5 border-t pt-4">
+        <>
+          <summary class="cursor-pointer text-sm font-semibold">
+            In this write-up
+          </summary>
+          <nav
+            aria-label="Write-up sections"
+            class="mt-3 flex flex-col gap-2 text-sm"
+          >
+            {sections.map((heading) => (
+              <a class="text-primary hover:underline" href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+        </>
+      </details>
+    )
+  }
+</section>

@@ -1,0 +1,113 @@
+---
+import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
+import { tools } from "../../data/tools";
+import { ConnectomeExplorer } from "../../components/react/ConnectomeExplorer";
+import SubstrateAnatomy from "../../components/substrate/SubstrateAnatomy";
+import { NetworkStateValidator } from "../../components/react/NetworkStateValidator";
+import SpecificationLedger from "../../components/react/SpecificationLedger";
+import { TrajectoryExplorer } from "../../components/react/TrajectoryExplorer";
+import { DeconvolutionPlayground } from "../../components/react/DeconvolutionPlayground";
+import { TrialOutcomePredictor } from "../../components/react/TrialOutcomePredictor";
+import { ArtClassifierDemo } from "../../components/react/ArtClassifierDemo";
+export function getStaticPaths() {
+  return tools.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool },
+  }));
+}
+const { tool } = Astro.props;
+const videos = [
+  { file: "jump-7-landed.mp4", title: "Jump and landing" },
+  { file: "box-jump-g1-020.mp4", title: "G1 box jump" },
+  { file: "throw-ball-flight.mp4", title: "Throw and ball flight" },
+  { file: "walk-g1-shove-fail.mp4", title: "A failure case: shove recovery" },
+];
+---
+
+<IndexPageLayout
+  wide
+  title={`${tool.title} — Rohit Ravi`}
+  subTitle={tool.title}
+  description={tool.description}
+>
+  <div class="w-full min-w-0">
+    <aside class="mb-6 rounded-xl border bg-card p-5 text-sm leading-relaxed">
+      <p class="font-semibold text-primary">{tool.kind}</p><p class="mt-2">
+        {tool.scope}
+      </p><a
+        class="mt-3 inline-block font-semibold text-primary underline underline-offset-4"
+        href={`/projects/${tool.project}`}>Project methods & results →</a>
+    </aside>
+    <div class="tool-surface min-w-0" data-tool={tool.slug}>
+      {tool.slug === "connectome" && <ConnectomeExplorer client:only="react" />}
+      {tool.slug === "anatomy" && <SubstrateAnatomy client:only="react" />}
+      {
+        tool.slug === "neural-states" && (
+          <NetworkStateValidator client:only="react" />
+        )
+      }
+      {
+        tool.slug === "specification" && (
+          <SpecificationLedger client:only="react" />
+        )
+      }
+      {tool.slug === "resistance" && <TrajectoryExplorer client:only="react" />}
+      {
+        tool.slug === "methylation" && (
+          <DeconvolutionPlayground client:only="react" />
+        )
+      }
+      {tool.slug === "trials" && <TrialOutcomePredictor client:only="react" />}
+      {tool.slug === "art" && <ArtClassifierDemo client:only="react" />}
+      {
+        tool.slug === "movement" && (
+          <div class="grid gap-6 sm:grid-cols-2">
+            {videos.map((video) => (
+              <figure class="overflow-hidden rounded-xl border bg-card">
+                <video
+                  class="aspect-video w-full bg-black"
+                  controls
+                  playsinline
+                  preload="metadata"
+                  aria-label={video.title}
+                >
+                  <source
+                    src={`/videos/robotic-movement/${video.file}`}
+                    type="video/mp4"
+                  />
+                  <a href={`/videos/robotic-movement/${video.file}`}>
+                    Download recording
+                  </a>
+                </video>
+                <figcaption class="p-4 text-sm font-semibold">
+                  {video.title}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )
+      }
+    </div>
+    <noscript
+      ><p class="my-6 rounded border p-4">
+        Interactive models require JavaScript. The project methods and results
+        remain available through the link above.
+      </p></noscript
+    >
+    <a
+      class="mt-8 inline-block text-sm font-semibold text-primary underline underline-offset-4"
+      href="/tools">← All tools & demos</a
+    >
+  </div>
+</IndexPageLayout>
+<style is:global>
+  .tool-surface {
+    overflow-wrap: anywhere;
+  }
+  .tool-surface canvas {
+    max-width: 100%;
+  }
+  .tool-surface table {
+    font-size: 0.85rem;
+  }
+</style>

@@ -11,9 +11,10 @@ const experiences = (await getCollection("experiences"))
 ---
 
 <IndexPageLayout
-  title="Research experience — Rohit Ravi"
+  wide
+  title="Experience & technical skills — Rohit Ravi"
   description="Research experience, technical skills, and certifications across machine learning, neuroscience, and scientific software."
-  subTitle="Research experience"
+  subTitle="Experience & technical skills"
 >
   <div class="w-full max-w-4xl space-y-10 py-4">
     <nav
@@ -60,6 +61,39 @@ const experiences = (await getCollection("experiences"))
         </section>
       ))
     }
+    <section aria-labelledby="contributions-heading">
+      <h2 id="contributions-heading" class="text-2xl font-semibold">
+        Selected technical contributions
+      </h2>
+      <p class="mt-3 text-sm text-muted-foreground">
+        From my broader research and engineering portfolio, including
+        independent projects.
+      </p>
+      <ul class="mt-4 space-y-4 leading-relaxed">
+        <li>
+          <a
+            class="font-semibold text-primary underline"
+            href="/projects/handwriting-emg">Personalized neural decoding</a
+          > — reproduced a released wrist-EMG model and reduced character error from
+          30.07% to 15.02% across ten held-out users with supervised personalization
+          and language-model decoding.
+        </li>
+        <li>
+          <a
+            class="font-semibold text-primary underline"
+            href="/projects/libribrain-2026">MEG decoding and evaluation</a
+          > — built competition decoders, then tested how much of the local result
+          could be explained by timing metadata without neural input.
+        </li>
+        <li>
+          <a
+            class="font-semibold text-primary underline"
+            href="/projects/robotic-movement">Physics-based movement</a
+          > — developed and evaluated movement trajectories in simulation, with recorded
+          outcomes and failure cases.
+        </li>
+      </ul>
+    </section>
     <section id="technical-skills" aria-labelledby="skills-heading">
       <h2 id="skills-heading" class="text-2xl font-semibold">
         Technical skills

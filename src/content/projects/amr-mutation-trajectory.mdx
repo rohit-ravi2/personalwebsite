@@ -7,6 +7,7 @@ subject: "Clinical and molecular"
 image:
   url: /images/projects/amr-mutation-trajectory/cover.png
   alt: "Canonical-AMR top-3, like for like. On all 571 test transitions: LightGBM 0.054, transformer 0.000, reranker 0.051. On the 72 where LightGBM's top-10 contains the answer: LightGBM 0.431, transformer 0.403, reranker 0.403."
+overview: {"question": "Does the order of previous mutations help predict the next step in antibiotic resistance?", "contribution": "Compared gradient boosting, sequence models, and reranking against controls for mutation history.", "result": "Recorded held-out transition predictions can be inspected alongside the observed next mutations. The explorer uses saved predictions.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/amr-mutation-trajectory"}, {"label": "Explore transitions", "href": "/tools/resistance"}]}
 ---
 
 import { TrajectoryExplorer } from "../../components/react/TrajectoryExplorer";

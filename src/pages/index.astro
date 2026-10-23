@@ -17,28 +17,25 @@ const SITE = PROFILE.site;
   <!-- Main Content Grid -->
   <main
     transition:animate="fade"
-    class="relative m-auto grid w-full max-w-6xl gap-2 overflow-hidden p-2 sm:gap-2 sm:p-4 md:grid-cols-2 md:gap-3 md:p-6 lg:grid-cols-12 lg:gap-4"
+    class="home-layout relative m-auto grid w-full max-w-6xl gap-2 overflow-hidden p-2 sm:gap-2 sm:p-4 md:gap-3 md:p-6 lg:gap-4"
   >
     <!-- Intro -->
-    <Card colSpan="lg:col-span-8 md:col-span-2">
+    <Card colSpan="home-intro">
       <IntroCard />
     </Card>
 
     <!-- About Me -->
-    <Card
-      colSpan="lg:col-span-4 md:col-span-1"
-      title="Why this work matters to me"
-    >
+    <Card colSpan="home-why" title="Why this work matters to me">
       <AboutMe />
     </Card>
 
     <!-- Projects -->
-    <Card colSpan="lg:col-span-8 md:col-span-1" title="Selected work">
+    <Card colSpan="home-work" title="Selected work">
       <Projects />
     </Card>
 
     <!-- Quote -->
-    <Card colSpan="lg:col-span-4 md:col-span-1">
+    <Card colSpan="home-quote">
       <div class="flex h-full flex-col justify-center">
         <blockquote
           class="italic text-center md:text-left md:border-l-2 md:pl-6"
@@ -49,21 +46,18 @@ const SITE = PROFILE.site;
     </Card>
 
     <!-- Education -->
-    <Card
-      colSpan="md:col-span-1 lg:col-span-6"
-      title="Education & certificates"
-    >
+    <Card colSpan="home-education" title="Education & certificates">
       <StudyCard />
     </Card>
 
     <!-- Experiences -->
-    <Card colSpan="md:col-span-1 lg:col-span-6" title="Research experience">
+    <Card colSpan="home-experience" title="Research experience">
       <ExperienceCard />
     </Card>
 
     <!-- Blog -->
     <Card
-      colSpan="md:col-span-1 lg:col-span-6"
+      colSpan="home-writing"
       rowSpan="md:row-span-1 lg:row-span-1"
       title="Recent writing"
     >
@@ -71,14 +65,24 @@ const SITE = PROFILE.site;
     </Card>
 
     <!-- Contact -->
-    <Card
-      colSpan="md:col-span-1 lg:col-span-6"
-      rowSpan="md:row-span-2 lg:row-span-1"
-      title="Start a conversation"
-    >
-      <ContactPanel />
+    <Card colSpan="home-contact" rowSpan="md:row-span-2 lg:row-span-1">
+      <div class="grid gap-6 md:grid-cols-2 md:gap-10">
+        <div>
+          <h2 class="text-xl font-semibold">Start a conversation</h2><p
+            class="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground"
+          >
+            I’m interested in research and engineering opportunities in neural
+            data, machine learning, and computational biology. If something here
+            connects with your work, I’d like to hear about it.
+          </p><a
+            href="/tools"
+            class="mt-5 inline-block text-sm font-semibold text-primary underline underline-offset-4"
+            >Explore the tools & demos →</a>
+        </div>
+        <ContactPanel />
+      </div>
     </Card>
-    <div class="col-span-full flex justify-end px-2 pt-2">
+    <div class="home-owner col-span-full flex justify-end px-2 pt-2">
       <a
         href="/editor"
         class="rounded p-2 text-xs text-muted-foreground opacity-30 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
@@ -87,3 +91,49 @@ const SITE = PROFILE.site;
     </div>
   </main>
 </BaseLayout>
+
+<style is:global>
+  .home-layout {
+    align-items: start;
+    grid-template-areas: "intro" "why" "work" "quote" "education" "experience" "writing" "contact" "owner";
+  }
+  .home-layout > .home-intro {
+    grid-area: intro;
+  }
+  .home-layout > .home-why {
+    grid-area: why;
+  }
+  .home-layout > .home-work {
+    grid-area: work;
+  }
+  .home-layout > .home-quote {
+    grid-area: quote;
+  }
+  .home-layout > .home-education {
+    grid-area: education;
+  }
+  .home-layout > .home-experience {
+    grid-area: experience;
+  }
+  .home-layout > .home-writing {
+    grid-area: writing;
+  }
+  .home-layout > .home-contact {
+    grid-area: contact;
+  }
+  .home-layout > .home-owner {
+    grid-area: owner;
+  }
+  @media (min-width: 768px) {
+    .home-layout {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-areas: "intro intro" "why quote" "work work" "education experience" "writing contact" "owner owner";
+    }
+  }
+  @media (min-width: 1024px) {
+    .home-layout {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-areas: "intro intro intro intro why why" "work work work work quote quote" "work work work work writing writing" "education education education experience experience experience" "contact contact contact contact contact contact" "owner owner owner owner owner owner";
+    }
+  }
+</style>

@@ -1,9 +1,10 @@
 ---
-import Container from '../components/Container.astro'
+import Container from "../components/Container.astro";
+const { wide = false } = Astro.props;
 ---
 
 <div class="pb-4 pt-8">
-  <Container size="md">
-    <slot/>
+  <Container size={wide ? "lg" : "md"}>
+    <slot />
   </Container>
 </div>

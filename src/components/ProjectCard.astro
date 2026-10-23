@@ -11,6 +11,7 @@ const {
   altText,
   dateStart,
   inProgress = false,
+  wide = false,
 } = Astro.props;
 const date = dateStart ? new Date(dateStart) : null;
 const dateLabel =
@@ -25,14 +26,14 @@ const dateLabel =
 
 <Tag
   href={href}
-  class={`group flex h-full flex-col overflow-hidden rounded-xl border bg-card p-0 shadow-sm transition-colors hover:border-primary ${className}`}
+  class={`group flex h-full flex-col overflow-hidden rounded-xl border bg-card p-0 shadow-sm transition-colors hover:border-primary ${wide ? "project-wide" : ""} ${className}`}
 >
   {
     imagePath && (
       <img
         src={imagePath}
         alt={altText ?? ""}
-        class="h-44 w-full border-b object-cover"
+        class="project-image aspect-[16/9] w-full border-b bg-white/70 object-contain"
         loading="lazy"
         decoding="async"
       />
@@ -58,3 +59,18 @@ const dateLabel =
     <p class="text-sm leading-relaxed text-muted-foreground">{subheading}</p>
   </div>
 </Tag>
+
+<style>
+  @media (min-width: 640px) {
+    .project-wide {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .project-wide .project-image {
+      height: 100%;
+      min-height: 220px;
+      border-bottom: 0;
+      border-right: 1px solid hsl(var(--border));
+    }
+  }
+</style>

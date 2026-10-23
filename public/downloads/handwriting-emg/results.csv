@@ -1,0 +1,5 @@
+encoder,greedy_cer_percent,lm_cer_percent
+Generic reproduced,30.07,25.43
+Early input correction,26.99,21.87
+Early adapter,26.76,21.89
+Personal full fine-tune,20.33,15.02

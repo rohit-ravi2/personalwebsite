@@ -16,6 +16,21 @@ const projectCollection = defineCollection({
       .optional(),
     tags: z.array(z.string()).optional(),
     subject: z.string(),
+    overview: z
+      .object({
+        question: z.string().min(1).max(2000),
+        contribution: z.string().min(1).max(2000),
+        result: z.string().min(1).max(2000),
+        links: z
+          .array(
+            z.object({
+              label: z.string().min(1).max(100),
+              href: z.string().regex(/^(https:\/\/[^\s]+|\/(?!\/)[^\s]*)$/),
+            }),
+          )
+          .max(10),
+      })
+      .optional(),
     inProgress: z.boolean().optional(),
   }),
 });

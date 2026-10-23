@@ -93,3 +93,13 @@ test('guided-project metadata validates certificates and local PDF paths', () =>
   assert.throws(() => assertData(path, metadata.replace('/certifications/example.pdf', '/../private/example.pdf')));
   assert.throws(() => assertData(path, metadata.replace('frameworks: [PyTorch]', 'frameworks: []')));
 });
+
+test('project overview rejects executable and protocol-relative resource links', () => {
+  const overview = { question: 'A question', contribution: 'An implementation', result: 'A measured result', links: [{label:'Methods',href:'/downloads/methods.md'}] };
+  const content = value => markdown.replace('\n---\n\nA paragraph.', `\noverview: ${JSON.stringify(value)}\n---\n\nA paragraph.`);
+  assert.doesNotThrow(() => assertData('src/content/projects/example.md', content(overview)));
+  for (const href of ['javascript:alert(1)', '//other.example', 'data:text/html,test', 'https://example.com/space here']) {
+    assert.throws(() => assertData('src/content/projects/example.md', content({...overview,links:[{label:'Methods',href}]})));
+  }
+  assert.throws(() => assertData('src/content/projects/example.md', content({...overview,result:''})));
+});

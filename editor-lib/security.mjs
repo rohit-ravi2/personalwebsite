@@ -95,6 +95,11 @@ export function assertData(path, content, previous = '') {
   if (data.tags !== undefined && (!Array.isArray(data.tags) || !data.tags.every(t => typeof t === 'string'))) throw new Error('Tags must be a list of text values.');
   for (const key of ['inProgress', 'draft']) if (data[key] !== undefined && typeof data[key] !== 'boolean') throw new Error(`${key} must be true or false.`);
   if (data.image !== undefined && (!data.image || typeof data.image.url !== 'string' || typeof data.image.alt !== 'string')) throw new Error('Images need a URL and alt text.');
+  if (data.overview !== undefined) {
+    const value = data.overview;
+    const text = (s, max) => typeof s === 'string' && s.trim().length > 0 && s.length <= max;
+    if (!path.includes('/projects/') || !value || !['question', 'contribution', 'result'].every(key => text(value[key], 2000)) || !Array.isArray(value.links) || value.links.length > 10 || !value.links.every(link => link && text(link.label, 100) && typeof link.href === 'string' && /^(https:\/\/[^\s]+|\/(?!\/)[^\s]*)$/.test(link.href))) throw new Error('Project overview needs a question, contribution, result, and valid HTTPS or site resource links.');
+  }
   if (data.guidedProjects !== undefined) {
     const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
     const https = value => { try { return typeof value === 'string' && new URL(value).protocol === 'https:'; } catch { return false; } };

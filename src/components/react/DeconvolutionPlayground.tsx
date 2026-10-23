@@ -1,3 +1,4 @@
+import { interpolateDeconv } from "../../lib/deconvolution.mjs";
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -39,34 +40,6 @@ async function loadOrt(): Promise<ORT> {
   ort.env.wasm.wasmPaths =
     "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.24.3/dist/";
   return ort as unknown as ORT;
-}
-
-// Interpolate the deconv vector for an arbitrary tumor fraction between known grid points
-function interpolateDeconv(
-  lookup: Lookup,
-  cancer: string,
-  tf: number
-): number[] {
-  const fractions = lookup.tumor_fractions;
-  const cancerKey = cancer in lookup.lookup ? cancer : "healthy";
-  // Find bounding fractions
-  let lo = fractions[0];
-  let hi = fractions[fractions.length - 1];
-  for (let i = 0; i < fractions.length - 1; i++) {
-    if (tf >= fractions[i] && tf <= fractions[i + 1]) {
-      lo = fractions[i];
-      hi = fractions[i + 1];
-      break;
-    }
-  }
-  if (tf <= fractions[0]) return [...lookup.lookup[cancerKey][String(fractions[0])]];
-  if (tf >= fractions[fractions.length - 1])
-    return [...lookup.lookup[cancerKey][String(fractions[fractions.length - 1])]];
-
-  const vLo = lookup.lookup[cancerKey][String(lo)];
-  const vHi = lookup.lookup[cancerKey][String(hi)];
-  const alpha = (tf - lo) / (hi - lo);
-  return vLo.map((v, i) => v + alpha * (vHi[i] - v));
 }
 
 // Color palette for major cell-type categories

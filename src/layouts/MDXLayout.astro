@@ -1,10 +1,12 @@
 ---
+import ProjectOverview from "../components/ProjectOverview.astro";
 import ContentTags from "../components/ContentTags.astro";
 import InProgressBadge from "../components/InProgressBadge.astro";
 import IndexPageLayout from "./IndexPageLayout.astro";
 
-const { frontmatter } = Astro.props;
-const { title, description, image, startDate, tags, canonical, inProgress } = frontmatter;
+const { frontmatter, headings = [] } = Astro.props;
+const { title, description, image, startDate, tags, canonical, inProgress } =
+  frontmatter;
 
 const isProject = Astro.url.pathname.startsWith("/projects/");
 const pageUrl = new URL(Astro.url.pathname, Astro.site).toString();
@@ -17,9 +19,9 @@ const toIso = (d: unknown): string | undefined => {
 };
 
 const imageUrl = image?.url
-  ? (image.url.startsWith("http")
-      ? image.url
-      : new URL(image.url, Astro.site).toString())
+  ? image.url.startsWith("http")
+    ? image.url
+    : new URL(image.url, Astro.site).toString()
   : new URL("/og-image.png", Astro.site).toString();
 
 const articleSchema = isProject
@@ -51,26 +53,45 @@ const articleSchema = isProject
   : null;
 ---
 
-<IndexPageLayout title={title} description={description} image={image} subTitle={title} canonicalURL={canonical}>
+<IndexPageLayout
+  title={title}
+  description={description}
+  image={image}
+  subTitle={title}
+  canonicalURL={canonical}
+>
   <div class="w-full justify-center flex flex-col">
-    {(inProgress || tags) &&
-      <div class="pb-4 mx-auto flex flex-wrap items-center justify-center gap-1">
-        {inProgress && <InProgressBadge />}
-        {tags && <ContentTags tags={tags}/>}
-      </div>}
-
-    {startDate &&
-      <div class="text-sm text-light my-2 sr-only mx-auto">
-        {startDate}
-      </div>
+    {
+      (inProgress || tags) && (
+        <div class="pb-4 mx-auto flex flex-wrap items-center justify-center gap-1">
+          {inProgress && <InProgressBadge />}
+          {tags && <ContentTags tags={tags} />}
+        </div>
+      )
     }
 
+    {
+      startDate && (
+        <div class="text-sm text-light my-2 sr-only mx-auto">{startDate}</div>
+      )
+    }
+
+    {
+      isProject && frontmatter.overview && (
+        <ProjectOverview overview={frontmatter.overview} headings={headings} />
+      )
+    }
     <article class="prose mx-auto">
-      <slot/>
+      <slot />
     </article>
   </div>
 
-  {articleSchema && (
-    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  )}
+  {
+    articleSchema && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(articleSchema)}
+      />
+    )
+  }
 </IndexPageLayout>

@@ -6,8 +6,9 @@ tags: ["Connectomics", "Graph Neural Networks", "Computational Neuroscience", "R
 subject: "C. elegans"
 inProgress: true
 image:
-  url: /images/projects/c-elegans-cover.png
-  alt: "Illustrated C. elegans worm with colored neural-network overlay — Rohit Ravi's connectomics + transcriptomics project"
+  url: /images/projects/celegans-connectivity.png
+  alt: "Cook et al. cell-class connectivity, showing connections with weight at least 10 in a non-anatomical circular layout."
+overview: {"question": "What can connectivity and gene expression tell us about the structure and dynamics of a small nervous system?", "contribution": "Built a learning pipeline spanning connectome analysis, graph models, gene-expression features, and neural simulation.", "result": "Topology predicts aspects of wiring; structural features did not reliably predict recorded activity. The reported r = 0.987 is in-sample.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/c-elegans-multimodal"}, {"label": "Explore connectivity", "href": "/tools/connectome"}]}
 ---
 
 import { ConnectomeExplorer } from "../../components/react/ConnectomeExplorer";

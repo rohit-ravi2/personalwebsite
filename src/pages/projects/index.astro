@@ -32,6 +32,7 @@ const ungrouped = projects.filter(
 ---
 
 <IndexPageLayout
+  wide
   title="Projects"
   description="Research and engineering across neural decoding, computational biology, and machine learning."
   subTitle="Projects"
@@ -66,9 +67,11 @@ const ungrouped = projects.filter(
             >
               {group.subject}
             </h2>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {group.items.map((entity: any) => (
                 <ProjectCard
+                  class={group.items.length === 1 ? "sm:col-span-2" : ""}
+                  wide={group.items.length === 1}
                   href={"/projects/" + entity.slug}
                   heading={entity.data.title}
                   subheading={entity.data.description}
@@ -86,9 +89,11 @@ const ungrouped = projects.filter(
             <h2 id="subject-other" class="mb-3 text-xl font-semibold">
               Other
             </h2>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {ungrouped.map((entity: any) => (
                 <ProjectCard
+                  class={ungrouped.length === 1 ? "sm:col-span-2" : ""}
+                  wide={ungrouped.length === 1}
                   href={"/projects/" + entity.slug}
                   heading={entity.data.title}
                   subheading={entity.data.description}
