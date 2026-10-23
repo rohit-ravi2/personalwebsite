@@ -1,27 +1,46 @@
 ---
-import { buttonVariants } from './ui/button'
+import { buttonVariants } from "./ui/button";
 import { PROFILE } from "../content/profileData";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/about", label: "About" },
   { href: "/projects", label: "Projects" },
-  { href: "/posts", label: "Blog" },
+  { href: "/posts", label: "Writing" },
+  { href: "/experiences", label: "Experience" },
 ];
 ---
 
-<header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+<header
+  class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+>
   <div class="container flex h-16 items-center justify-between gap-2 px-4">
-    <a href="/" class="flex items-center space-x-2 shrink-0" aria-label="Rohit Ravi — home">
+    <a
+      href="/"
+      class="flex items-center space-x-2 shrink-0"
+      aria-label="Rohit Ravi — home"
+    >
       <span class="inline-block font-bold">{PROFILE.name}</span>
     </a>
 
     <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
-      {navLinks.map((l) => (
-        <a href={l.href} class={buttonVariants({ variant: 'ghost', size: 'sm' })}>{l.label}</a>
-      ))}
-      <a href={PROFILE.repo} target="_blank" rel="noreferrer" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>GitHub</a>
+      {
+        navLinks.map((l) => (
+          <a
+            href={l.href}
+            class={buttonVariants({ variant: "ghost", size: "sm" })}
+          >
+            {l.label}
+          </a>
+        ))
+      }
+      <a
+        href={PROFILE.links.github}
+        target="_blank"
+        rel="noreferrer"
+        class={buttonVariants({ variant: "ghost", size: "sm" })}>GitHub</a
+      >
     </nav>
 
     <!-- Mobile controls -->
@@ -35,7 +54,10 @@ const navLinks = [
         class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
       >
         <Menu className="h-5 w-5 mobile-nav-open-icon" aria-hidden="true" />
-        <X className="h-5 w-5 hidden mobile-nav-close-icon" aria-hidden="true" />
+        <X
+          className="h-5 w-5 hidden mobile-nav-close-icon"
+          aria-hidden="true"
+        />
       </button>
     </div>
   </div>
@@ -47,19 +69,21 @@ const navLinks = [
     aria-label="Mobile primary"
   >
     <ul class="flex flex-col p-2">
-      {navLinks.map((l) => (
-        <li>
-          <a
-            href={l.href}
-            class="block rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-          >
-            {l.label}
-          </a>
-        </li>
-      ))}
+      {
+        navLinks.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="block rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
       <li>
         <a
-          href={PROFILE.repo}
+          href={PROFILE.links.github}
           target="_blank"
           rel="noreferrer"
           class="block rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
@@ -75,27 +99,27 @@ const navLinks = [
   // Mobile nav toggle — reattach on view transitions so it keeps working.
   (() => {
     function wire() {
-      const btn = document.getElementById('mobile-nav-toggle');
-      const nav = document.getElementById('mobile-nav');
+      const btn = document.getElementById("mobile-nav-toggle");
+      const nav = document.getElementById("mobile-nav");
       if (!btn || !nav) return;
-      const openIcon = btn.querySelector('.mobile-nav-open-icon');
-      const closeIcon = btn.querySelector('.mobile-nav-close-icon');
+      const openIcon = btn.querySelector(".mobile-nav-open-icon");
+      const closeIcon = btn.querySelector(".mobile-nav-close-icon");
       const setOpen = (open) => {
-        nav.classList.toggle('hidden', !open);
-        btn.setAttribute('aria-expanded', String(open));
-        if (openIcon) openIcon.classList.toggle('hidden', open);
-        if (closeIcon) closeIcon.classList.toggle('hidden', !open);
+        nav.classList.toggle("hidden", !open);
+        btn.setAttribute("aria-expanded", String(open));
+        if (openIcon) openIcon.classList.toggle("hidden", open);
+        if (closeIcon) closeIcon.classList.toggle("hidden", !open);
       };
-      btn.onclick = () => setOpen(nav.classList.contains('hidden'));
-      nav.querySelectorAll('a').forEach((a) => {
-        a.addEventListener('click', () => setOpen(false));
+      btn.onclick = () => setOpen(nav.classList.contains("hidden"));
+      nav.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => setOpen(false));
       });
       setOpen(false);
     }
     wire();
-    document.addEventListener('astro:after-swap', wire);
+    document.addEventListener("astro:after-swap", wire);
   })();
 
   // Scrub any stale .dark class applied by the old theme toggle.
-  document.documentElement.classList.remove('dark');
+  document.documentElement.classList.remove("dark");
 </script>

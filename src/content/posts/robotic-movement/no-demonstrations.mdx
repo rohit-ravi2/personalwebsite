@@ -1,7 +1,7 @@
 ---
-title: "No demonstrations: the low-data principle"
+title: "Generating robot movements without demonstrations"
 startDate: 2026-10-07
-description: "Why the project derives movement from a robot's own specification instead of human motion data, and exactly what that claim does and does not cover."
+description: "The inputs, search budget, and hand-designed structure behind this physics-based movement pipeline, and the limits of its no-demonstration claim."
 tags: ["Robotics", "Simulation", "Humanoids", "Data"]
 draft: false
 order: 7
@@ -11,9 +11,9 @@ Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page se
 
 ## Human-like, but not copied
 
-Humanoids are useful because they are shaped like us and do the things we do, so a general framework of robot movement should look, more or less, like a general framework of optimal human movement. That is the north star, and it is not trivial: well-funded companies are working on it right now and have not solved it.
+Humanoids are useful because they are shaped like us and do the things we do, so a general framework of robot movement should look, more or less, like a general framework of optimal human movement. That is a long-term goal rather than a capability established by this project.
 
-The difference is in how. The dominant approach is mass data collection: people in sensor suits, with their motion retargeted onto the robot, task by task. But a human optimum is optimal for a body of tendons and muscle, not for electric motors with different torque-speed characteristics and no elastic energy storage. I wanted to derive the movement from the robot's own specification instead, and to do it in a way that generalises across tasks rather than one task at a time. That is a fundamentally different bet.
+The difference is in how. The dominant approach is mass data collection: people in sensor suits, with their motion retargeted onto the robot, task by task. But a human optimum is optimal for a body of tendons and muscle, not for electric motors with different torque-speed characteristics and no elastic energy storage. I wanted to derive the movement from the robot's own specification instead, and to do it in a way that generalises across tasks rather than one task at a time. This project tests that alternative in simulation.
 
 ## The low-data aspect
 

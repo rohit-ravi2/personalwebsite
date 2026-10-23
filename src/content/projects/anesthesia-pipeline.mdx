@@ -1,9 +1,10 @@
 ---
-title: "Anesthesia Pipeline — Network-State Validation"
+title: "Modeling anesthesia and reversible neural states"
 startDate: 2026-04-15
-description: "Network-state validator for volatile anesthesia on a substrate-agnostic LIF integrator. Predicts EC50s, mutant magnitudes, and Eger non-immobilizer specificity from literature-grounded multi-target perturbation profiles across three independent organism calibrations (worm Cook 2019, fly Winding 2023, mouse generic random graph)."
+description: "Computational models of anesthetic perturbations, tested against published pharmacology across worm, fly, and mouse calibrations, alongside a literature map of reduced-activity states."
 tags: ["Computational Pharmacology", "Anesthesia", "Connectomics", "Network Models", "Research"]
 subject: "Clinical and molecular"
+inProgress: true
 image:
   url: /images/projects/anesthesia-pipeline-cover.svg
   alt: "Halothane vs hexafluoroethane network-state response on the C. elegans Cook 2019 connectome — anesthetic pushes command-interneuron firing into quiescent regime, non-immobilizer does not, across four orders of magnitude in dose."
@@ -14,19 +15,19 @@ import { NetworkStateValidator } from "../../components/react/NetworkStateValida
 ## Where the question came from
 
 During the worst stretches of an illness that began in college, the pain has stopped under
-sedation deep enough to count as anesthesia. I am not naming those drugs, and nothing here is
-a recommendation. The fact raised a technical question. A nervous system can be put into a
+deep sedation. That personal experience raised a technical question; it is not evidence for
+a mechanism or a recommendation. A nervous system can be put into a
 reduced-activity state and brought back, and it is not obvious what that state shares with
 sleep, or which parts of the change are reversible. The simulator on this page, and the
 comparison of anesthesia with sleep and the other reduced-activity states, is that question
 asked on a connectome instead of in a clinic. The longer account is on the
 [about page](/about).
 
-## Thesis
+## Working model
 
 General anesthesia is driven by **coordinated partial perturbation across a multi-class target ensemble** (SNARE release, Complex I, K2P channels, nAChR, NCA leak, GABA-A potentiation), not a single-target binding event. Mutants in any one target give partial phenotypes; non-immobilizers like hexafluoroethane lack engagement at the high-magnitude classes the architecture requires.
 
-**What this project earned, stated once:** within-organism volatile EC50 prediction ~3× tighter than Meyer-Overton on held-out isoflurane across worm, fly and mouse, with one free parameter per organism; mutant magnitude predictions inside published literature bands; and a 4–6 mechanism-class minimum sufficient subset in which SNARE-or-Complex-I is universal (25/25 passing subsets).
+**Reported model results:** within-organism volatile EC50 prediction ~3× tighter than Meyer-Overton on held-out isoflurane across worm, fly and mouse, with one free parameter per organism; mutant magnitude predictions inside published literature bands; and a 4–6 mechanism-class minimum sufficient subset in which SNARE-or-Complex-I is universal (25/25 passing subsets).
 
 **What it does not establish.** A 2026-06-12 preregistered, accept-either-way re-examination (see *Adversarial close-out*) proved the V1 operator is **rank-2** — every anesthetic and genotype profile collapses to a uniform current scalar plus one global synaptic gain, so the network *cannot by construction* distinguish which targets are engaged from the aggregate magnitude of two coordinates. Cell-type targeting, tested on a rank-lifted substrate built specifically to make it testable, returns a **null** on worm (46th percentile). The immobilization readout is **demoted to a network statistic**, not validated behavioral quiescence. Whether the *specific* target identities are load-bearing, rather than one magnitude-matched ensemble among many, is **not established here**.
 
@@ -62,7 +63,7 @@ Worm is **not** anchor-overfit and fly is **not** uniquely special; both show a 
 
 **Net.** The core thesis survives — a multi-class quorum (4–6 classes; SNARE-or-Complex-I universal) reproduces MAC, and anesthetics discriminatively engage a biologically-motivated target panel. But the project's own substrate, even after the rank-lift built to test it, does **not** establish that the *specific* cell-type-resolved target identities are load-bearing rather than one magnitude-matched ensemble.
 
-## The successor result (2026-09): a cross-state mechanism map, and an asymmetry nobody has asked about
+## Follow-up: a literature map of reduced-activity states
 
 The "Paper 2" question this project posed — *does anesthetic-induced quiescence act on the machinery of natural reduced-activity states?* — was blocked here on the demoted readout. It was answered by a different method: a frozen mechanism-repertoire × state map built directly from primary literature, with the search instrument itself calibrated against a measured recall standard.
 
@@ -74,7 +75,7 @@ The "Paper 2" question this project posed — *does anesthetic-induced quiescenc
 | physically imposed (cryptobiosis) | 1 | 0 | 2 | 0 | 2 | 1 | 0 |
 | exogenous agent (anesthesia) | 4 | **0** | 18 | 3 | 3 | 0 | **5** |
 
-**No mechanism has ever been shown to *produce* the anesthetized state.** Exactly zero, across four rows and 25 populated cells, against 17 in the endogenous states. Not a coverage artifact: the most completely scored row in the table — mouse volatile anesthesia at 11/12 cells — is one of the four.
+**No cell in the four anesthesia rows met this map’s definition of *producing* the anesthetized state.** That is zero across four rows and 25 populated cells, against 17 in the endogenous states. Not a coverage artifact: the most completely scored row in the table — mouse volatile anesthesia at 11/12 cells — is one of the four.
 
 **The matching claim about exit was falsified, deliberately.** An earlier version of this table had zero `ENABLES_EXIT` across every endogenous state. Hibernation was then scored *specifically because* it was the state most likely to break that, and it did: intracerebroventricular prostaglandin E₂ provokes arousal from an established hibernation bout ([PMID 11893609](https://pubmed.ncbi.nlm.nih.gov/11893609/)), and central adenosine antagonism reverses established torpor ([PMID 22785425](https://pubmed.ncbi.nlm.nih.gov/22785425/)). The second is scored the same way as caffeine-accelerated emergence from anesthesia because it is the same pharmacology delivered the same way — scoring them differently would have preserved the zero and been indefensible.
 
@@ -82,7 +83,7 @@ The "Paper 2" question this project posed — *does anesthetic-induced quiescenc
 
 > Exit is studied where exit is costly. Production is studied where production is not already explained by the intervention.
 
-Anesthesia has an exit literature because emergence is a clinical problem. Hibernation has one because arousal is an energetic problem. Sleep has none because waking up is taken for granted. Nothing produces the anesthetized state because the drug already answers the question. The shape of the literature follows the shape of the question — and hibernation supplies the natural experiment: two groups matched on production mode, differing in exit cost, differing in exactly the predicted direction.
+Anesthesia has an exit literature because emergence is a clinical problem. Hibernation has one because arousal is an energetic problem. In this map, sleep has no qualifying exit entry. One possible explanation is that pharmacological intervention makes production easier to take for granted in anesthesia. The shape of the literature follows the shape of the question — and hibernation supplies the natural experiment: two groups matched on production mode, differing in exit cost, differing in exactly the predicted direction.
 
 **A convergence nobody looked for.** Two states, two sufficiency tests, same structure. Central A1-agonist activation in mouse produces profound hypothermia that is *not torpor* — it separates from the real state on temperature kinetics, heart rate, shivering, arrhythmia, recovery rate and transcriptional signature ([PMID 28378088](https://pubmed.ncbi.nlm.nih.gov/28378088/)). Chemogenetic reactivation of anesthesia-activated ensembles produces immobility, discoordination and anti-nociception but *not* loss of righting ([PMID 41573848](https://pubmed.ncbi.nlm.nih.gov/41573848/)). Independent literatures, independent methods: **the components of a reduced-activity state can be produced separately, and producing some of them does not assemble the state.** Neither paper cites the other.
 
@@ -94,7 +95,7 @@ The same paper carries a second dissociation its authors state explicitly — th
 
 **Agent specificity, established four independent times.** Anesthetics are routinely discussed as a class; the manipulation evidence says they are not one. Ndufs4 knockout mice are 2.5–3× hypersensitive to isoflurane and halothane, 2× to propofol, and **resistant to ketamine**. Stomatin knockout shifts diethyl ether sensitivity by 12% and leaves halothane and isoflurane unchanged (a measured null with a positive internal control). EAAT3 knockout lowers isoflurane *hypnosis* threshold while leaving isoflurane *immobility* untouched. N-type Ca²⁺ channel knockout is *more* halothane-sensitive and *less* propofol-sensitive — oppositely affected, in one genotype. **"Anesthetic sensitivity" is not one quantity; it is at least agent-specific and, within one agent, endpoint-specific.**
 
-**The most confident claim in the dormancy literature is unexamined.** A prediction frozen *before* any scoring said that for the deep states, the membrane-excitability classes would come back `NOT_TESTED` rather than `TESTED_NEGATIVE` — and called that the single most valuable possible output. It holds, now on four deep states: dauer, cryptobiosis, seasonal hibernation and mouse daily torpor are all empty across the entire merged excitability block, at recall 1.00. "Dormancy reduces neural excitability" is asserted constantly and has not been tested at the mechanism level in any of them.
+**A gap in the mapped dormancy literature.** A prediction frozen *before* any scoring said that for the deep states, the membrane-excitability classes would come back `NOT_TESTED` rather than `TESTED_NEGATIVE` — and called that the single most valuable possible output. It holds, now on four deep states: dauer, cryptobiosis, seasonal hibernation and mouse daily torpor are all empty across the entire merged excitability block, at recall 1.00. Within this search and scoring framework, these rows contain no qualifying tests of the membrane-excitability mechanisms.
 
 **Method result, portable beyond this project.** The literature-search protocol used in every earlier run had a **measured recall of 0.05** — NCBI eutils ANDs bare terms, so concatenated multi-concept queries demanded every term appear, and the founding worm anesthesia-genetics paper returned zero hits. Rebuilding it as boolean OR-groups with calibrated retrieval depth took measured internal recall to **1.00 (112/112)**, on a hold-out target that grew 170% during calibration. Two results generalize: broadening query vocabulary at fixed retrieval depth *costs* recall, and every residual miss must be attributed to vocabulary-versus-depth by direct diagnostic before either is changed. **A null is only as interpretable as its instrument's measured recall** — which is why 53 of 120 cells can be reported as "searched and empty" at all.
 
@@ -213,7 +214,7 @@ V5 M2 (connectome permutation) and V5+ (no-integration sign-only baseline + Meye
 | Eger non-immobilizers | predicts they should immobilize at high dose | correctly classifies as non-immobilizers (3/3) |
 | mutant magnitude predictions | no answer (Meyer-Overton has nothing to say) | several inside literature bands (TREK1_KO 2.04 in 1.5-2.5; TASK13_dKO 2.06 in 2-3; ND-49 0.62 in 0.5-0.7; gas-1 0.57 close to 0.33-0.5) |
 
-## Honest single-line claim, post-controls
+## Summary after controls
 
 > A literature-anchored multi-class Hill perturbation table, integrated through a substrate-agnostic LIF integrator, recovers held-out volatile EC50s ~3× tighter than Meyer-Overton across worm, fly, and mouse with one free parameter calibrated per organism. The architecture requires a 4–6 class minimum sufficient subset per organism (V7 Sub-Q2); SNARE or Complex I is universal across all 25 all-stages-passing subsets. Against a corrected two-coordinate magnitude-matched null, the conserved profile shows a modest advantage in worm (28%) and fly (26%) and a marginal one in mouse (38%). Cell-type-resolved target specificity, tested on a substrate rank-lifted expressly to make it testable, is **null** on worm (46th percentile) and untestable on fly. Calibration generalizes anchor-to-anchor at grid resolution (V5 M4). Eger non-immobilizer specificity is entailed by correct volatile EC50 prediction (V7 Sub-Q2 stage attrition), not an independent capability.
 
@@ -225,7 +226,7 @@ Use the **Cross-Species** tab to compare worm + fly + mouse halothane / isoflura
 
 ## V5 adversarial controls — bootstrap CIs and connectome permutation
 
-Honest follow-on testing reveals where the V3/V4 result is genuinely structural and where it is over-determined:
+Follow-up testing examines where the V3/V4 result is genuinely structural and where it is over-determined:
 
 **Bootstrap 95% CIs** (1000 resamples on 5-seed ensembles): predictions are precise but tight. The worm-isoflurane held-out test (predicted 291 µM, 95% CI [276, 310] µM) sits inside its CI containing the published 290 µM — the strongest of the four EC50 predictions. The other three EC50s sit just outside their 95% CIs (worm halothane CI [297, 334] vs published 340; fly halothane CI [343, 373] vs 340; fly iso CI [315, 328] vs 290). Fold-errors of 1.06–1.11× are real but not statistically consistent with published values to within seed noise.
 

@@ -1,0 +1,52 @@
+{
+  "lead": "I study nervous systems because I know how profoundly they can change a life—and how much remains unexplained when they do.",
+  "introduction": "I’m studying data science and philosophy at NYU, with research interests spanning machine learning, neural computation, and biology. Those interests developed through coursework, but their urgency came from a severe illness that began during college. What started as a search for answers about my own health grew into a broader commitment: to develop the technical understanding needed to help people whose suffering we still struggle to explain.",
+  "sections": [
+    {
+      "title": "Before the questions became personal",
+      "paragraphs": [
+        "For much of my life, I understood progress through training. I played four years of varsity tennis at Northern Highlands, and during the COVID lockdown I often spent six hours a day on court. Fitness, energy, and the ability to push myself were central to my daily life. I expected to keep building on them.",
+        "Becoming ill disrupted that continuity. Activities that had once been routine became inaccessible. I lost the physical capacity I had depended on, and long stretches of illness narrowed the world around me.",
+        "Treatment eventually made the condition more manageable. I’m grateful for the clinicians who helped make that possible. Yet relief and explanation were different things: the underlying cause remained uncertain, even after consultations across specialties. I was left with questions that mattered beyond any single appointment. Where was the dysfunction occurring? What could explain such a large change in experience and ability when conventional investigations offered so little clarity?",
+        "I began reading because I wanted answers. Over time, I wanted the skills to investigate the questions myself."
+      ]
+    },
+    {
+      "title": "Finding a direction",
+      "paragraphs": [
+        "Alongside that search, I began exploring my roots and identity more seriously. Vedanta became a source of orientation during a period when much of what had previously defined my life was unavailable to me. Its questions about suffering, selfhood, and consciousness had an immediate personal significance.",
+        "That exploration remains an important part of my life. It also deepened my interest in philosophy of mind: how subjective experience relates to physical processes, what we mean by a self, and what an explanation of consciousness would actually need to explain. I want to examine those questions carefully, including where philosophical reasoning and empirical investigation can inform each other and where their methods differ.",
+        "My sense of how I wanted to help people changed during this period. I came to see research and engineering as the avenue through which I could contribute most. Machine learning, neuroscience, and computation offered ways to investigate mechanisms, build useful tools, and work on problems whose consequences extend across many lives.",
+        "The uncertainty that had been so difficult to live with became a reason to learn."
+      ]
+    },
+    {
+      "title": "How that became my work",
+      "paragraphs": [
+        "My coursework in machine learning gave me a practical starting point. Working with C. elegans let me begin studying nervous systems computationally: how connectivity, cellular properties, and activity relate, and what a model can reasonably tell us about the living system it represents. The notebooks were a learning pipeline, through which I developed the ability to turn broad biological questions into analyses and experiments.",
+        "My own search also drew me toward genetic, mitochondrial, and myelination mechanisms. I was interested in how nervous-system function can be disrupted through processes that are difficult to see in a conventional structural investigation.",
+        "Some of that reading informed things I tried personally, including DHA and palmitoylethanolamide with luteolin. I experienced benefits, although that experience cannot establish which mechanism was responsible or what would help someone else. It gave me further questions to investigate.",
+        "The autism and myelination work became especially personal when I saw a young relative suffering. I recognized something of the helplessness I had experienced myself, and I wanted to help in whatever way I could. My experience with DHA was part of what first directed my attention toward lipid supply and myelination. From there, the task was to examine whether the biological evidence supported the initial idea—and how the question needed to change when it did not.",
+        "My interest in anesthesia and sleep grew from another observation during treatment: profound changes in nervous-system state could interrupt acute suffering. That made reversibility especially compelling to me. How can a nervous system enter a dramatically different state and then return? What distinguishes reduced activity, quiescence, sleep, and anesthesia? Computational models offered a way to begin exploring those questions.",
+        "These projects share a personal origin, but each needs evidence appropriate to its own claims. My experience helps explain why I ask the questions. The research has to determine what answers they can support."
+      ]
+    },
+    {
+      "title": "From biological questions to neural data",
+      "paragraphs": [
+        "As my technical skills developed, my work expanded into decoding information from neural signals.",
+        "LibriBrain brought me into MEG analysis and the challenge of extracting useful information from noisy measurements. It also made evaluation itself a central part of the work: understanding how much of a model’s performance reflects the neural signal and how much can be explained by timing or other features of the task.",
+        "The wrist-EMG handwriting project explores a different interface between nervous systems and computation. It asks how signals associated with intended movement can support communication, and how adaptation to an individual changes a model’s usefulness.",
+        "These projects are opportunities to demonstrate the engineering skills behind my broader interests: working with complex data, training and adapting models, designing evaluations, and investigating why a result changes. They also connect to something that has become deeply important to me—how computation can help preserve or recover a person’s ability to act, communicate, and participate in life."
+      ]
+    },
+    {
+      "title": "What I want to contribute",
+      "paragraphs": [
+        "I want to bring this combination of personal commitment and technical ability to a research team or company working on consequential problems in biology, neural systems, or machine learning.",
+        "There is much I still want to learn. I’m looking for work that demands depth: difficult data, mechanisms that remain uncertain, and tools that need to function beyond a demonstration. I want collaborators who care about both the quality of an explanation and what it could make possible for people.",
+        "Illness changed the life I expected to have. It also helped clarify the work I want to devote myself to. My goal is to use machine learning, neuroscience, computation, and philosophy to tackle the hardest problems I can contribute to solving—and, through that work, make suffering more bearable."
+      ]
+    }
+  ]
+}

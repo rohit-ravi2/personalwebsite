@@ -1,19 +1,19 @@
 ---
-title: "Where it started: the tennis serve"
+title: "From tennis technique to robot movement"
 startDate: 2026-09-12
-description: "Why a tennis player and coach ended up building humanoid robots that find their own technique: technique beats size, and a robot's optimum is computable."
+description: "How my experience playing and coaching tennis led to a simulation project on deriving movement from a robot’s geometry and motor limits."
 tags: ["Robotics", "Tennis", "Biomechanics"]
 draft: false
 order: 1
 ---
 
-Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page: [Robotic Movement: Progression in Generalization](/projects/robotic-movement/).
+Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page: [Humanoid movement through physics and optimization](/projects/robotic-movement/).
 
 ## Technique beats size
 
 I played tennis in college, coached in college, and directed tournaments before that. The thing that stayed with me from all of it is the serve. You can have a huge, strong, athletic player whose serve will not break 50 mph, and a short, skinny kid with years of training who hits 100. Strength is not the bottleneck. Technique is.
 
-The trained kid serves harder because he uses a kinetic chain: from his feet to his calves, his quads, his hips, his shoulder, and only then his arm and hand. The untrained player uses his arm. No matter how much you weigh, if you cannot move that weight well, it is mechanically useless. The kid who uses his whole body keeps accelerating the racquet head through the whole movement, so in a real sense he has more mass behind the shot than the bigger player. That is F = ma, quite literally.
+The trained kid serves harder because he uses a kinetic chain: from his feet to his calves, his quads, his hips, his shoulder, and only then his arm and hand. The untrained player uses his arm. No matter how much you weigh, if you cannot move that weight well, it is mechanically useless. The kid who uses his whole body keeps accelerating the racquet head through the whole movement, so in a real sense he has more mass behind the shot than the bigger player. The comparison led me to focus on coordinated motion and the transfer of energy through the body.
 
 Nobody has perfect technique. The best players are simply the ones closest to the ideal. And the ideal has a shape: use as many muscle groups as you can, in a sequence synchronised well enough that you never lose acceleration.
 
@@ -23,11 +23,11 @@ The serve was only ever the example. Lifting a weight, sprinting, jumping, throw
 
 ## Why a robot, not a player
 
-For a person, the optimal movement exists, but you cannot compute it. You cannot measure someone's segment masses, joint ranges and torque-speed curves well enough to solve for it, so a coach is reduced to saying "use your legs". Teaching that to a kid is not something you can do mathematically.
+For a person, predicting an optimal movement is difficult: segment masses, joint ranges, muscle properties, and motor control are only partially measured. Coaches use experience and observation to bridge those gaps.
 
 For a humanoid robot, every one of those numbers is already written down in its specification. The inverse problem nobody can solve for a human is tractable for a robot. That is the move this project makes: give a robot its own specification and a physical goal, and let it find its own technique.
 
-There is a second reason. Most humanoids today learn by copying people: humans in motion-capture suits, with the motion retargeted onto the robot. But a human optimum is optimal for a body of tendons and muscle, not for electric motors with completely different torque-speed characteristics and no elastic energy storage. Copying a person should be the wrong answer for a robot, and deriving the motion from the robot's own body should be the right one.
+There is a second reason. Most humanoids today learn by copying people: humans in motion-capture suits, with the motion retargeted onto the robot. But a human optimum is optimal for a body of tendons and muscle, not for electric motors with completely different torque-speed characteristics and no elastic energy storage. That difference motivates a comparison between retargeted human motion and strategies derived from the robot’s own body.
 
 ## From the serve to the throw
 

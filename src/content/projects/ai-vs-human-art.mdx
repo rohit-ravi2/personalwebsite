@@ -1,9 +1,10 @@
 ---
-title: "AI vs. Human Art Classification"
+title: "Classifying AI-generated and human artwork"
 startDate: 2025-04-01
-description: "A deep-learning classifier that distinguishes AI-generated from human-made artwork, with interpretability via Grad-CAM, t-SNE, and PCA."
+description: "Convolutional models for artwork source and style classification, with feature visualization and a browser demo. Reported binary test accuracy: 93.71%."
 tags: ["Deep Learning", "Computer Vision", "Interpretability", "CNNs"]
 subject: "Vision"
+inProgress: true
 image:
   url: /images/projects/ai-vs-human-art-cover.png
   alt: "Illustration of a human painter and an AI robot painting the same scene — Rohit Ravi's AI vs. Human Art classifier project"
@@ -33,7 +34,7 @@ Tuned architecture: 3 conv layers (32 → 64 → 64), batch norm, L2, dropout 0.
 
 ## Interpretability
 
-Three lenses on what the model learned:
+I used three methods to inspect the learned representations:
 
 - **Grad-CAM** — spatial attention maps per image, useful for checking whether the model keys on brushstroke-level features vs. composition-level ones.
 - **t-SNE / PCA** on the penultimate layer — clusters separate AI generators cleanly; human styles overlap more.
@@ -41,10 +42,10 @@ Three lenses on what the model learned:
 
 <img src="/images/projects/ai-art-tsne.jpg" alt="t-SNE projection of the 47-style flat CNN's 128-dim latent space. AI sub-generators cluster tightly; human styles spread and overlap." class="mx-auto max-w-2xl rounded-lg border" />
 
-## Takeaways
+## Findings
 
 - The binary AI/Human signal is strong and largely texture-driven.
 - Grouped classification of *which* AI engine generated an image is nearly as easy as binary detection — different diffusion pipelines leave different fingerprints.
-- 47-way style classification is genuinely hard (0.39 F1); the model falls back to broad-class cues when style cues conflict, which is visible in the confusion matrices.
+- 47-way style classification has lower performance (0.39 F1); the model falls back to broad-class cues when style cues conflict, which is visible in the confusion matrices.
 
 Code: [github.com/rohit-ravi2/visual-classification-ai-vs-human-art](https://github.com/rohit-ravi2/visual-classification-ai-vs-human-art)

@@ -1,7 +1,7 @@
 ---
-title: "The throw: the animation that changed the project"
+title: "Whole-body throwing through physics-based search"
 startDate: 2026-10-05
-description: "A throw that exaggerated a baseball technique beyond human range, why it became the core of the project, and the kick that followed."
+description: "How simulated throwing develops a coordinated kinetic chain, what changes under valid motor limits, and how the method extends to aiming and kicking."
 tags: ["Robotics", "Simulation", "Humanoids", "Biomechanics"]
 draft: false
 order: 3
@@ -32,11 +32,11 @@ I also did not trust the release speed of that version, and I was right not to: 
 
 ## The core of the project
 
-Some of the later, more carefully controlled throws scored better on the raw numbers, and for a moment that animation was treated as a historical curiosity. I think that misses the point entirely. The chance that a movement could organise itself that way, to that degree of sophistication, by accident is absurd. That animation is the core of the whole project.
+Some of the later, more carefully controlled throws scored better on the raw numbers, and for a moment that animation was treated as a historical curiosity. I think that misses the point entirely. The animation made the coordinated movement easy to inspect, but the later controlled runs are needed to establish its validity.
 
 What generalises is the principle inside it. Not an elegant "unified law of movement" written in mathematics, but something more practical and, to me, more striking: a construction that takes a robot's own body and a physical goal and produces whole-body technique with little to no training data. The elegance is in the real-world implementation. That it can be done at all is the result.
 
-So we rebuilt it under honest motor limits and tested what it actually depends on:
+So we rebuilt it under the specified motor limits and tested what it actually depends on:
 
 - **The technique only appears with enough search.** At the full budget of 38,400 simulated trials, the whole-body throw emerges every time. At 2,400 trials the search finds a valid throw, but an arm-led one.
 - **It reproduces.** Every seed rediscovered the same organisation: the pelvis swivelling on planted feet, a large waist turn, and speed amplified from about 15 rad/s at the pelvis to 70 to 86 rad/s at the hand. The best valid release is 22.6 m/s, inside the motors' ratings.

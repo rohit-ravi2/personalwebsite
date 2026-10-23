@@ -1,9 +1,10 @@
 ---
-title: "C. elegans Connectomics + Transcriptomics"
+title: "C. elegans: connectivity, gene expression, and simulation"
 startDate: 2025-09-01
-description: "Multi-modal analysis asking how much of local wiring in a small nervous system is determined by topology vs. gene expression."
+description: "A computational neuroscience learning pipeline combining connectomics, gene expression, neural models, and an interactive worm simulator, with documented validation limits."
 tags: ["Connectomics", "Graph Neural Networks", "Computational Neuroscience", "Research"]
 subject: "C. elegans"
+inProgress: true
 image:
   url: /images/projects/c-elegans-cover.png
   alt: "Illustrated C. elegans worm with colored neural-network overlay — Rohit Ravi's connectomics + transcriptomics project"
@@ -43,7 +44,7 @@ A multi-modal pipeline over the hermaphrodite *C. elegans* connectome, joining c
 
 ## Status
 
-Learning work, not a paper. The numbers above are in-sample fits, and the topology-dominant framing has not survived later held-out tests: across several of my later analyses, the measured connectome predicts activity no better than degree-matched shuffles or physical proximity.
+This began as a learning and model-building project. The numbers above are in-sample fits, and the topology-dominant framing has not survived later held-out tests: across several of my later analyses, the measured connectome predicts activity no better than degree-matched shuffles or physical proximity.
 
 Code: [github.com/rohit-ravi2/c-elegans-multimodal](https://github.com/rohit-ravi2/c-elegans-multimodal)
 
@@ -80,7 +81,7 @@ Honest calibration notes are in the component's "Sources & attribution" fold. v1
 
 **Perturbation validation and reproducibility audit (Phases 3d-3 through 3d-6).** An initial v3.0 perturbation suite reported two apparent phenotype reproductions (RIS → quiescence collapse ΔQUI=−0.53; AVA → reversal abolished ΔREV=−0.15), and subsequent biological corrections (5HT pharyngeal exclusion in 3d-5; CeNGEN-derived per-edge glutamate receptors in 3d-4) appeared to regress both results. Rather than iterate on recalibration, the next phase (3d-6) ran a proper reproducibility audit: 3 seeds × 3 configs × 6 ablations × 2 conditions (108 runs, ~97 min compute) with `brian2.seed()` locked alongside `np.random.seed()`. The audit overturned the initial story in both directions.
 
-**What survives statistical scrutiny (v3.0, default sign mode, n=3 seeds × 20 s):** AVA ablation under touch reliably reduces reversal — ΔREV = **−0.57 ± 0.37** across 3 seeds, all three correctly negative. This was originally framed as a genuine Chalfie 1985 reproduction. The RIS result, previously reported as ΔQUI=−0.53 flagship, averages to **−0.24 ± 0.33** across seeds — directionally consistent with Turek 2016 (2/3 seeds negative) but not statistically robust at 20 s runs. **Subsequent horizontal-rebase work (May 2026) reframes both findings — see "Horizontal rebase: honest reframing of phenotype claims" below.**
+**What survives statistical scrutiny (v3.0, default sign mode, n=3 seeds × 20 s):** AVA ablation under touch reliably reduces reversal — ΔREV = **−0.57 ± 0.37** across 3 seeds, all three correctly negative. This was originally framed as a genuine Chalfie 1985 reproduction. The RIS result, previously reported as ΔQUI=−0.53 flagship, averages to **−0.24 ± 0.33** across seeds — directionally consistent with Turek 2016 (2/3 seeds negative) but not statistically robust at 20 s runs. **Subsequent horizontal-rebase work (May 2026) reframes both findings — see "Re-evaluating phenotype claims" below.**
 
 **What the biological corrections actually did:** the audit confirms they systematically degrade phenotype reproduction. The AVA effect weakens to ΔREV=−0.29±0.52 in v3.1 and disappears entirely in v3.2 (−0.03±0.13). This is statistically confirmed regression across multiple seeds, not a single-run artifact. Adding biologically-accurate modulation shifts the network out of the regime where calibrated phenotypes emerge.
 
@@ -106,7 +107,7 @@ Full Tier 1 stack available via `ClosedLoopEnv(brain_class="graded", environment
 
 **Wave2HybridBrain integration — production-grade under M2-pure (May 2026).** Initial Phase δ WB3 cross-coupling work in April surfaced a load-bearing readout artifact (σ > 0.5 rising-threshold pseudo-spike emission silently zeros under saturated σ regime). The D7-followup implemented σ-magnitude continuous readout matching `graded_brain.py` `output_rates()` precedent. Under that corrected readout, the Wave2HybridBrain initially appeared to NOT activate AVA on touch — leading to a temporary "demote Wave 2 hybrid to research substrate" framing. The horizontal rebase's W2 investigation thread refuted that interpretation: under M2-pure (per-edge + `sign_exceptions={}`, the locked production sign mode), Wave2HybridBrain fires the cascade identically to pure LIFBrain M2-pure (AVDL Δ +60.5 Hz; AVAL σ Δ +10% peri-touch with clean Δ_post ≈ 0 separation from drift). The initial CP2 finding was a sign-mode question (DOCUMENTED_SIGN_EXCEPTIONS in non-M2-pure modes collapses the cascade upstream of Wave 2 cells), not a cellular-substitution question. Wave 2 + M2-pure adds biophysical resolution beyond LIF without breaking cascade dynamics.
 
-## Horizontal rebase: honest reframing of phenotype claims (May 2026)
+## Re-evaluating phenotype claims (May 2026)
 
 A five-phase horizontal rebase was conducted to settle the validation methodology questions the T0 resolution had left open. Repository deliverables: `docs/state_of_claims_2026-05-02.md` (state-of-claims catalog), `docs/brain_v3.5_locked.md` (Phase 1 brain lock), `docs/phase2_preflight.md` (architecture sign-off).
 

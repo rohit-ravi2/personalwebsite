@@ -1,4 +1,4 @@
-import {defineConfig} from "astro/config";
+import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
@@ -6,7 +6,7 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.rohitravi.com',
+  site: "https://www.rohitravi.com",
   integrations: [
     react(),
     tailwind({
@@ -14,7 +14,8 @@ export default defineConfig({
     }),
     mdx(),
     sitemap({
-      changefreq: 'weekly',
+      filter: (page) => !new URL(page).pathname.startsWith("/editor"),
+      changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),
     }),

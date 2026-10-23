@@ -1,62 +1,55 @@
 ---
-import { Button } from '../ui/button'
 import { PROFILE } from "../../content/profileData";
-import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
+import { Github, Linkedin, Mail } from "lucide-react";
+const socials = [
+  { href: PROFILE.links.github, label: "GitHub", Icon: Github },
+  { href: PROFILE.links.linkedin, label: "LinkedIn", Icon: Linkedin },
+  { href: PROFILE.links.email, label: "Email", Icon: Mail },
+];
 ---
 
-<div class="flex h-full w-full animate-appear flex-col md:flex-row">
-  <div class="flex flex-col justify-between gap-4 text-center md:text-left md:max-h-[300px] md:flex-1">
-    <div class="flex h-full flex-col items-center md:items-start">
-      <p class="m-0 text-xl font-light">
-        Hi, I'm <b class="font-bold">{PROFILE.firstName}</b>.
-      </p>
-      <ul class="pt-4 space-y-1">
-        {PROFILE.shortIntros.map((intro) => (
-          <li>{intro}</li>
-        ))}
-      </ul>
-      {PROFILE.links?.orcid && (
-        <a href={PROFILE.links.orcid} target="_blank" rel="noreferrer" class="pt-2 text-xs text-muted-foreground hover:underline">
-          ORCID {PROFILE.links.orcid.replace("https://orcid.org/", "")}
-        </a>
-      )}
-    </div>
-    <div class="flex gap-2 justify-center md:justify-start">
-      <a href={PROFILE.links.github} aria-label="Rohit Ravi on GitHub" target="_blank" rel="noreferrer">
-        <Button aria-label="Rohit Ravi on GitHub">
-          <Github/>
-          <span class="sr-only">Rohit Ravi on GitHub</span>
-        </Button>
-      </a>
-      {PROFILE.links?.linkedin && (
-        <a href={PROFILE.links.linkedin} aria-label="Rohit Ravi on LinkedIn" target="_blank" rel="noreferrer">
-          <Button aria-label="Rohit Ravi on LinkedIn">
-            <Linkedin/>
-            <span class="sr-only">Rohit Ravi on LinkedIn</span>
-          </Button>
-        </a>
-      )}
-      {PROFILE.links?.email && (
-        <a href={PROFILE.links.email} aria-label="Email Rohit Ravi">
-          <Button aria-label="Email Rohit Ravi">
-            <Mail/>
-            <span class="sr-only">Email Rohit Ravi</span>
-          </Button>
-        </a>
-      )}
-      {PROFILE.links?.instagram && (
-        <a href={PROFILE.links.instagram} aria-label="Rohit Ravi on Instagram" target="_blank" rel="noreferrer">
-          <Button aria-label="Rohit Ravi on Instagram">
-            <Instagram/>
-            <span class="sr-only">Rohit Ravi on Instagram</span>
-          </Button>
-        </a>
-      )}
-    </div>
+<div class="flex h-full flex-col justify-between gap-7">
+  <div>
+    <p class="text-sm font-medium text-muted-foreground">
+      {PROFILE.shortIntros[0]}
+    </p>
+    {
+      PROFILE.shortIntros.length > 1 && (
+        <ul class="mt-1 space-y-1 text-sm text-muted-foreground">
+          {PROFILE.shortIntros.slice(1).map((intro) => (
+            <li>{intro}</li>
+          ))}
+        </ul>
+      )
+    }
+    <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+      {PROFILE.name}
+    </h1>
+    <p class="mt-4 max-w-xl text-xl font-medium leading-snug sm:text-2xl">
+      {PROFILE.headLine}
+    </p>
+    <p class="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+      {PROFILE.headLine2}
+    </p>
   </div>
-  <img
-    src={PROFILE.avatarUrl}
-    class="hidden md:block h-auto max-h-[260px] w-auto self-center ml-auto select-none"
-    alt={`Illustrated avatar of Rohit Ravi, undergraduate researcher at NYU's Center for Data Science`}
-  />
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+    <a
+      href="/projects"
+      class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+      >Explore my work</a
+    >
+    {
+      socials.map(({ href, label, Icon }) => (
+        <a
+          href={href}
+          class="inline-flex items-center gap-2 text-sm font-medium hover:underline"
+          target={label === "Email" ? undefined : "_blank"}
+          rel={label === "Email" ? undefined : "noreferrer"}
+        >
+          <Icon size={16} aria-hidden="true" />
+          {label}
+        </a>
+      ))
+    }
+  </div>
 </div>

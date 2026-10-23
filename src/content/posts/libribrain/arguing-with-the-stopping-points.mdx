@@ -1,13 +1,13 @@
 ---
-title: "Arguing with the stopping points"
+title: "Building my LibriBrain speech decoder"
 startDate: 2026-10-21
-description: "How a month of decoding heard words from brain recordings actually unfolded: an audit that changed the target, a single-subject model that beat every multi-subject one, a hidden pocket of predictability, and two lines I held to the end."
+description: "How I developed the LibriBrain entry: changing the training target, transferring across listeners, testing sentence-level context, and evaluating shortcuts under competition constraints."
 tags: ["MEG", "Neural Decoding", "Research Process", "Kaggle"]
 draft: false
 order: 2
 ---
 
-Part of the [LibriBrain](/posts/libribrain/) series. Technical companion: [The margin above 0.63](/posts/libribrain/the-margin-above-063/).
+Part of the [LibriBrain](/posts/libribrain/) series. Technical companion: [What timing reveals about MEG decoding benchmarks](/posts/libribrain/the-margin-above-063/).
 
 LibriBrain began as one dataset among many in a broader investigation of public neuroscience data. In late September
 I gave it a dedicated session, and on October 8 I entered both tracks of the PNPL competition: decode which of fifty
@@ -39,11 +39,9 @@ of recordings, and no one else, transferred to the thirty-nine other listeners b
 them. Their short recordings added more variation than information. The Broad score rose from 0.43 to 0.66 in a single
 evening.
 
-That result raised a deeper question. If different people's brains respond to the same heard word so similarly that
-one person's model reads everyone else, where does individuality live? My working answer is production. Perception is
-shaped by a shared sensory pathway, while speaking is a program each person builds over years of development. I think
-that asymmetry reflects how tightly language is coupled to the timing of plasticity in the circuits behind cognition,
-and it is now a research question I intend to pursue.
+That result made me interested in comparing the transfer of sensory and motor representations.
+The contrast with user-specific handwriting models suggests a useful question, although these two
+projects alone cannot separate task differences from differences in data volume or measurement.
 
 ## Rules first
 
@@ -54,7 +52,7 @@ enough timing to align rows across people. We had used none of it.
 I held a second line of my own. Early on, a model given the spacing between words jumped from 0.30 to 0.51 locally. It
 was reading word durations from the audio, not the brain. The rules allowed it; I removed it. After the competition I
 measured how far that shortcut alone reaches. A model with no brain data at all scores 0.63 on our test blocks, which
-means any honest decoder on this benchmark should be judged by its margin above 0.63, not above chance.
+makes timing-only prediction an important comparison alongside chance on this evaluation split.
 
 ## Pockets of predictability
 
@@ -81,8 +79,7 @@ of 0.430 and 0.732.
 
 Two practices carried this work. Keeping wide-open exploration separate from disciplined execution let ideas move
 quickly without contaminating the results. Refusing to accept a stopping point until it had been measured was right
-more often than it was wrong; several limits we had called hard turned out to be soft. And the lines I held under
-deadline pressure, I would hold again.
+more often than it was wrong; several limits we had called hard turned out to be soft. Explicit evaluation rules helped keep that process consistent under deadline pressure.
 
 The code, the pre-registered experiment log and the full development history are at
 [github.com/rohit-ravi2/libribrain-2026](https://github.com/rohit-ravi2/libribrain-2026), and the technical summary is

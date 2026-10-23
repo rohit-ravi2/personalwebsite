@@ -1,7 +1,7 @@
 ---
-title: "Fifty words from a magnetic field"
+title: "LibriBrain 2026: decoding speech from MEG"
 startDate: 2026-09-21
-description: "Decoding which of 50 words a listener heard from 306-channel MEG, for the LibriBrain 2026 competition. Eighth on the Broad public leaderboard with no leakage, a no-brain baseline that scores 0.63, and a measured account of where the remaining distance comes from."
+description: "MEG word decoding for LibriBrain 2026, with public scores of 0.722 on Broad and 0.729 on Deep. Includes transfer learning, test-time adaptation, and an evaluation of timing-only baselines."
 tags: ["MEG", "Neural Decoding", "Neuroscience", "Machine Learning", "Kaggle", "Research"]
 subject: "Neural decoding"
 image:
@@ -44,10 +44,10 @@ durations in the audio, not from the brain. I removed the feature, though the ru
 
 After the competition I measured how far timing alone goes. A classifier that sees no MEG at all, only each word's
 relative onset, the gap to the next word, its position and the sentence length, scores **0.632** on the same held-out
-blocks where the brain decoder scores about 0.70 to 0.78. On this benchmark's format the honest floor is near 0.63,
-not 0.20, and a decoder's contribution is the margin above it.
+blocks where the brain decoder scores about 0.70 to 0.78. This establishes a strong non-neural baseline on the tested split. Decoder performance
+therefore needs to be compared with timing-only models as well as chance.
 
-## Local tests that lied
+## When local validation failed to transfer
 
 Several changes looked certain locally and did nothing on the leaderboard. Fitting a per-subject input layer on each
 Broad subject's labelled data improved local accuracy in all 18 configurations tested and added 0.001 on the

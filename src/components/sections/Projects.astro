@@ -1,41 +1,40 @@
 ---
 import { getCollection } from "astro:content";
-import Card from '../Card.astro'
-import { Button } from '../ui/button'
-import { formateLocalDate } from "../../lib/utils";
-
-
-let projects = await getCollection('projects');
-
-// sort projects by dateStart DESC
-projects.sort((a: any, b: any) => {
-  return new Date(b.data.startDate) - new Date(a.data.startDate);
-});
-
-projects = projects.slice(0, 3);
+import InProgressBadge from "../InProgressBadge.astro";
+const entries = await getCollection("projects");
+const selected = ["handwriting-emg", "libribrain-2026", "asd-myelin-timing"];
+const projects = selected
+  .map((slug) => entries.find((entry) => entry.slug === slug))
+  .filter(Boolean);
 ---
 
-
-<div class="mt-2 space-y-4">
+<div class="mt-2 space-y-5">
   {
-    projects.slice(0, 3).map((project) => (
-      <div>
-        <h3 class="text-lg font-semibold text-primary">
-          <a href={`/projects/${project.slug}`} class="hover:underline">
-            {project.data.title}
-          </a>
-        </h3>
-        <p class="text-sm">
-          {project.data.description}
-        </p>
-        <p class="text-sm text-muted-foreground">
-          {formateLocalDate(project.data.startDate)} {project.data?.endDate ? '- ' + formateLocalDate(project.data.endDate) : ''}
-        </p>
-      </div>
-    ))
+    projects.map(
+      (project) =>
+        project && (
+          <article class="border-b pb-5 last:border-b-0 last:pb-0">
+            <div class="mb-1 flex flex-wrap items-center gap-2">
+              <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {project.data.subject}
+              </span>
+              {project.data.inProgress && <InProgressBadge />}
+            </div>
+            <h3 class="text-lg font-semibold text-primary">
+              <a href={`/projects/${project.slug}`} class="hover:underline">
+                {project.data.title}
+              </a>
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed">
+              {project.data.description}
+            </p>
+          </article>
+        ),
+    )
   }
-  <a href="/projects">
-    <Button variant="link" className="pl-0"> View More</Button>
-  </a>
+  <a
+    href="/projects"
+    class="inline-block text-sm font-semibold text-primary underline underline-offset-4"
+    >All projects <span aria-hidden="true">→</span></a
+  >
 </div>
-

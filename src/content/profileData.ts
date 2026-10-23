@@ -1,26 +1,23 @@
+import home from "../data/home.json";
+
 export const PROFILE = {
   site: {
     SEO: {
       title: "Rohit Ravi – Machine Learning for Neuroscience",
       description:
-        "Undergraduate Researcher at NYU's Center for Data Science (Courant Institute). Machine learning for neural decoding, whole-brain neuroscience, human genetics and clinical prediction, with every result audited for leakage.",
+        "Rohit Ravi works across machine learning, neuroscience, and computation. Explore research in neural decoding, biological modeling, and human genetics, and the personal motivation behind it.",
     },
   },
   timezone: "America/New_York",
   language: "en-US",
   firstName: "Rohit",
   name: "Rohit Ravi",
-  headLine: "Machine learning for neuroscience, decoding and the science of mind.",
-  headLine2:
-    "Undergraduate Researcher, Center for Data Science, Courant Institute of Mathematical Sciences, New York University. I build machine-learning systems on neural, genetic and clinical data, then try to break them.",
+  headLine: home.headLine,
+  headLine2: home.headLine2,
   website: "https://www.rohitravi.com",
   repo: "https://github.com/rohit-ravi2/personalwebsite",
   avatarUrl: "/avatar.png",
-  shortIntros: [
-    "Undergraduate Researcher · Center for Data Science, Courant Institute, NYU",
-    "Neural decoding · whole-brain neuroscience · statistical genetics · clinical ML",
-    "B.A. Data Science, Philosophy minor"
-  ],
+  shortIntros: home.shortIntros,
   words: [
     "Arise, awake, and stop not till the goal is reached. — Swami Vivekananda",
   ],

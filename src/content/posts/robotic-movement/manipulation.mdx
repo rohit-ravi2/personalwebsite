@@ -1,7 +1,7 @@
 ---
-title: "Manipulation: from laundry to a solid grasp"
+title: "Grasping and force-controlled manipulation"
 startDate: 2026-10-10
-description: "The laundry north star, the decision to make every object solid and every grasp real, and why chores waited until the movement itself generalised."
+description: "Developing a simulated finger grasp and brush-wiping task, and identifying the manipulation capabilities needed before attempting more complex household tasks."
 tags: ["Robotics", "Simulation", "Manipulation"]
 draft: false
 order: 6
@@ -16,7 +16,7 @@ export const Clip = ({ src, caption }) => (
 
 Part of the [Robotic Movement](/posts/robotic-movement/) series. Project page section: [Manipulation](/projects/robotic-movement/#manipulation).
 
-## The north star
+## The longer-term goal
 
 Finding the optimal movement is the first step. The next abstraction is knowing which movement to use for which task, and the far end of that road is a robot folding laundry. Doing the laundry and other everyday tasks with a bottom-up framework, built from the robot's own body rather than from human demonstrations, is what would set this apart from how other humanoid companies approach it.
 
@@ -30,6 +30,6 @@ The result so far is one real finger grasp: the G1's Dex3 hand wrapping a brush 
 
 ## Why chores waited
 
-I set chores aside deliberately. Until the method reliably derives the optimal movement from a body's own components, tasks like catching or wiping are the wrong shape of test: they mostly measure grasping and perception, not movement. The order is movement first, then the choice of movement, then tasks. Laundry is still the north star; it is just not the next step.
+I set chores aside deliberately. Until the method reliably derives the optimal movement from a body's own components, tasks like catching or wiping are the wrong shape of test: they mostly measure grasping and perception, not movement. The order is movement first, then the choice of movement, then tasks. Household tasks remain the longer-term goal.
 
 Previous: [Carrying with the body](/posts/robotic-movement/carrying/). Next: [No demonstrations](/posts/robotic-movement/no-demonstrations/).

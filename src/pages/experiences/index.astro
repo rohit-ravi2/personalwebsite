@@ -1,61 +1,70 @@
 ---
 import { getCollection } from "astro:content";
 import { formateLocalMonth } from "../../lib/utils";
-import { Badge } from "../../components/ui/badge";
 import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
-import { TableCell, TableRow, Table, TableBody } from "../../components/ui/table";
-import { ArrowRight } from "lucide-react";
-
-const experiences = await getCollection('experiences');
-
-experiences.sort((a, b) => {
-  return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
-});
+import { PROFILE } from "../../content/profileData";
+const experiences = (await getCollection("experiences"))
+  .filter((entry) => !entry.data.title.startsWith("Competitor"))
+  .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
 ---
-<IndexPageLayout title="Experiences"
-                 description="Places I have worked and the roles I have held."
-                 subTitle="Experiences">
-  {experiences.length === 0 ? (
-    <p class="text-sm text-muted-foreground italic">Work and research experience coming soon.</p>
-  ) : (
-    <Table>
-      <TableBody>
-        {experiences.map((entry) => (
-          <TableRow key={entry.slug}>
-            <TableCell className="font-medium">
-              <div class="flex flex-col gap-1 min-w-20">
-                <a
-                  href={'/experiences/' + entry.slug}
-                  class="font-semibold text-primary hover:font-extrabold"
-                >
-                  {entry.data.title}
-                </a>
-                <div class="mb-4 text-sm">
-                  {formateLocalMonth(entry.data.startDate)}
-                  {entry.data.endDate ? ` - ${formateLocalMonth(entry.data.endDate)}` : ' - Present'}
-                </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              <div class="ml-4 flex p-2 flex-col gap-2 text-sm max-w-lg min-w-16">
-                {entry.data.company}
-                <div class="flex gap-1 flex-wrap">
-                  {(entry.data.tags ?? []).map((i) => (
-                    <a href={`/tags/${i}`}>
-                      <Badge className="truncate">{i}</Badge>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              <a href={'/experiences/' + entry.slug}>
-                <ArrowRight/>
-              </a>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  )}
+
+<IndexPageLayout
+  title="Research experience — Rohit Ravi"
+  description="Research background, technical skills, and selected work in neural data and machine learning."
+  subTitle="Research experience"
+>
+  <div class="w-full max-w-3xl space-y-10 py-4">
+    {
+      experiences.map((entry) => (
+        <section class="rounded-lg border bg-card p-6">
+          <p class="text-sm text-muted-foreground">
+            {formateLocalMonth(entry.data.startDate)} –{" "}
+            {entry.data.endDate
+              ? formateLocalMonth(entry.data.endDate)
+              : "Present"}
+          </p>
+          <h2 class="mt-2 text-2xl font-semibold">
+            <a href={`/experiences/${entry.slug}`} class="hover:underline">
+              {entry.data.title}
+            </a>
+          </h2>
+          <p class="mt-2 leading-relaxed">{entry.data.company}</p>
+          <p class="mt-4 leading-relaxed text-muted-foreground">
+            My research interests span computational neuroscience and machine
+            learning, including models of nervous systems and the interpretation
+            of neural and biological data.
+          </p>
+          <a
+            href={`/experiences/${entry.slug}`}
+            class="mt-4 inline-block text-sm font-semibold text-primary underline underline-offset-4"
+          >
+            Read more
+          </a>
+        </section>
+      ))
+    }
+    <section>
+      <h2 class="text-xl font-semibold">Technical skills</h2>
+      <ul class="mt-4 space-y-3 text-sm leading-relaxed">
+        {PROFILE.skills.map((skill) => <li class="border-b pb-3">{skill}</li>)}
+      </ul>
+    </section>
+    <section>
+      <h2 class="text-xl font-semibold">Explore the work</h2>
+      <p class="mt-3 leading-relaxed">
+        My projects document the methods, experiments, and results in more
+        detail. Competition entries are included there alongside the broader
+        research portfolio.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-5 text-sm font-semibold text-primary">
+        <a href="/projects" class="underline underline-offset-4">Projects</a>
+        <a href="/about" class="underline underline-offset-4"
+          >The motivation behind my work</a
+        >
+        <a href={PROFILE.links.email} class="underline underline-offset-4"
+          >Get in touch</a
+        >
+      </div>
+    </section>
+  </div>
 </IndexPageLayout>

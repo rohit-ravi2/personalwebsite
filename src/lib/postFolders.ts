@@ -4,7 +4,10 @@ type Post = CollectionEntry<"posts">;
 
 // Display names for blog subfolders (src/content/posts/<folder>/...).
 // A folder without an entry here gets a title derived from its name.
-export const FOLDER_META: Record<string, { title: string; description: string }> = {
+export const FOLDER_META: Record<
+  string,
+  { title: string; description: string }
+> = {
   libribrain: {
     title: "LibriBrain",
     description:
@@ -13,7 +16,7 @@ export const FOLDER_META: Record<string, { title: string; description: string }>
   "robotic-movement": {
     title: "Robotic Movement",
     description:
-      "The thread behind the robotic movement project, section by section, in dated messages from the time.",
+      "Notes on learning movement: running, jumping, carrying, and manipulation.",
   },
 };
 
@@ -24,7 +27,12 @@ export const folderOf = (post: Post): string | null => {
 
 export const folderTitle = (folder: string): string =>
   FOLDER_META[folder]?.title ??
-  folder.split("/").pop()!.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  folder
+    .split("/")
+    .pop()!
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 
 export const byDateDesc = (a: Post, b: Post) =>
   b.data.startDate.getTime() - a.data.startDate.getTime();
@@ -47,4 +55,5 @@ export const groupByFolder = (posts: Post[]) => {
   return { root, folders };
 };
 
-export const cardHeading = (p: Post) => (p.data.draft ? `Draft: ${p.data.title}` : p.data.title);
+export const cardHeading = (p: Post) =>
+  p.data.draft ? `Draft: ${p.data.title}` : p.data.title;

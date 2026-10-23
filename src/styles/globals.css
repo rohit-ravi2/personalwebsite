@@ -5,28 +5,28 @@
 @layer base {
   :root {
     /* Single theme palette (no dark mode) */
-    --background: 37 40% 92%;      /* light cream */
-    --foreground: 156 45% 12%;     /* deep forest green */
+    --background: 37 40% 92%; /* light cream */
+    --foreground: 156 45% 12%; /* deep forest green */
 
-    --card: 0 0% 100% / 0.55;      /* translucent white */
+    --card: 0 0% 100% / 0.55; /* translucent white */
     --card-foreground: 156 45% 12%;
 
     --popover: 37 40% 96%;
     --popover-foreground: 156 45% 12%;
 
-    --primary: 156 45% 22%;        /* forest */
+    --primary: 156 45% 22%; /* forest */
     --primary-foreground: 37 40% 96%;
 
     --secondary: 156 25% 28%;
     --secondary-foreground: 37 40% 96%;
 
     --muted: 156 15% 28%;
-    --muted-foreground: 156 35% 22%;  /* darkened + warmed from 15% 35% for legibility on the animated gradient */
+    --muted-foreground: 156 35% 22%;
 
-    --accent: 39 75% 45%;          /* golden amber */
+    --accent: 39 75% 45%; /* golden amber */
     --accent-foreground: 37 40% 96%;
 
-    --destructive: 0 84% 60%;      
+    --destructive: 0 84% 60%;
     --destructive-foreground: 37 40% 96%;
 
     --border: 156 20% 80%;
@@ -47,52 +47,41 @@
     @apply border-border;
   }
 
-body {
-  @apply min-h-screen antialiased;
-  /* Same 4-color palette, but with the cream-peach (#ffecd2) interspersed
-     between each saturated stop so the gradient spends more time in
-     cream-adjacent states and the coral / periwinkle peaks become brief
-     sweeps rather than long dwells. */
-  background: linear-gradient(
-    270deg,
-    #ffecd2,
-    #fcb69f,
-    #ffecd2,
-    #a1c4fd,
-    #ffecd2,
-    #c2e9fb,
-    #ffecd2
-  );
-  background-size: 800% 800%;
-  animation: gradientFlow 50s ease-in-out infinite;
-  color: #0F3B2E;
-}
+  body {
+    @apply min-h-screen antialiased;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
 
-@keyframes gradientFlow {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 4px;
+  }
 
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
-  /* Global card style */
+  /* Shared surfaces stay still so reading and keyboard focus remain stable. */
   .bg-card {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    @apply rounded-2xl shadow-lg transition-all duration-300 p-6;
-  }
-
-  .bg-card:hover {
-    background-color: hsl(0 0% 100% / 0.8); /* more opaque */
-    @apply shadow-2xl scale-[1.01] -translate-y-1;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid hsl(var(--border));
+    @apply rounded-2xl shadow-sm p-6;
   }
 
   /* Breadcrumbs: force body color + medium weight so they read on the
-     animated gradient. The astro-breadcrumbs defaults are too light. */
+     cream background. The astro-breadcrumbs defaults are too light. */
   .c-breadcrumbs__link,
   .c-breadcrumbs__crumb {
     color: hsl(var(--foreground)) !important;
@@ -109,8 +98,7 @@ body {
 
   /* Override Tailwind Typography (`prose`) color tokens so MDX body,
      headings, lists, bold, blockquotes, and links all render in the
-     site's forest ink — readable against the pastel gradient without
-     giving up the cream-on-gradient aesthetic. Hierarchy comes from
+     site's forest ink. Hierarchy comes from
      size + weight, not color variation. */
   .prose {
     --tw-prose-body: hsl(var(--foreground));
@@ -132,7 +120,7 @@ body {
   }
 
   /* Prose links — underlined by default so they're discoverable
-     without hover on the gradient backdrop. */
+     without hover against the cream background. */
   .prose a {
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -143,7 +131,7 @@ body {
   }
 
   /* Inline code — translucent cream background so it reads against the
-     gradient; keep it subtle so it doesn't compete with body text. */
+     background; keep it subtle so it doesn't compete with body text. */
   .prose :where(code):not(:where([class~="not-prose"] *)) {
     background-color: hsl(37 40% 92% / 0.7);
     padding: 0.15em 0.4em;

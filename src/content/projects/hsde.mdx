@@ -1,9 +1,10 @@
 ---
-title: "HSDE — Hybrid Symbolic Discovery Engine"
+title: "Neural-symbolic reasoning prototypes"
 startDate: 2024-06-01
-description: "Neural-symbolic reasoning prototypes: a recursive CA + attention + symbolic hybrid, and an Enhanced Symbolic Discovery Engine targeting AIME / SAT / GSM8K."
+description: "Exploring cellular automata, attention representations, rule mining, and symbolic solvers as components of reasoning systems. Benchmark evaluation remains in progress."
 tags: ["Neural-Symbolic", "Reasoning", "LLMs", "Research"]
 subject: "Reasoning"
+inProgress: true
 image:
   url: /images/projects/hsde-cover.png
   alt: "Pipeline diagram: Cellular Automata → Attention → Causal Graph → Symbolic Rules — architecture of Rohit Ravi's Hybrid Symbolic Discovery Engine"
@@ -19,7 +20,7 @@ Phased architecture:
 2. Transformer trained on the CA trajectories with attention hooks exposed.
 3. Attention tensors → binary causal matrix → temporal causal graph → FP-growth rule mining over that graph.
 
-The bet: attention isn't the explanation, but the causal graph *built from* attention is a substrate you can do symbolic discovery on.
+The hypothesis is that graph representations derived from attention may support rule discovery. Attention weights alone do not establish causal relationships.
 
 ## Module 2 — ESDE (Enhanced Symbolic Discovery Engine)
 
@@ -27,7 +28,7 @@ Targets AIME / SAT / GSM8K via a neural-symbolic hybrid: Phi-3 / Mistral via Oll
 
 ## Status
 
-Prototypes, not products. Architectural boundaries are clean and the core ideas survive contact with real data, but benchmark results, ablations, and end-to-end reliability aren't there yet. The strongest publishable slice is ASI Phases 1–3B with controlled experiments against a transformer-only baseline — fits ICLR ME-FoMo, NeurIPS SRI, or NeSy workshop.
+These are exploratory prototypes. Benchmark results, controlled ablations, and end-to-end reliability have not yet been established. The next step is a controlled comparison of the cellular-automata pipeline against a transformer-only baseline.
 
 - Main repo: [rohit-ravi2/recursive-research](https://github.com/rohit-ravi2/recursive-research)
 - HSDE (nested, separate repo): [rohit-ravi2/hsde](https://github.com/rohit-ravi2/hsde)

@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge";
 import { getCollection } from "astro:content";
 import { PROFILE } from "@/content/profileData.ts";
 
-
 /**
  * mergeClassNamesSafely
  * @param inputs
@@ -25,11 +24,11 @@ export const getUserTimeZoneInBrowser = (): string => {
 
 const getLocalLanguage = (): string => {
   return PROFILE.language;
-}
+};
 
 export const formateLocalDate = (
   date: Date,
-  timeZone: string = PROFILE.timezone,
+  timeZone: string = "UTC",
 ): string => {
   return new Intl.DateTimeFormat(getLocalLanguage(), {
     year: "numeric",
@@ -41,7 +40,7 @@ export const formateLocalDate = (
 
 export const formateLocalMonth = (
   date: Date,
-  timeZone: string = PROFILE.timezone,
+  timeZone: string = "UTC",
 ): string => {
   return new Intl.DateTimeFormat(getLocalLanguage(), {
     year: "numeric",

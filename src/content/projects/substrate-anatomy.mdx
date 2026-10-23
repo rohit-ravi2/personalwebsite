@@ -1,7 +1,7 @@
 ---
-title: "Tier4 Substrate Anatomy — a whole-cell electrical substrate, rendered from code"
+title: "Interactive anatomy of a C. elegans neural model"
 startDate: 2026-06-19
-description: "An interactive 3D anatomy of the C. elegans Tier4 whole-cell electrical substrate. Every channel, receptor, pump, transporter, gap junction, and ion compartment actually present in the Brian2 model is rendered 1:1 from code with an honest ON / default-OFF / ORPHANED / NOT-INTEGRATED status."
+description: "A 3D explorer of a 300-cell Brian2 model, showing ion channels, receptors, pumps, synapses, and the integration status of each modeled component."
 tags: ["Computational Neuroscience", "Whole-Cell Modeling", "Three.js", "C. elegans", "Biophysics", "Research"]
 subject: "C. elegans"
 image:
@@ -18,7 +18,7 @@ substrate** — the Brian2 model that puts CeNGEN-scaled ion channels, ligand-ga
 receptors, pumps, transporters, gap junctions, and single-pool ion dynamics onto
 300 cells at their real morphological positions.
 
-The design principle is **honesty about completeness**. Every structure is
+The explorer distinguishes implemented components from missing ones. Every structure is
 rendered with a status read straight from the assemble path:
 
 - **ON** — integrated and active on the default assemble path

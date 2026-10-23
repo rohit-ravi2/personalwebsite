@@ -1,14 +1,14 @@
 ---
-title: "Handwriting from the wrist"
+title: "Personalized handwriting decoding from wrist EMG"
 startDate: 2026-09-22
-description: "Meta's released wrist-EMG handwriting model, reproduced at 30.07% character error on ten held-out users, then brought to 15.02% by a personal fine-tune plus a language model. The two gains add. Fine-tuning on other users makes the same model worse."
+description: "Reproducing Meta’s wrist-EMG handwriting decoder and reducing character error from 30.07% to 15.02% on ten held-out users through personalization and language-model decoding."
 tags: ["sEMG", "Neural Decoding", "Handwriting", "Machine Learning", "Research"]
 subject: "Neural decoding"
 ---
 
 Meta released a generic model that reads handwriting from surface EMG at the wrist, as one task in their generic neuromotor interface. The released test split is ten users who never appear in training. Their own checkpoint, scored with their decoder, has a character error rate of 30.06%. I reproduced that number: **30.07%**.
 
-The question was where a further gain can come from, and whether two different gains are the same gain counted twice.
+I investigated whether personalization and language-model decoding address different sources of error.
 
 ## What moved the error
 
@@ -26,7 +26,7 @@ The two gains add. The interaction is about zero: +0.67 points, interval [−0.6
 
 Fine-tuning on the *other* nine test users, and scoring the one who was left out, raises the error to 39.74%. Zero of the ten users improve. The residual that personalization reaches is specific to that writer. It does not transfer.
 
-An early linear correction of the sensors captures about a third of the personalization gain. The other two thirds require the encoder itself to change. On the wrist-angle task in the same release, the opposite is true: the whole per-user gain is an early input correction. The split is a property of the task, not a slogan about EMG.
+An early linear correction of the sensors captures about a third of the personalization gain. The other two thirds require the encoder itself to change. On the wrist-angle task in the same release, the opposite is true: the whole per-user gain is an early input correction. The relative contribution of sensor correction and encoder adaptation differs between these tasks.
 
 A language model that was allowed to see the training prompts, including prompts that also appear at test time, would have reported 14.15% instead of 15.02% on the fine-tune and 24.25% instead of 25.43% on the generic model. The numbers above use the de-leaked model. The leak would have overstated the gain by about one point.
 
@@ -34,4 +34,4 @@ A language model that was allowed to see the training prompts, including prompts
 
 Ten test users. One validation-chosen fine-tune recipe, and that recipe sits on the edge of the grid that was searched, so the personalization gain may be understated. The user-specific residual is not separated into how the motor units are recruited versus how the person forms letters. The language model is a character 7-gram, not a neural rescoring model. Offline character error is not the online words-per-minute number in Meta's paper, and the paper says those two are not comparable.
 
-This page is the checkable end of the thread on the [about page](/about). It is a measurement of a released model. It is not a treatment.
+This work builds on my interest in neural interfaces and communication, described on the [About page](/about). The results evaluate an offline decoder, not a clinical intervention.

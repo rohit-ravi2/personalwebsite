@@ -1,281 +1,113 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomisedBreadCrumbs from "../components/CustomisedBreadCrumbs.astro";
+import { getEntry } from "astro:content";
+import about from "../data/about.json";
 
-const thread = [
-  {
-    href: "/projects/asd-myelin-timing",
-    kicker: "Myelin",
-    line: "Investigating myelination and autism using human genetic data.",
-  },
-  {
-    href: "/projects/anesthesia-pipeline",
-    kicker: "Anesthesia and sleep",
-    line: "Exploring reversible changes in nervous-system activity.",
-  },
-  {
-    href: "/projects/libribrain-2026",
-    kicker: "LibriBrain",
-    line: "MEG decoding and the influence of timing on model evaluation.",
-  },
-  {
-    href: "/projects/handwriting-emg",
-    kicker: "Handwriting",
-    line: "Adapting a wrist-EMG handwriting decoder to individual writers.",
-  },
-];
+const selectedWork = await Promise.all(
+  [
+    "asd-myelin-timing",
+    "anesthesia-pipeline",
+    "libribrain-2026",
+    "handwriting-emg",
+  ].map(async (slug) => {
+    const project = await getEntry("projects", slug);
+    return {
+      slug,
+      title: project?.data.title,
+      description: project?.data.description,
+    };
+  }),
+);
 ---
 
 <BaseLayout
   title="About — Rohit Ravi"
   description="How illness, philosophy, and a search for understanding led Rohit Ravi to work in machine learning, neuroscience, and computation."
 >
-  <main class="mx-auto w-full max-w-3xl px-4 py-10">
+  <main class="mx-auto w-full max-w-4xl px-5 py-10 sm:px-8">
     <CustomisedBreadCrumbs />
     <header
-      class="mt-8 grid items-end gap-8 md:grid-cols-[17rem_minmax(0,1fr)]"
+      class="mt-8 grid items-center gap-8 md:grid-cols-[15rem_minmax(0,1fr)] md:gap-12"
     >
       <figure class="mx-auto w-full max-w-xs md:mx-0 md:max-w-none">
         <img
           src="/images/about/rohit-ravi.jpg"
-          alt="Rohit Ravi, in a navy suit, standing between stone columns."
+          alt="Rohit Ravi in a navy suit, standing between stone columns."
           width="1024"
           height="1536"
-          class="aspect-[3/4] w-full rounded-lg object-cover object-[center_18%] shadow-md"
+          class="aspect-[3/4] w-full rounded-lg object-cover object-[center_18%]"
+          fetchpriority="high"
         />
-        <figcaption
-          class="mt-2 text-center text-xs text-muted-foreground md:text-left"
-        >
-          Rohit Ravi
-        </figcaption>
       </figure>
       <div>
         <p
           class="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground"
         >
-          About
+          About me
         </p>
-        <h1
-          class="mt-2 scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl"
-        >
+        <h1 class="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
           Rohit Ravi
         </h1>
-        <p class="mt-4 text-lg leading-relaxed">
-          I study nervous systems because I know how profoundly they can change
-          a life—and how much remains unexplained when they do.
-        </p>
-        <p class="mt-4 leading-relaxed text-muted-foreground">
-          I’m studying data science and philosophy at NYU, with research
-          interests spanning machine learning, neural computation, and biology.
-          Those interests developed through coursework, but their urgency came
-          from a severe illness that began during college. What started as a
-          search for answers about my own health grew into a broader commitment:
-          to develop the technical understanding needed to help people whose
-          suffering we still struggle to explain.
+        <p class="mt-5 text-xl leading-relaxed">{about.lead}</p>
+        <p class="mt-5 leading-relaxed text-muted-foreground">
+          {about.introduction}
         </p>
       </div>
     </header>
-    <div class="mt-12 flex flex-col gap-12 text-base leading-relaxed">
-      <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
-          Before the questions became personal
-        </h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <p>
-            For much of my life, I understood progress through training. I
-            played four years of varsity tennis at Northern Highlands, and
-            during the COVID lockdown I often spent six hours a day on court.
-            Fitness, energy, and the ability to push myself were central to my
-            daily life. I expected to keep building on them.
-          </p>
-          <p>
-            Becoming ill disrupted that continuity. Activities that had once
-            been routine became inaccessible. I lost the physical capacity I had
-            depended on, and long stretches of illness narrowed the world around
-            me.
-          </p>
-          <p>
-            Treatment eventually made the condition more manageable. I’m
-            grateful for the clinicians who helped make that possible. Yet
-            relief and explanation were different things: the underlying cause
-            remained uncertain, even after consultations across specialties. I
-            was left with questions that mattered beyond any single appointment.
-            Where was the dysfunction occurring? What could explain such a large
-            change in experience and ability when conventional investigations
-            offered so little clarity?
-          </p>
-          <p>
-            I began reading because I wanted answers. Over time, I wanted the
-            skills to investigate the questions myself.
-          </p>
-        </div>
-      </section>
-      <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
-          Finding a direction
-        </h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <p>
-            Alongside that search, I began exploring my roots and identity more
-            seriously. Vedanta became a source of orientation during a period
-            when much of what had previously defined my life was unavailable to
-            me. Its questions about suffering, selfhood, and consciousness had
-            an immediate personal significance.
-          </p>
-          <p>
-            That exploration remains an important part of my life. It also
-            deepened my interest in philosophy of mind: how subjective
-            experience relates to physical processes, what we mean by a self,
-            and what an explanation of consciousness would actually need to
-            explain. I want to examine those questions carefully, including
-            where philosophical reasoning and empirical investigation can inform
-            each other and where their methods differ.
-          </p>
-          <p>
-            My sense of how I wanted to help people changed during this period.
-            I came to see research and engineering as the avenue through which I
-            could contribute most. Machine learning, neuroscience, and
-            computation offered ways to investigate mechanisms, build useful
-            tools, and work on problems whose consequences extend across many
-            lives.
-          </p>
-          <p>
-            The uncertainty that had been so difficult to live with became a
-            reason to learn.
-          </p>
-        </div>
-      </section>
-      <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
-          How that became my work
-        </h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <p>
-            My coursework in machine learning gave me a practical starting
-            point. Working with <em>C. elegans</em> let me begin studying nervous
-            systems computationally: how connectivity, cellular properties, and activity
-            relate, and what a model can reasonably tell us about the living system
-            it represents. The notebooks were a learning pipeline, through which
-            I developed the ability to turn broad biological questions into analyses
-            and experiments.
-          </p>
-          <p>
-            My own search also drew me toward genetic, mitochondrial, and
-            myelination mechanisms. I was interested in how nervous-system
-            function can be disrupted through processes that are difficult to
-            see in a conventional structural investigation.
-          </p>
-          <p>
-            Some of that reading informed things I tried personally, including
-            DHA and palmitoylethanolamide with luteolin. I experienced benefits,
-            although that experience cannot establish which mechanism was
-            responsible or what would help someone else. It gave me further
-            questions to investigate.
-          </p>
-          <p>
-            The autism and myelination work became especially personal when I
-            saw a young relative suffering. I recognized something of the
-            helplessness I had experienced myself, and I wanted to help in
-            whatever way I could. My experience with DHA was part of what first
-            directed my attention toward lipid supply and myelination. From
-            there, the task was to examine whether the biological evidence
-            supported the initial idea—and how the question needed to change
-            when it did not.
-          </p>
-          <p>
-            My interest in anesthesia and sleep grew from another observation
-            during treatment: profound changes in nervous-system state could
-            interrupt acute suffering. That made reversibility especially
-            compelling to me. How can a nervous system enter a dramatically
-            different state and then return? What distinguishes reduced
-            activity, quiescence, sleep, and anesthesia? Computational models
-            offered a way to begin exploring those questions.
-          </p>
-          <p>
-            These projects share a personal origin, but each needs evidence
-            appropriate to its own claims. My experience helps explain why I ask
-            the questions. The research has to determine what answers they can
-            support.
-          </p>
-        </div>
-      </section>
-      <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
-          From biological questions to neural data
-        </h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <p>
-            As my technical skills developed, my work expanded into decoding
-            information from neural signals.
-          </p>
-          <p>
-            LibriBrain brought me into MEG analysis and the challenge of
-            extracting useful information from noisy measurements. It also made
-            evaluation itself a central part of the work: understanding how much
-            of a model’s performance reflects the neural signal and how much can
-            be explained by timing or other features of the task.
-          </p>
-          <p>
-            The wrist-EMG handwriting project explores a different interface
-            between nervous systems and computation. It asks how signals
-            associated with intended movement can support communication, and how
-            adaptation to an individual changes a model’s usefulness.
-          </p>
-          <p>
-            These projects are opportunities to demonstrate the engineering
-            skills behind my broader interests: working with complex data,
-            training and adapting models, designing evaluations, and
-            investigating why a result changes. They also connect to something
-            that has become deeply important to me—how computation can help
-            preserve or recover a person’s ability to act, communicate, and
-            participate in life.
-          </p>
-        </div>
-      </section>
-      <nav class="grid gap-3 sm:grid-cols-2" aria-label="Explore the research">
-        {
-          thread.map((item) => (
-            <a
-              href={item.href}
-              class="rounded-lg border bg-card px-4 py-3 transition hover:border-primary"
-            >
-              <span class="block text-sm font-semibold text-primary">
-                {item.kicker}
-              </span>
-              <span class="mt-1 block text-sm leading-snug text-muted-foreground">
-                {item.line}
-              </span>
-            </a>
-          ))
-        }
-      </nav>
-      <section>
-        <h2 class="border-t pt-8 text-xl font-semibold tracking-tight">
-          What I want to contribute
-        </h2>
-        <div class="mt-4 flex flex-col gap-4">
-          <p>
-            I want to bring this combination of personal commitment and
-            technical ability to a research team or company working on
-            consequential problems in biology, neural systems, or machine
-            learning.
-          </p>
-          <p>
-            There is much I still want to learn. I’m looking for work that
-            demands depth: difficult data, mechanisms that remain uncertain, and
-            tools that need to function beyond a demonstration. I want
-            collaborators who care about both the quality of an explanation and
-            what it could make possible for people.
-          </p>
-          <p>
-            Illness changed the life I expected to have. It also helped clarify
-            the work I want to devote myself to. My goal is to use machine
-            learning, neuroscience, computation, and philosophy to tackle the
-            hardest problems I can contribute to solving—and, through that work,
-            make suffering more bearable.
-          </p>
-        </div>
-      </section>
+
+    <div
+      class="mx-auto mt-16 flex max-w-[65ch] flex-col gap-12 text-base leading-[1.85]"
+    >
+      {
+        about.sections.map((section, index) => (
+          <>
+            <section aria-labelledby={`about-section-${index}`}>
+              <h2
+                id={`about-section-${index}`}
+                class="border-t pt-8 text-2xl font-semibold tracking-tight"
+              >
+                {section.title}
+              </h2>
+              <div class="mt-5 flex flex-col gap-5">
+                {section.paragraphs.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            </section>
+            {index === about.sections.length - 2 && (
+              <aside
+                class="rounded-xl border bg-card p-5 sm:p-6"
+                aria-label="Selected research"
+              >
+                <p class="mb-4 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                  Explore the work
+                </p>
+                <div class="grid gap-5 sm:grid-cols-2">
+                  {selectedWork.map((project) => (
+                    <a
+                      href={`/projects/${project.slug}`}
+                      class="group block rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                    >
+                      <span class="block text-base font-semibold leading-snug text-primary group-hover:underline">
+                        {project.title}
+                      </span>
+                      <span class="mt-2 block text-sm leading-relaxed text-muted-foreground">
+                        {project.description}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </aside>
+            )}
+          </>
+        ))
+      }
+      <a
+        href="mailto:rohit.ravi2@gmail.com"
+        class="w-fit rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:opacity-90"
+        >Get in touch</a
+      >
     </div>
   </main>
 </BaseLayout>

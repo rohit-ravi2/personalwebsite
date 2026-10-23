@@ -1,0 +1,15 @@
+{
+  "login": "passed",
+  "structuredEdit": "passed",
+  "preview": "passed",
+  "publishPayload": "passed",
+  "history": "passed",
+  "newPost": "passed",
+  "logout": "passed",
+  "returnNavigation": "passed",
+  "mobileLayout": {
+    "width": 378,
+    "scroll": 378
+  },
+  "externalWrites": 0
+}

@@ -1,9 +1,7 @@
 ---
-import ProjectCard from 'src/components/ProjectCard.astro'
+import ProjectCard from "src/components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
-
-
 
 const SUBJECT_ORDER = [
   "Neural decoding",
@@ -16,9 +14,11 @@ const SUBJECT_ORDER = [
   "Reasoning",
 ];
 
-const projects = await getCollection('projects');
+const projects = await getCollection("projects");
 projects.sort((a: any, b: any) => {
-  return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
+  return (
+    new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime()
+  );
 });
 
 const grouped = SUBJECT_ORDER.map((subject) => ({
@@ -26,52 +26,82 @@ const grouped = SUBJECT_ORDER.map((subject) => ({
   items: projects.filter((project) => project.data.subject === subject),
 })).filter((group) => group.items.length > 0);
 
-const ungrouped = projects.filter((project) => !SUBJECT_ORDER.includes(project.data.subject));
+const ungrouped = projects.filter(
+  (project) => !SUBJECT_ORDER.includes(project.data.subject),
+);
 ---
 
-<IndexPageLayout title="Projects" description="Grouped by subject. Unfinished work is marked In progress." subTitle="My Projects">
-  {projects.length === 0 ? (
-    <p class="text-sm text-muted-foreground italic">More projects coming soon.</p>
-  ) : (
-    <div class="flex w-full flex-col gap-10">
-      {grouped.map((group) => (
-        <section class="w-full" aria-labelledby={group.subject.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>
-          <h2 id={group.subject.toLowerCase().replace(/[^a-z0-9]+/g, "-")} class="mb-3 text-xl font-semibold">
-            {group.subject}
-          </h2>
-          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {group.items.map((entity: any) => (
-              <ProjectCard
-                href={'/projects/' + entity.slug}
-                heading={entity.data.title}
-                subheading={entity.data.description}
-                altText={entity?.data?.image?.alt}
-                imagePath={entity?.data?.image?.url}
-                dateStart={entity.data.startDate}
-                inProgress={entity.data.inProgress}
-              />
-            ))}
-          </div>
-        </section>
-      ))}
-      {ungrouped.length > 0 && (
-        <section class="w-full" aria-labelledby="subject-other">
-          <h2 id="subject-other" class="mb-3 text-xl font-semibold">Other</h2>
-          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {ungrouped.map((entity: any) => (
-              <ProjectCard
-                href={'/projects/' + entity.slug}
-                heading={entity.data.title}
-                subheading={entity.data.description}
-                altText={entity?.data?.image?.alt}
-                imagePath={entity?.data?.image?.url}
-                dateStart={entity.data.startDate}
-                inProgress={entity.data.inProgress}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
-  )}
+<IndexPageLayout
+  title="Projects"
+  description="Research and engineering across neural decoding, computational biology, and machine learning."
+  subTitle="Projects"
+>
+  {
+    projects.length === 0 ? (
+      <p class="text-sm text-muted-foreground italic">
+        More projects coming soon.
+      </p>
+    ) : (
+      <div class="flex w-full flex-col gap-10">
+        <nav aria-label="Project subjects" class="flex flex-wrap gap-2">
+          {grouped.map((group) => (
+            <a
+              href={`#${group.subject.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+              class="rounded-full border px-3 py-1.5 text-sm hover:border-primary hover:bg-white/50"
+            >
+              {group.subject}
+            </a>
+          ))}
+        </nav>
+        {grouped.map((group) => (
+          <section
+            class="w-full"
+            aria-labelledby={group.subject
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")}
+          >
+            <h2
+              id={group.subject.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
+              class="mb-3 text-xl font-semibold"
+            >
+              {group.subject}
+            </h2>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {group.items.map((entity: any) => (
+                <ProjectCard
+                  href={"/projects/" + entity.slug}
+                  heading={entity.data.title}
+                  subheading={entity.data.description}
+                  altText={entity?.data?.image?.alt}
+                  imagePath={entity?.data?.image?.url}
+                  dateStart={entity.data.startDate}
+                  inProgress={entity.data.inProgress}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+        {ungrouped.length > 0 && (
+          <section class="w-full" aria-labelledby="subject-other">
+            <h2 id="subject-other" class="mb-3 text-xl font-semibold">
+              Other
+            </h2>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {ungrouped.map((entity: any) => (
+                <ProjectCard
+                  href={"/projects/" + entity.slug}
+                  heading={entity.data.title}
+                  subheading={entity.data.description}
+                  altText={entity?.data?.image?.alt}
+                  imagePath={entity?.data?.image?.url}
+                  dateStart={entity.data.startDate}
+                  inProgress={entity.data.inProgress}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    )
+  }
 </IndexPageLayout>

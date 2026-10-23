@@ -50,3 +50,8 @@ data/external/
 **/x86_64/
 *.so
 
+
+# Owner editor secrets
+.env
+.env.*
+!.env.example

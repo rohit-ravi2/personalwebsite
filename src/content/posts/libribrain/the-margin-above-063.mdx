@@ -1,7 +1,7 @@
 ---
-title: "The margin above 0.63"
+title: "What timing reveals about MEG decoding benchmarks"
 startDate: 2026-10-21
-description: "The technical side of my LibriBrain entry: the target that doubled the score, why one listener's model beat every multi-subject model, test-time steps that use only each listener's own data, and a brain-free baseline that sets the real floor for this benchmark."
+description: "Technical notes from LibriBrain 2026: contextual training targets, cross-subject transfer, test-time adaptation, and a timing-only baseline that changes how decoder scores should be interpreted."
 tags: ["MEG", "Neural Decoding", "Machine Learning", "Kaggle"]
 image:
   url: /images/projects/libribrain/lb_progression.png
@@ -10,7 +10,7 @@ draft: false
 order: 1
 ---
 
-Part of the [LibriBrain](/posts/libribrain/) series. Project page: [Fifty words from a magnetic field](/projects/libribrain-2026/).
+Part of the [LibriBrain](/posts/libribrain/) series. Project page: [LibriBrain 2026: decoding speech from MEG](/projects/libribrain-2026/).
 
 The LibriBrain 2026 competition asks which of fifty words a listener heard, given 306 channels of
 magnetoencephalography (MEG) recorded while they listened. A prediction counts if the true word is among its ten best
@@ -50,7 +50,7 @@ combining data across listeners.
 3. **Recording-day correction.** The Deep test set came from a day absent from training. Re-estimating the network's
    normalisation statistics on those recordings added 0.044 on Deep.
 
-## The honest floor
+## The timing-only baseline
 
 All listeners heard the same sentences, and the test files exposed enough timing to align rows across people. That
 alignment was prohibited, and the entry never used it. There is a subtler version of the same problem inside each
@@ -58,8 +58,8 @@ sentence. The spacing between words encodes their durations, and durations ident
 
 To measure it, I trained a classifier with no brain data at all, using only what each test row exposes: the word's
 position, the gap to the next word and the sentence length. On the same held-out blocks where the brain decoder scores
-0.70 to 0.78, the timing-only model scores **0.632**. Duration alone gives 0.468. The meaningful baseline for this
-benchmark is therefore close to 0.63, not 0.20, and a decoder's contribution is its margin above that floor. My entry
+0.70 to 0.78, the timing-only model scores **0.632**. Duration alone gives 0.468. This gives a strong non-neural baseline on the tested split. Comparing a decoder with timing-only
+prediction is necessary to assess how much performance depends on the neural measurements. My entry
 uses no timing features.
 
 ## Validation that tracks the leaderboard

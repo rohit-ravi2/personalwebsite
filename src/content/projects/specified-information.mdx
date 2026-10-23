@@ -1,7 +1,7 @@
 ---
-title: "Where is the 'blueprint' in the C. elegans connectome?"
+title: "How development shapes the C. elegans connectome"
 startDate: 2026-07-01
-description: "A worm's genome is far too small to store its ~7,000 wiring connections one by one — yet the wiring is nearly the same in every animal. So where is the information that specifies it? This is the log of a systematic hunt: a dozen candidate 'hidden codes' tested and ruled out, and the surprisingly simple thing that was left standing."
+description: "Testing how physical contact, developmental timing, and molecular signals account for reproducible wiring in C. elegans, using matched controls and held-out connectomes."
 tags: ["Computational Neuroscience", "Connectomics", "C. elegans", "Information Theory", "Research"]
 subject: "C. elegans"
 image:
@@ -19,20 +19,16 @@ by connection. Its wiring is famously **reproducible** — build a fresh worm an
 essentially the same diagram, roughly the same ~7,000 chemical synapses in roughly the
 same places, every time.
 
-That reproducibility is the puzzle. The worm's genome is tiny. It cannot possibly store a
-literal list of "neuron A connects to neuron B" for every connection — there simply isn't
-room. So the wiring must be **generated** from something much more compact: a rulebook, a
-molecular address system, a developmental program. Somewhere there is *specified
+That reproducibility is the puzzle. The reproducibility raises a developmental question: which combinations of molecular
+signals, physical contact, and developmental history generate that wiring? Somewhere there is *specified
 information* that the genome executes to build the same brain twice.
 
 The obvious question — and the one this project chased — is **where that information
 actually lives.** Is there a hidden "wiring code" waiting to be found? Or is the wiring a
 by-product of simpler things, with no code at all?
 
-This page is the honest log of the hunt. It reads as a sequence of hypotheses, each one
-tested with pre-registered pass/fail gates and proper statistical controls, and each one
-either kept or ruled out — with the reason it failed, and how that failure pointed to the
-next thing to try.
+This page records the hypotheses tested, their pre-registered criteria and controls, and
+how the results changed the next analysis.
 
 Code and results: [github.com/rohit-ravi2/connectome-specification](https://github.com/rohit-ravi2/connectome-specification)
 
@@ -48,7 +44,7 @@ far each factor gets you, compared against how well two adult animals agree with
 
 <SpecificationLedger client:visible />
 
-## The honest bottom line
+## Findings and limits
 
 At the resolution I could test (adult neurons, class-level gene expression, a handful of
 animals), the reproducible worm connectome does **not** show a distributed molecular
@@ -83,7 +79,7 @@ set of rule-specific codes, not an edge-by-edge wiring table, at least at the re
 available.
 
 <p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
-A note on honesty: this is a rigorous <em>decomposition</em>, not a discovered blueprint.
+Scope: this is a controlled <em>decomposition</em>, not a discovered blueprint.
 That contact dominates wiring echoes Brittin et al. (2021); that the wiring is reproducible
 echoes Witvliet et al. (2021). The contribution here is the developmental-timing
 mediation, the controlled transmitter bias, the systematic testing of hidden-code hypotheses

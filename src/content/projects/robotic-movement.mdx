@@ -1,7 +1,7 @@
 ---
-title: "Robotic Movement: Progression in Generalization"
+title: "Humanoid movement through physics and optimization"
 startDate: 2026-09-12
-description: "Physics simulations of humanoid robots (Unitree G1, H1, Apptronik Apollo) finding their own way to jump, throw, run and carry, from a description of their own body and a physical goal, with no human motion data. A running record of where the method generalizes and where it does not."
+description: "Deriving jumping, throwing, running, and carrying motions from robot geometry and motor limits in MuJoCo. Simulation studies across humanoid bodies without human demonstration data."
 tags: ["Robotics", "Simulation", "MuJoCo", "Humanoids", "Optimization", "Research"]
 subject: "Robotics"
 inProgress: true
@@ -45,7 +45,7 @@ and which simulator settings a result depends on.
 ## How these movements were made: no demonstrations, no learned policy
 
 <Aside href="/posts/robotic-movement/no-demonstrations/">
-The part of this I think is most undersold is how little data it needs. Humanoids are usually taught by copying people in sensor suits; here the robot gets its own specification and a goal, and nothing else.
+The pipeline searches for movement using a robot model and a physical objective, without human demonstrations. Hand-designed starting structures and balance controllers are described below.
 </Aside>
 
 Nothing on this page was learned from people. No motion capture, no teleoperation, no video of
@@ -101,7 +101,7 @@ I expected the robot's best jump to look nothing like a person's. Instead it fou
 This is the animation that changed the project. The arm lagged back, the hips swivelled further than any person's can, and the result was a baseball throw pushed beyond human range by the robot's own form. Nobody told it to throw like a pitcher, or to go past one.
 </Aside>
 
-<Clip src="/videos/robotic-movement/throw-3-robot-derived-windup.mp4" caption="A wind-up derived from the robot's own body, refined by search: hips swivel on planted feet, the arm trails the trunk." note="Historical render: this version exceeded the wrist's rated speed and is not a valid speed figure. The same construction under the honest actuator limits reaches 20-23 m/s." />
+<Clip src="/videos/robotic-movement/throw-3-robot-derived-windup.mp4" caption="A wind-up derived from the robot's own body, refined by search: hips swivel on planted feet, the arm trails the trunk." note="Historical render: this version exceeded the wrist's rated speed and is not a valid speed figure. The same construction under the specified actuator limits reaches 20-23 m/s." />
 
 <Clip src="/videos/robotic-movement/throw-ball-flight.mp4" caption="The same construction at full search budget: 22.6 m/s release under the simulator model's motor limits (with Unitree's lower published knee limit and a 10 ms motor lag, about 15 m/s at a smaller budget), valid at both time steps. Ball flight drawn from the release state." note="Ball flight is computed drag-free from the release state." />
 <Clip src="/videos/robotic-movement/throw-capacity-whatif.mp4" caption="Change the body, and the technique reorganises: halve the arm's torque and the hips and trunk take over; halve the legs' torque and the arm does more of the work." note="What-if bodies (torque scaled), not robot capability." />
@@ -182,7 +182,7 @@ Leverage is something people understand and robots do not yet. With the arms bal
 ## Manipulation
 
 <Aside href="/posts/robotic-movement/manipulation/">
-Laundry is the north star, but only once the movement itself generalises. Until then the rule is simple: every object solid, every grasp real or labelled as an attachment.
+Household tasks are a longer-term goal. The current manipulation test focuses on a brush grasp and wipe; attachments are identified separately from simulated finger grasps.
 </Aside>
 
 <Pair>

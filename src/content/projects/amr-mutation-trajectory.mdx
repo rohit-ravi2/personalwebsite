@@ -1,7 +1,7 @@
 ---
-title: "Antibiotic Resistance — Mutation Trajectory Prediction"
+title: "Predicting antibiotic-resistance mutation trajectories"
 startDate: 2026-05-12
-description: "Predicting the next resistance mutation given an ordered evolution history, over ALEdb plus CARD plus deep mutational scanning data. An autoregressive transformer shows ordered history matters (top-3 0.156 → 0.527 with context), but the three-stage reranker I built on top of it does not beat its own components, and unconditional canonical-AMR top-3 stays near 0.05."
+description: "Sequence models for predicting mutations during adaptive evolution. Tests compare gradient boosting, transformers, and reranking, and measure the contribution of ordered mutation history."
 tags: ["Antibiotic Resistance", "Directed Evolution", "Transformers", "Protein Language Models", "Bioinformatics", "Research"]
 subject: "Clinical and molecular"
 image:
@@ -11,7 +11,7 @@ image:
 
 import { TrajectoryExplorer } from "../../components/react/TrajectoryExplorer";
 
-The thing about predicting the next mutation in a directed-evolution trajectory is that you have to decide what "right" means. Most antibiotic resistance machine learning predicts phenotype from genome. Given this bacterium's whole genome, will it be resistant to ciprofloxacin? I wanted to do something different. Given an ordered history of mutations that have already accumulated under selection, what's the next one going to be? That's a sequential-decision problem on the evolution side rather than a classification problem on the diagnostic side, and at the start of Day 1 I had not realized how much that framing matters.
+This project asks whether the next mutation in an adaptive-evolution trajectory can be predicted from the ordered mutations that precede it. Most antibiotic resistance machine learning predicts phenotype from genome. Given this bacterium's whole genome, will it be resistant to ciprofloxacin? I wanted to do something different. Given an ordered history of mutations that have already accumulated under selection, what's the next one going to be? That's a sequential-decision problem on the evolution side rather than a classification problem on the diagnostic side, and at the start of Day 1 I had not realized how much that framing matters.
 
 Day 1 was the foundation. 28,768 lab-evidence genomes pulled from BV-BRC, annotated with AMRFinderPlus at 98.81% coverage. 17,991 unique resistance protein sequences embedded with ESM2-650M at half precision on an 8GB RTX 4060 Ti. Trajectory data from ALEdb (28,028 transitions across 860 trajectories) plus deep mutational scanning measurements from Pal 2015, Marcusson 2009, and Gullberg 2014 for fluoroquinolone-target proteins. A LightGBM LambdaRank model over candidate mutations hit top-3 = 0.708 overall, which sounded fine. Then I sliced by canonical-AMR mutations specifically — the ones that show up in the CARD database of clinically-relevant resistance — and canonical-AMR top-3 dropped to 0.13–0.21.
 
@@ -33,7 +33,7 @@ Within that 72-transition subset the per-class picture is uneven and the counts 
 
 <img src="/images/projects/amr-mutation-trajectory/fig3_ablations.png" alt="Transformer ablations: removing autoregressive context drops top-3 from 0.527 to 0.156. Removing ESM2/DMS features or canonical loss weighting barely changes anything." class="mx-auto max-w-2xl rounded-lg border my-6" />
 
-A few other holes worth being honest about. The MIC supervision is on a linear-ramp proxy, because ALEdb provides endpoint MIC measurements but not per-flask values. The apparent Pearson 0.92 between predicted step number and MIC is largely tautological, since the proxy was constructed to be a linear function of step number to begin with. The macrolide canonical-AMR top-1 = 0 on n=11 transitions is biologically suspicious and probably means the mutation tokenization breaks for ribosomal-RNA loci, where most macrolide resistance actually lives. No held-out-organism or held-out-drug-class evaluation either, so every number here is on chromosomally-similar data to the training set.
+Several limitations remain. The MIC supervision is on a linear-ramp proxy, because ALEdb provides endpoint MIC measurements but not per-flask values. The apparent Pearson 0.92 between predicted step number and MIC is largely tautological, since the proxy was constructed to be a linear function of step number to begin with. The macrolide canonical-AMR top-1 = 0 on n=11 transitions is biologically suspicious and probably means the mutation tokenization breaks for ribosomal-RNA loci, where most macrolide resistance actually lives. No held-out-organism or held-out-drug-class evaluation either, so every number here is on chromosomally-similar data to the training set.
 
 What survives is the Day-2 ablation: ordered mutation history carries real signal (top-3 0.156 without context, 0.527 with it). The reranker, which I originally thought was the contribution, is not supported by its own numbers. The data is almost entirely chromosomal point-mutation evolution (1 of 28,028 transitions is plasmid-borne, consistent with ALEdb's serial-passage origin), so the model is learning chromosomal evolution patterns specifically. That's a useful narrow regime, not a general-purpose AMR predictor.
 

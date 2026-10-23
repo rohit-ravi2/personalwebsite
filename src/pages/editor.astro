@@ -1,0 +1,246 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Owner editor — Rohit Ravi"
+  description="Private owner editing workspace."
+  noindex
+>
+  <main class="editor-shell">
+    <header class="editor-heading">
+      <div>
+        <p class="eyebrow">Owner workspace</p><h1>Edit your website</h1>
+      </div><a href="/">Back to website</a>
+    </header>
+    <p id="status" role="status" aria-live="polite">Checking your session…</p>
+    <form id="login" hidden>
+      <h2>Sign in</h2><p>
+        Use your owner password to edit and publish content.
+      </p>
+      <label for="password">Password</label><input
+        id="password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        maxlength="512"
+      />
+      <button type="submit">Sign in</button>
+    </form>
+    <section id="workspace" hidden>
+      <div class="toolbar">
+        <label for="files">Choose a page</label><select id="files"
+        ></select><button id="load" type="button">Open</button><button
+          id="new"
+          type="button">New post or project</button
+        ><button id="logout" type="button" class="secondary">Sign out</button>
+      </div>
+      <form id="new-entry" hidden>
+        <h2>Create an entry</h2>
+        <label for="kind">Type</label><select id="kind"
+          ><option value="posts">Blog post</option><option value="projects"
+            >Project</option
+          ></select
+        >
+        <label for="slug">URL name</label><input
+          id="slug"
+          required
+          pattern="[a-z0-9]+(-[a-z0-9]+)*"
+          placeholder="my-new-project"
+        />
+        <label for="new-title">Title</label><input id="new-title" required />
+        <label for="new-description">Description</label><input
+          id="new-description"
+          required
+        />
+        <label for="subject">Subject (projects)</label><input
+          id="subject"
+          value="Neural decoding"
+        />
+        <button type="submit">Create draft in editor</button>
+      </form>
+      <div id="editing" hidden>
+        <div class="document-heading">
+          <h2 id="document-title"></h2><span id="dirty"></span>
+        </div>
+        <p id="help">
+          Edit your content, review the preview, then publish. Existing
+          interactive components stay intact.
+        </p>
+        <div id="structured"></div>
+        <label id="source-label" for="source">Markdown and page metadata</label>
+        <textarea id="source" rows="24" spellcheck="true"></textarea>
+        <div class="toolbar actions">
+          <button id="preview-button" type="button">Preview changes</button
+          ><button id="save" type="button">Publish changes</button><button
+            id="history-button"
+            type="button"
+            class="secondary">Revision history</button
+          >
+        </div>
+        <section id="preview-panel" hidden>
+          <h2>Preview</h2><p class="hint">
+            Text preview. Interactive demos and the final site layout are
+            preserved on the published page.
+          </p><article id="preview"></article>
+        </section>
+        <section id="history" hidden>
+          <h2>Revision history</h2><p>
+            Load an earlier version to review it. Publish to restore it as a new
+            revision.
+          </p><div id="revisions"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+<script src="../../public/admin/editor.js"></script>
+<style is:global>
+  .editor-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 5rem;
+  }
+  .editor-shell .editor-heading,
+  .editor-shell .document-heading,
+  .editor-shell .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .editor-shell .editor-heading {
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .editor-shell .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #426351;
+  }
+  .editor-shell h1 {
+    font-size: 2rem;
+    font-weight: 650;
+  }
+  .editor-shell h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 1rem 0;
+  }
+  .editor-shell #status {
+    padding: 1rem;
+    border: 1px solid #cbd7cc;
+    border-radius: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .editor-shell #login {
+    max-width: 440px;
+  }
+  .editor-shell label {
+    display: block;
+    font-weight: 550;
+    margin: 0.8rem 0 0.35rem;
+  }
+  .editor-shell input,
+  .editor-shell select,
+  .editor-shell textarea {
+    border: 1px solid #a7b9ac;
+    background: #fffef9;
+    color: #163c2e;
+    border-radius: 0.4rem;
+    padding: 0.7rem;
+    width: 100%;
+    font: inherit;
+  }
+  .editor-shell textarea {
+    line-height: 1.65;
+  }
+  .editor-shell #source {
+    font-family: ui-monospace, monospace;
+    font-size: 0.9rem;
+  }
+  .editor-shell button {
+    background: #174632;
+    color: #fffdf5;
+    padding: 0.65rem 1rem;
+    border-radius: 0.4rem;
+    font: inherit;
+    cursor: pointer;
+  }
+  .editor-shell button.secondary {
+    background: transparent;
+    border: 1px solid #a7b9ac;
+    color: inherit;
+  }
+  .editor-shell button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+  .editor-shell button:focus-visible,
+  .editor-shell input:focus-visible,
+  .editor-shell select:focus-visible,
+  .editor-shell textarea:focus-visible,
+  .editor-shell a:focus-visible {
+    outline: 3px solid #ba8c3a;
+    outline-offset: 3px;
+  }
+  .editor-shell .toolbar select {
+    width: auto;
+    flex: 1;
+    min-width: 200px;
+  }
+  .editor-shell .toolbar label {
+    margin: 0;
+  }
+  .editor-shell .actions {
+    margin: 1.25rem 0;
+  }
+  .editor-shell #new-entry,
+  .editor-shell #preview-panel,
+  .editor-shell #history {
+    padding: 1.5rem;
+    border: 1px solid #cbd7cc;
+    border-radius: 0.65rem;
+    margin: 1.5rem 0;
+    background: #fffdf8;
+  }
+  .editor-shell #new-entry button {
+    margin-top: 1rem;
+  }
+  .editor-shell .section-editor {
+    border-top: 1px solid #cbd7cc;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+  .editor-shell .section-editor .toolbar {
+    margin: 0.7rem 0;
+  }
+  .editor-shell .section-editor button {
+    font-size: 0.85rem;
+  }
+  .editor-shell #dirty,
+  .editor-shell .hint {
+    font-size: 0.85rem;
+    color: #526555;
+  }
+  .editor-shell #preview p {
+    margin: 1rem 0;
+    line-height: 1.8;
+  }
+  .editor-shell #preview h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 1.6rem 0 0.7rem;
+  }
+  .editor-shell #revisions button {
+    display: block;
+    text-align: left;
+    margin: 0.7rem 0;
+    width: 100%;
+  }
+  .editor-shell [hidden] {
+    display: none !important;
+  }
+</style>
