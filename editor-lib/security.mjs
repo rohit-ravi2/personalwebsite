@@ -48,6 +48,7 @@ export function assertData(path, content, previous = '') {
     if (path.endsWith('about.json')) {
       if (!str(data.lead) || !str(data.introduction) || !Array.isArray(data.sections) || data.sections.length > 30 || !data.sections.every(s => str(s.title, 200) && Array.isArray(s.paragraphs) && s.paragraphs.length <= 50 && s.paragraphs.every(p => str(p)))) throw new Error('Invalid About content.');
     } else if (!str(data.headLine) || !str(data.headLine2) || !Array.isArray(data.shortIntros) || data.shortIntros.length > 8 || !data.shortIntros.every(p => str(p, 500))) throw new Error('Invalid homepage content.');
+    if (path.endsWith('home.json') && data.bio !== undefined && !str(data.bio)) throw new Error('Invalid greeting panel bio.');
     return;
   }
   // Parse MDX, then preserve complete executable nodes (including multiline JS,

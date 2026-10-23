@@ -24,7 +24,7 @@ function makeField(label, value, multiline = false) {
 }
 function renderStructured(data) {
   $('structured').replaceChildren(); structured = data;
-  const fields = path.endsWith('about.json') ? [['lead', 'Opening sentence'], ['introduction', 'Introduction']] : [['headLine', 'Headline'], ['headLine2', 'Introduction']];
+  const fields = path.endsWith('about.json') ? [['lead', 'Opening sentence'], ['introduction', 'Introduction']] : [['headLine', 'Headline'], ['headLine2', 'Introduction'], ['bio', 'Greeting panel bio']];
   for (const [key, label] of fields) {
     const field = makeField(label, data[key] || '', true); field.input.addEventListener('input', () => { structured[key] = field.input.value; }); $('structured').append(field.wrapper);
   }
@@ -77,7 +77,7 @@ $('preview-button').onclick = guard(async () => {
   if (structured) {
     append('p', structured.lead || structured.headLine); append('p', structured.introduction || structured.headLine2);
     if (structured.sections) structured.sections.forEach(s => { append('h3', s.title); s.paragraphs.forEach(p => append('p', p)); });
-    else structured.shortIntros.forEach(p => append('p', p));
+    else { if (structured.bio) append('p', structured.bio); structured.shortIntros.forEach(p => append('p', p)); }
   } else {
     const markdown = $('source').value.replace(/^---\n[\s\S]*?\n---\n/, '');
     markdown.split(/\n\s*\n/).filter(Boolean).forEach(block => { const heading = block.match(/^#{1,6}\s+(.+)$/); append(heading ? 'h3' : 'p', heading ? heading[1] : block); });

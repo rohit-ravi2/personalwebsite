@@ -1,23 +1,23 @@
 {
-  "lead": "I study nervous systems because I know how profoundly they can change a life—and how much remains unexplained when they do.",
-  "introduction": "I’m studying data science and philosophy at NYU, with research interests spanning machine learning, neural computation, and biology. Those interests developed through coursework, but their urgency came from a severe illness that began during college. What started as a search for answers about my own health grew into a broader commitment: to develop the technical understanding needed to help people whose suffering we still struggle to explain.",
+  "lead": "I try to understand neural systems because I know how profoundly they can change a life—and how much remains unexplained when they do.",
+  "introduction": "I’m studying data science and philosophy at NYU, with research interests spanning machine learning, neural computation, and biology. Those interests developed through coursework, but their urgency came from a severe illness that began at the beginning of college. What started as a search for answers about my own health grew into a broader commitment: to develop the technical understanding needed to help people whose suffering we still struggle to explain.",
   "sections": [
     {
       "title": "Before the questions became personal",
       "paragraphs": [
-        "For much of my life, I understood progress through training. I played four years of varsity tennis at Northern Highlands, and during the COVID lockdown I often spent six hours a day on court. Fitness, energy, and the ability to push myself were central to my daily life. I expected to keep building on them.",
-        "Becoming ill disrupted that continuity. Activities that had once been routine became inaccessible. I lost the physical capacity I had depended on, and long stretches of illness narrowed the world around me.",
-        "Treatment eventually made the condition more manageable. I’m grateful for the clinicians who helped make that possible. Yet relief and explanation were different things: the underlying cause remained uncertain, even after consultations across specialties. I was left with questions that mattered beyond any single appointment. Where was the dysfunction occurring? What could explain such a large change in experience and ability when conventional investigations offered so little clarity?",
+        "Tennis was a large part of my life. I played first singles on an elite team at Northern Highlands, and during the COVID lockdown I often spent six hours a day on court. Training gave my days structure, and physical effort was something I could depend on.",
+        "When I became ill at the beginning of college, activities that had once been routine became inaccessible. I lost the physical capacity I had depended on, and long stretches of illness narrowed the world around me.",
+        "It took over a year to begin understanding what was happening. After multiple procedures, including an endoscopy and a complete gastrointestinal workup, we eventually learned that the illness was neurological. That gave the search a direction, but the underlying cause remained unexplained.",
+        "Treatment eventually made the condition manageable. I’m grateful for the clinicians who helped make that possible. I was still left with questions that mattered beyond any single appointment. Where was the dysfunction occurring? What could explain such a large change in experience and ability when conventional investigations offered so little clarity?",
         "I began reading because I wanted answers. Over time, I wanted the skills to investigate the questions myself."
       ]
     },
     {
       "title": "Finding a direction",
       "paragraphs": [
-        "Alongside that search, I began exploring my roots and identity more seriously. Vedanta became a source of orientation during a period when much of what had previously defined my life was unavailable to me. Its questions about suffering, selfhood, and consciousness had an immediate personal significance.",
-        "That exploration remains an important part of my life. It also deepened my interest in philosophy of mind: how subjective experience relates to physical processes, what we mean by a self, and what an explanation of consciousness would actually need to explain. I want to examine those questions carefully, including where philosophical reasoning and empirical investigation can inform each other and where their methods differ.",
-        "My sense of how I wanted to help people changed during this period. I came to see research and engineering as the avenue through which I could contribute most. Machine learning, neuroscience, and computation offered ways to investigate mechanisms, build useful tools, and work on problems whose consequences extend across many lives.",
-        "The uncertainty that had been so difficult to live with became a reason to learn."
+        "During that period, I began exploring my roots and reading the Eastern philosophical texts that became personally meaningful to me. Vedanta gave me a way to think about suffering and identity when illness had disrupted much of the life I knew. Reading it also drew me further toward the science of consciousness. Questions about the self, perception, and experience became things I wanted to understand through neuroscience and computation as well as philosophy.",
+        "I became interested in reconciling perspectives I had often encountered as opposites: science and philosophy. I wanted to understand where they could illuminate the same questions, where they differed, and what each could reasonably explain. That search drew me toward philosophy of mind and gave my technical interests a broader purpose.",
+        "Studying neural systems became a way to pursue both the biological questions raised by my illness and the questions about experience that these texts had brought into focus. Together, they shaped the direction I wanted my work to take: developing a deeper understanding, and using the advanced technical tools of our time to turn that understanding into help for as many people as possible."
       ]
     },
     {

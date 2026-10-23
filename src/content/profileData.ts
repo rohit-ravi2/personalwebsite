@@ -17,6 +17,7 @@ export const PROFILE = {
   website: "https://www.rohitravi.com",
   repo: "https://github.com/rohit-ravi2/personalwebsite",
   avatarUrl: "/avatar.png",
+  introBio: home.bio,
   shortIntros: home.shortIntros,
   words: [
     "Arise, awake, and stop not till the goal is reached. — Swami Vivekananda",

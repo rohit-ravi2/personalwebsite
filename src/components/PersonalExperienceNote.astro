@@ -1,0 +1,22 @@
+---
+import { Info } from "lucide-react";
+---
+
+<details
+  class="rounded-lg border border-primary/20 bg-white/30 px-4 py-3 text-sm leading-relaxed"
+>
+  <summary
+    class="flex w-fit cursor-pointer list-none items-center gap-2 rounded text-primary [&::-webkit-details-marker]:hidden"
+  >
+    <Info size={16} aria-hidden="true" />
+    <span class="underline decoration-primary/40 underline-offset-4"
+      >About this account</span
+    >
+  </summary>
+  <p class="mt-3 text-muted-foreground">
+    This page describes my personal experience and the motivations behind my
+    research. References to treatments reflect my individual experience and
+    should not be interpreted as medical advice or evidence of effectiveness for
+    others.
+  </p>
+</details>

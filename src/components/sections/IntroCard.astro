@@ -1,55 +1,75 @@
 ---
+import { buttonVariants } from "../ui/button";
 import { PROFILE } from "../../content/profileData";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Instagram } from "lucide-react";
+
 const socials = [
-  { href: PROFILE.links.github, label: "GitHub", Icon: Github },
-  { href: PROFILE.links.linkedin, label: "LinkedIn", Icon: Linkedin },
-  { href: PROFILE.links.email, label: "Email", Icon: Mail },
+  { href: PROFILE.links.github, label: "Rohit Ravi on GitHub", Icon: Github },
+  {
+    href: PROFILE.links.linkedin,
+    label: "Rohit Ravi on LinkedIn",
+    Icon: Linkedin,
+  },
+  { href: PROFILE.links.email, label: "Email Rohit Ravi", Icon: Mail },
+  {
+    href: PROFILE.links.instagram,
+    label: "Rohit Ravi on Instagram",
+    Icon: Instagram,
+  },
 ];
 ---
 
-<div class="flex h-full flex-col justify-between gap-7">
-  <div>
-    <p class="text-sm font-medium text-muted-foreground">
-      {PROFILE.shortIntros[0]}
-    </p>
-    {
-      PROFILE.shortIntros.length > 1 && (
-        <ul class="mt-1 space-y-1 text-sm text-muted-foreground">
-          {PROFILE.shortIntros.slice(1).map((intro) => (
-            <li>{intro}</li>
-          ))}
-        </ul>
-      )
-    }
-    <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-      {PROFILE.name}
-    </h1>
-    <p class="mt-4 max-w-xl text-xl font-medium leading-snug sm:text-2xl">
-      {PROFILE.headLine}
-    </p>
-    <p class="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-      {PROFILE.headLine2}
-    </p>
+<div class="flex h-full w-full flex-col gap-6 md:flex-row">
+  <div
+    class="flex flex-col justify-between gap-6 text-center md:flex-1 md:text-left"
+  >
+    <div class="flex flex-col items-center md:items-start">
+      <h1 class="m-0 text-xl font-light">
+        Hi, I'm <b class="font-bold">{PROFILE.firstName}</b>.
+      </h1>
+      {
+        PROFILE.introBio && (
+          <p class="mt-4 max-w-md leading-relaxed">{PROFILE.introBio}</p>
+        )
+      }
+      <ul class="mt-4 list-disc space-y-1 pl-5 text-left">
+        {PROFILE.shortIntros.map((intro) => <li>{intro}</li>)}
+      </ul>
+      {
+        PROFILE.links.orcid && (
+          <a
+            href={PROFILE.links.orcid}
+            target="_blank"
+            rel="noreferrer"
+            class="pt-2 text-xs text-muted-foreground hover:underline"
+          >
+            ORCID {PROFILE.links.orcid.replace("https://orcid.org/", "")}
+          </a>
+        )
+      }
+    </div>
+    <div class="flex justify-center gap-2 md:justify-start">
+      {
+        socials
+          .filter(({ href }) => href)
+          .map(({ href, label, Icon }) => (
+            <a
+              href={href}
+              aria-label={label}
+              target={href.startsWith("mailto:") ? undefined : "_blank"}
+              rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
+              class={buttonVariants({ size: "icon" })}
+            >
+              <Icon aria-hidden="true" />
+              <span class="sr-only">{label}</span>
+            </a>
+          ))
+      }
+    </div>
   </div>
-  <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
-    <a
-      href="/projects"
-      class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-      >Explore my work</a
-    >
-    {
-      socials.map(({ href, label, Icon }) => (
-        <a
-          href={href}
-          class="inline-flex items-center gap-2 text-sm font-medium hover:underline"
-          target={label === "Email" ? undefined : "_blank"}
-          rel={label === "Email" ? undefined : "noreferrer"}
-        >
-          <Icon size={16} aria-hidden="true" />
-          {label}
-        </a>
-      ))
-    }
-  </div>
+  <img
+    src={PROFILE.avatarUrl}
+    class="ml-auto hidden h-auto max-h-[260px] w-auto max-w-[40%] select-none self-center md:block"
+    alt="Illustrated avatar of Rohit Ravi"
+  />
 </div>
