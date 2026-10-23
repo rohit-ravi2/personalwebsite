@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import { formateLocalMonth } from "../../lib/utils";
 const experiences = (await getCollection("experiences"))
   .filter((exp) => !exp.data.title.startsWith("Competitor"))
   .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
@@ -12,10 +11,6 @@ const experiences = (await getCollection("experiences"))
       <div>
         <h3 class="text-base font-semibold">{exp.data.title}</h3>
         <p class="mt-1">{exp.data.company}</p>
-        <p class="mt-1 text-xs text-muted-foreground">
-          {formateLocalMonth(exp.data.startDate)} –{" "}
-          {exp.data.endDate ? formateLocalMonth(exp.data.endDate) : "Present"}
-        </p>
       </div>
     ))
   }
