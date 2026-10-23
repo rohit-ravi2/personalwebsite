@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import { formateLocalMonth } from "../../lib/utils";
 import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
 import { PROFILE } from "../../content/profileData";
+import TechnicalSkills from "../../components/TechnicalSkills.astro";
+import Certifications from "../../components/Certifications.astro";
 const experiences = (await getCollection("experiences"))
   .filter((entry) => !entry.data.title.startsWith("Competitor"))
   .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
@@ -10,10 +12,25 @@ const experiences = (await getCollection("experiences"))
 
 <IndexPageLayout
   title="Research experience — Rohit Ravi"
-  description="Research background, technical skills, and selected work in neural data and machine learning."
+  description="Research experience, technical skills, and certifications across machine learning, neuroscience, and scientific software."
   subTitle="Research experience"
 >
-  <div class="w-full max-w-3xl space-y-10 py-4">
+  <div class="w-full max-w-4xl space-y-10 py-4">
+    <nav
+      aria-label="Experience sections"
+      class="flex flex-wrap gap-3 text-sm font-medium text-primary"
+    >
+      <a
+        href="#technical-skills"
+        class="rounded-full border px-4 py-2 hover:border-primary"
+        >Technical skills</a
+      >
+      <a
+        href="#certifications"
+        class="rounded-full border px-4 py-2 hover:border-primary"
+        >Certifications</a
+      >
+    </nav>
     {
       experiences.map((entry) => (
         <section class="rounded-lg border bg-card p-6">
@@ -43,11 +60,17 @@ const experiences = (await getCollection("experiences"))
         </section>
       ))
     }
-    <section>
-      <h2 class="text-xl font-semibold">Technical skills</h2>
-      <ul class="mt-4 space-y-3 text-sm leading-relaxed">
-        {PROFILE.skills.map((skill) => <li class="border-b pb-3">{skill}</li>)}
-      </ul>
+    <section id="technical-skills" aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-2xl font-semibold">
+        Technical skills
+      </h2>
+      <TechnicalSkills />
+    </section>
+    <section id="certifications" aria-labelledby="certifications-heading">
+      <h2 id="certifications-heading" class="text-2xl font-semibold">
+        Certifications
+      </h2>
+      <Certifications />
     </section>
     <section>
       <h2 class="text-xl font-semibold">Explore the work</h2>

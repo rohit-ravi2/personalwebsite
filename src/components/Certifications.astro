@@ -1,0 +1,108 @@
+---
+import { getCollection } from "astro:content";
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const priority = [
+  "computational-neuroscience",
+  "mind-and-machine",
+  "question-reality",
+];
+const certifications = (await getCollection("certifications")).sort((a, b) => {
+  const rank = (slug: string) =>
+    priority.includes(slug) ? priority.indexOf(slug) : priority.length;
+  return (
+    rank(a.slug) - rank(b.slug) ||
+    b.data.issueDate.valueOf() - a.data.issueDate.valueOf()
+  );
+});
+const rows = await Promise.all(
+  (compact ? certifications.slice(0, 3) : certifications).map(async (cert) => ({
+    cert,
+    Content:
+      !compact && !cert.data.verifyUrl && !cert.data.pdfPath
+        ? (await cert.render()).Content
+        : null,
+  })),
+);
+const institution = (issuer: string) =>
+  issuer === "Coursera Project Network"
+    ? ""
+    : issuer.replace(/^Coursera\s*·\s*/, "");
+const year = (date: Date) =>
+  new Intl.DateTimeFormat("en-US", { year: "numeric", timeZone: "UTC" }).format(
+    date,
+  );
+---
+
+<ul class={compact ? "space-y-3" : "mt-5 grid gap-4 sm:grid-cols-2"}>
+  {
+    rows.map(({ cert, Content }) => {
+      const href = cert.data.verifyUrl ?? cert.data.pdfPath;
+      return (
+        <li
+          class={
+            compact
+              ? "text-sm leading-snug"
+              : `rounded-xl border bg-card p-5 ${Content ? "sm:col-span-2" : ""}`
+          }
+        >
+          <h3
+            class={
+              compact ? "font-medium" : "text-base font-semibold leading-snug"
+            }
+          >
+            {href ? (
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                class="hover:underline"
+              >
+                {cert.data.title}
+              </a>
+            ) : (
+              cert.data.title
+            )}
+          </h3>
+          <p
+            class={
+              compact
+                ? "mt-1 text-xs text-muted-foreground"
+                : "mt-2 text-sm text-muted-foreground"
+            }
+          >
+            {[
+              institution(cert.data.issuer),
+              year(cert.data.issueDate),
+              cert.data.courseCount ? `${cert.data.courseCount} courses` : "",
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+          {!compact && href && (
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              class="mt-4 inline-block text-sm text-primary underline underline-offset-4"
+            >
+              Verify credential <span aria-hidden="true">↗</span>
+            </a>
+          )}
+          {Content && (
+            <details class="mt-4">
+              <summary class="w-fit cursor-pointer rounded text-sm font-medium text-primary">
+                View projects and certificates
+              </summary>
+              <div class="prose prose-sm mt-4 max-w-none overflow-x-auto">
+                <Content />
+              </div>
+            </details>
+          )}
+        </li>
+      );
+    })
+  }
+</ul>

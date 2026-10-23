@@ -75,3 +75,12 @@ test('API requires configuration, authentication, origin and CSRF before GitHub 
     assert.equal((await invoke(request('/api/editor?action=login', { method: 'POST', body: null }))).code, 400);
   } finally { globalThis.fetch = originalFetch; for (const key of Object.keys(process.env)) if (!(key in previous)) delete process.env[key]; Object.assign(process.env, previous); }
 });
+
+test('skill groups validate editable content and block executable links', () => {
+  const data = { groups: [{title: 'Programming', items: ['Python', 'Java', 'C++'], project: {label: 'Projects', href: '/projects'}}] };
+  assert.equal(allowedPath('src/data/skills.json'), true);
+  assert.doesNotThrow(() => assertData('src/data/skills.json', JSON.stringify(data)));
+  assert.throws(() => assertData('src/data/skills.json', JSON.stringify({groups: []})));
+  data.groups[0].project.href = 'javascript:alert(1)';
+  assert.throws(() => assertData('src/data/skills.json', JSON.stringify(data)));
+});

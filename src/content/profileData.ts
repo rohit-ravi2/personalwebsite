@@ -1,4 +1,5 @@
 import home from "../data/home.json";
+import skills from "../data/skills.json";
 
 export const PROFILE = {
   site: {
@@ -22,15 +23,7 @@ export const PROFILE = {
   words: [
     "Arise, awake, and stop not till the goal is reached. — Swami Vivekananda",
   ],
-  skills: [
-    "Python · PyTorch · NumPy / SciPy · scikit-learn · LightGBM",
-    "Deep learning: transformers, GNNs, CNNs, sequence models",
-    "Neural decoding: sEMG, MEG, calcium imaging",
-    "Statistical genetics: LDSC, Mendelian randomization, MAGMA",
-    "Leakage audits, pre-registration, held-out evaluation",
-    "In-browser ML demos: ONNX Runtime, Three.js, React",
-    "Linux · Git · CUDA · Jupyter",
-  ],
+  skillGroups: skills.groups,
   links: {
     github: "https://github.com/rohit-ravi2",
     linkedin: "https://www.linkedin.com/in/rohit-ravi2/",

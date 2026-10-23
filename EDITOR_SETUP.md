@@ -1,6 +1,6 @@
 # Owner editing
 
-The `/editor` page lets Rohit edit the homepage introduction, About narrative, existing projects, blog posts, experience entries and certification descriptions. It also creates Markdown project and blog entries. The homepage has a discreet owner sign-in link. The link is an entry point, not the security boundary.
+The `/editor` page lets Rohit edit the homepage introduction, About narrative, grouped technical skills, existing projects, blog posts, experience entries and certification descriptions. It also creates Markdown project and blog entries. The homepage has a discreet owner sign-in link. The link is an entry point, not the security boundary.
 
 ## One-time Vercel setup
 
@@ -27,7 +27,7 @@ It prompts without echoing the password and prints its salted hash. Generate the
 
 1. Open the homepage owner link or `/editor` and sign in.
 2. Choose an existing page, or create a new project/blog draft.
-3. About sections can be edited, added, removed and reordered. Homepage text uses structured fields. Article pages use Markdown and opening YAML metadata.
+3. About sections can be edited, added, removed and reordered. Homepage text and technical skill groups use structured fields. Article pages use Markdown and opening YAML metadata.
 4. Preview changes. Preview intentionally renders plain text and headings, not executable components or raw HTML.
 5. Publish to create a GitHub commit. The existing GitHub–Vercel integration starts a deployment. The editor confirms the commit, not deployment success; the public site changes only after a successful build.
 6. Revision history can load one of the last 15 file revisions. Publishing an earlier version restores it as a new commit, preserving history.
@@ -40,7 +40,7 @@ Existing MDX imports, component blocks and expression blocks are protected from 
 
 - Password verification uses salted scrypt; four-hour sessions are signed and stored in Secure, HttpOnly, SameSite=Strict, `__Host-` cookies. Rotating the session secret invalidates existing sessions.
 - Mutations require the configured Origin and a session-bound CSRF header. All API responses are private/no-store.
-- Content writes are restricted to the two content JSON files and the public content collections. Source code, credentials, private notes and arbitrary paths cannot be accessed.
+- Content writes are restricted to the three content JSON files and the public content collections. Source code, credentials, private notes and arbitrary paths cannot be accessed.
 - Login throttling uses per-instance counters and a delay after failure. In Vercel this is not a global distributed rate limit. Configure a Vercel Firewall rate-limit rule for POST `/api/editor?action=login` for additional distributed protection; keep the owner password long and unique.
 - Publishing writes to `main` using a repository-limited token. The hidden UI is never relied on to protect content. Removing `EDITOR_GITHUB_TOKEN` disables the editor immediately after environment redeployment.
 

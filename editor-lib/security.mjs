@@ -36,7 +36,7 @@ export function sessionCookie(token, clear = false) {
 }
 export function allowedPath(path) {
   if (typeof path !== 'string') return false;
-  if (['src/data/about.json', 'src/data/home.json'].includes(path)) return true;
+  if (['src/data/about.json', 'src/data/home.json', 'src/data/skills.json'].includes(path)) return true;
   return /^src\/content\/(projects|posts|experiences|certifications)\/[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*)?\.mdx?$/.test(path);
 }
 export function assertData(path, content, previous = '') {
@@ -45,6 +45,11 @@ export function assertData(path, content, previous = '') {
     let data;
     try { data = JSON.parse(content); } catch { throw new Error('Content must be valid JSON.'); }
     const str = (v, max = 20000) => typeof v === 'string' && v.length <= max;
+    if (path.endsWith('skills.json')) {
+      const link = value => typeof value === 'string' && (/^\/(?!\/)[a-zA-Z0-9/_#.-]*$/.test(value) || /^https:\/\/[^\s]+$/.test(value));
+      if (!data || !Array.isArray(data.groups) || data.groups.length < 1 || data.groups.length > 25 || !data.groups.every(group => group && str(group.title, 200) && group.title.trim() && Array.isArray(group.items) && group.items.length > 0 && group.items.length <= 30 && group.items.every(item => str(item, 500) && item.trim()) && group.project && str(group.project.label, 200) && link(group.project.href))) throw new Error('Skills need named groups, skill lists, and valid project links.');
+      return;
+    }
     if (path.endsWith('about.json')) {
       if (!str(data.lead) || !str(data.introduction) || !Array.isArray(data.sections) || data.sections.length > 30 || !data.sections.every(s => str(s.title, 200) && Array.isArray(s.paragraphs) && s.paragraphs.length <= 50 && s.paragraphs.every(p => str(p)))) throw new Error('Invalid About content.');
     } else if (!str(data.headLine) || !str(data.headLine2) || !Array.isArray(data.shortIntros) || data.shortIntros.length > 8 || !data.shortIntros.every(p => str(p, 500))) throw new Error('Invalid homepage content.');

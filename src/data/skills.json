@@ -1,0 +1,146 @@
+{
+  "groups": [
+    {
+      "title": "Programming & scientific computing",
+      "items": [
+        "Python, Java, C++",
+        "JavaScript and TypeScript",
+        "SQL",
+        "NumPy, SciPy and pandas",
+        "Numerical methods and data visualization"
+      ],
+      "project": {
+        "label": "Explore the projects",
+        "href": "/projects"
+      }
+    },
+    {
+      "title": "Machine learning & deep learning",
+      "items": [
+        "PyTorch and TensorFlow",
+        "scikit-learn, LightGBM and CatBoost",
+        "Transformers, CNNs and graph neural networks",
+        "Sequence models and representation learning",
+        "Fine-tuning, transfer learning and test-time adaptation"
+      ],
+      "project": {
+        "label": "MEG decoding in LibriBrain",
+        "href": "/projects/libribrain-2026"
+      }
+    },
+    {
+      "title": "Neural data & interfaces",
+      "items": [
+        "MEG, surface EMG and calcium-imaging data",
+        "Neural time-series preprocessing and analysis",
+        "Speech and handwriting decoding",
+        "Individual model adaptation",
+        "Cross-subject and cross-session evaluation"
+      ],
+      "project": {
+        "label": "Wrist-EMG handwriting decoding",
+        "href": "/projects/handwriting-emg"
+      }
+    },
+    {
+      "title": "Computational neuroscience",
+      "items": [
+        "Brian2 and NEURON",
+        "Connectome analysis and graph-based modeling",
+        "Spiking and conductance-based neural models",
+        "Ion channels, synapses and network dynamics",
+        "Combining connectivity with gene-expression data"
+      ],
+      "project": {
+        "label": "C. elegans neural models",
+        "href": "/projects/c-elegans-multimodal"
+      }
+    },
+    {
+      "title": "Genetics & biological data",
+      "items": [
+        "GWAS summary-statistic analysis",
+        "LD-score regression and genetic correlation",
+        "Mendelian randomization and MAGMA",
+        "Gene-set enrichment and cell-type comparisons",
+        "Single-cell expression and public biological atlases"
+      ],
+      "project": {
+        "label": "Autism and myelination",
+        "href": "/projects/asd-myelin-timing"
+      }
+    },
+    {
+      "title": "Structural biology & cheminformatics",
+      "items": [
+        "AlphaFold-Multimer",
+        "DeepChem and RDKit",
+        "Protein Data Bank (PDB)",
+        "PubChem and ChEMBL",
+        "AutoDock Vina",
+        "Molecular descriptors and structure–compound data workflows"
+      ],
+      "project": {
+        "label": "Molecular and neural-state modeling",
+        "href": "/projects/anesthesia-pipeline"
+      }
+    },
+    {
+      "title": "Simulation & optimization",
+      "items": [
+        "MuJoCo and physics-based simulation",
+        "Acme reinforcement-learning tools",
+        "Trajectory search and movement optimization",
+        "Robot geometry and actuator constraints",
+        "Parameter sweeps and sensitivity analysis",
+        "Comparing model behavior across simulation settings"
+      ],
+      "project": {
+        "label": "Humanoid movement simulations",
+        "href": "/projects/robotic-movement"
+      }
+    },
+    {
+      "title": "Statistics & model evaluation",
+      "items": [
+        "Cross-validation and held-out experimental design",
+        "Bootstrap confidence intervals and permutation tests",
+        "Ablation studies and null-model comparisons",
+        "Confounding and data-leakage analysis",
+        "PCA, t-SNE and canonical correlation analysis"
+      ],
+      "project": {
+        "label": "Evaluating neural decoding benchmarks",
+        "href": "/posts/libribrain/the-margin-above-063"
+      }
+    },
+    {
+      "title": "Interactive research software",
+      "items": [
+        "React, Astro and Tailwind CSS",
+        "JavaScript and TypeScript interfaces",
+        "Three.js and interactive scientific visualization",
+        "ONNX Runtime Web and browser-based inference",
+        "Connecting model outputs to interactive research tools"
+      ],
+      "project": {
+        "label": "Interactive neural-model anatomy",
+        "href": "/projects/substrate-anatomy"
+      }
+    },
+    {
+      "title": "Research engineering",
+      "items": [
+        "Linux and Git",
+        "CUDA-based model training",
+        "Jupyter notebooks and experiment workflows",
+        "Data preparation and analysis pipelines",
+        "Reproducible configurations and experiment records"
+      ],
+      "project": {
+        "label": "Browse the source code",
+        "href": "https://github.com/rohit-ravi2"
+      }
+    }
+  ]
+}

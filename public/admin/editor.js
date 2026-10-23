@@ -24,6 +24,33 @@ function makeField(label, value, multiline = false) {
 }
 function renderStructured(data) {
   $('structured').replaceChildren(); structured = data;
+  if (path.endsWith('skills.json')) {
+    data.groups.forEach((group, index) => {
+      const box = document.createElement('div'); box.className = 'section-editor';
+      for (const [label, value, update, multiline] of [
+        ['Skill area', group.title, value => group.title = value, false],
+        ['Skills (one per line)', group.items.join('\n'), value => group.items = value.split('\n').map(item => item.trim()).filter(Boolean), true],
+        ['Project link label', group.project.label, value => group.project.label = value, false],
+        ['Project link URL', group.project.href, value => group.project.href = value, false],
+      ]) {
+        const field = makeField(label, value, multiline);
+        field.input.addEventListener('input', () => update(field.input.value)); box.append(field.wrapper);
+      }
+      const buttons = document.createElement('div'); buttons.className = 'toolbar';
+      for (const [label, operation] of [
+        ['Move up', () => { if (index) [data.groups[index - 1], data.groups[index]] = [data.groups[index], data.groups[index - 1]]; }],
+        ['Move down', () => { if (index < data.groups.length - 1) [data.groups[index + 1], data.groups[index]] = [data.groups[index], data.groups[index + 1]]; }],
+        ['Remove skill area', () => { if (confirm('Remove this skill area from the draft?')) data.groups.splice(index, 1); }],
+      ]) {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'secondary'; button.textContent = label;
+        button.onclick = () => { operation(); markDirty(); renderStructured(data); }; buttons.append(button);
+      }
+      box.append(buttons); $('structured').append(box);
+    });
+    const add = document.createElement('button'); add.type = 'button'; add.textContent = 'Add skill area';
+    add.onclick = () => { data.groups.push({title:'New skill area', items:['New skill'], project:{label:'Explore the work', href:'/projects'}}); markDirty(); renderStructured(data); };
+    $('structured').append(add); return;
+  }
   const fields = path.endsWith('about.json') ? [['lead', 'Opening sentence'], ['introduction', 'Introduction']] : [['headLine', 'Headline'], ['headLine2', 'Introduction'], ['bio', 'Greeting panel bio']];
   for (const [key, label] of fields) {
     const field = makeField(label, data[key] || '', true); field.input.addEventListener('input', () => { structured[key] = field.input.value; }); $('structured').append(field.wrapper);
@@ -74,7 +101,9 @@ $('new-entry').onsubmit = guard(async () => {
 $('preview-button').onclick = guard(async () => {
   const preview = $('preview'); preview.replaceChildren();
   const append = (tag, text) => { const element = document.createElement(tag); element.textContent = text; preview.append(element); };
-  if (structured) {
+  if (structured?.groups) {
+    structured.groups.forEach(group => { append('h3', group.title); group.items.forEach(item => append('p', item)); append('p', group.project.label); });
+  } else if (structured) {
     append('p', structured.lead || structured.headLine); append('p', structured.introduction || structured.headLine2);
     if (structured.sections) structured.sections.forEach(s => { append('h3', s.title); s.paragraphs.forEach(p => append('p', p)); });
     else { if (structured.bio) append('p', structured.bio); structured.shortIntros.forEach(p => append('p', p)); }

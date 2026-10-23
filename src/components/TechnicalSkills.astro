@@ -1,0 +1,24 @@
+---
+import { PROFILE } from "../content/profileData";
+---
+
+<div class="mt-5 grid gap-4 sm:grid-cols-2">
+  {
+    PROFILE.skillGroups.map((group) => (
+      <article class="flex flex-col rounded-xl border bg-card p-5">
+        <h3 class="text-base font-semibold">{group.title}</h3>
+        <ul class="mt-3 flex-1 list-disc space-y-2 pl-4 text-sm leading-relaxed text-muted-foreground">
+          {group.items.map((skill) => (
+            <li>{skill}</li>
+          ))}
+        </ul>
+        <a
+          href={group.project.href}
+          class="mt-5 w-fit text-sm font-medium text-primary underline underline-offset-4"
+        >
+          {group.project.label} <span aria-hidden="true">→</span>
+        </a>
+      </article>
+    ))
+  }
+</div>
