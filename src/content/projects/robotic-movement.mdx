@@ -183,11 +183,22 @@ Leverage is something people understand and robots do not yet. With the arms bal
 ## Manipulation
 
 <Aside href="/posts/robotic-movement/manipulation/">
-Household tasks are a longer-term goal. The current manipulation test focuses on a brush grasp and wipe; attachments are identified separately from simulated finger grasps.
+Household tasks are a longer-term goal. The manipulation work covers a brush grasp and wipe, and one grasp construction tested on shapes it was never tuned on; attachments are identified separately from simulated finger grasps.
 </Aside>
 
 <Pair>
 <Clip src="/videos/robotic-movement/manip-brush-wrap-wipe.mp4" caption="G1 with Dex3 hands: a real finger wrap of a brush handle, then a force-controlled wipe." />
+</Pair>
+
+### Grasping shapes it was never tuned on
+
+<Aside href="/posts/robotic-movement/manipulation/#grasping-shapes-it-was-never-tuned-on">
+One frozen grasp construction, with no per-object settings, on six held-out shapes under 60 freshly drawn poses, masses and frictions it had never seen: **78% pass (95% interval 66% to 87%), up from 30% (20% to 43%)**. A pass is lift, a 3-second hold and a wrist shake at both physics time steps. The mug still fails every time; it needs a hook grasp.
+</Aside>
+
+<Pair>
+<Clip src="/videos/robotic-movement/manip-heldout-plate-old.mp4" caption="Before: the open hand lands on the plate, and it is dropped." />
+<Clip src="/videos/robotic-movement/manip-heldout-plate-new.mp4" caption="Now: the same plate, lifted and held through the shake." />
 </Pair>
 
 Code and results: [github.com/rohit-ravi2/robotic-movement](https://github.com/rohit-ravi2/robotic-movement)

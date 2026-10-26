@@ -7,6 +7,10 @@ draft: false
 order: 6
 ---
 
+export const Pair = ({ children }) => (
+  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>{children}</div>
+);
+
 export const Clip = ({ src, caption }) => (
   <figure style={{ margin: "1.25rem 0 2rem" }}>
     <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
@@ -27,6 +31,42 @@ Early manipulation scenes did not hold up to scrutiny. Surfaces and objects were
 The result so far is one real finger grasp: the G1's Dex3 hand wrapping a brush handle and then wiping with controlled force. It holds in 6 of 10 stress tests. Every other hold in the project is an attachment, and it is labelled as one.
 
 <Clip src="/videos/robotic-movement/manip-brush-wrap-wipe.mp4" caption="G1 with Dex3 hands: a real finger wrap of a brush handle, then a force-controlled wipe." />
+
+## Grasping shapes it was never tuned on
+
+The brush wrap was one object made solid. The harder question is whether a single grasp construction carries over to shapes and conditions it was never set up for. So I froze one construction, with no per-object settings, and tested it on six held-out shapes (a 15 mm sphere, a cube, a block, a capsule lying on its side, a thin plate standing in a slot, and a mug) under randomly drawn object pose, mass and friction it had never seen. A pass means the hand lifts the object, holds it for 3 seconds, survives a 2-second wrist shake, and does all of that at both physics time steps.
+
+On 60 conditions drawn after the construction was frozen:
+
+| Construction | Passes at both time steps | 95% interval |
+|---|---|---|
+| Before | 30% | 20% to 43% |
+| Now | 78% | 66% to 87% |
+
+The improvement came from three changes, each derived from the robot rather than from the objects:
+
+- **The fingers use their rated torque.** A default had been capping them at 60% of what the hand is specified for, and an earlier conclusion that the grip had no more force to give was made at that cap.
+- **The arm aims against the body as it actually stands.** When the arm reaches out, the balance controller shifts the torso to keep the robot over its feet, and that carried the fingertips about 7.6 mm above where they were aimed. Re-solving the arm's joint angles on the moving body removed that error.
+- **The hand opens only as wide as the space around the object allows.** A fixed opening made the fingers land on the plate's top edge before they could close.
+
+<Pair>
+<Clip src="/videos/robotic-movement/manip-heldout-plate-old.mp4" caption="Before: the open hand lands on the plate and it is dropped, at both time steps." />
+<Clip src="/videos/robotic-movement/manip-heldout-plate-new.mp4" caption="Now: the same plate, lifted, held, and shaken without slipping." />
+</Pair>
+
+<Pair>
+<Clip src="/videos/robotic-movement/manip-heldout-sphere-new.mp4" caption="A 15 mm sphere, held by two fingertips through the shake." />
+<Clip src="/videos/robotic-movement/manip-heldout-capsule-new.mp4" caption="A capsule lying on its side, held the same way." />
+</Pair>
+
+What it does not do yet:
+
+- The mug fails every time. A pinch cannot fit between its handle and body, so it needs a hook or wrap grasp the construction does not have.
+- The block got slightly worse, 16 of 20 instead of 20 of 20. On two of the draws no opening clears the hand fully, and the rule then picks one that is too narrow.
+- A thin disc lying flat cannot be pinched from the side without the fingers going through the table, so it is reported as unsupported rather than counted as a controller failure.
+- The sphere grasp only holds while friction is at least 0.8 times nominal.
+
+How it was tested matters as much as the number. Every experiment was written down as a set of competing predictions before it ran, checked against fixed rules (both time steps, no hardware changes, no per-object settings, a baseline before any comparison), and recorded in a log that cannot be edited after the fact. The fresh conditions were drawn once and used once per frozen construction. All of this is simulation only.
 
 ## Why chores waited
 
