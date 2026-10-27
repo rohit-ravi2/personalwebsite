@@ -18,6 +18,12 @@ const toIso = (d: unknown): string | undefined => {
   return undefined;
 };
 
+const toLabel = (d: unknown): string | undefined => {
+  const date = d instanceof Date ? d : typeof d === "string" ? new Date(d) : null;
+  if (!date || Number.isNaN(date.getTime())) return undefined;
+  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+};
+
 const imageUrl = image?.url
   ? image.url.startsWith("http")
     ? image.url
@@ -72,7 +78,9 @@ const articleSchema = isProject
 
     {
       startDate && (
-        <div class="text-sm text-light my-2 sr-only mx-auto">{startDate}</div>
+        <time datetime={toIso(startDate)} class="text-sm text-light my-2 sr-only mx-auto">
+          {toLabel(startDate)}
+        </time>
       )
     }
 
