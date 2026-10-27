@@ -1,5 +1,5 @@
 ---
-title: "Does the worm's wiring diagram predict its brain activity?"
+title: "Connectome Graph Dynamics"
 startDate: 2026-09-16
 description: "Frozen held-out benchmarks on public whole-brain C. elegans data: in a learned graph network the real connectome scores the same as degree-preserving shuffles (+0.0001 R² [−0.0007, +0.0009])."
 tags: ["Computational Neuroscience", "Connectomics", "C. elegans", "Graph Neural Networks", "Reproducibility", "Research"]
@@ -36,9 +36,14 @@ Code and results: [github.com/rohit-ravi2/worm-graph-dynamics](https://github.co
 
 ## The investigation
 
-The first six entries come from earlier work on the Randi et al. (2023) stimulation atlas,
-which is not in the public repository. They explain why the benchmarks were built the way they
-were. Entries 7 to 11 are the benchmarks in the repository.
+The first six entries come from earlier work on the Randi et al. (2023) stimulation atlas.
+They explain why the benchmarks were built the way they were. Entries 7 to 11 are the
+benchmarks. Results for the Randi entries are in the repository too: the
+[distance-vs-connectome comparison](https://github.com/rohit-ravi2/worm-graph-dynamics/blob/main/analyses/randi_distance_map/pipeline_q/out/pq07_wtqgt0.5.json),
+the [proximity ratio](https://github.com/rohit-ravi2/worm-graph-dynamics/blob/main/analyses/randi_distance_map/pipeline_q/out/pq08_wtqgt0.5.json),
+the [mechanism test outcomes](https://github.com/rohit-ravi2/worm-graph-dynamics/blob/main/results/mechanism/randi_proximity/runs/randi_proximity_g3_20260917T183056Z/outputs/outcomes.json),
+the [held-out two-way ratios](https://github.com/rohit-ravi2/worm-graph-dynamics/blob/main/results/mechanism/cross_rig/twoway_heldout_result.json), and the
+[look-ahead audit](https://github.com/rohit-ravi2/worm-graph-dynamics/blob/main/docs/audits/WORM_PAST_ONLY_AUDIT_2026-09-16.md).
 
 <InvestigationLog client:visible entries={ENTRIES} />
 

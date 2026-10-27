@@ -8,7 +8,7 @@ inProgress: true
 image:
   url: /images/projects/anesthesia-pipeline-cover.svg
   alt: "Halothane vs hexafluoroethane network-state response on the C. elegans Cook 2019 connectome — anesthetic pushes command-interneuron firing into quiescent regime, non-immobilizer does not, across four orders of magnitude in dose."
-overview: {"question": "What can modeled perturbations tell us about reduced neural activity and reversibility?", "contribution": "Compared model responses with published pharmacology and organized results across worm, fly, and mouse calibrations.", "result": "Exploratory model and literature comparisons. Reduced activity alone does not demonstrate anesthesia or unconsciousness.", "links": [{"label": "Inspect model results", "href": "/tools/neural-states"}]}
+overview: {"question": "What can modeled perturbations tell us about reduced neural activity and reversibility?", "contribution": "Compared model responses with published pharmacology and organized results across worm, fly, and mouse calibrations.", "result": "Exploratory model and literature comparisons. Reduced activity alone does not demonstrate anesthesia or unconsciousness.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/anesthesia-pipeline"}, {"label": "Cross-state map report", "href": "https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/cross_state_map/PE5_FINAL_REPORT.md"}, {"label": "Inspect model results", "href": "/tools/neural-states"}]}
 ---
 
 import { NetworkStateValidator } from "../../components/react/NetworkStateValidator";
@@ -24,6 +24,8 @@ comparison of anesthesia with sleep and the other reduced-activity states, is th
 asked on a connectome instead of in a clinic. The longer account is on the
 [about page](/about).
 
+Code and results: [github.com/rohit-ravi2/anesthesia-pipeline](https://github.com/rohit-ravi2/anesthesia-pipeline)
+
 ## Working model
 
 General anesthesia is driven by **coordinated partial perturbation across a multi-class target ensemble** (SNARE release, Complex I, K2P channels, nAChR, NCA leak, GABA-A potentiation), not a single-target binding event. Mutants in any one target give partial phenotypes; non-immobilizers like hexafluoroethane lack engagement at the high-magnitude classes the architecture requires.
@@ -38,7 +40,7 @@ The validator operationalises this directly. Per-anesthetic Hill-curve perturbat
 
 ## Adversarial close-out (2026-06-12) — what the gated re-examination corrected
 
-A preregistered, accept-either-way gated re-examination — every fix capable of *deflating* a claim, with leak floors and pre-written fail branches — certified the foundation and corrected several headline claims to exactly what the evidence licenses. Full record: `SESSION_CLOSEOUT_2026-06-12.md`.
+A preregistered, accept-either-way gated re-examination — every fix capable of *deflating* a claim, with leak floors and pre-written fail branches — certified the foundation and corrected several headline claims to exactly what the evidence licenses. Audit harnesses and verdicts: [`AnestheticSimulator/audits/`](https://github.com/rohit-ravi2/anesthesia-pipeline/tree/main/AnestheticSimulator/audits).
 
 **Foundation — the operator is rank-2 (P18).** A static + dynamic certificate proves the V1 perturbation operator collapses every anesthetic/genotype profile to two scalars: a uniform hyperpolarizing current `total_pa` and a single global synaptic gain `snare_factor` — QF = G(total_pa, snare_factor), max per-neuron non-uniformity 2.7e-16. This is the lens for everything else: the network *cannot, by construction,* distinguish which specific targets are engaged from the aggregate magnitude of two coordinates.
 
@@ -58,7 +60,7 @@ Worm is **not** anchor-overfit and fly is **not** uniquely special; both show a 
 
 **Molecular-layer occupancy — engagement robust, saturation inflated (P11).** Vina Kd and the clinical EC50 are both aqueous-referenced; the shipped occupancy multiplied concentration by the partition coefficient (Kp = 250) without scaling Kd — a frame double-count, since Kp cancels when applied consistently. Corrected: multi-target *engagement* is robust (29/30 targets > 10% at 1× EC50) but *saturation* collapses (0/30 at > 90% vs 26/30 before) → moderate partial occupancy ~0.25–0.5, not saturating.
 
-**Calibration honesty narrowed (P7).** Git archaeology shows the `sat_pa` magnitude ladder's a-priori provenance is undecidable and the 3 Hz cutoff value was hardcoded *after* the preregistration. "One free parameter (α)" narrows to "one fitted scalar conditional on a ladder of undecidable provenance and a post-prereg cutoff value." See `PROVENANCE.md`.
+**Calibration honesty narrowed (P7).** Git archaeology shows the `sat_pa` magnitude ladder's a-priori provenance is undecidable and the 3 Hz cutoff value was hardcoded *after* the preregistration. "One free parameter (α)" narrows to "one fitted scalar conditional on a ladder of undecidable provenance and a post-prereg cutoff value."
 
 **One constructive positive (P20).** Three mutant phenotypes (gas-1, unc-79, unc-80) have literature magnitudes the rank-2 operator structurally *cannot* express — routed to the metabolic (Tier4) or cell-type-expression (V2) substrate. The model names epistasis it cannot capture and points to the substrate feature each needs. (Separately, P13-SOL28 confirmed the 4–6 class quorum is robust to the biophysically-corrected NCA current magnitude.)
 
@@ -98,7 +100,7 @@ The same paper carries a second dissociation its authors state explicitly — th
 
 **A gap in the mapped dormancy literature.** A prediction frozen *before* any scoring said that for the deep states, the membrane-excitability classes would come back `NOT_TESTED` rather than `TESTED_NEGATIVE` — and called that the single most valuable possible output. It holds, now on four deep states: dauer, cryptobiosis, seasonal hibernation and mouse daily torpor are all empty across the entire merged excitability block, at recall 1.00. Within this search and scoring framework, these rows contain no qualifying tests of the membrane-excitability mechanisms.
 
-**Method result, portable beyond this project.** The literature-search protocol used in every earlier run had a **measured recall of 0.05** — NCBI eutils ANDs bare terms, so concatenated multi-concept queries demanded every term appear, and the founding worm anesthesia-genetics paper returned zero hits. Rebuilding it as boolean OR-groups with calibrated retrieval depth took measured internal recall to **1.00 (112/112)**, on a hold-out target that grew 170% during calibration. Two results generalize: broadening query vocabulary at fixed retrieval depth *costs* recall, and every residual miss must be attributed to vocabulary-versus-depth by direct diagnostic before either is changed. **A null is only as interpretable as its instrument's measured recall** — which is why 53 of 120 cells can be reported as "searched and empty" at all.
+**Method result, portable beyond this project.** The literature-search protocol used in every earlier run had a **measured recall of 0.05** — NCBI eutils ANDs bare terms, so concatenated multi-concept queries demanded every term appear, and the founding worm anesthesia-genetics paper returned zero hits. Rebuilding it as boolean OR-groups with calibrated retrieval depth took measured internal recall to **1.00** (111/111 on the original ten rows, 120/120 once the map grew to twelve; [search audit](https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/cross_state_map/scoring/SEARCH_METHOD_AUDIT.md)), on a hold-out target that grew 170% during calibration. Two results generalize: broadening query vocabulary at fixed retrieval depth *costs* recall, and every residual miss must be attributed to vocabulary-versus-depth by direct diagnostic before either is changed. **A null is only as interpretable as its instrument's measured recall** — which is why 53 of the original ten rows' 120 cells can be reported as "searched and empty" at all.
 
 ## Interactive: V3 ensemble explorer
 
@@ -251,7 +253,7 @@ The conserved-substrate hypothesis itself survives: the perturbation-table + net
 
 ### V7 adversarial controls — minimum sufficient subsets and random-ensemble nulls
 
-V7 extends V6 with four pre-registered adversarial controls (Sub-Q2 mechanism-subset search, Sub-Q1 random-ensemble nulls, V5 M3 parameter sensitivity, V5 M4 calibration cross-validation). Pre-registration locked 2026-05-05, hash `533b624a…`, commit `4061f4f`. Frozen α throughout (worm 0.13, fly 0.060, mouse 0.10); no recalibration in V7 scope. Closeout doc: `v7_final_summary.md`.
+V7 extends V6 with four pre-registered adversarial controls (Sub-Q2 mechanism-subset search, Sub-Q1 random-ensemble nulls, V5 M3 parameter sensitivity, V5 M4 calibration cross-validation). Pre-registration locked 2026-05-05, hash `533b624a…`, commit `4061f4f`. Frozen α throughout (worm 0.13, fly 0.060, mouse 0.10); no recalibration in V7 scope.
 
 **Sub-Q2 — minimum sufficient mechanism subset.** All 317 non-empty subsets of the conserved-target mechanism classes tested (127 worm + 127 fly + 63 mouse, dropping `glucl_potentiation` for mouse — no mammalian ortholog). Three-stage gating: halothane (Stage 1) → isoflurane held-out (Stage 2) → Eger non-immobilizers (Stage 3). 12,680 sims, ~410 min wall.
 
@@ -285,7 +287,7 @@ Percentile rank = fraction of random ensembles whose halothane fold-error is *be
 
 **V5 M4 — calibration cross-validation (anchor swap).** Re-calibrate α on isoflurane MAC (target ≈ 290 µM), predict halothane EC50 at iso-anchored α. At α-grid resolution, iso-anchored α = halothane-anchored α in all three organisms (0% diff). Predicted halothane EC50 at iso-anchored α: 323.5 µM worm (1.05×), 361.7 µM fly (1.06×), 288.2 µM mouse (1.21×). M4a / M4b **PASS** all three. The calibration generalizes anchor-to-anchor at the resolution of the search — the cleanest positive result in V7.
 
-**Pre-registered deviation summary.** 3 confirmations (P1 no 1-class subset, P3 SNARE-OR-Complex-I universal, P4 GluCl invertebrate-only); 4 falsifications (P2 brittle to 2-class subsets, P5 smallest passer 4–6, P6 worm anchor-overfit, P7 mouse magnitude-explained); 1 not testable in V1 (P8 cell-type spread); 3 sensitivity outcomes (M3a / M3b PASS, M3c DEVIATION in lower-tail width); 2 cross-cal PASS (M4a / M4b). Full table in `v7_final_summary.md §6`. Inter-organism redundancy detail in `v7_redundancy_analysis.md`.
+**Pre-registered deviation summary.** 3 confirmations (P1 no 1-class subset, P3 SNARE-OR-Complex-I universal, P4 GluCl invertebrate-only); 4 falsifications (P2 brittle to 2-class subsets, P5 smallest passer 4–6, P6 worm anchor-overfit, P7 mouse magnitude-explained); 1 not testable in V1 (P8 cell-type spread); 3 sensitivity outcomes (M3a / M3b PASS, M3c DEVIATION in lower-tail width); 2 cross-cal PASS (M4a / M4b). Results for each control are under [`AnestheticSimulator/artifacts/`](https://github.com/rohit-ravi2/anesthesia-pipeline/tree/main/AnestheticSimulator/artifacts).
 
 </details>
 
@@ -306,8 +308,8 @@ Stated narrowly, and this is the whole claim: **the estimator has a documented, 
 ## Status
 
 - **V3 worm + V4 fly + V6 mouse three-organism validator shipped.** All four gates pass in all three organisms with V5 + V5+ + V7 adversarial-control caveats per sections above.
-- **V7 closeout complete (2026-05-12).** Pre-registration locked 2026-05-05 (hash `533b624a…`, commit `4061f4f`). Sub-Q2 + Sub-Q1 + V5 M3 + V5 M4 ran 2026-05-05 to 2026-05-08. Closeout docs: `v7_final_summary.md`, `v7_redundancy_analysis.md`, `v7_preregistration.md`.
-- **Adversarial close-out complete (2026-06-12).** Preregistered, accept-either-way gated re-examination: foundation certified rank-2 (P18); deflations P7 (α honesty) / P8 (Sub-Q1 trichotomy) / P11 (occupancy saturation) / P1_P2 (cell-type-targeting worm-null) / P17 (behavioral readout); mean-field theorem (P3); robustness pass (P13-SOL28 nca quorum); constructive positive (P20 → V2/Tier4 routing); one fabrication caught before shipping. See `SESSION_CLOSEOUT_2026-06-12.md`. Audit harnesses + verdicts under `AnestheticSimulator/audits/`.
+- **V7 closeout complete (2026-05-12).** Pre-registration locked 2026-05-05 (hash `533b624a…`, commit `4061f4f`). Sub-Q2 + Sub-Q1 + V5 M3 + V5 M4 ran 2026-05-05 to 2026-05-08. Verdicts: [`v7_subset_verdict.json`](https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/AnestheticSimulator/artifacts/v7_subset_search/v7_subset_verdict.json), [`v7_match2b_verdict.json`](https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/AnestheticSimulator/artifacts/v7_match2b/v7_match2b_verdict.json).
+- **Adversarial close-out complete (2026-06-12).** Preregistered, accept-either-way gated re-examination: foundation certified rank-2 (P18); deflations P7 (α honesty) / P8 (Sub-Q1 trichotomy) / P11 (occupancy saturation) / P1_P2 (cell-type-targeting worm-null) / P17 (behavioral readout); mean-field theorem (P3); robustness pass (P13-SOL28 nca quorum); constructive positive (P20 → V2/Tier4 routing); one fabrication caught before shipping. Audit harnesses and verdicts: [`AnestheticSimulator/audits/`](https://github.com/rohit-ravi2/anesthesia-pipeline/tree/main/AnestheticSimulator/audits).
 - **Cross-state mechanism map complete (2026-09-17, extended 2026-09-21).** 12 rows × 12 mechanism classes = 144 cells, all terminally disposed; 162 verified PMIDs, 0 unresolved; measured internal retrieval recall **1.00 (120/120)** on every row; schema and completion validators both exit 0. This is the successor line and it is independent of the simulator substrate.
 - **Hibernation scored and the mandated class-coarsening run (2026-09-21).** Hibernation was scored expressly to attack the headline and broke half of it; the coarsening merged classes 1–4 and reversed nothing. Both were the project's top two self-declared debts.
 - **Page corrected (2026-09-21).** The superseded worm/fly/mouse trichotomy was removed from the live claims and preserved in a collapsed historical block.

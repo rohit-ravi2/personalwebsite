@@ -7,7 +7,7 @@ subject: "C. elegans"
 image:
   url: /images/substrate_hero_poster_thumb.png
   alt: "C. elegans Tier4 substrate anatomy — 3D rendering of the whole-cell electrical model"
-overview: {"question": "What exactly is represented inside a biophysical neural model?", "contribution": "Built a 3D inspection interface for a 300-cell Brian2 model and its channels, receptors, pumps, and synapses.", "result": "An anatomy and integration-status explorer. Component presence does not establish biological validation of the complete model.", "links": [{"label": "Open the model explorer", "href": "/tools/anatomy"}]}
+overview: {"question": "What exactly is represented inside a biophysical neural model?", "contribution": "Built a 3D inspection interface for a 300-cell Brian2 model and its channels, receptors, pumps, and synapses.", "result": "An anatomy and integration-status explorer. Component presence does not establish biological validation of the complete model.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/substrate-anatomy"}, {"label": "Anatomy data (JSON)", "href": "https://github.com/rohit-ravi2/substrate-anatomy/blob/main/viewer/data/substrate_inventory.json"}, {"label": "Open the model explorer", "href": "/tools/anatomy"}]}
 ---
 
 import SubstrateAnatomy from "../../components/substrate/SubstrateAnatomy";
@@ -31,6 +31,11 @@ Nothing is illustrative unless it is explicitly flagged as such. The voltage
 colour and Ca²⁺ glow are driven by a **real Brian2 trajectory** emitted from the
 model, not hand-authored.
 
+Code and data: [github.com/rohit-ravi2/substrate-anatomy](https://github.com/rohit-ravi2/substrate-anatomy). The
+model build is [`model/network/layer2/assemble.py`](https://github.com/rohit-ravi2/substrate-anatomy/blob/main/model/network/layer2/assemble.py),
+and [`model/tests/emit_substrate_inventory.py`](https://github.com/rohit-ravi2/substrate-anatomy/blob/main/model/tests/emit_substrate_inventory.py)
+regenerates the explorer's data from that code.
+
 <SubstrateAnatomy client:only="react" />
 
 ## How to read it
@@ -49,9 +54,9 @@ filter the inventory, and every structure carries its `file:line` provenance.
 
 ## Known-missing structure
 
-Three structures are deliberately marked **NOT INTEGRATED** and cited to the
-substrate audits (`docs/SUBSTRATE_LIMITER_AUDIT_2026-06-19.md`,
-`docs/K_PARTITION_DISCRIMINATOR_VERDICT.md`):
+Four structures are deliberately marked **NOT INTEGRATED**, each cited in the
+[inventory](https://github.com/rohit-ravi2/substrate-anatomy/blob/main/viewer/data/substrate_inventory.json)
+to the substrate audit that diagnosed it:
 
 1. **Spatial glial K-siphon** — current glia is a K *sink* only, with no return
    path to the cell interior.
@@ -59,6 +64,9 @@ substrate audits (`docs/SUBSTRATE_LIMITER_AUDIT_2026-06-19.md`,
    (the local-nkcc route was ruled out).
 3. **Grounded γ_NCA** — a regenerative inward N-shape with a first-principles
    conductance rather than a stability-floor placeholder.
+4. **Ca-K brake relief** — a grounded balance so the SLO-1 (BK) and KCNL-1 (SK)
+   brakes do not erase that regenerative N-shape. It has to land together with
+   the grounded K_in source; either alone is insufficient.
 
 These are the foundation gaps the substrate work is converging on, shown in red
 rather than hidden.
