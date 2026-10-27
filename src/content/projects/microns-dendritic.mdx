@@ -1,0 +1,100 @@
+---
+title: "Dendritic input clustering in MICrONS is presynaptic geometry"
+startDate: 2026-09-21
+description: "Do co-tuned inputs land together on cortical dendrites? In MICrONS the standard shuffle test calls pure soma geometry clustering (p = 0.001); adjusted for it, receptive-field placement is bounded at d ≤ 0.019."
+tags: ["Computational Neuroscience", "Connectomics", "Visual Cortex", "Statistics", "Research"]
+subject: "Cortical connectomics"
+image:
+  url: /images/projects/microns-dendritic-cover.png
+  alt: "Dot plot of near-pair similarity excess on MICrONS dendrites: labels built only from presynaptic soma position give a larger naive excess than the real functional labels, and the geometry-adjusted estimates sit on zero in the four pre-registered tests and in five replications including a second animal"
+overview: {"question": "Do presynaptic neurons with similar visual tuning place their synapses near each other on a cortical dendrite, beyond what the position of their cell bodies predicts?", "contribution": "A blinded, pre-registered test on the MICrONS connectome with a planted-geometry check on every analysis, a held-out label tier, orthogonal replications, and a second animal (V1DD).", "result": "The usual within-cell shuffle reports soma geometry as functional clustering at p = 0.001. Raw clustering is real but geometric; beyond geometry, placement is null in every test and bounded at d ≤ 0.019 in the best-powered arm.", "links": [{"label": "Source code and results", "href": "https://github.com/rohit-ravi2/microns-dendritic"}]}
+---
+
+import InvestigationLog from "../../components/react/InvestigationLog";
+import { ENTRIES } from "../../data/investigations/microns-dendritic";
+
+## The puzzle
+
+A pyramidal neuron in visual cortex receives thousands of synapses spread along its dendrites.
+Spine-imaging studies (Wilson et al. 2016; Iacaruso et al. 2017) found that neighbouring spines
+tend to have more similar tuning than distant ones. The appealing reading is that the brain places
+inputs carrying related information next to each other, so the dendrite can combine them locally.
+
+Imaging cannot test that reading. It sees the spine but not the presynaptic cell, so it cannot tell
+input-specific placement apart from something more mundane: neurons whose cell bodies sit near each
+other send axons through the same neuropil and have overlapping receptive fields, so their synapses
+would land near each other on a dendrite even if nothing sorted them by function.
+
+The MICrONS volume of mouse visual cortex can separate the two. It has the reconstructed dendrites,
+the synapse positions on them, the presynaptic neurons and their soma positions, and functional
+profiles for 13,805 co-registered presynaptic neurons from a model fit to their recorded activity.
+The question I asked: **do functionally similar inputs land near each other along the dendrite,
+beyond what presynaptic geometry predicts?**
+
+Code and results: [github.com/rohit-ravi2/microns-dendritic](https://github.com/rohit-ravi2/microns-dendritic)
+
+## The investigation
+
+<InvestigationLog client:visible entries={ENTRIES} />
+
+## What survived
+
+The plot sets the three quantities side by side for each test: the naive excess produced by labels
+that contain only soma position (open circles), the naive excess with the real functional labels
+(red), and the geometry-adjusted estimate with its 95% null interval (blue). The real raw effect is
+no larger than geometry alone makes it, and the adjusted estimate sits on zero everywhere, including
+in the second animal.
+
+<img src="/images/projects/microns-dendritic-cover.png" alt="Near-pair similarity excess for the four pre-registered MICrONS tests and five replications: planted soma-geometry labels, real labels with the naive contrast, and the geometry-adjusted estimate with 95% null interval" style={{width: "100%", height: "auto"}} />
+
+## Findings and limits
+
+The finding I am most confident in is about method. On MICrONS, a within-cell shuffle of presynaptic
+identities, the obvious way to test dendritic clustering, reports "clustering" at p = 0.001 when
+the labels are nothing but presynaptic soma position (d = 0.095 on pyramidal dendrites, 0.139 on
+interneurons). The same happens in V1DD (d = 0.201, p = 0.002). Any shuffle-based analysis of
+input clustering in these volumes will find geometry and can call it function.
+
+The substantive result is a bounded null. Near-pair similarity is genuinely elevated on the
+dendrite (d = 0.056 for receptive-field location on pyramidal cells, 0.032 for the tuning feature on
+interneurons), but it is the size geometry produces, and once presynaptic soma distance, lateral
+separation and axon co-travel are regressed out, nothing is left that the tests detect: null in all
+4 confirmatory tests, in 87 robustness runs (smallest Holm p = 0.279), on a held-out
+tier of 12,522 presynaptic neurons, in a path-vs-Euclidean test that does not use the geometry model,
+on spine-only synapses, and in the Sarup & Boahen axon groups. In the broad tier, the best-powered
+version, the upper 95% bounds on placement beyond geometry are d ≤ 0.019–0.030 for receptive-field
+and tuning-feature similarity, and d ≤ 0.019 for receptive-field location on pyramidal dendrites. The adjusted test had at least 0.88 power at d = 0.10 on blind data.
+
+The claim is "no placement beyond presynaptic soma geometry", not "no clustering". Placement that
+follows retinotopic axon routing counts as geometry here by construction. And the limits are real:
+
+- **One main animal, model-derived labels.** The MICrONS profiles come from a digital-twin model of
+  the recorded activity, and co-registration covers a small fraction of each cell's inputs. The
+  V1DD replication uses measured activity but has only 958 near pairs (smallest detectable effect
+  d ≈ 0.1–0.2), and uses straight-line rather than along-dendrite distance.
+- **The apical tuft is untested in practice.** It has 185 near pairs in the broad tier, giving
+  bounds of 0.24–0.57. That is the compartment tuft-imaging studies point to, so an effect could
+  still be there.
+- **A small positive residual.** The pyramidal receptive-field estimate is slightly positive in the
+  strict tier (+0.027), the held-out tier (+0.035, z = 1.73) and V1DD natural movies (+0.046), and
+  negative in the broad tier (−0.013). None is significant. A pooled test was not pre-registered,
+  so I treat this as a bound, not an effect.
+- **The planted-geometry check only tests geometry of the form I modelled.** The replications that
+  do not use the geometry model (held-out labels, path vs Euclidean, spine-only, a second animal)
+  are what cover the rest, and they agree.
+
+Open, each with its next step: a path-distance V1DD run (needs authenticated skeleton access), V1DD
+labels built from measured tuning rather than correlations, a tuft test with roughly ten times the
+pairs, and ordered axon groups of three or more once a full group list is available.
+
+<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
+Scope: the data and functional co-registration are the MICrONS Consortium's (Ding et al., Nature 2025,
+which tests function against connectivity at the level of neuron pairs, not synapse position on the
+dendrite). The clustering being tested comes from spine-imaging studies (Wilson et al. 2016; Iacaruso
+et al. 2017), which cannot see presynaptic cells. Sarup and Boahen (bioRxiv 2026) found anatomical
+axon groups that co-cluster on branches, without functional data; this project gives them a
+functional test. As of October 2026 I found no prior test that combines measured presynaptic
+function, synapse position along the dendrite, and a presynaptic-geometry control. The contribution
+is the geometry-confound result, the bounded null with held-out and second-animal replications, and
+the pre-registered record of which of my predictions failed.
+</p>

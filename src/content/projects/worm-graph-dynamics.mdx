@@ -1,0 +1,103 @@
+---
+title: "Does the worm's wiring diagram predict its brain activity?"
+startDate: 2026-09-16
+description: "Frozen held-out benchmarks on public whole-brain C. elegans data: in a learned graph network the real connectome scores the same as degree-preserving shuffles (+0.0001 R² [−0.0007, +0.0009])."
+tags: ["Computational Neuroscience", "Connectomics", "C. elegans", "Graph Neural Networks", "Reproducibility", "Research"]
+subject: "C. elegans"
+image:
+  url: /images/projects/worm-graph-dynamics-cover.png
+  alt: "Left: held-out R² of one graph neural network trained with different edge sets; the connectome (0.5776) sits among three degree-preserving shuffles (0.5770–0.5783) and below nearest physical neighbours (0.5799). Right: learned edge gates are as stable across folds on shuffled graphs as on the connectome."
+overview: {"question": "Does knowing who is wired to whom help predict what a C. elegans nervous system does next, beyond knowing who sits next to whom?", "contribution": "A package that goes from public DANDI/OSF data to a frozen, hashed, held-out benchmark result in one command, with matched null graphs and a physical-geometry baseline built in, plus a record of the claims I retracted along the way.", "result": "Across linear and learned models on 38 held-out animals, the connectome does no better than degree-preserving shuffles of itself, and the nearest physical neighbours do slightly better than either. The project is paused with the next test named.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/worm-graph-dynamics"}, {"label": "L2 results (JSON)", "href": "https://github.com/rohit-ravi2/worm-graph-dynamics/blob/main/results/gd/benchmarks/L2/L2_results.json"}]}
+---
+
+import InvestigationLog from "../../components/react/InvestigationLog";
+import { ENTRIES } from "../../data/investigations/worm-graph-dynamics";
+
+## The puzzle
+
+*C. elegans* has the best-mapped nervous system of any animal: about 300 neurons and a
+wiring diagram that has been redrawn from electron microscopy several times. It now also has
+public whole-brain calcium recordings, with most neurons identified by name, in dozens of
+freely moving animals.
+
+So the obvious question is whether the wiring diagram helps predict the activity. If neuron A
+synapses onto neuron B, does knowing A's recent activity help forecast B's, more than knowing
+the activity of some other neuron that is not connected to B?
+
+It is harder to answer than it looks. Connected neurons tend to sit close together in the
+head, so any benefit from "connected" can be a benefit from "nearby". Nearby neurons can also
+contaminate each other's signal under the microscope. And a model with more inputs will often
+look better whether or not those inputs are the right ones. A fair test needs the same model
+fitted with the real connectome, with shuffled copies that keep every neuron's number of
+connections, and with a graph built from physical distance alone, all scored on animals the
+model never saw.
+
+Code and results: [github.com/rohit-ravi2/worm-graph-dynamics](https://github.com/rohit-ravi2/worm-graph-dynamics)
+
+## The investigation
+
+The first six entries come from earlier work on the Randi et al. (2023) stimulation atlas,
+which is not in the public repository. They explain why the benchmarks were built the way they
+were. Entries 7 to 11 are the benchmarks in the repository.
+
+<InvestigationLog client:visible entries={ENTRIES} />
+
+## What survived
+
+One graph neural network, trained five times with nothing changed except its edges. The real
+connectome lands among its shuffled copies, nearest physical neighbours do slightly better, and
+the edge gates it learns are no more consistent than the gates learned on shuffled graphs.
+
+<img src="/images/projects/worm-graph-dynamics-cover.png" alt="Held-out R² for the connectome, three degree-preserving shuffles, nearest physical neighbours and no edges, plus learned edge-gate stability across folds for each graph." />
+
+## Findings and limits
+
+**What holds.** On Atanas et al. (2023), 38 animals forecast 2.4 s ahead with every animal
+held out once, the identity of the wiring adds nothing measurable to a learned graph model:
+connectome minus shuffled is +0.0001 R² [−0.0007, +0.0009], so the two do about as well as each
+other. A graph of each neuron's nearest physical neighbours beats the connectome by 0.0023
+[0.0007, 0.0036]. The linear models agree: the connectome beats its shuffled copies by a small,
+significant margin (+0.0015 to +0.0023), but neighbours match or beat it at every horizon. In
+the stimulation data, distance predicts the functional map far better than connectome weight
+(AUC 0.727 vs 0.566), and the connectome adds nothing once distance is known. Having *some*
+sparse graph helps a little (+0.0034 over no edges), nonlinearity helps more (+0.015), and
+connecting everything to everything is destructive.
+
+**What it does not show.** This is not evidence that the wiring is irrelevant to the worm.
+It says that, at this resolution, these recordings cannot tell the wiring apart from geometry.
+Several limits matter:
+
+- **Nearness is confounded with ganglion and cell class.** Physically close neurons tend to share
+  a ganglion and often a class (left/right partners sit together). The neighbour graph may be
+  winning because it groups neurons that do similar things, not because of anything about
+  distance itself. I did not build a class- or ganglion-matched null.
+- **Only about 89 neurons are identified in enough animals**, sampled every 0.6 s through a
+  calcium indicator. Fast or sparse synaptic effects could be invisible at this sampling.
+- **The perturbation test is uninformative.** The Kato AVA silencing benchmark passes its
+  manipulation check, but 5 animals per arm cannot separate any graph from any other.
+- **The proximity effect in the stimulation data is not explained.** Its mechanism, optical
+  contamination or local coupling, is non-identifiable from existing data. Two of my own
+  numbers on it did not survive held-out checks: the contamination kernel explains 7–13% of the
+  effect on held-out animals, not the 30% I first reported from a non-random discovery set, and a
+  connectome lead of +0.03 AUC was mostly reproduced by a matched random control. An earlier claim
+  that brain activity predicts future speed came from a look-ahead in the lag search and is
+  retracted.
+
+**Status: paused (October 2026).** The test that could change this result has not been run: a
+benchmark on the Randi stimulation data that scores predictions with a model of measurement
+contamination and compares the connectome against distance, geometry, the Creamer et al. linear
+dynamical system, and matched-removal baselines. Two smaller items are queued behind it:
+forecasting the oxygen-shift response in Kato's stimulus arm, and imputing held-out neurons.
+Separating contamination from coupling needs new data rather than more analysis: fast two-plane
+or voltage imaging with sparse indicator expression, or innexin degradation in the target cell.
+
+<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
+Scope: this is a benchmark and a negative result on public data, not a new model of worm
+dynamics. The data are Atanas et al. (2023), Kato et al. (2015) and Randi et al. (2023); the
+connectome is White et al. (1986) and Witvliet et al. (2021) as shipped by the
+<code>wormneuroatlas</code> package. Creamer, Leifer and Pillow (2024) fit connectome-constrained
+dynamics to the Randi atlas; Randi et al. themselves report that signal propagation often
+departs from what the anatomy predicts. What I add is the degree-preserving and physical-neighbour
+controls applied to the same frozen, held-out evaluation, a check of the proximity effect against
+an optical contamination model, and the record of which of my own claims did not hold up.
+</p>
