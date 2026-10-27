@@ -1,297 +1,138 @@
 ---
 title: "Autism, myelination, and developmental timing"
-startDate: 2026-09-21
-description: "Investigating myelination in autism through statistical genetics, single-cell data, and conduction-delay models. An ongoing study of how developmental timing may shape neural function."
+startDate: 2026-09-16
+description: "Testing whether autism risk runs through myelin. Lipid supply, APOE and oligodendrocyte stage died under controls; OPC methylation shows a robust excess (OR 2.86) that survives precision matching."
 tags: ["Statistical Genetics", "Neurodevelopment", "Single-Cell Genomics", "Epigenomics", "Neuroimaging", "Research"]
 subject: "Human genetics"
 inProgress: true
-overview: {"question": "Could the timing of myelination help explain differences in neural function in autism?", "contribution": "Combined statistical genetics, single-cell evidence, and conduction-delay models to test and narrow the original lipid-supply hypothesis.", "result": "Ongoing. The original frontal supply-specific account did not hold up; developmental timing remains a hypothesis to investigate.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/asd-myelin-timing"}]}
 image:
-  url: /images/projects/asd-myelin-workflow.svg
-  alt: "Research workflow combining genetic evidence, cellular context, and conduction timing models; not an established causal mechanism."
+  url: /images/projects/asd-myelin-timing-cover.png
+  alt: "Left: for nine test arms, -log10 p before and after the control that decided each. Chromatin de novo burden and oligodendrocyte genes among SFARI genes survive; an OPC methylation excess survives and grows under precision matching; oligodendrocyte maturation stage, the neurogenic-to-gliogenic switch, apoptosis genes (common and de novo), PV x OPC co-dysregulation and the maturation clock die. Right: mean autism x white-matter ICVF genetic correlation as first reported (+0.102), after the allele-orientation fix (-0.102), and in Gu et al. 2025 (-0.073)."
+overview: {"question": "Does inherited autism risk act through myelination, and specifically through a weak lipid-supply chain that would hit the last-myelinating frontal circuits first?", "contribution": "Tested the idea and its successors across common variants, rare de novo variants, two single-cell atlases, cell-type methylation, autistic cortex and a conduction model, each with a control built to kill it, and recorded every correction.", "result": "Work in progress. The lipid-supply, APOE, frontal-specificity, maturation-stage and apoptosis versions died under their controls. The meaningful signal is in OPC methylation: autistic prefrontal cortex shows an excess of diagnosis-associated methylation in oligodendrocyte precursors that grows under precision matching (OR 2.86, p = 4e-56). Also standing: a weak, global, negative genetic correlation with white-matter neurite density (replicating Gu et al. 2025), chromatin-regulator de novo burden, and a modest oligodendrocyte-gene enrichment among autism genes.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/asd-myelin-timing"}]}
 ---
 
-<div style={{border: "1px solid rgba(59,130,246,0.35)", background: "rgba(59,130,246,0.07)", borderRadius: "10px", padding: "0.95rem 1.15rem", margin: "0 0 2rem", fontSize: "0.94rem", lineHeight: 1.65}}>
-<strong style={{color: "#1d4ed8"}}>Open line of inquiry.</strong> This is a status report on
-two weeks of work, not a finished result. The hypothesis I started with is not supported in
-its original form. What replaced it is more specific, and the test that would settle it needs
-longitudinal infant data rather than more computation. This page will be updated as that
-progresses.
+import InvestigationLog from "../../components/react/InvestigationLog";
+import { ENTRIES } from "../../data/investigations/asd-myelin-timing";
+
+<div style={{border: "1px solid rgba(217,119,6,0.4)", background: "rgba(217,119,6,0.07)", borderRadius: "10px", padding: "0.95rem 1.15rem", margin: "0 0 2rem", fontSize: "0.94rem", lineHeight: 1.65}}>
+<strong style={{color: "#b45309"}}>Work in progress.</strong> This is an active line of research. The
+original lipid-supply hypothesis did not hold, and the investigation below records every test that
+ruled a version of it out. The most meaningful signal so far is in OPC methylation, which survives
+matching on measurement precision. The tests that would settle the timing question need infant and
+child imaging data that are still being requested, and this page will be updated as they run.
 </div>
 
-## Where this started
+## The puzzle
 
-I have a relative who is six years old, cannot speak, and is in pain much of the time. That
-is why I started this, and it shaped which questions felt worth chasing. I wanted to understand whether the biological mechanisms I was reading about could be
-investigated with public data. This is exploratory research, not a treatment proposal.
+The question grew out of my interest in how neural function can be disrupted by processes a
+structural scan does not show.
 
-The route into lipids came from my own illness before it came from his. I had tried DHA on my
-own, outside any protocol I was given, and it helped me. That is my experience. It is not a
-recommendation, and it is not an effect I can separate from everything else I was doing. Reading studies of DHA in autism, alongside my own experience, led me to investigate lipid
-supply. That connection motivated a hypothesis; it did not establish a shared mechanism or
-a treatment effect.
+Myelin, the insulating sheath that lets axons conduct fast, is mostly lipid. Building it means
+moving a large amount of cholesterol and fatty acid into membrane on a developmental schedule,
+and the prefrontal cortex is the last region to finish: it is still myelinating years after the
+rest of the brain. So the starting hypothesis was structural. If someone inherits a weak
+lipid-supply chain (synthesis, transport, uptake), the place that should fail first is the one
+that needs the most supply latest, and that is the region whose functions look most like the
+ones affected in autism. Weak supply → oligodendrocytes that cannot keep up → thin or late
+frontal myelin → mistimed signalling.
 
-The starting question was one I wrote down before running anything:
+That is a hypothesis, not a known fact, and it is testable because every arrow in it leaves a
+mark in public data. Inherited risk shows up in GWAS and de novo mutation data; cell-type
+localisation shows up in single-cell atlases; perturbation shows up in methylation; and
+timing can be computed.
 
-> Is there any indication with people that have hypomyelinated frontal lobes (which ASD
-> children do) could be predisposed to ASD genetically that onsets later on through other
-> variables… a common factor across all of them seems to be poor lipid transport proteins.
-
-The intuition was structural rather than statistical. Myelin — the insulating sheath wrapped
-around axons that lets signals travel fast — is mostly lipid. Building it means moving a large
-quantity of cholesterol and fatty acid into a membrane, quickly, on a developmental schedule.
-And the prefrontal cortex is the last region of the brain to be myelinated; it is still going
-years after everywhere else has finished.
-
-So if someone is born with a constitutionally weak lipid-supply chain, the place that should
-fail first is the place that needs the most supply latest. That happens to be the region whose
-functions look most like the ones disrupted in autism.
-
-That is a real prediction with a real shape: weak lipid transport and cholesterol synthesis →
-oligodendrocytes that cannot keep up → thin or late myelin in frontal circuits → slowed,
-desynchronised signalling → the phenotype. Every arrow in it is testable, and several are
-testable on data that is already public.
-
-I set two rules before anything ran. The first kept the work off the obvious attractor:
-
-> We're not connecting this to APOE4 — we're simply stating that the hypomyelinated areas in
-> the frontal lobe are going to cause circuit interference in the exact areas that ASD
-> phenotypes present… Keep the tests right on hand, but don't run them yet until we both agree
-> we have a path that makes sense and is at least somewhat likely to yield results, not total
-> implausibility.
-
-The second was the standard the work had to meet, written down so it could not be quietly
-lowered later: **novel, meaningful, and useful**. Three conditions that have to hold at once.
-Most ideas fail at least one.
-
-## Asking the genome whether it agrees
-
-The cleanest opening test is genetic correlation. Autism has a measurable common-variant
-liability. So does white-matter microstructure, measured across tens of thousands of UK
-Biobank brain scans. If the lipid story holds, those two should share genetic architecture,
-and the sharing should concentrate in frontal tracts.
-
-Autism liability is associated with *lower* neurite density across the tracts measured,
-consistently in the same direction across all fifteen, with a mean genetic correlation near
-−0.10. That direction agrees with the hypothesis. The anatomy does not: the effect is global
-rather than frontal, with anterior and posterior tracts separated by about 0.01 — no gradient
-at all.
-
-Two independent checks matter more than the estimate itself. An unrelated immune trait run
-through the identical pipeline produces nothing on the same tracts, which rules out a generic
-artifact of the method. And a published study with more power, on the same biobank, reports
-the same negative direction — 14 of 15 tracts, plus a significant negative correlation for
-cortical grey matter, where it had the sample size to resolve one.
-
-The statistical limit: neither estimate is significant tract by tract. Mine reaches a best
-false-discovery rate of 0.064, theirs 0.232. Two underpowered studies agreeing on a weak
-negative trend is worth something, but it is a trend, and I treat it as one. So the founding
-hypothesis loses its anatomy here, not its direction.
-
-## Trajectory, not deficit
-
-The useful question after a failed premise is not whether to abandon it, but what it should
-have been. I rewrote the central question:
-
-> Does a biologically identifiable subset of ASD involve abnormal oligodendrocyte/myelin
-> developmental trajectories, and if so, which upstream molecular pathways generate that
-> phenotype?
->
-> Treat timing as a first-class variable. A mutation that causes premature oligodendrocyte
-> differentiation followed by depletion could eventually produce a phenotype that looks like
-> later hypomyelination even though the earliest abnormality was excessively early maturation.
-
-That second paragraph is the part I would keep from the entire project. "Hypomyelination" is a
-static quantity — too little insulation, measured once. Nothing in development is static. A
-cell that matures too early exhausts a progenitor pool that was supposed to last years, and
-the deficit appears much later, somewhere else, looking like a supply failure when it was
-really a scheduling failure.
-
-It also dissolves a contradiction I had been stuck on. Infants who are later diagnosed with
-autism show *higher* white-matter anisotropy at six months and *lower* by twenty-four — a
-crossover, not a flat deficit. Under "not enough myelin," that early overshoot is an
-embarrassment. Under "wrong schedule," it is the prediction — and the adult genetic signal,
-which points weakly toward less neurite density, is what the late end of such a trajectory
-would look like.
-
-## Testing cell-type specificity
-
-The next question was whether autism risk genes concentrate anywhere along oligodendrocyte
-development. Using a human single-cell atlas of the lineage, I placed each gene on the
-maturation axis — from progenitor to myelinating cell — and asked whether genetic association
-tracks position on that axis.
-
-It did, at p = 0.004. Before believing it, I ran the control the design called for.
-
-Genes that are long, evolutionarily constrained and broadly expressed are associated with
-almost every brain disorder — and those are exactly the genes expressed in progenitors. So an
-apparent "maturation axis" effect can be a property of the *genes* rather than of the cells.
-Conditioning on gene length, constraint and expression breadth, the effect went to p = 0.638.
-Permuting the stage labels gave p = 0.70.
-
-The instrument was working, which is the important part. The same pipeline run on neurons
-instead of oligodendrocytes returns t = +3.36, p = 0.0008, and survives identical
-conditioning. The test detects a real cell-type signal when one is there. Autism's
-common-variant signal localises to neurons, not to the oligodendrocyte lineage. A second,
-independent human atlas spanning fetal to adult returned the same null, including at the
-mature end the first atlas could not cover.
-
-The same design paid off again on rare variants. A gene set for the developmental switch from
-making neurons to making glia showed an odds ratio of 17.4 for damaging new mutations — the
-largest effect anywhere in the project. Its *synonymous* control — mutations that do not change
-the protein and therefore cannot be causal — came in at 6.0. A control that cannot be real
-coming out positive means the analysis is measuring gene properties rather than biology, so
-the result does not count. Building that control in from the start is what let me spend twenty
-minutes on it rather than two months.
-
-What did survive was a chromatin state-control signal, odds ratio 2.41 with clean synonymous
-and missense controls — the established autism chromatin result, and notably not specific to
-oligodendrocytes. Every lipid module was null at adequate power, and APOE was null on every
-test, which at least vindicated rule one.
-
-## Moving the predisposition upstream
-
-If the predisposition is not in the genes that build myelin, the natural next candidate is the
-system that damages it. Nearly every substantial immune response releases inflammatory
-cytokines, and those cytokines are known to affect oligodendrocytes. Perhaps the inherited
-part is not lipid handling but immune reactivity.
-
-The test I liked best here is anatomical rather than statistical. If cytokines act *directly*
-on oligodendrocyte precursors, those cells need the receptors. In human infant prefrontal
-cortex, they largely do not have them. The classical IL-6 receptor is 54× more abundant on
-microglia than on precursors. The IL-1 receptor is essentially absent from every cell type.
-Complement receptors are absent from precursors entirely. The classical inflammatory cytokines
-are microglia-facing, which means that whatever immune activation does to this lineage, it is
-relayed rather than delivered — and that relocates the decisive experiment to the relay.
-
-Two things then fell out of the same data that I had not gone looking for.
-
-The first: exactly one immune-relevant receptor is enriched on precursors rather than
-microglia, and it is not a cytokine receptor at all. It is an adenosine receptor, at 9.3×
-microglia, peaking precisely at the commitment step where a precursor decides to become a
-myelinating cell. It is also the receptor implicated in the one causally demonstrated route
-from peripheral immune cells to prefrontal myelination in a living animal — and that route runs
-on a purine metabolite rather than on inflammation.
-
-The second: all three lipid-synthesis programmes peak at that same commitment step, while
-structural myelin genes rise steadily to maturity. So lipid biology is not the entry point, but
-it is the *output* programme, switched on at commitment. A lipid-supply failure would therefore
-present as a failure to commit, not as a thin sheath at the end — a different phenotype, in a
-different cell state, at a different time from the one I originally predicted. That is the most
-useful thing the lipid hypothesis produced, and it only appeared once the hypothesis stopped
-being the premise.
-
-## How much timing does myelin actually buy?
-
-Every version of this story ends in "slowed or desynchronised signalling," which is usually
-asserted rather than computed. The quantity that matters is not mean delay but the *spread* of
-arrival times across a population of axons, measured against the windows that matter: roughly
-3 ms for feed-forward inhibition, 8 ms for coincidence detection, 25 ms for a gamma cycle.
-
-Simulating 20,000 axons with realistic diameter and sheath-thickness distributions: moderate
-under-myelination adds about 5.3 ms of arrival-time spread on a 90 mm association tract — past
-the inhibition window — and only 1.0 ms on a 20 mm short-range fibre. The vulnerable class is
-long-range association pathways, and the effect is real but strongly length-dependent.
-
-The result I did not expect was the sign. *Over*-myelination does not add spread; it removes it.
-Since different autism genes push myelination in opposite directions — one causes precocious
-maturation, another suppresses it — a mixed cohort cancels in the mean *and* in the variance.
-That is a principled reason why whole-cohort studies of myelin in autism return weak and
-inconsistent answers, and it means stratification is not a refinement but a precondition.
-
-## What the methylation says
-
-The strongest surviving version of the story came from a different kind of data. Genetics tells
-you what a cell could do; methylation records what happened to it. In cell-type-resolved
-methylation from autistic prefrontal cortex, of eight cell types profiled, oligodendrocyte
-precursors carry the highest rate of diagnosis-associated differential methylation — about twice
-the pooled rate of the others.
-
-That is exactly the shape the argument needs: a cell type that is *not* where the inherited
-signal lives, but is the most state-perturbed in the tissue. That pattern is the signature of a
-downstream convergence node rather than an origin.
-
-I tested three alternative explanations for this observation.
-
-**Measurement noise.** Precursors do have the noisiest estimates of the eight cell types, which
-could manufacture the entire effect — the noisiest cell produces the most extreme values, and
-extreme values clear thresholds. Matching every region against regions of equal measurement
-precision, the excess does not shrink; it grows, from an odds ratio of 1.92 to 2.86. It also
-grows with stringency at fixed thresholds, so it is not an artifact of the multiple-testing
-procedure either.
-
-**Emptiness.** Only three of 272 significant regions carry a gene name. But just 2.24% of the
-tested background carries one, so three is the expected number — that statistic measures the
-dataset's annotation sparsity rather than the signal. Mapping by genomic coordinates instead
-lifts annotation to 76% and yields 205 genes, and those genes show no pathway enrichment of any
-kind. So "no nameable mechanism yet" stands, for a better reason.
-
-**Region composition.** This is the one that binds. Each cell type in this dataset is tested only
-on its own set of regions, and only about 2% of regions are shared by any pair — so "precursors
-have the highest rate" is a statement about their own region set rather than a common yardstick.
-Settling it requires the per-donor raw files, which are not public yet.
-
-So the observation survives its two best alternative explanations and stalls on a third that is
-a property of the published data rather than of the biology.
-
-## A clock, and what it says about autistic tissue
-
-One byproduct of the atlas work was a transcriptomic maturation clock: a score that places any
-oligodendrocyte-lineage cell along the progenitor-to-myelinating axis. Its validation is that it
-recovers donor age without being told it.
-
-It had never been pointed at autistic tissue, so I applied it to 25,494 oligodendrocyte-lineage
-nuclei from 31 donors — 15 autistic, 16 control, ages 4 to 22. The clock transfers cleanly: it
-separates precursors from mature cells blind, and in control donors alone, mean stage rises with
-age at ρ = +0.77 — an independent replication of the clock on a purely postnatal range.
-
-The primary comparison is null. Autistic versus control donor-mean stage gives p = 0.16, and it
-does not survive its own controls: the same score shifts as much in astrocytes, and most of the
-trend decomposes into differences in cell composition. The honest summary is that the study is
-underpowered — the smallest effect detectable at this sample size is larger than the clock's
-entire postnatal range. The design needs roughly four times the donors, which exist in other
-cohorts.
-
-One lead stays open rather than claimed: an age-by-diagnosis interaction on the
-composition-independent score, stable under leave-one-out and several covariate adjustments,
-though one of its controls is not clean. An age *interaction* rather than a group difference is
-exactly the shape the trajectory reframing predicts, which is why it deserves a proper test
-rather than a headline.
-
-## Current findings and next steps
-
-The hypothesis I started with is not supported in its original form. Lipid-transport genetics is
-not the entry point, frontal specificity is not there, APOE is not involved, and inflammatory
-cytokines do not act directly on the cells in question because the receptors are not on them.
-
-What survives is a different and more specific model: inherited liability acting on
-developmental state control, producing parallel consequences in neurons and in the
-oligodendrocyte lineage whose direction varies by gene, with lipid synthesis as an output
-programme engaged at commitment rather than a supply constraint at maturity, and with the
-consequence expressed as timing — the spread of conduction delays on long association tracts —
-rather than as a simple deficit of insulation.
-
-Testing that requires longitudinal data: imaging infants before diagnosis and measuring the
-*rate of change* rather than a group difference at one age, which is where a trajectory
-crossover either appears or does not. That is a data-access problem rather than a compute
-problem. The other decisive experiment is one nobody has run — restoring neuronal activity in an
-animal model that has both an established oligodendrocyte phenotype and the tools to do it,
-which would settle whether the myelin change is a cause or a consequence.
-
-My six-year-old relative still cannot speak, and this analysis offers no immediate clinical
-answer. His experience remains part of why I want to pursue the question carefully.
-
-<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
-A note on what is mine and what is not: the infant white-matter crossover, the established
-autism chromatin signal, the demonstrated oligodendrocyte phenotypes of specific autism risk
-genes, and the peripheral-immune route to prefrontal myelination are findings from other groups,
-verified here rather than discovered. The original contributions are the constraint-conditioned
-test of oligodendrocyte-stage localisation and its replication in a second atlas, the
-carrier-level rare-variant analysis with its synonymous controls, the receptor-substrate
-comparison in human infant cortex, the conduction-spread simulation and its cancellation result,
-the adjudication of the precursor methylation excess against noise, annotation and region
-composition, and the transfer of the maturation clock to autistic tissue. Negative results, done
-carefully, are results. Everything numerical above traces to a logged analysis or a cited paper.
-</p>
+Two rules were set before anything ran. Do not route the question through APOE4, the obvious
+lipid gene. And agree on a plausible path before running tests, rather than running everything
+and reading the winners. The standard for the result was that it be novel, meaningful and useful,
+all three at once.
 
 Code and results: [github.com/rohit-ravi2/asd-myelin-timing](https://github.com/rohit-ravi2/asd-myelin-timing)
+
+## The investigation
+
+Each step below is one test or one correction. Several are my own errors, kept in with the
+numbers before and after, because they changed what the later steps meant.
+
+<InvestigationLog client:visible entries={ENTRIES} />
+
+## What survived
+
+Most arms of the ladder had a result that looked real before the control designed for it, and
+nothing after. The left panel shows each arm before and after the control that decided it; the
+right panel shows the one white-matter result, before and after the allele fix.
+
+<img src="/images/projects/asd-myelin-timing-cover.png" alt="Left: -log10 p before and after the deciding control for nine test arms, colored by whether each survived. Right: autism x white-matter neurite density genetic correlation as first reported (+0.102), after the allele-orientation fix (-0.102), and in Gu et al. 2025 (-0.073)." />
+
+## Findings and limits
+
+What holds, at the resolution I could test:
+
+- **A weak, global white-matter correlation.** Autism liability is genetically correlated with
+  lower neurite density in all 15 tracts tested (mean rg −0.102, best FDR 0.064), with no
+  frontal gradient. It replicates Gu et al. (2025) with less power. The frontal part of the
+  original hypothesis is gone; the direction is not.
+- **Chromatin, for rare variants.** De novo loss-of-function burden in chromatin regulators
+  (OR 2.41, clean synonymous and missense controls) is the established autism result, and it is
+  not oligodendrocyte-specific. The same module is null for common variants.
+- **A modest oligodendrocyte-gene enrichment among autism genes** (1.39× after annotation-count
+  matching, 2.38× in the highest-confidence tier), secondary to neuronal and synaptic signal and
+  expressed mostly after birth. The β-catenin/TCF complex is the one leave-one-out-robust gene
+  set, but its genes are not oligodendrocyte-enriched.
+- **A modelling result.** Under- and over-myelination move conduction spread in opposite
+  directions, so a cohort mixing both cancels. Whole-cohort myelin studies of autism should be
+  expected to come back weak, and stratifying by gene or trajectory is a precondition.
+
+What died: lipid and cholesterol genes as an entry point (every common-variant, rare-variant
+and gene-set instrument, plus methylation at the power available), APOE, frontal specificity,
+localisation of common-variant risk to an oligodendrocyte maturation stage (two atlases), the
+neurogenic-to-gliogenic switch, apoptosis and pruning genes as loci of risk, a direct
+cytokine route to OPCs, an inherited child-genome immune route, and PV-interneuron × OPC
+co-dysregulation in autistic cortex.
+
+The most meaningful signal is in OPC methylation. Oligodendrocyte precursors carry the highest
+rate of diagnosis-associated methylation in autistic prefrontal cortex, and the excess is not
+noise: matched on measurement precision it grows from OR 1.92 to 2.86 (95% CI 2.50–3.29,
+p = 4e-56), and it strengthens as the significance threshold tightens. What is still open is how
+specific it is to OPCs, because each cell type was tested on its own set of regions; a shared
+region set refit from the per-donor files will settle that. A second lead is open rather than
+claimed: the maturation clock shows an
+age-by-diagnosis interaction in oligodendrocytes, which is the shape the timing idea predicts,
+but it was post hoc and one of its controls was not clean.
+
+The nulls are narrower than they look. The common-variant tests rest on one autism GWAS of modest size and
+adult UK Biobank imaging; the single-cell and methylation data are postnatal and postmortem;
+the autistic-cortex comparisons have 15 to 16 donors per group; and diffusion measures track
+axons and neurites, not myelin itself. Some planned checks never ran: a replication of the
+gene-set tests on a second autism GWAS (it failed silently), a chromatin S-LDSC annotation, the
+Mendelian randomisation after the allele fix, and the allergy–autism overlap tests.
+
+The tests that would settle the timing question need data I do not yet have access to:
+
+- **HBN-POD2** diffusion data are downloaded, but diagnosis labels need the Child Mind
+  Institute data-use agreement. With them: is lower axonal water fraction specific to autistic
+  children, and is it frontal or global?
+- **IBIS** infant imaging at 6, 12 and 24 months needs NIMH Data Archive access. Infants later
+  diagnosed with autism show higher white-matter anisotropy at 6 months and lower at 24
+  (Wolff et al. 2012). A trajectory account predicts a difference in the rate of change, which
+  only longitudinal infant data can test.
+- **Per-donor methylation files** for GSE298243 would settle whether the OPC excess holds on a
+  shared region set with diagnosis permuted across donors.
+- An experiment for collaborators: restore neuronal activity in an animal model with an
+  established oligodendrocyte phenotype (for example NLGN3) and see whether the myelin change
+  reverses. That would separate cause from consequence, and as far as I can find it has not
+  been done.
+
+<p style={{fontSize: "0.8rem", opacity: 0.7, marginTop: "1.5rem"}}>
+Scope: the negative white-matter correlation is Gu et al. (2025)'s finding, reproduced here;
+chromatin de novo burden is Satterstrom et al. (2020) and Fu et al. (2022); infant OPC and
+committed-precursor enrichment of autism genes was reported by Klavert et al. (2026); the infant
+anisotropy crossover is Wolff et al. (2012); the mouse offset between lipid and myelin programmes
+is Marques et al. (2016); the physics of conduction delay is Pajevic and colleagues'; and the
+interneuron-myelination experiment is Benamer et al. (2020). The data are from those groups and
+from Velmeshev et al. (2019) and Eyring et al. (2026). The contribution here is the
+constraint-conditioned stage test and its replication in a second atlas, the carrier-level burden
+with synonymous controls, the annotation-count-matched null and what it did to the apoptosis and
+oligodendrocyte arms, the receptor comparison in infant cortex, the conduction-cancellation
+result, the adjudication of the OPC methylation excess, the transfer of the maturation clock to
+autistic tissue, and the record of which of my own conclusions did not survive.
+</p>
