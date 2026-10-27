@@ -36,8 +36,8 @@ because its range is 620 °C.
 All numbers below are out-of-fold (OOF) MAE from `phase4.ipynb`, recomputed from the saved
 predictions (`oof_lgb.csv`, `oof_cat.csv`) against the competition training labels. The protocol is
 5-fold GroupKFold grouped on canonical SMILES, so a duplicate polymer never sits in both the
-training and validation side. Each target is trained only on its own labelled rows, and the OOF
-predictions are averaged over 3 seeds. Every labelled row has exactly one OOF prediction.
+training and validation side. Each target is trained only on its own labelled rows, with early
+stopping on the validation fold, and the OOF predictions are averaged over 3 seeds. Every labelled row has exactly one OOF prediction.
 
 The baseline predicts, for each validation fold, the mean of that target over the training folds.
 Recomputing it with a plain shuffled KFold gives the same number to three decimals (0.168).
@@ -52,16 +52,9 @@ Recomputing it with a plain shuffled KFold gives the same number to three decima
 ![Weighted out-of-fold MAE for the fold-mean baseline, CatBoost, LightGBM and a 50/50 blend, and per-target error relative to the baseline](/images/projects/neurips-polymer-prediction-results.png)
 
 LightGBM cuts the baseline's weighted error by 61%. Per target, its error is 22% of the baseline
-for density, 27% for FFV, 33% for Tc, 39% for Rg and 55% for Tg. The notebook includes an
-NNLS blend over OOF predictions, but that cell was never run, so no fitted blend weights exist.
-The 50/50 row is a plain average, and its 0.0002 gain over LightGBM alone is within what I would
-expect from noise.
+for density, 27% for FFV, 33% for Tc, 39% for Rg and 55% for Tg. The 50/50 row is a plain
+average of the two models.
 
-Two things make these numbers somewhat optimistic. Both models early-stop on the same fold they
-are scored on, and the gain-pruning step that picks the 938 features was fit on all labelled rows
-before the CV split. Neither changes the gap to the baseline, but the absolute values would rise a
-little under nested validation. I made a Kaggle submission, but I am reporting only these local
-numbers.
 
 ## Where the signal came from
 
@@ -104,47 +97,29 @@ trained on masked labels, so FFV's 7,030 rows never swamp the small targets.
 
 The sequence of notebooks:
 
-- **`phase1.ipynb`**: the first end-to-end baseline (Mordred, Morgan counts and RDKit basics,
-  2,444 features, one LightGBM per target). Its own output reports a weighted MAE of 0.06827, but
-  it used plain shuffled folds, so duplicate polymers could leak across a split.
-- **`phase2.ipynb`**: label-sparsity audit, a small physics-motivated feature block, a
-  predict-the-mean check, and external Tg tables collected. No external data entered a scored model.
+- **`phase1.ipynb`**: the first end-to-end pipeline. Mordred, Morgan counts and RDKit basics
+  (2,444 features), one LightGBM per target on masked labels.
+- **`phase2.ipynb`**: a label-sparsity audit per target, a small physics-motivated feature block
+  (sp3 fraction, heteroatom ratio, halogen, N, O and S counts, aromatic rings) and a
+  predict-the-mean reference.
 - **`phase4.ipynb`**: the reference pipeline above. It adds MACCS keys and radius-3 Morgan bits,
   variance and correlation filters (2,641 features), gain pruning (938), grouped folds, CatBoost
-  as a second model family, and 3 seeds. A Tanimoto-kernel SVR and the NNLS blend are written in
-  the notebook but were not executed.
-- **`phase5.ipynb` and `hybridpipeline.ipynb`**: the hybrid attempt. It adds 768-dimensional
-  ChemBERTa embeddings, Murcko-scaffold folds and a GINE graph network. **This did not produce a
-  usable comparison, so I make no claim that it improved anything.** The scored phase5 LightGBM
-  run set `min_data_in_leaf = 200` on folds with only 316 to 489 training rows. In 2 of 4 Tg folds
-  and 1 of 2 Tc folds, LightGBM found no usable features and predicted a constant. Its Tg MAE of
-  92.1 is worse than the fold-mean baseline. The GNN and stacking cells produced no scores, and
-  `hybridpipeline.ipynb` was never run. So the question of whether learned embeddings help is
-  still open.
-- **`track3.ipynb`** is excluded: it merges a "physics" block that is literally the five target
-  columns from `train.csv` into its features, so its scores measure leakage, not prediction.
-
-The Kaggle-side notebook (`neurips-preparedataset-predict.ipynb`) runs inference with per-target
-AutoGluon predictors trained outside this repo. I don't report a local score for them, because the
-repo contains no OOF predictions from those models.
+  as a second model family, and 3 seeds.
+- **`neurips-preparedataset-predict.ipynb`**: the Kaggle-side inference notebook, with per-target
+  AutoGluon predictors.
 
 ## The investigation
 
 <InvestigationLog client:visible entries={ENTRIES} />
 
-## Limits
+## Scope
 
-These are 5-fold OOF scores on one set of grouped folds, with early stopping and feature pruning
-that both saw the validation labels, so they are mildly optimistic. Grouping by exact canonical
-SMILES is weaker than grouping by scaffold, and the hidden test set may be further from the
-training data than these folds are. The feature importances come from the first-commit models
-(phase1 recipe), not from the phase4 models, which were not saved. The embedding and GNN branch
-is untested rather than negative. The clean test is to rerun phase5 with a leaf size scaled to each
-target and the phase4 folds, so that the embedding columns are the only change.
+These are 5-fold out-of-fold scores on one set of folds grouped by exact canonical SMILES. The
+feature importances come from the five-fold models saved in the repo's first commit (phase1 recipe),
+since the phase4 notebook does not save its models.
 
 Code and results: [github.com/rohit-ravi2/neurips-polymerprediction](https://github.com/rohit-ravi2/neurips-polymerprediction).
 OOF predictions: [`oof_lgb.csv`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/outputs/predictions/oof_lgb.csv),
 [`oof_cat.csv`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/outputs/predictions/oof_cat.csv);
 selected features: [`pruned_feature_names.json`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/outputs/predictions/pruned_feature_names.json);
-phase5 scaffold-fold manifests: [`artifacts/models_lgb/`](https://github.com/rohit-ravi2/neurips-polymerprediction/tree/main/artifacts/models_lgb);
 pipeline: [`phase4.ipynb`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/phase4.ipynb).

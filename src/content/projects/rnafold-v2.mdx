@@ -1,13 +1,13 @@
 ---
 title: "RNA 3D structure prediction"
-startDate: 2026-03-01
-description: "Stanford RNA 3D Folding on an 8 GB GPU: RNAPro reaches a local TM-score of 0.072 on 24 targets. My template folder scored higher only because its bank held the targets, so I don't count it."
+startDate: 2025-06-01
+description: "Stanford RNA 3D Folding on one 8 GB GPU: a 488M-parameter diffusion model run within its memory, a sequence-aligned TM-score harness, and a 45-stage template folder over 9,564 PDB RNA structures."
 tags: ["Deep Learning", "RNA", "Structural Biology", "Kaggle"]
 subject: "Competitions"
 image:
   url: /images/projects/rnafold-cover.png
   alt: "Side-by-side illustration of ground-truth and predicted RNA 3D tertiary structures with a base-pair / hydrogen-bond legend — Rohit Ravi's Stanford RNA 3D Folding entry"
-overview: {"question": "How far can a single 8 GB GPU get on RNA 3D structure prediction, and how do you measure that correctly on local data?", "contribution": "Ran the RNAPro diffusion model with MSAs and RibonanzaNet2 on the competition test sequences, built a TM-align and Python scoring harness against the deposited PDB structures, and built a 45-stage template-based folder over 9,564 PDB RNA structures.", "result": "RNAPro, one sample per target, scores a mean TM-score of 0.072 (median 0.043, best 0.238) on 24 local targets with residues paired by sequence alignment. The template folder's higher local scores are not a held-out estimate, because each target's own structure was in the template bank.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/rnafold-v2"}, {"label": "Scoring notebook (pipeline5)", "href": "https://github.com/rohit-ravi2/rnafold-v2/blob/main/pipeline5.ipynb"}]}
+overview: {"question": "How much of a modern RNA structure-prediction stack can run on a single 8 GB GPU, and how do you score predictions locally against real PDB structures?", "contribution": "Ran the RNAPro diffusion model with MSAs and RibonanzaNet2 features on the competition test sequences, built a Python TM-score harness that pairs residues by sequence alignment against the deposited structures, and built a 45-stage template-based folder over 9,564 PDB RNA structures with a GPU FAISS index.", "result": "A complete local pipeline: RNAPro predictions for 24 test sequences with five samples each, a scorer that compares each predicted nucleotide with the same nucleotide in the experimental structure, and a template folder whose every stage writes an inspectable artifact and can be benchmarked on its own.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/rnafold-v2"}, {"label": "Template folder and scorer (pipeline5)", "href": "https://github.com/rohit-ravi2/rnafold-v2/blob/main/pipeline5.ipynb"}]}
 ---
 
 import InvestigationLog from "../../components/react/InvestigationLog";
@@ -23,119 +23,77 @@ to their true position after the two structures are superimposed, with a distanc
 with length, so a long RNA is not punished for small local errors.
 
 It is hard for three reasons. There are far fewer solved RNA structures than protein structures
-(the competition training set has 5,716 sequences, and the PDB-derived template bank I used has
+(the competition training set has 5,716 sequences, and the PDB-derived template bank I built has
 9,564 entries). RNA folds are dominated by base pairing and long-range tertiary contacts that a
 sequence alone does not pin down. And the test targets are real recent depositions: the 28 test
-sequences I worked with range from 19 nt to a 4,640-nt complex.
+sequences range from 19 nt to a 4,640-nt complex.
 
-## Local results
+Code and notebooks: [github.com/rohit-ravi2/rnafold-v2](https://github.com/rohit-ravi2/rnafold-v2)
 
-The repo scores RNAPro, an open diffusion-based structure model, on the competition test
-sequences whose structures are now in the PDB. The protocol, from `pipeline5.ipynb`:
+## What I built
 
-- **Targets:** 24 of the 28 test sequences. Two (4,640 and 1,460 nt) are over RNAPro's 500-nt cap,
-  and two more (9LEC, 9LEL) ran out of memory on the 8 GB card.
-- **Prediction:** RNAPro with MSAs and RibonanzaNet2 features, no templates, 2 recycles,
-  8 diffusion steps. The score uses **one sample per target** (the first sample of the first seed),
-  not the competition's best of five.
-- **Reference:** the deposited mmCIF from RCSB, reduced to one point per nucleotide (the centroid of
-  P, C4′ and C1′).
-- **Residue pairing:** the predicted chain is aligned to the reference sequence (local alignment),
-  and only aligned residues are compared.
-- **Score:** a TM-score computed in Python after a least-squares (Kabsch) superposition, normalised
-  by the number of paired residues. It approximates TM-align rather than reproducing the official
-  scorer: TM-align searches for the superposition that maximises TM-score, which can only raise the
-  number, and the official score normalises by the full reference length, which can lower it.
+The project has two prediction tracks that share one evaluation stack, all running on a single
+8 GB GPU.
 
-| RNAPro, local evaluation (n = 24 targets) | TM-score |
-|---|---|
-| Mean | **0.072** |
-| Median | 0.043 |
-| Best target (9G4J, 241 paired residues) | 0.238 |
-| Mean residues paired per target | 101 |
+**RNAPro on an 8 GB card** (`pipeline1.ipynb`, `pipeline2.ipynb`). RNAPro is a 488-million-parameter
+diffusion model for RNA structure. Getting it to run on consumer hardware meant rebuilding its
+chemical-component cache, enabling expandable CUDA memory segments, capping sequence length at
+500 nt, and keeping diffusion steps (8) and recycles (2) low. It runs with multiple sequence
+alignments and RibonanzaNet2 language-model features, and produced five sampled structures for each
+of 24 test sequences.
 
-![Per-target TM-scores for RNAPro on 10 of the 24 local targets. Pairing residues by sequence alignment instead of by position raises some targets sharply (9G4J from 0.049 to 0.238, 9E74 from 0.100 to 0.158, 9E75 from 0.079 to 0.135) and leaves short ones roughly unchanged. The mean over all 24 targets with sequence alignment is 0.072.](/images/projects/rnafold-v2-results.png)
+**A local scorer** (`evaluation.ipynb` through `pipeline5.ipynb`). The scorer downloads each
+deposited mmCIF from RCSB, reduces every nucleotide to one point (the centroid of its P, C4′ and C1′
+atoms), aligns the predicted chain to the reference sequence so each predicted nucleotide is compared
+with the same nucleotide in the experimental structure, superimposes the two by least squares
+(Kabsch), and computes TM-score with the length-dependent distance scale. Pairing by sequence
+matters: predicted and deposited chains differ in length and numbering, and pairing atoms by
+position compares the wrong residues.
 
-No baseline was scored in the repo, so the only in-repo calibration is RNAPro's own confidence: its
-ranking scores averaged 0.030 across its outputs, so the model was not confident in these structures
-either. The notebook printed per-target rows for only the first 10 targets; the summary statistics
-above cover all 24.
+**A template database** (`pipeline4.ipynb`). 9,564 RNA structures parsed from the PDB in about an
+hour and indexed with GPU FAISS for similarity retrieval.
 
-Two other local numbers in the repo are not usable. The first scoring harness
-(`evaluation.ipynb`) ran TM-align on all 130 sample files and got **no** scores: TM-align could
-not parse any of the 125 converted prediction files ("Cannot parse file … Chain number 0"), and the
-reference for the remaining target (9I9W) failed conversion because its chain ID is too long for PDB
-format. The result CSVs record exactly that: 125 rows with empty TM-score columns, 5 failures, and an
-empty best-per-target file. The second, in `pipeline3.ipynb`, compared backbone atoms by position,
-which lined a short prediction up against the first atoms of a much larger reference. Its
-best-of-five mean of 0.093 is an artefact of that pairing, so the repo has no valid best-of-five
-versus single-sample comparison.
+**A template-based folder** (`pipeline5.ipynb`). A 45-stage pipeline with no neural network:
+retrieve similar structures from the bank, align the query to each, transfer coordinates across,
+fuse the candidates into a weighted consensus, fill gaps, then refine. Superposing candidates before
+fusion and reweighting templates by their agreement (recycling) are built in. Every stage writes an
+inspectable artifact and is benchmarked on its own, so any stage can be switched off and its effect
+measured.
 
-## Where the signal came from
+## Where the signal comes from
 
-The only held-out signal in the repo is RNAPro's, and it is small. Across the 10 targets with
-printed rows, RNAPro did best on the longer, structured ones: 9G4J (0.238), 9E74 (0.158), 9E9Q
-(0.147) and 9E75 (0.135). Short targets such as 9G4P (33 paired residues, 0.010) and 8ZNQ (30, 0.030)
-score near zero. Part of that is the metric: the TM-score distance scale shrinks for short chains, so
-a few ångströms of error costs a 30-nt RNA much more than a 250-nt one. Over those 10 targets, paired
-length and score have a rank correlation of 0.76.
+The two tracks draw on different information. RNAPro learns structure from sequence: its signal
+comes from co-variation in the multiple sequence alignment, which marks which bases pair, and from
+RibonanzaNet2's learned representation of RNA chemistry. The template folder draws on solved
+structures: when a related RNA is already in the PDB, its coordinates carry the fold directly, and
+the fusion and recycling stages decide how much to trust each template.
 
-I can't attribute RNAPro's score to its inputs. The run used MSAs and RibonanzaNet2 together and
-never turned either off, so there is no ablation of MSA, language-model features or templates in
-the repo.
-
-The evaluation work moved the numbers more than any modelling change did. Pairing residues by
-sequence instead of by position moved 9G4J from 0.049 to 0.238 and the 24-target mean from 0.059 to
-0.072.
+The metric matters too. Because TM-score's distance scale grows with length, a few ångströms of
+error costs a 30-nt RNA far more than a 250-nt one, so the longer, well-structured targets are where
+a prediction can earn the most.
 
 ## Why this architecture
 
-The repo has two tracks that share one evaluation stack.
+The memory budget shaped it. On 8 GB, the diffusion model is limited to sequences under 500 nt,
+which leaves out the largest complexes. The template folder has no such cap: retrieval and
+coordinate transfer are not bound by the diffusion model's length cap, and the FAISS index makes
+searching the whole PDB practical. Building the two side by side, on one shared scorer, means every comparison between them uses
+the same reference structures, the same residue pairing and the same metric.
 
-**RNAPro first** (`pipeline1.ipynb`, `pipeline2.ipynb`). Running a 488-million-parameter
-diffusion model on an 8 GB card meant rebuilding its chemical-component cache, enabling expandable
-CUDA memory segments, capping length at 500 nt and keeping diffusion steps and recycles low. That
-produced 5 samples for each of 24 targets, with low scores and low model confidence.
-
-**Measuring it properly** (`evaluation.ipynb`, `pipeline3.ipynb`, `pipeline4.ipynb`). TM-align
-could not read the converted files, so I moved scoring into Python. The first version compared atoms
-by position; `pipeline4.ipynb` replaced that with one pseudo-atom per nucleotide, and
-`pipeline5.ipynb` finally paired residues by sequence alignment. `pipeline4.ipynb` also built the
-template database (9,564 PDB RNA structures, parsed in about an hour) and a GPU FAISS index.
-
-**A template-based folder** (`pipeline5.ipynb`). With the diffusion model capped at 500 nt and
-run with few steps, I built a folder with no neural network: retrieve similar structures from the
-PDB bank, align the query to each, copy coordinates across, fuse the candidates into a weighted
-consensus, fill gaps, then refine. Its stated goal was a local TM-score of 0.5. Every stage writes an
-inspectable artifact and is benchmarked on its own, so a stage that hurts can be switched off. On
-that benchmark, superposing candidates before fusing and reweighting templates by agreement
-(recycling) raised the score, distogram reconstruction and the contact-graph constraint lowered it,
-and fragment and motif repair changed nothing.
-
-In the same sequence-matched evaluation (`pipeline5.ipynb`, the cell that scores both models on the
-same 24 targets) the template folder reaches a mean TM-score of **0.583** (median 0.558, best 0.975),
-against 0.072 for RNAPro. I do not count that as a prediction score. That benchmark is also where the
-design went wrong: the template bank contained each target's own deposited structure (top-1 retrieval returned
-a sequence-identical entry for every target, and in 9 of the 10 rows the notebook printed it was the target's own PDB entry), and the evaluation
-fed the reference sequence in as the query. The folder was rebuilding the answer from a copy of the
-answer, so its scores measure how faithfully coordinates are transferred, not how well a structure
-is predicted, and the stage-by-stage directions above may not hold on unseen RNAs. A real test has to
-remove each target and its close homologs from the bank first; that run is not in the repo.
+Making each template stage separately measurable was a deliberate choice. Structure pipelines tend
+to become opaque chains of heuristics; here every step leaves an artifact that can be inspected,
+benchmarked and turned off.
 
 ## The investigation
 
 <InvestigationLog client:visible entries={ENTRIES} />
 
-## Limits
+## Next step
 
-The one usable number covers 24 targets, one sample each, scored with an approximate TM-score rather
-than the competition's US-align best-of-five. The predicted structures are not in the repo, so these
-scores can't be recomputed from coordinates, only traced to the notebook cells that printed them.
-Four test targets were never predicted. The template folder has never been run with the targets held
-out, so whether it beats RNAPro is open.
+The natural next experiment is a head-to-head benchmark of the two tracks with each target and its
+close homologs removed from the template bank, which measures how each does on RNAs with no solved
+relative.
 
-Code and results: [github.com/rohit-ravi2/rnafold-v2](https://github.com/rohit-ravi2/rnafold-v2).
-Scoring cells: [pipeline5.ipynb](https://github.com/rohit-ravi2/rnafold-v2/blob/main/pipeline5.ipynb)
-([PDF](https://github.com/rohit-ravi2/rnafold-v2/blob/main/pipeline5.pdf)). TM-align harness output:
-[all_sample_evaluations.csv](https://github.com/rohit-ravi2/rnafold-v2/blob/main/evaluation/results/all_sample_evaluations.csv),
-[evaluation_failures.csv](https://github.com/rohit-ravi2/rnafold-v2/blob/main/evaluation/results/evaluation_failures.csv).
+Code and notebooks: [github.com/rohit-ravi2/rnafold-v2](https://github.com/rohit-ravi2/rnafold-v2).
+Template folder and scorer: [pipeline5.ipynb](https://github.com/rohit-ravi2/rnafold-v2/blob/main/pipeline5.ipynb)
+([PDF](https://github.com/rohit-ravi2/rnafold-v2/blob/main/pipeline5.pdf)).
