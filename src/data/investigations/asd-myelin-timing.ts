@@ -122,27 +122,12 @@ export const ENTRIES: InvestigationEntry[] = [
       "As first reported: mean ICVF rg +0.102, positive in all 15 tracts (strongest, left cingulum, p = 0.007; none survived Bonferroni). Anterior and posterior tracts differed by 0.011: no frontal gradient.",
     ruled: "Frontal specificity, the anatomical core of the starting hypothesis.",
     why:
-      "The sign was wrong (entry 19): every correlation was inverted by an allele-orientation error. The absence of a frontal gradient survived the fix.",
+      "The sign was wrong (entry 18): every correlation was inverted by an allele-orientation error. The absence of a frontal gradient survived the fix.",
     next:
       "I rewrote the question that day: is there a subset of autism with an abnormal oligodendrocyte developmental trajectory, with timing as a first-class variable? Premature maturation that exhausts the progenitor pool could later look like hypomyelination.",
   },
   {
     n: 9,
-    date: "2026-09-16",
-    q: "Could an infant immune exposure push cytokines to levels that harm oligodendrocytes?",
-    verdict: "ruled-out",
-    tag: "Side branch · exposure margins",
-    tried:
-      "A side branch on the immune route: compare published cytokine peaks after aluminium-adjuvanted vaccination with the lowest concentrations shown to affect oligodendrocyte-lineage cells, in blood and in an estimated brain compartment, and for duration.",
-    found:
-      "Exposure falls short by 200× for IFN-γ, 679× for IL-6 in blood (about 22,700× after estimated transfer to brain) and over 36,000× for IL-1β. TNF-α came closest: 2–7× short in blood, 125× or more after estimated brain transfer, and 1.5–4.5× too brief.",
-    ruled: "The adjuvant → cytokine → oligodendrocyte chain as posed.",
-    why:
-      "It fails at two links: alum produces little systemic cytokine response, and no study has measured cerebrospinal cytokines after vaccination. A literature pass over alternative mechanisms (amplification, cell trafficking, aluminium–transferrin, direct toxicity) found the null model best supported.",
-    next: "Back to the brain's own cell types and the maturation axis.",
-  },
-  {
-    n: 10,
     date: "2026-09-17",
     q: "Does autism risk concentrate at a stage of oligodendrocyte maturation?",
     verdict: "ruled-out",
@@ -157,7 +142,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Rare variants have larger effects. Test those, then replicate in an atlas with more mature cells.",
   },
   {
-    n: 11,
+    n: 10,
     date: "2026-09-17",
     q: "Do rare de novo mutations hit oligodendrocyte or lipid genes?",
     verdict: "kept",
@@ -172,7 +157,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "One module looked enormous: the switch from making neurons to making glia.",
   },
   {
-    n: 12,
+    n: 11,
     date: "2026-09-17",
     q: "Is the neurogenic-to-gliogenic switch a rare-variant hotspot?",
     verdict: "ruled-out",
@@ -187,7 +172,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Back to common variants, with modules large enough to detect something.",
   },
   {
-    n: 13,
+    n: 12,
     date: "2026-09-17",
     q: "Does any mechanistic gate carry common-variant risk at adequate power?",
     verdict: "ruled-out",
@@ -199,11 +184,11 @@ export const ENTRIES: InvestigationEntry[] = [
     ruled:
       "Lipid synthesis and trafficking as common-variant gates. Conditioning on oligodendrocyte genes moved them by about 1%, so they are absent in their own right, not hidden behind the lineage.",
     why:
-      "Chromatin is null for common variants but strong for rare ones (entry 11): a real common/rare split. Fate-switch and OPC-timing modules are too small to test at this level.",
+      "Chromatin is null for common variants but strong for rare ones (entry 10): a real common/rare split. Fate-switch and OPC-timing modules are too small to test at this level.",
     next: "Turn to the immune version of the predisposition, starting with whether the cells can hear cytokines.",
   },
   {
-    n: 14,
+    n: 13,
     date: "2026-09-17",
     q: "Can inflammatory cytokines act directly on OPCs?",
     verdict: "ruled-out",
@@ -218,7 +203,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Ask whether the immune predisposition is in the genome at all.",
   },
   {
-    n: 15,
+    n: 14,
     date: "2026-09-17",
     q: "Is there an inherited immune route into the oligodendrocyte lineage?",
     verdict: "ruled-out",
@@ -233,7 +218,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Quantify what a myelin change would actually do to signal timing.",
   },
   {
-    n: 16,
+    n: 15,
     date: "2026-09-17",
     q: "How much timing does myelin buy?",
     verdict: "kept",
@@ -249,7 +234,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Replicate the maturation-axis null in a second atlas with mature cells.",
   },
   {
-    n: 17,
+    n: 16,
     date: "2026-09-17",
     q: "Does the stage null hold in an atlas that reaches mature cells?",
     verdict: "ruled-out",
@@ -264,7 +249,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Genetics shows where risk starts. Methylation can show which cells end up perturbed.",
   },
   {
-    n: 18,
+    n: 17,
     date: "2026-09-17",
     q: "Which cell type is most epigenetically perturbed in autistic cortex?",
     verdict: "partial",
@@ -276,10 +261,10 @@ export const ENTRIES: InvestigationEntry[] = [
     ruled: "Nothing yet. I promoted this to the program's keystone.",
     why:
       "A cell type that is not where inherited risk lives but is the most perturbed is what a downstream convergence point would look like. OPC estimates are also the noisiest in the dataset, which needed checking.",
-    next: "Check the signal's content and its noise before leaning on it (entry 20).",
+    next: "Check the signal's content and its noise before leaning on it (entry 19).",
   },
   {
-    n: 19,
+    n: 18,
     date: "2026-09-21",
     q: "Why does my white-matter correlation disagree with Gu et al. 2025?",
     verdict: "partial",
@@ -294,7 +279,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Apply the same scrutiny to the methylation keystone.",
   },
   {
-    n: 20,
+    n: 19,
     date: "2026-09-21",
     q: "Is the OPC methylation excess real?",
     verdict: "kept",
@@ -309,7 +294,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Refit on a shared region set from the per-donor files (pending); meanwhile, look for the maturation trajectory directly in autistic tissue.",
   },
   {
-    n: 21,
+    n: 20,
     date: "2026-09-21",
     q: "Is oligodendrocyte maturation shifted in autistic cortex?",
     verdict: "partial",
@@ -324,7 +309,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "A new hypothesis: failed apoptosis and hypomyelination share genes.",
   },
   {
-    n: 22,
+    n: 21,
     date: "2026-10-07",
     q: "Do failed-apoptosis and oligodendrocyte genes converge in autism?",
     verdict: "ruled-out",
@@ -335,11 +320,11 @@ export const ENTRIES: InvestigationEntry[] = [
       "Common variants: the intersection had β = −0.006, p = 0.51, below two of its five size-matched random sets; the oligodendrocyte signal sat in the non-apoptosis genes (p = 0.037). De novo: apoptosis LoF OR 1.94 (p = 0.003), but against matched sets its synonymous row was more extreme than its LoF row (p = 0.009 vs 0.106). Random 31-gene control sets also reached matched p = 0.001.",
     ruled: "Apoptosis–oligodendrocyte convergence in common and de novo variants.",
     why:
-      "The last line is a pipeline finding: the matched-set null is miscalibrated for small modules, so every small-module matched p in the burden pipeline, including entry 12's, is untrustworthy.",
+      "The last line is a pipeline finding: the matched-set null is miscalibrated for small modules, so every small-module matched p in the burden pipeline, including entry 11's, is untrustworthy.",
     next: "Try the highest-confidence autism genes against a matched background.",
   },
   {
-    n: 23,
+    n: 22,
     date: "2026-10-07",
     q: "Do high-confidence autism genes favour apoptosis or oligodendrocyte annotations?",
     verdict: "partial",
@@ -354,7 +339,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "If the apoptotic machinery itself is mutated in autism, the executioner caspases should show it.",
   },
   {
-    n: 24,
+    n: 23,
     date: "2026-10-07",
     q: "Is the pruning machinery itself a locus of risk?",
     verdict: "ruled-out",
@@ -369,7 +354,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Stop starting from hypotheses: scan all 5,768 GO terms and see what autism genes converge on.",
   },
   {
-    n: 25,
+    n: 24,
     date: "2026-10-07",
     q: "Unprompted, what do autism genes converge on?",
     verdict: "partial",
@@ -383,7 +368,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Test the β-catenin/TCF signal properly.",
   },
   {
-    n: 26,
+    n: 25,
     date: "2026-10-08",
     q: "Is β-catenin/TCF a real oligodendrocyte-facing hub?",
     verdict: "partial",
@@ -398,7 +383,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Look for a dimensional imaging signal, and for whether interneuron myelination has been tested.",
   },
   {
-    n: 27,
+    n: 26,
     date: "2026-10-08",
     q: "Is there a dimensional white-matter signal in children?",
     verdict: "partial",
@@ -413,7 +398,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "A pre-registered test of the interneuron–oligodendrocyte link in human autistic tissue.",
   },
   {
-    n: 28,
+    n: 27,
     date: "2026-10-08",
     q: "Are PV interneurons and OPCs co-dysregulated in autistic brains?",
     verdict: "ruled-out",
@@ -428,7 +413,7 @@ export const ENTRIES: InvestigationEntry[] = [
     next: "Return to the original question once more: lipid transport, in genetics and in methylation.",
   },
   {
-    n: 29,
+    n: 28,
     date: "2026-10-08",
     q: "Last look: is lipid transport involved at all?",
     verdict: "ruled-out",
@@ -439,7 +424,7 @@ export const ENTRIES: InvestigationEntry[] = [
     ruled:
       "Lipid-transport genetics, across MAGMA, both GO scans and the gold-standard genes. The methylation result is an underpowered null, not a refutation.",
     why:
-      "With entry 17, the consistent reading is that the lipid machinery is not broken; it is gated by differentiation state and switched on at commitment.",
+      "With entry 16, the consistent reading is that the lipid machinery is not broken; it is gated by differentiation state and switched on at commitment.",
     next: "What remains open, and the data it needs, is below.",
   },
 ];
