@@ -30,7 +30,7 @@ Code and results: [github.com/rohit-ravi2/anesthesia-pipeline](https://github.co
 
 General anesthesia is driven by **coordinated partial perturbation across a multi-class target ensemble** (SNARE release, Complex I, K2P channels, nAChR, NCA leak, GABA-A potentiation), not a single-target binding event. Mutants in any one target give partial phenotypes; non-immobilizers like hexafluoroethane lack engagement at the high-magnitude classes the architecture requires.
 
-**Reported model results:** within-organism volatile EC50 prediction ~3× tighter than Meyer-Overton on held-out isoflurane across worm, fly and mouse, with one free parameter per organism; mutant magnitude predictions inside published literature bands; and a 4–6 mechanism-class minimum sufficient subset in which SNARE-or-Complex-I is universal (25/25 passing subsets).
+**Reported model results:** within-organism volatile EC50 prediction ~3× tighter than Meyer-Overton on held-out isoflurane across worm, fly and mouse, with one free parameter per organism; mutant magnitude predictions inside published literature bands for 14 of 32 mutants; and a 4–6 mechanism-class minimum sufficient subset in which SNARE-or-Complex-I is universal (25/25 passing subsets).
 
 **What it does not establish.** A 2026-06-12 preregistered, accept-either-way re-examination (see *Adversarial close-out*) proved the V1 operator is **rank-2** — every anesthetic and genotype profile collapses to a uniform current scalar plus one global synaptic gain, so the network *cannot by construction* distinguish which targets are engaged from the aggregate magnitude of two coordinates. Cell-type targeting, tested on a rank-lifted substrate built specifically to make it testable, returns a **null** on worm (46th percentile). The immobilization readout is **demoted to a network statistic**, not validated behavioral quiescence. Whether the *specific* target identities are load-bearing, rather than one magnitude-matched ensemble among many, is **not established here**.
 
@@ -189,7 +189,7 @@ The architecture transfers to *Drosophila larva* (Winding 2023 connectome, 2,952
 |---|---|---|---|
 | 1 — halothane WT calibration anchor | 317 µM (1.07× off 340) | 361 µM (1.06× off 340) | 297 µM (1.18× off 350) |
 | 2 — held-out volatile (isoflurane) | **291 µM (1.002× off 290)** | **323 µM (1.11× off 290)** | **273 µM (1.06× off 290)** |
-| 3 — mutant magnitude predictions | inside lit band: 4/9 | inside lit band: 5/13 | inside lit band: 4/10 |
+| 3 — mutant magnitude predictions | inside lit band: [2/9](https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/AnestheticSimulator/artifacts/state_validation/v3_ensemble/v2_verdict.json) | inside lit band: [6/13](https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/AnestheticSimulator/artifacts/state_validation_fly/v4_ensemble/v4_verdict.json) | inside lit band: [6/10](https://github.com/rohit-ravi2/anesthesia-pipeline/blob/main/AnestheticSimulator/artifacts/state_validation_mouse/v6_verdict.json) |
 | 4 — Eger non-immobilizer specificity | 3 / 3 | 3 / 3 | 3 / 3 |
 | α (free parameter, single-anchor) | 0.13 | 0.060 | 0.10 |
 
@@ -215,7 +215,7 @@ V5 M2 (connectome permutation) and V5+ (no-integration sign-only baseline + Meye
 | etomidate mouse | 196× off | not directly tested in V6 (mechanism-specific table addresses it) |
 | ketamine mouse | 44× off | mechanism-specific |
 | Eger non-immobilizers | predicts they should immobilize at high dose | correctly classifies as non-immobilizers (3/3) |
-| mutant magnitude predictions | no answer (Meyer-Overton has nothing to say) | several inside literature bands (TREK1_KO 2.04 in 1.5-2.5; TASK13_dKO 2.06 in 2-3; ND-49 0.62 in 0.5-0.7; gas-1 0.57 close to 0.33-0.5) |
+| mutant magnitude predictions | no answer (Meyer-Overton has nothing to say) | 14 of 32 inside literature bands (e.g. TREK1_KO 2.04 in 1.5-2.5; TASK13_dKO 2.06 in 2-3; ND-49 0.62 in 0.5-0.7; ORK1 1.77 in 1.2-1.8) |
 
 ## Summary after controls
 
