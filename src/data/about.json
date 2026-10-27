@@ -6,10 +6,11 @@
       "title": "Before the questions became personal",
       "paragraphs": [
         "Tennis was a large part of my life. I played first singles on an elite team at Northern Highlands, and during the COVID lockdown I often spent six hours a day on court. Training gave my days structure, and physical effort was something I could depend on.",
-        "When I became ill at the beginning of college, activities that had once been routine became inaccessible. I lost the physical capacity I had depended on, and long stretches of illness narrowed the world around me.",
-        "It took over a year to begin understanding what was happening. After multiple procedures, including an endoscopy and a complete gastrointestinal workup, we learned that the problem was neurological: dysfunction involving the neural circuits that regulate the GI tract. Investigations had found no structural explanation for the severity of the symptoms. Yet during episodes, I experienced pain and nausea more intense than anything I had previously known.",
-        "That recognition gave us a direction. We sought out specialists in neurogastroenterology, hoping that understanding which system was involved would bring us closer to an explanation. I began to appreciate how much uncertainty could remain even within specialist care. Identifying the neurological nature of the illness did not establish its underlying mechanism or provide a clear path to resolving it.",
-        "Dr. Wilfrid Raby, whose care made an enormous difference to my life, approached that uncertainty with candor and commitment. From our first conversation, he acknowledged that we were working in territory that was not fully understood. We would use the information available, work carefully, and try to reduce the symptoms and periods of pain. Over time, we made immense progress. Treatment made the condition manageable, and I remain deeply grateful for his persistence and care.",
+        "I began to have severe health issues at the beginning of my sophomore year. Activities that had once been routine became inaccessible. I lost the physical capacity I had depended on, and long stretches of illness narrowed the world around me.",
+        "It took over a year to begin understanding what was happening. After extensive investigation, we learned that the problem was neurological, involving the neural circuits that regulate the gastrointestinal tract. Investigations had found no structural explanation for the severity of the symptoms. Yet during episodes, I experienced pain and nausea more intense than anything I had previously known.",
+        "That recognition gave us a direction. We sought out specialists in neurogastroenterology, hoping that identifying the system involved would bring us closer to an explanation. But even within specialist care, much remained a black box. We could recognize that neural function was disrupted and observe how symptoms responded to treatment, without being able to identify precisely what had changed in the circuits or why. Knowing where the problem lay was still far from understanding how it worked.",
+        "I came to see a parallel with artificial neural networks: we can observe a system’s outputs and influence its behavior while still struggling to explain the internal processes responsible. In my own case, the distance between identifying a neurological disorder and understanding its mechanism had immediate consequences for how we could approach treatment.",
+        "My care required working through that uncertainty. We used the information available, worked carefully, and tried to reduce the symptoms and periods of pain. Over time, we made immense progress. Treatment made the condition manageable, and I remain deeply grateful for the persistence and care that helped make that possible.",
         "But the improvement left questions I could not put aside. The year before becoming ill, I had been in the best physical condition of my life. Now there were periods when I could barely get out of bed, let alone train or play tennis. How could such a profound change occur without a prior history or a structural explanation on imaging? What had changed in the system, and why was it so difficult to identify?",
         "Those questions opened a further search. I wanted to understand how neural circuits could become so profoundly disrupted, what responses to treatment might reveal about their mechanisms, and how computational tools could help investigate problems that remained difficult to answer clinically. The distance between what I was experiencing and what we could explain became a reason to keep learning—and to develop the technical skills to investigate further."
       ]
@@ -17,62 +18,29 @@
     {
       "title": "Finding a direction",
       "paragraphs": [
-        "During that period, I began exploring my roots and reading the Eastern philosophical texts that became personally meaningful to me. Vedanta gave me a way to think about suffering and identity when illness had disrupted much of the life I knew. Reading it also drew me further toward the science of consciousness. Questions about the self, perception, and experience became things I wanted to understand through neuroscience and computation as well as philosophy.",
-        "I became interested in reconciling perspectives I had often encountered as opposites: science and philosophy. I wanted to understand where they could illuminate the same questions, where they differed, and what each could reasonably explain. That search drew me toward philosophy of mind and gave my technical interests a broader purpose.",
-        "Studying neural systems became a way to pursue both the biological questions raised by my illness and the questions about experience that these texts had brought into focus. Together, they shaped the direction I wanted my work to take: developing a deeper understanding, and using the advanced technical tools of our time to turn that understanding into help for as many people as possible."
+        "During that period, I also began exploring my roots and reading philosophical texts that became personally meaningful to me. Questions about suffering, identity, and consciousness had become immediate parts of my life. Reading gave me ways to examine them and drew me further toward the science of experience: how perception arises, how a sense of self develops, and how changes in a nervous system can transform someone’s world.",
+        "I became interested in bringing science and philosophy into conversation. Neuroscience and computation offered ways to investigate mechanisms; philosophy helped me think about what those explanations could tell us about experience and what questions remained open. That connection drew me toward philosophy of mind and continues to shape the work I pursue.",
+        "My ambitions changed during this time. I came to see research and engineering as the contribution I wanted to make—using the advanced technical tools of our time to develop a deeper understanding and turn it into help for as many people as possible."
       ]
     },
     {
       "title": "How that became my work",
       "paragraphs": [
-        "My coursework in machine learning gave me a practical starting point. Working with C. elegans let me begin studying nervous systems computationally: how connectivity, cellular properties, and activity relate, and what a model can reasonably tell us about the living system it represents. The notebooks were a learning pipeline, through which I developed the ability to turn broad biological questions into analyses and experiments.",
-        "My own search also drew me toward genetic, mitochondrial, and myelination mechanisms. I was interested in how nervous-system function can be disrupted through processes that are difficult to see in a conventional structural investigation.",
-        "Some of that reading informed things I tried personally, including DHA and palmitoylethanolamide with luteolin. I experienced benefits, although that experience cannot establish which mechanism was responsible or what would help someone else. It gave me further questions to investigate.",
-        "The autism and myelination work became especially personal when I saw a young relative suffering. I recognized something of the helplessness I had experienced myself, and I wanted to help in whatever way I could. My experience with DHA was part of what first directed my attention toward lipid supply and myelination. From there, the task was to examine whether the biological evidence supported the initial idea—and how the question needed to change when it did not.",
-        "My interest in anesthesia and sleep grew from another observation during treatment: profound changes in nervous-system state could interrupt acute suffering. That made reversibility especially compelling to me. How can a nervous system enter a dramatically different state and then return? What distinguishes reduced activity, quiescence, sleep, and anesthesia? Computational models offered a way to begin exploring those questions.",
-        "These projects share a personal origin, but each needs evidence appropriate to its own claims. My experience helps explain why I ask the questions. The research has to determine what answers they can support."
-      ]
-    },
-    {
-      "title": "From biological questions to neural data",
-      "paragraphs": [
-        "As my technical skills developed, my work expanded into decoding information from neural signals.",
-        "LibriBrain brought me into MEG analysis and the challenge of extracting useful information from noisy measurements. It also made evaluation itself a central part of the work: understanding how much of a model’s performance reflects the neural signal and how much can be explained by timing or other features of the task.",
-        "The wrist-EMG handwriting project explores a different interface between nervous systems and computation. It asks how signals associated with intended movement can support communication, and how adaptation to an individual changes a model’s usefulness.",
-        "These projects are opportunities to demonstrate the engineering skills behind my broader interests: working with complex data, training and adapting models, designing evaluations, and investigating why a result changes. They also connect to something that has become deeply important to me—how computation can help preserve or recover a person’s ability to act, communicate, and participate in life."
+        "For long stretches of the illness, joining a lab or taking an internship was beyond what my health allowed. Working independently gave me a way to keep learning and build experience at a pace I could sustain. With public datasets, published research, and a single GPU, I began reproducing models, designing analyses, and developing experiments around the questions that interested me.",
+        "My coursework in machine learning provided a practical starting point. Working with C. elegans gave me a nervous system I could begin to study computationally, connecting its wiring diagram to cellular properties and measured activity. As I learned more, my interests developed around several recurring questions.",
+        "One is how the structure of a nervous system relates to what it does. My connectome and neural-control projects examine how much measured activity can be explained by wiring, physical proximity, and cell identity. The MICrONS dendritic work approaches a related question at a smaller scale: whether the arrangement of inputs along a dendrite carries information beyond the geometry of the surrounding cells. These projects have taught me to turn broad questions into comparisons that can distinguish competing explanations.",
+        "Another is how neural function changes so dramatically across states. My experience of illness made that question personal, and treatment deepened my interest in reversibility. Anesthesia and sleep offered ways to ask how a nervous system can enter a profoundly different state and return. My reading also led toward genetic, mitochondrial, and myelination mechanisms that could affect function without producing an obvious structural explanation.",
+        "A third is what we can read from neural signals and make useful. LibriBrain brought me into MEG analysis and the challenge of extracting information from noisy recordings. The wrist-EMG handwriting work explores how signals associated with intended movement can support communication, and how adapting a model to an individual changes its performance.",
+        "Across these projects, I have developed experience working with complex biological data, reproducing published systems, training and adapting models, and examining what a result actually depends on. Some promising findings changed substantially under closer testing. Learning to trace those changes has become an important part of how I work.",
+        "My broader projects in molecular prediction, clinical data, and robotics have given me opportunities to extend that toolkit and explore other problems where computation could be useful. The questions connecting my work remain close to where I began."
       ]
     },
     {
       "title": "What I want to contribute",
       "paragraphs": [
-        "I want to bring this combination of personal commitment and technical ability to a research team or company working on consequential problems in biology, neural systems, or machine learning.",
-        "There is much I still want to learn. I’m looking for work that demands depth: difficult data, mechanisms that remain uncertain, and tools that need to function beyond a demonstration. I want collaborators who care about both the quality of an explanation and what it could make possible for people.",
-        "Illness changed the life I expected to have. It also helped clarify the work I want to devote myself to. My goal is to use machine learning, neuroscience, computation, and philosophy to tackle the hardest problems I can contribute to solving—and, through that work, make suffering more bearable."
-      ]
-    },
-    {
-      "title": "Why the work looks the way it does",
-      "paragraphs": [
-        "I became ill at 19, at the start of college. For long stretches I could not attend school or hold a job, and there was no realistic way to join a lab or take an internship. That is why this site has no supervisor, internship or co-author on it yet. It was not a choice.",
-        "What I could do was work alone, at home, on public data and a single 8 GB GPU. Rather than let those years produce nothing, I used them to teach myself the tools and to take on real problems: reproducing published models, entering open competitions, and testing ideas against datasets that other researchers had released.",
-        "Working without anyone to check my results shaped how I work. I write down predictions before running an analysis where I can, build the control that could break a result before I believe it, and report the results I retracted alongside the ones that held. Several pages here record exactly that."
-      ]
-    },
-    {
-      "title": "One set of questions",
-      "paragraphs": [
-        "The project list looks scattered. It is organised around a small number of questions that the illness put in front of me and that I have not been able to put down.",
-        "The first is what can be read out of a nervous system. The wrist-EMG handwriting and LibriBrain MEG projects decode intended movement and heard speech from neural signals, and both turned as much on evaluation as on modelling: how much of an apparent result comes from the brain, and how much from the structure of the task.",
-        "The second is how much of what a nervous system does is set by its wiring. The C. elegans projects and the MICrONS dendritic work test the connectome against measured activity, and keep finding that physical proximity and cell identity explain more than the wiring diagram alone.",
-        "The third is how a nervous system can enter a profoundly different state and come back. That question came directly from my own experience, and it runs through the anesthesia work and the genetics projects on myelination and connective tissue, which ask how neural function can be disrupted by processes that a structural scan does not show.",
-        "Underneath these is a question from philosophy of mind: what a model of a nervous system can and cannot explain about experience. The remaining projects, in clinical prediction, molecular data and robotics, apply the same toolkit to problems where good public data existed."
-      ]
-    },
-    {
-      "title": "What comes next",
-      "paragraphs": [
-        "The missing piece is outside review: putting the results that hold up in front of other researchers and letting them test them.",
-        "I am looking for research and research-engineering work on neural interfaces, neural data and machine learning for biology: difficult data, mechanisms that are still uncertain, and colleagues who care about whether an explanation is actually right."
+        "I am now well enough to pursue opportunities that illness previously put out of reach. I want to bring the technical experience and independence I developed during that time into a research team, learn from colleagues, and contribute to work that benefits from sustained collaboration.",
+        "I’m particularly interested in research and research engineering involving neural interfaces, neural data, and machine learning for biology. I enjoy problems that require moving between a scientific question and the practical work of building something that can test it.",
+        "Illness changed the life I expected to have and gave lasting purpose to the work I want to do. My goal is to use machine learning, neuroscience, computation, and philosophy to tackle the hardest problems I can contribute to solving—and help make the suffering people experience more bearable."
       ]
     }
   ]

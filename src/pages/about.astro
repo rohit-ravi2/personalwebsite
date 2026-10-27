@@ -3,28 +3,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomisedBreadCrumbs from "../components/CustomisedBreadCrumbs.astro";
 import { getEntry } from "astro:content";
 import about from "../data/about.json";
-import PersonalExperienceNote from "../components/PersonalExperienceNote.astro";
-
-// Keep the disclosure near personal treatment references when sections are edited.
-const notePosition = about.sections
-  .flatMap((section, sectionIndex) =>
-    section.paragraphs.map((paragraph, paragraphIndex) => ({
-      paragraph,
-      sectionIndex,
-      paragraphIndex,
-    })),
-  )
-  .find(({ paragraph }) => /\bDHA\b|palmitoylethanolamide/i.test(paragraph));
-
 // The "Explore the work" box sits just before the "What I want to contribute" section.
 const exploreAfter =
   about.sections.findIndex((section) => section.title === "What I want to contribute") - 1;
 const selectedWork = await Promise.all(
   [
-    "asd-myelin-timing",
-    "anesthesia-pipeline",
-    "libribrain-2026",
     "handwriting-emg",
+    "libribrain-2026",
+    "microns-dendritic",
+    "neural-control",
   ].map(async (slug) => {
     const project = await getEntry("projects", slug);
     return {
@@ -85,16 +72,7 @@ const selectedWork = await Promise.all(
                 {section.title}
               </h2>
               <div class="mt-5 flex flex-col gap-5">
-                {section.paragraphs.map((paragraph, paragraphIndex) => (
-                  <>
-                    {index === (notePosition?.sectionIndex ?? 0) &&
-                      paragraphIndex ===
-                        (notePosition?.paragraphIndex ?? 0) && (
-                        <PersonalExperienceNote />
-                      )}
-                    <p>{paragraph}</p>
-                  </>
-                ))}
+                {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
               </div>
             </section>
             {index === exploreAfter && (
