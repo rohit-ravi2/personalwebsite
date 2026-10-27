@@ -14,7 +14,6 @@ export default defineConfig({
     }),
     mdx(),
     sitemap({
-      filter: (page) => !new URL(page).pathname.startsWith("/editor"),
       changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),

@@ -82,20 +82,13 @@ const SITE = PROFILE.site;
         <ContactPanel />
       </div>
     </Card>
-    <div class="home-owner col-span-full flex justify-end px-2 pt-2">
-      <a
-        href="/editor"
-        class="rounded p-2 text-xs text-muted-foreground opacity-30 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-        aria-label="Owner sign-in">Owner</a
-      >
-    </div>
   </main>
 </BaseLayout>
 
 <style is:global>
   .home-layout {
     align-items: start;
-    grid-template-areas: "intro" "why" "work" "quote" "education" "experience" "writing" "contact" "owner";
+    grid-template-areas: "intro" "why" "work" "quote" "education" "experience" "writing" "contact";
   }
   .home-layout > .home-intro {
     grid-area: intro;
@@ -121,19 +114,16 @@ const SITE = PROFILE.site;
   .home-layout > .home-contact {
     grid-area: contact;
   }
-  .home-layout > .home-owner {
-    grid-area: owner;
-  }
   @media (min-width: 768px) {
     .home-layout {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-areas: "intro intro" "why quote" "work work" "education experience" "writing contact" "owner owner";
+      grid-template-areas: "intro intro" "why quote" "work work" "education experience" "writing contact";
     }
   }
   @media (min-width: 1024px) {
     .home-layout {
       grid-template-columns: repeat(6, minmax(0, 1fr));
-      grid-template-areas: "intro intro intro intro why why" "work work work work quote quote" "work work work work writing writing" "education education education experience experience experience" "contact contact contact contact contact contact" "owner owner owner owner owner owner";
+      grid-template-areas: "intro intro intro intro why why" "work work work work quote quote" "work work work work writing writing" "education education education experience experience experience" "contact contact contact contact contact contact";
     }
   }
 </style>

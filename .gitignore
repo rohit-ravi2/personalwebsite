@@ -51,7 +51,7 @@ data/external/
 *.so
 
 
-# Owner editor secrets
+# Local secrets
 .env
 .env.*
 !.env.example
