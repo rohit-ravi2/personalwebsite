@@ -1,27 +1,150 @@
 ---
 title: "Polymer property prediction"
 startDate: 2025-07-01
-description: "A NeurIPS 2025 competition pipeline combining chemical descriptors, gradient boosting, and learned representations to predict polymer properties."
+description: "Per-target LightGBM and CatBoost on ~2,600 Mordred, RDKit and fingerprint descriptors for the NeurIPS 2025 polymer challenge: 5-fold grouped OOF weighted MAE 0.0649, against 0.168 for predicting the mean."
 tags: ["Deep Learning", "Cheminformatics", "Gradient Boosting", "Kaggle"]
 subject: "Competitions"
 image:
-  url: /images/projects/neurips-polymer-cover.png
-  alt: "Polymer chain mapped to a scatter plot of molecular features vs. predicted property — Rohit Ravi's NeurIPS Polymer Prediction Kaggle entry"
-overview: {"question": "How can chemical descriptors and learned representations improve polymer-property prediction?", "contribution": "Built a competition pipeline combining chemical features, gradient boosting, and learned embeddings.", "result": "A NeurIPS 2025 competition project, with modeling choices and pipeline details documented below.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/neurips-polymerprediction"}]}
+  url: /images/projects/neurips-polymer-prediction-results.png
+  alt: "Left: competition-weighted out-of-fold MAE of 0.1685 for predicting the training-fold mean, 0.0674 for CatBoost, 0.0649 for LightGBM and 0.0647 for a 50/50 blend. Right: per-target MAE as a fraction of the baseline, from about 0.22 for density to about 0.55 for Tg."
+overview: {"question": "With a few hundred labels per property, how well can five polymer properties be predicted from a repeat-unit SMILES string, and where does the signal come from?", "contribution": "Built per-target LightGBM and CatBoost models on Mordred, RDKit and fingerprint descriptors with masked labels, duplicate-safe grouped folds and gain-based feature pruning, then recomputed every score from the saved out-of-fold predictions.", "result": "Out-of-fold weighted MAE 0.0649 (LightGBM), 0.0674 (CatBoost) and 0.0647 (50/50 blend), against 0.168 for predicting the training-fold mean. Whole-molecule Mordred descriptors carry 92 to 99% of the model gain on every target.", "links": [{"label": "Source code", "href": "https://github.com/rohit-ravi2/neurips-polymerprediction"}, {"label": "Out-of-fold predictions", "href": "https://github.com/rohit-ravi2/neurips-polymerprediction/tree/main/outputs/predictions"}]}
 ---
 
-Entry for the NeurIPS 2025 Open Polymer Prediction Kaggle competition — predicting physical properties of polymers from their chemical structure representations.
+import InvestigationLog from "../../components/react/InvestigationLog";
+import { ENTRIES } from "../../data/investigations/neurips-polymer-prediction";
 
-## Approach
+## The problem
 
-Split across five phased notebooks (`phase1` → `phase5`) plus a hybrid pipeline combining:
+The NeurIPS 2025 Open Polymer Prediction competition on Kaggle gives you a polymer as a SMILES
+string for its repeat unit, with `*` marking where the chain continues, and asks for five
+properties: glass transition temperature (Tg), fractional free volume (FFV), thermal
+conductivity (Tc), density, and radius of gyration (Rg).
 
-- **CatBoost** on engineered chemical descriptors (the `catboost_info/` directory in the repo).
-- **Deep representations** via a hybrid pipeline notebook, exploring whether learned embeddings add signal over hand-crafted features.
-- **Track 2 notebook** — separate run targeting the competition's secondary evaluation criterion.
+The training file has 7,973 polymers, but the labels are very sparse. FFV is measured for 7,030
+of them. Tg has 511 labels, Tc 737, density 613 and Rg 614. So four of the five targets are
+small-data regression problems sitting inside one larger table.
 
-## What I took from it
+The score is a weighted MAE across the five targets. As implemented in my notebooks
+(`competition_wmae` in `phase1.ipynb`), each target gets weight 1 / (√n × range), where n is its
+label count and range is the spread of its labelled values, and the weights are normalised to sum
+to one. That makes the weighting very uneven: Tc gets 0.561, density 0.269, FFV 0.158, Rg 0.012
+and Tg 0.001. Tg, the property a polymer chemist would care about most, barely moves the score,
+because its range is 620 °C.
 
-The gradient-boosted baseline on engineered features was harder to beat than I expected. The hybrid model improves on it, but the gain is smaller than the corresponding jump you'd get from richer data — a reminder that in structured-prediction problems with limited labels, feature engineering still earns its keep.
+## Local results
 
-Code: [github.com/rohit-ravi2/neurips-polymerprediction](https://github.com/rohit-ravi2/neurips-polymerprediction)
+All numbers below are out-of-fold (OOF) MAE from `phase4.ipynb`, recomputed from the saved
+predictions (`oof_lgb.csv`, `oof_cat.csv`) against the competition training labels. The protocol is
+5-fold GroupKFold grouped on canonical SMILES, so a duplicate polymer never sits in both the
+training and validation side. Each target is trained only on its own labelled rows, and the OOF
+predictions are averaged over 3 seeds. Every labelled row has exactly one OOF prediction.
+
+The baseline predicts, for each validation fold, the mean of that target over the training folds.
+Recomputing it with a plain shuffled KFold gives the same number to three decimals (0.168).
+
+| Model | Weighted MAE | Tg (°C) | FFV | Tc | Density (g/cm³) | Rg (Å) |
+|---|---|---|---|---|---|---|
+| Predict the fold mean | 0.1685 | 88.4 | 0.0209 | 0.0770 | 0.1096 | 3.96 |
+| CatBoost | 0.0674 | 51.1 | 0.00572 | 0.0252 | 0.0274 | 1.57 |
+| LightGBM | 0.0649 | 48.6 | 0.00576 | 0.0252 | 0.0247 | 1.53 |
+| 50/50 blend (not tuned) | **0.0647** | 49.0 | 0.00552 | 0.0249 | 0.0245 | 1.52 |
+
+![Weighted out-of-fold MAE for the fold-mean baseline, CatBoost, LightGBM and a 50/50 blend, and per-target error relative to the baseline](/images/projects/neurips-polymer-prediction-results.png)
+
+LightGBM cuts the baseline's weighted error by 61%. Per target, its error is 22% of the baseline
+for density, 27% for FFV, 33% for Tc, 39% for Rg and 55% for Tg. The notebook includes an
+NNLS blend over OOF predictions, but that cell was never run, so no fitted blend weights exist.
+The 50/50 row is a plain average, and its 0.0002 gain over LightGBM alone is within what I would
+expect from noise.
+
+Two things make these numbers somewhat optimistic. Both models early-stop on the same fold they
+are scored on, and the gain-pruning step that picks the 938 features was fit on all labelled rows
+before the CV split. Neither changes the gap to the baseline, but the absolute values would rise a
+little under nested validation. I made a Kaggle submission, but I am reporting only these local
+numbers.
+
+## Where the signal came from
+
+**Whole-molecule descriptors, not substructure bits.** The phase4 notebook doesn't save its models,
+so for feature importance I used the five-fold LightGBM models saved in the repo's first commit.
+They use the phase1 recipe: 1,412 Mordred 2D descriptors, 2,048 Morgan radius-2 count bits and
+8 RDKit basics. Summing split gain over the five folds, Mordred descriptors carry 98.5% of the
+gain for Tg, 96.2% for FFV, 91.5% for Tc, 99.6% for density and 97.8% for Rg. That is despite the
+Morgan bits outnumbering them. The pruning step in phase4 says the same thing: it kept 75% of the
+Mordred columns but only 13% of the Morgan radius-2 counts and 36% of the radius-3 bits.
+
+The top features per target are mostly physically sensible:
+
+- **Tg:** `RotRatio`, the fraction of rotatable bonds, is the single largest feature (5.0% of
+  gain). Chain flexibility is the textbook driver of the glass transition.
+- **Density:** mean atomic mass (`Mm`), mean atomic number (`MZ`) and average molecular weight
+  (`AMW`), plus information-content indices. Heavier atoms per unit of structure mean a denser
+  material.
+- **Rg:** one descriptor, `MDEC-11` (a distance-edge count between primary carbons, effectively a
+  measure of how many chain ends there are and how far apart they sit), carries 13% of the gain on
+  its own.
+- **Tc:** the one target where a fingerprint bit leads: Morgan count bit 1143 takes 6.1% of the
+  gain, ahead of topological charge indices (`JGI2`, `JGT10`).
+- **FFV:** gain is spread thinly. The top feature has 1.0%, and the top 20 together have only 10%.
+  This is the target with 7,030 labels, and the model uses many weak descriptors rather than a few
+  strong ones.
+
+**LightGBM against CatBoost.** On the same pruned features, the two models' OOF predictions
+correlate at 0.97 to 0.99 per target. LightGBM has the lower error on a given row only about half
+the time (49 to 53%). That is why averaging them helps so little.
+
+## Why this architecture
+
+The label counts settled most of it. With 511 to 737 labels on four targets, a model that has to
+learn chemistry from raw structure (a graph network or a fine-tuned SMILES transformer) has too
+little data. Descriptor libraries like Mordred already encode chemistry: mass, polarity, shape and
+flexibility. Gradient-boosted trees handle that kind of wide, heterogeneous, partly redundant
+table well, without scaling, and they train in minutes per target. Every model is per-target and
+trained on masked labels, so FFV's 7,030 rows never swamp the small targets.
+
+The sequence of notebooks:
+
+- **`phase1.ipynb`**: the first end-to-end baseline (Mordred, Morgan counts and RDKit basics,
+  2,444 features, one LightGBM per target). Its own output reports a weighted MAE of 0.06827, but
+  it used plain shuffled folds, so duplicate polymers could leak across a split.
+- **`phase2.ipynb`**: label-sparsity audit, a small physics-motivated feature block, a
+  predict-the-mean check, and external Tg tables collected. No external data entered a scored model.
+- **`phase4.ipynb`**: the reference pipeline above. It adds MACCS keys and radius-3 Morgan bits,
+  variance and correlation filters (2,641 features), gain pruning (938), grouped folds, CatBoost
+  as a second model family, and 3 seeds. A Tanimoto-kernel SVR and the NNLS blend are written in
+  the notebook but were not executed.
+- **`phase5.ipynb` and `hybridpipeline.ipynb`**: the hybrid attempt. It adds 768-dimensional
+  ChemBERTa embeddings, Murcko-scaffold folds and a GINE graph network. **This did not produce a
+  usable comparison, so I make no claim that it improved anything.** The scored phase5 LightGBM
+  run set `min_data_in_leaf = 200` on folds with only 316 to 489 training rows. In 2 of 4 Tg folds
+  and 1 of 2 Tc folds, LightGBM found no usable features and predicted a constant. Its Tg MAE of
+  92.1 is worse than the fold-mean baseline. The GNN and stacking cells produced no scores, and
+  `hybridpipeline.ipynb` was never run. So the question of whether learned embeddings help is
+  still open.
+- **`track3.ipynb`** is excluded: it merges a "physics" block that is literally the five target
+  columns from `train.csv` into its features, so its scores measure leakage, not prediction.
+
+The Kaggle-side notebook (`neurips-preparedataset-predict.ipynb`) runs inference with per-target
+AutoGluon predictors trained outside this repo. I don't report a local score for them, because the
+repo contains no OOF predictions from those models.
+
+## The investigation
+
+<InvestigationLog client:visible entries={ENTRIES} />
+
+## Limits
+
+These are 5-fold OOF scores on one set of grouped folds, with early stopping and feature pruning
+that both saw the validation labels, so they are mildly optimistic. Grouping by exact canonical
+SMILES is weaker than grouping by scaffold, and the hidden test set may be further from the
+training data than these folds are. The feature importances come from the first-commit models
+(phase1 recipe), not from the phase4 models, which were not saved. The embedding and GNN branch
+is untested rather than negative. The clean test is to rerun phase5 with a leaf size scaled to each
+target and the phase4 folds, so that the embedding columns are the only change.
+
+Code and results: [github.com/rohit-ravi2/neurips-polymerprediction](https://github.com/rohit-ravi2/neurips-polymerprediction).
+OOF predictions: [`oof_lgb.csv`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/outputs/predictions/oof_lgb.csv),
+[`oof_cat.csv`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/outputs/predictions/oof_cat.csv);
+selected features: [`pruned_feature_names.json`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/outputs/predictions/pruned_feature_names.json);
+phase5 scaffold-fold manifests: [`artifacts/models_lgb/`](https://github.com/rohit-ravi2/neurips-polymerprediction/tree/main/artifacts/models_lgb);
+pipeline: [`phase4.ipynb`](https://github.com/rohit-ravi2/neurips-polymerprediction/blob/main/phase4.ipynb).
