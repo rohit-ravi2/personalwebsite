@@ -7,6 +7,7 @@ const SUBJECT_ORDER = [
   "Neural decoding",
   "Human genetics",
   "C. elegans",
+  "Cortical connectomics",
   "Clinical and molecular",
   "Robotics",
   "Competitions",
@@ -14,12 +15,16 @@ const SUBJECT_ORDER = [
   "Reasoning",
 ];
 
-const projects = await getCollection("projects");
-projects.sort((a: any, b: any) => {
+const allProjects = await getCollection("projects");
+allProjects.sort((a: any, b: any) => {
   return (
     new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime()
   );
 });
+
+const projects = allProjects.filter((project) => !project.data.earlierWork);
+const earlier = allProjects.filter((project) => project.data.earlierWork);
+const year = (date: Date) => new Date(date).getUTCFullYear();
 
 const grouped = SUBJECT_ORDER.map((subject) => ({
   subject,
@@ -104,6 +109,31 @@ const ungrouped = projects.filter(
                 />
               ))}
             </div>
+          </section>
+        )}
+        {earlier.length > 0 && (
+          <section class="w-full" aria-labelledby="earlier-work">
+            <h2 id="earlier-work" class="mb-3 text-xl font-semibold">
+              Earlier work
+            </h2>
+            <ul class="divide-y rounded-xl border bg-card text-sm">
+              {earlier.map((entity: any) => (
+                <li class="flex flex-col gap-1 px-5 py-3 sm:flex-row sm:items-baseline sm:gap-4">
+                  <span class="shrink-0 text-xs text-muted-foreground">
+                    {year(entity.data.startDate)}
+                  </span>
+                  <a
+                    href={"/projects/" + entity.slug}
+                    class="shrink-0 font-semibold hover:text-primary hover:underline"
+                  >
+                    {entity.data.title}
+                  </a>
+                  <span class="text-muted-foreground">
+                    {entity.data.description}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
       </div>

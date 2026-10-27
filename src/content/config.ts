@@ -32,6 +32,7 @@ const projectCollection = defineCollection({
       })
       .optional(),
     inProgress: z.boolean().optional(),
+    earlierWork: z.boolean().optional(),
   }),
 });
 
