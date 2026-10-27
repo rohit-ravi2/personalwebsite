@@ -2,12 +2,13 @@
 import ProjectCard from "src/components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 import IndexPageLayout from "../../layouts/IndexPageLayout.astro";
+import { SELECTED_WORK } from "../../data/selectedWork";
 
 const SUBJECT_ORDER = [
   "Neural decoding",
-  "Human genetics",
   "C. elegans",
   "Cortical connectomics",
+  "Human genetics",
   "Clinical and molecular",
   "Robotics",
   "Competitions",
@@ -24,6 +25,9 @@ allProjects.sort((a: any, b: any) => {
 
 const projects = allProjects.filter((project) => !project.data.earlierWork);
 const earlier = allProjects.filter((project) => project.data.earlierWork);
+const selected = SELECTED_WORK.map((slug) =>
+  allProjects.find((project) => project.slug === slug),
+).filter(Boolean);
 const year = (date: Date) => new Date(date).getUTCFullYear();
 
 const grouped = SUBJECT_ORDER.map((subject) => ({
@@ -49,6 +53,26 @@ const ungrouped = projects.filter(
       </p>
     ) : (
       <div class="flex w-full flex-col gap-10">
+        {selected.length > 0 && (
+          <section class="w-full" aria-labelledby="selected-work">
+            <h2 id="selected-work" class="mb-3 text-xl font-semibold">
+              Selected work
+            </h2>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {selected.map((entity: any) => (
+                <ProjectCard
+                  href={"/projects/" + entity.slug}
+                  heading={entity.data.title}
+                  subheading={entity.data.description}
+                  altText={entity?.data?.image?.alt}
+                  imagePath={entity?.data?.image?.url}
+                  dateStart={entity.data.startDate}
+                  inProgress={entity.data.inProgress}
+                />
+              ))}
+            </div>
+          </section>
+        )}
         <nav aria-label="Project subjects" class="flex flex-wrap gap-2">
           {grouped.map((group) => (
             <a

@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 import InProgressBadge from "../InProgressBadge.astro";
 const entries = await getCollection("projects");
-const selected = ["handwriting-emg", "libribrain-2026", "asd-myelin-timing", "robotic-movement"];
+import { SELECTED_WORK } from "../../data/selectedWork";
+const selected = SELECTED_WORK;
 const projects = selected
   .map((slug) => entries.find((entry) => entry.slug === slug))
   .filter(Boolean);

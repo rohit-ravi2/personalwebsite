@@ -3,16 +3,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomisedBreadCrumbs from "../components/CustomisedBreadCrumbs.astro";
 import { getEntry } from "astro:content";
 import about from "../data/about.json";
+import { SELECTED_WORK } from "../data/selectedWork";
 // The "Explore the work" box sits just before the "What I want to contribute" section.
 const exploreAfter =
   about.sections.findIndex((section) => section.title === "What I want to contribute") - 1;
 const selectedWork = await Promise.all(
-  [
-    "handwriting-emg",
-    "libribrain-2026",
-    "microns-dendritic",
-    "neural-control",
-  ].map(async (slug) => {
+  SELECTED_WORK.map(async (slug) => {
     const project = await getEntry("projects", slug);
     return {
       slug,
