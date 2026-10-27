@@ -49,6 +49,31 @@
         "There is much I still want to learn. I’m looking for work that demands depth: difficult data, mechanisms that remain uncertain, and tools that need to function beyond a demonstration. I want collaborators who care about both the quality of an explanation and what it could make possible for people.",
         "Illness changed the life I expected to have. It also helped clarify the work I want to devote myself to. My goal is to use machine learning, neuroscience, computation, and philosophy to tackle the hardest problems I can contribute to solving—and, through that work, make suffering more bearable."
       ]
+    },
+    {
+      "title": "Why the work looks the way it does",
+      "paragraphs": [
+        "I became ill at 19, at the start of college. For long stretches I could not attend school or hold a job, and there was no realistic way to join a lab or take an internship. That is why this site has no supervisor, internship or co-author on it yet. It was not a choice.",
+        "What I could do was work alone, at home, on public data and a single 8 GB GPU. Rather than let those years produce nothing, I used them to teach myself the tools and to take on real problems: reproducing published models, entering open competitions, and testing ideas against datasets that other researchers had released.",
+        "Working without anyone to check my results shaped how I work. I write down predictions before running an analysis where I can, build the control that could break a result before I believe it, and report the results I retracted alongside the ones that held. Several pages here record exactly that."
+      ]
+    },
+    {
+      "title": "One set of questions",
+      "paragraphs": [
+        "The project list looks scattered. It is organised around a small number of questions that the illness put in front of me and that I have not been able to put down.",
+        "The first is what can be read out of a nervous system. The wrist-EMG handwriting and LibriBrain MEG projects decode intended movement and heard speech from neural signals, and both turned as much on evaluation as on modelling: how much of an apparent result comes from the brain, and how much from the structure of the task.",
+        "The second is how much of what a nervous system does is set by its wiring. The C. elegans projects and the MICrONS dendritic work test the connectome against measured activity, and keep finding that physical proximity and cell identity explain more than the wiring diagram alone.",
+        "The third is how a nervous system can enter a profoundly different state and come back. That question came directly from my own experience, and it runs through the anesthesia work and the genetics projects on myelination and connective tissue, which ask how neural function can be disrupted by processes that a structural scan does not show.",
+        "Underneath these is a question from philosophy of mind: what a model of a nervous system can and cannot explain about experience. The remaining projects, in clinical prediction, molecular data and robotics, apply the same toolkit to problems where good public data existed."
+      ]
+    },
+    {
+      "title": "What comes next",
+      "paragraphs": [
+        "The missing piece is outside review: putting the results that hold up in front of other researchers and letting them test them.",
+        "I am looking for research and research-engineering work on neural interfaces, neural data and machine learning for biology: difficult data, mechanisms that are still uncertain, and colleagues who care about whether an explanation is actually right."
+      ]
     }
   ]
 }
