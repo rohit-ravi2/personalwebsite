@@ -1,0 +1,67 @@
+---
+title: "The line over the landing"
+startDate: 2026-10-30
+description: "The hip-to-head line drawn on the simulated 20 cm landing that holds, and on three misses, after a change that drives a tilted sole flat."
+tags: ["Robotics", "Simulation", "Humanoids"]
+draft: false
+order: 9
+---
+
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. The misses this is comparing against are in [Where the box jumps fail](/posts/robotic-movement/box-jump-failures/).
+
+## What the two lines are
+
+This is a MuJoCo simulation of the stock Unitree G1, with the published motor ratings and a 10 ms motor lag. The box is 20 cm high. Nothing on this page is a hardware result, and this is not a new count. The counted controller still passes 49 of 100 and falls on 21. Those clips are unchanged.
+
+The blue line is straight up from the hips, and it is as long as the distance from the hips to the head. That is the string. The other line runs from the hips to the head. It is orange while it is more than about 14 deg off the string, and green once it has come home. The number on the frame is that angle.
+
+## What changed in these eight clips
+
+These eight clips are not the counted controller. On landing, a foot tilted more than about 16 deg is driven back toward flat. The arms move only outside the landing that already holds: the line still rising past about 52 deg, or swinging back faster than that landing ever does. The undisturbed jump is unchanged at both timesteps. The 100-trial list was not re-run.
+
+One trial that used to pass, B14 at 1 ms, now unloads the feet for 23 ms. That is a regression, so this is not the working count.
+
+## The landing that holds
+
+Both timesteps. The line is about 41 deg forward when the heels meet the box, the feet are flat, and it is back near 4 deg once the body is standing.
+
+### N0
+
+<Clip src="/videos/robotic-movement/hip-line/N0-0p5ms.mp4" caption="Undisturbed, 0.5 ms. The line is 43 deg forward when the heels meet the box, the feet are flat, and it comes home to 4 deg. It holds." />
+
+<Clip src="/videos/robotic-movement/hip-line/N0-1ms.mp4" caption="Undisturbed, 1 ms. The line is 41 deg forward when the heels meet the box, the feet are flat, and it comes home to 4 deg. It holds." />
+
+## Three misses
+
+### C07
+
+Falls forward at both timesteps. At contact the line is about 51 deg and the feet are already nearly flat. The arms move once it is past about 52 deg. It is down for about a tenth of a second, and then it is over.
+
+<Clip src="/videos/robotic-movement/hip-line/C07-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. 0.5 ms. The feet are nearly flat and the line is 51 deg forward. It falls forward." />
+
+<Clip src="/videos/robotic-movement/hip-line/C07-1ms.mp4" caption="The same disturbance at 1 ms. The feet are nearly flat and the line is 51 deg forward. It falls forward." />
+
+### A04
+
+Short at both timesteps. The heels are about 11 cm behind the near edge while the line is about 49 deg forward, and they finish about 18 cm short. The head is over the box. The feet are not.
+
+<Clip src="/videos/robotic-movement/hip-line/A04-0p5ms.mp4" caption="The controller is nudged. 0.5 ms. The heels finish 18 cm short of the near edge. The line is forward and there is no surface under the feet." />
+
+<Clip src="/videos/robotic-movement/hip-line/A04-1ms.mp4" caption="The same nudge at 1 ms. The heels finish 18 cm short of the near edge." />
+
+### A22
+
+This one used to fall backward with the toes up about 28 deg. It now stays up, the feet end flat, and the line comes back to about 4 deg. The feet still arrive toes-up, and they leave the box for 37 ms at 0.5 ms and 36 ms at 1 ms, about 0.21 s after touchdown. That unload is why it is not a pass.
+
+<Clip src="/videos/robotic-movement/hip-line/A22-0p5ms.mp4" caption="The controller is nudged. 0.5 ms. The feet arrive 28 deg toes-up, end flat, and the body stays up. They unload for 37 ms, so this is not a pass." />
+
+<Clip src="/videos/robotic-movement/hip-line/A22-1ms.mp4" caption="The same nudge at 1 ms. The feet arrive 28 deg toes-up, end flat, and the body stays up. They unload for 36 ms." />
+
+Previous: [Where the box jumps fail](/posts/robotic-movement/box-jump-failures/).
