@@ -7,6 +7,13 @@ draft: false
 order: 10
 ---
 
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
 Part of the [Robotic Movement](/posts/robotic-movement/) series. The procedure these numbers come from is in [Generating robot movements without demonstrations](/posts/robotic-movement/no-demonstrations/). The hand results are in [Grasping and force-controlled manipulation](/posts/robotic-movement/manipulation/).
 
 ## What is supposed to transfer
@@ -88,15 +95,35 @@ Forty adaptation steps, with the cube required to be inside 6 cm at release, pla
 
 This cube is not one of the eight published setups, and those were not re-run. Five of eight is unchanged. One cube at one position is not a transfer result. A closer cube, written down before this one passed, is the next measurement.
 
+<Clip src="/videos/robotic-movement/generalize/dev_close_s2_1ms.mp4" caption="Seed 2 at 1 ms. The cube is placed at 1.1 cm. Every step is valid, and the carry is the real one. This pose is not one of the eight." />
+
+<Clip src="/videos/robotic-movement/generalize/dev_close_s2_0p5ms.mp4" caption="The same motion at 0.5 ms. The cube is placed at 2.0 cm. Every step stays valid." />
+
 ## 2026-10-30 — an earlier landing change, on one stored failure
 
 The counted box-jump controller still lands the undisturbed jump at both timesteps. The hip-to-head line ends about 4 degrees forward. On one stored trial, friction at 0.8 times stock, the box 1 cm closer, and a small controller nudge, it falls at both timesteps. At touchdown the line is 0.90 rad forward at 1 ms and 0.94 rad at 0.5 ms. The fall ends at 1.12 rad. Liftoff pitch is 0.35 rad, against 0.33 rad on the jump that lands.
 
 Two earlier changes were tried, each on its own. Less forward pitch in the dip, by 0.10 rad. A slower push, by 0.03 s. Each one made the undisturbed jump fall as well, and the stored trial still fell. Neither was kept. The hundred trials were not re-run. Forty-nine of one hundred is not a certified landing.
 
+<Clip src="/videos/robotic-movement/l1-failures/N0-1ms.mp4" caption="The counted controller, undisturbed, 1 ms. Both feet land on the box and the body holds." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C07-1ms.mp4" caption="The counted controller on the stored trial, 1 ms. Friction 0.8, the box 1 cm closer, the controller nudged. The feet stay on the box and the body falls forward." />
+
+<Clip src="/videos/robotic-movement/generalize/land_dip_n0_1ms.mp4" caption="Undisturbed, 1 ms, with the dip pitch reduced by 0.10 rad. The jump that was landing falls forward, short of the box." />
+
+<Clip src="/videos/robotic-movement/generalize/land_ramp_n0_1ms.mp4" caption="Undisturbed, 1 ms, with the push 0.03 s slower. It falls." />
+
 ## 2026-10-30 — the closer cube does not transfer
 
 The same forty steps on a closer cube did not pass. Seed 1 put the cube down at 2.9 cm at 1 ms and 2.5 cm at 0.5 ms, and the carry was the real one. The lift that got there is not valid at 0.5 ms. The stance is lost. Seed 2 did not place the cube. The search fell through to the waypoint again, and the cube settled 23 cm away at 1 ms and 21 cm away at 0.5 ms. Its lift was unbalanced at 0.5 ms. The pass on the first close cube does not transfer. Five of eight is unchanged. A further family, written down in case both seeds passed, was not run.
+
+<Clip src="/videos/robotic-movement/generalize/dev_closer_s1_1ms.mp4" caption="Closer cube, seed 1, 1 ms. The cube is put down at 2.9 cm. The lift that does it is the higher alternative." />
+
+<Clip src="/videos/robotic-movement/generalize/dev_closer_s1_0p5ms.mp4" caption="The same lift at 0.5 ms. The stance is lost. The cube being near the target does not make the step valid." />
+
+<Clip src="/videos/robotic-movement/generalize/dev_closer_s2_1ms.mp4" caption="Closer cube, seed 2, 1 ms. The carry goes to a waypoint and does not release there. The cube settles 23 cm away." />
+
+<Clip src="/videos/robotic-movement/generalize/dev_closer_s2_0p5ms.mp4" caption="The same waypoint at 0.5 ms. The cube settles 21 cm away. The lift is unbalanced." />
 
 ## 2026-10-30 — a mass shift and a placement gain, on the same fall
 
@@ -105,3 +132,17 @@ The counted jump was run again. It still lands. The same stored trial still fall
 Moving the dip's mass 3 cm back was achieved. The undisturbed jump then fell the other way, and the line ended 1.24 rad with the head behind the hips. The stored trial also fell, and at 1 ms its feet were not on the box. Neither was kept.
 
 Raising the in-flight foot placement gain by 0.20 left the undisturbed jump landing. The stored trial still fell, and at 1 ms the touchdown line was the same 0.90 rad. The gain changed. The fall did not. The hundred trials were not re-run.
+
+<Clip src="/videos/robotic-movement/generalize/land_lean_n0_1ms.mp4" caption="Undisturbed, 1 ms, dip mass 3 cm farther back. The body reaches the box and falls with the head behind the hips. The line ends at 1.24 rad the other way." />
+
+<Clip src="/videos/robotic-movement/generalize/land_ke_c07_1ms.mp4" caption="The stored trial, 1 ms, placement gain raised by 0.20. The body still falls forward on the box. The touchdown line is the same 0.90 rad." />
+
+## 2026-10-30 — scoring the handed posture, on the closer cube
+
+The 0.5 ms check inside the search had been scored from the standing posture, not from the posture the robot was actually in. The search now scores the check from the handed posture. One seed of the closer cube. The frozen replay is still the grade.
+
+At 1 ms the cube is placed at 2.7 cm. Reach, lift, and carry are valid, and the lift and the carry are the real search, not a waypoint. At 0.5 ms the lift is valid too. The stance loss from the previous seed is not there. The carry is not valid. The cube is inside 6 cm at release and settles at 3.4 cm, and the time spent inside that ball is short of the required 0.15 s by 1 ms. The seed does not pass. A second seed was not run. Five of eight is unchanged.
+
+<Clip src="/videos/robotic-movement/generalize/ga9_closer_s1_1ms.mp4" caption="Closer cube, one seed, 1 ms, with the check scored from the handed posture. The cube is placed at 2.7 cm. The lift and the carry are the real search." />
+
+<Clip src="/videos/robotic-movement/generalize/ga9_closer_s1_0p5ms.mp4" caption="The same motion at 0.5 ms. The lift holds. The carry is inside 6 cm and the dwell is short by 1 ms, so the step is not valid. The cube settles at 3.4 cm." />
