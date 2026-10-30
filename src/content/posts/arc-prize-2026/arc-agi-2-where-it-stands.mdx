@@ -1,0 +1,34 @@
+---
+title: "Where the ARC-AGI-2 entry stands"
+startDate: 2026-10-30
+description: "Public score 30.14, rank 1450, and the plan for the submissions that remain before the 2 November deadline."
+tags: ["ARC-AGI-2", "Kaggle", "ARC Prize"]
+draft: false
+order: 2
+---
+
+Part of the [ARC Prize 2026](/posts/arc-prize-2026/) series. The other track is [Where the ARC-AGI-3 entry stands](/posts/arc-prize-2026/arc-agi-3-where-it-stands/).
+
+## The score on the board
+
+The public leaderboard file downloaded at 21:52 UTC on 30 October 2026 lists Rohit Ravi at rank 1450 of 3543 teams, score 30.14, from one submission on 21 October. The kernel was `rohitravi2/arc2-ttt-baseline-rr`: the public NVARC Qwen3-4B test-time-training pipeline, with the program-synthesis leg switched off. Kaggle's API reported the same rank and the same score that evening.
+
+On that same file the public medal lines are gold (rank 16) 73.19, silver (rank 174) 33.19, and bronze (rank 348) 32.22. On 28 October those lines were 69.72, 33.06, and 31.94. The public board is about half of the hidden test. Final medals use the other half, so a public score is not a medal.
+
+Most teams between about 32 and 36 are running variants of that same Qwen3-4B pipeline. Notes written on 28 October, from a public gap analysis, put the run-to-run spread of the pipeline at about 29.7 to 33.9. One run landing near 33 does not settle a medal either way. The teams at 66 and above trained their own models. That is not the target for the days left.
+
+## What is in the queue
+
+At 17:51 EDT a second kernel was pushed: `rohitravi2/arc2-nvarc-fast-baseline-rr`, version 1. It is the same model and the same training setup as the October 21 fork (128 test-time-training sequences, LoRA rank 256, 16 augmented views, depth-first search at probability 0.2, `score_kgmon` selection), rebased onto the throughput-patched public notebook. That patch groups equal-length views into one decode batch, spends the 12 hour budget on cheap tasks first, and uses leftover time for a second seeded pass on the least certain tasks. The commit run checks four public evaluation tasks and is capped at about 32 minutes. It is a smoke test, not a leaderboard score.
+
+The hidden-test run starts only after that commit finishes and the kernel is submitted. It had not been submitted at the time this note was written.
+
+## What is not in this run
+
+A program-synthesis leg was attempted twice earlier and produced no score. The first attempt loaded a grid model that has no chat template, so every task errored. The second had its time budget set to zero. It stays out until a commit actually finishes.
+
+A separate CPU grammar, scored only on the training distribution, solves 81 of 830 development outputs and 13 of 111 probe outputs. That is an exact match on training-set test outputs, and it is not a Kaggle score. The public evaluation file was not used to build it. An earlier grammar in another repo, scored once, was 0 of 172 on the public evaluation set. Neither number is on the leaderboard.
+
+## The submissions left
+
+The competition allows one submission per UTC day, and the deadline is 2 November 2026 at 23:59 UTC, which is 6:59 PM EST. The UTC day changes at 8:00 PM EDT on 30 October and again on 31 October, then at 7:00 PM EST on 1 and 2 November. The plan is to use each of those days: the throughput-patched pipeline first, then a variant that rescores each candidate under 16 views instead of 8, then whatever the returned scores justify. Each official score will get its own note, with the kernel version and the public number Kaggle returns. A commit-run printout will not be reported as a leaderboard score.
