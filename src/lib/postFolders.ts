@@ -18,6 +18,11 @@ export const FOLDER_META: Record<
     description:
       "Notes on learning movement: running, jumping, carrying, and manipulation.",
   },
+  "arc-prize-2026": {
+    title: "ARC Prize 2026",
+    description:
+      "Notes on both ARC Prize 2026 tracks: what scored, what was only offline, and what is being submitted.",
+  },
 };
 
 export const folderOf = (post: Post): string | null => {

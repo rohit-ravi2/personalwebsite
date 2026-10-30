@@ -1,0 +1,42 @@
+---
+title: "Where the ARC-AGI-3 entry stands"
+startDate: 2026-10-30
+description: "The public score is 22.38 from one October 21 kernel. Local search on the 25 public games has not produced an autonomous agent near that, and a labelled rerun of the same kernel is in flight for tonight's first submission slot."
+tags: ["ARC", "Kaggle", "ARC-AGI-3"]
+draft: false
+order: 1
+---
+
+Part of the [ARC Prize 2026](/posts/arc-prize-2026/) series.
+
+This is the state of the ARC-AGI-3 track on the evening of 30 October 2026, before any new score has come back. The deadline is 2 November 2026, 23:59 UTC. Kaggle allows one submission per UTC day. The counter resets at 00:00 UTC, which is 20:00 EDT tonight and on the 31st, then 19:00 EST on 1 and 2 November.
+
+## Three numbers that are not the same
+
+| Number | What it is | What it is not |
+|---|---|---|
+| 22.38 | Kaggle public score, submission ref 57492955, 21 October 2026, 18:11 UTC. Kernel `rohitravi2/lantern-run-arc3`, described at submit time as "D-prime scheduler fork, v2". | Not a score from the local `MyAgent` file. |
+| 14.95 | Offline official mean on the 25 public games, from replaying action words that were found by hand and by search. Fresh environments, official pin. 23550/1575. | Not autonomous. The words are not a policy that runs on a hidden game. |
+| 0.0 | Official scorecard for the autonomous `MyAgent` on those same 25 games, 200 actions, skipping actions that do not change the frame. Zero levels. Three games reached game-over. | Not a Kaggle submission. |
+
+A harness mean of 16.48 is an older incremental sum that omits the official pin. It is not a fourth measurement of the same thing.
+
+## What the 22.38 agent actually is
+
+It is a private fork of a public notebook that replaces the scheduler's slot priority with a formula called D-prime, on top of Daniel Franzen's Milestone 2 harness and Tufa Labs' Duck setup. The model is a quantized Qwen, served locally in the kernel. There is no internet at score time. The public writeup of that notebook says the same code has landed between the high 20s and 31.54 on different runs, and that one submission is not enough to separate the scheduler from noise. Our one draw was 22.38. That is the number to beat.
+
+The kernel that produced it is left in place. Tonight's run is a new kernel, `rohitravi2/arc3-dprime-slot1`, with the competition-rerun path unchanged. The commit path, which does not score, no longer sits through an empty nine-hour rehearsal. As of this writing the commit is running and has not been submitted.
+
+## What local search has and has not done
+
+Closed probes are written down and are not being rerun: a third subset of the eight ft09 click targets, the lp85 colour-3 windows read as glyphs, several level-6 covers, and a component-signature BFS that aliases sprites under translation.
+
+Overnight search on the public games, with environment reset allowed, is offline. Equal-time random search cleared more levels than the longer graph, beam, kinetic, and sprite runs. The best graph pass in the saved result files cleared a level on a handful of games (sp80, vc33, cd82, lp85, ft09 among them) and scored about 1.3 on the harness mean across all 25. That is a real signal that state hashing plus reset can finish an easy level. It is not a hidden-game policy, and it is not close to 22.38.
+
+Hard-coded words and game-id lookups for the public set will not score on the hidden games. The transferable pieces are the ones that do not name a game: detect clickable targets from the frame, hash states, search with reset, skip actions that change nothing, and spend fewer actions once a level is solved. Efficiency is part of the official score.
+
+## The plan from here
+
+Use the remaining submissions. The first UTC slot tonight is the labelled D-prime rerun, because nothing better has been verified and an untested edit of the harness can fail the only run that scores. The second slot, after 20:00 EDT, is for the best general addition that can be checked on the 25 public games before it is pushed. After that, one submission per UTC day through the deadline. Each one will be recorded with the kernel version, the change, the local evidence, and the public score when Kaggle returns it.
+
+Nothing on this page is a new leaderboard score.
