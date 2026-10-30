@@ -43,4 +43,15 @@ At 1 ms both carries stayed valid. Neither cube fell. The farther one was placed
 
 Across every rollout in that pair, no knee or hand touched the floor. The first bad event was always one foot going to zero load while the other foot still held the weight. On the 1 ms runs that lasted less than the quarter-second the stance rule allows, so the step still passed. The historical fall, the one that left the cube 94 cm away with a non-foot part on the floor, did not show up at this shorter search. I am not calling that fall explained.
 
-The gap this run actually found: a solution accepted at 1 ms does not have to survive 0.5 ms, and the pick-and-place search never asks it to. The throw and the jump already score the worse of the two timesteps. That is the next change, tested on a cube position that is not one of the eight.
+The gap this run actually found: a solution accepted at 1 ms does not have to survive 0.5 ms, and the pick-and-place search never asks it to. The throw and the jump already score the worse of the two timesteps.
+
+## 2026-10-30 — searching at both timesteps
+
+Same budget, on a cube that is not one of the eight, at (0.16 m, −0.30 m). One seed.
+
+| search | 1 ms | 0.5 ms |
+|---|---|---|
+| 1 ms only | steps valid, placed 8.8 cm | carry does not reach, placed 9.2 cm |
+| worse of the two timesteps | steps valid, placed 6.4 cm | steps valid, placed 6.9 cm |
+
+Scoring both timesteps removed the 0.5 ms failure and cut the miss. It did not get inside 6 cm. The cube is on the table either way. The vertical 3 cm is the target point sitting above where a 6 cm cube rests, and the rule allows that. The eight published setups were not re-run, so the 5 of 8 number is unchanged. A second seed of the both-timesteps search is the next measurement, because 4 mm is inside the run-to-run scatter already on the books.
