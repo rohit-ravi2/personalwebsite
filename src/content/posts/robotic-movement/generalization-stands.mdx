@@ -146,3 +146,21 @@ At 1 ms the cube is placed at 2.7 cm. Reach, lift, and carry are valid, and the 
 <Clip src="/videos/robotic-movement/generalize/ga9_closer_s1_1ms.mp4" caption="Closer cube, one seed, 1 ms, with the check scored from the handed posture. The cube is placed at 2.7 cm. The lift and the carry are the real search." />
 
 <Clip src="/videos/robotic-movement/generalize/ga9_closer_s1_0p5ms.mp4" caption="Replay of that motion at 0.5 ms. The lift holds and the cube settles near 3 cm. The graded run missed the 0.15 s hold by 1 ms. This replay cleared it. The seed was not counted as a pass." />
+
+## 2026-10-30 — the task layer changes one landing request
+
+The stored fall is already at 0.90 rad when the feet touch. The jump that lands is at 0.61 rad. The task layer asked for 0.10 rad less forward pitch at launch. That parameter sits on its stop, so the request clips and was not rolled.
+
+The revised request extends the trunk during flight by 0.15 rad. An equal budget raises the capture gain by 0.30 instead. The capture gain is applied only after the touchdown line is stored.
+
+The higher capture gain left that line at 0.90 rad at 1 ms and 0.94 rad at 0.5 ms, the same digits as the stored fall. The feet stayed on the box. The body still fell, and a joint limit is now among the failed gates. The undisturbed jump still landed. Not kept.
+
+The flight extension moved the line to 0.70 rad at 1 ms and 0.71 rad at 0.5 ms. The undisturbed jump still landed at 1 ms. At 0.5 ms it ends upright, and it is not valid because the feet hop. On the stored trial at 1 ms, both feet are on the top and the heels are 12 cm short of the edge. The body falls. At 0.5 ms the feet are not both on the top. Not kept.
+
+The request changed, and the touchdown line changed with it. The landing was not saved. The hundred trials were not re-run. Forty-nine of one hundred is not a certified landing. Five of eight is unchanged. This is simulation.
+
+<Clip src="/videos/robotic-movement/generalize/land_kcp_c07_1ms.mp4" caption="Stored trial, 1 ms, capture gain raised by 0.30. The body still falls forward on the box. The touchdown line is the same 0.90 rad." />
+
+<Clip src="/videos/robotic-movement/generalize/land_fly_c07_1ms.mp4" caption="Stored trial, 1 ms, trunk extended 0.15 rad in flight. The touchdown line is 0.70 rad. The heels are 12 cm short of the edge, both feet are on the top, and the body falls." />
+
+<Clip src="/videos/robotic-movement/generalize/land_fly_n0_0p5ms.mp4" caption="Undisturbed, 0.5 ms, the same trunk extension. The body ends upright on the box. The grade fails because the feet hop. At 1 ms this jump still lands." />
