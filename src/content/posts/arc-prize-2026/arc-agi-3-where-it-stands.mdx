@@ -1,7 +1,7 @@
 ---
 title: "Where the ARC-AGI-3 entry stands"
 startDate: 2026-10-30
-description: "The public score is 22.38 from one October 21 kernel. Local search on the 25 public games has not produced an autonomous agent near that, and a labelled rerun of the same kernel is in flight for tonight's first submission slot."
+description: "The public score to beat is still 22.38 from 21 October. The 30 October rerun, ref 57817929, scored 0.00 in about half an hour and did not replace it."
 tags: ["ARC", "Kaggle", "ARC-AGI-3"]
 draft: false
 order: 1
@@ -9,7 +9,7 @@ order: 1
 
 Part of the [ARC Prize 2026](/posts/arc-prize-2026/) series. The other track is [Where the ARC-AGI-2 entry stands](/posts/arc-prize-2026/arc-agi-2-where-it-stands/).
 
-This is the state of the ARC-AGI-3 track on the evening of 30 October 2026, before any new score has come back. The deadline is 2 November 2026, 23:59 UTC. Kaggle allows one submission per UTC day. The counter resets at 00:00 UTC, which is 20:00 EDT tonight and on the 31st, then 19:00 EST on 1 and 2 November.
+This is the state of the ARC-AGI-3 track on the evening of 30 October 2026. A later section records the score that came back the same evening. The deadline is 2 November 2026, 23:59 UTC. Kaggle allows one submission per UTC day. The counter resets at 00:00 UTC, which is 20:00 EDT tonight and on the 31st, then 19:00 EST on 1 and 2 November.
 
 ## Three numbers that are not the same
 
@@ -48,3 +48,9 @@ Nothing above is a new leaderboard score.
 ## 30 October, 6:06 PM EDT
 
 Submitted ref 57817929, kernel `rohitravi2/arc3-dprime-slot1` version 1. It is the D-prime fork again. The commit run writes the required parquet and returns. The scoring run is the competition rerun, and that path is the October 21 kernel. Kaggle has accepted it and the status is pending. The public score is still 22.38 until this one comes back. No submissions remain in the UTC day that ends at 8:00 PM EDT.
+
+## 30 October, 6:46 PM EDT
+
+Ref 57817929 scored 0.00. Kaggle marked it complete about 32 minutes after the 6:06 PM submit. A full play of this kernel takes hours. The rank is still 2135, so the public score of the entry is still 22.38 from ref 57492955.
+
+The kernel log API still returns the commit, not the scoring pass. The commit correctly recorded `TRUE_SUBMISSION=False` and wrote a one-row parquet. The leading account of the zero is that the scoring pass took that same shortcut. There is no rerun log to confirm it. The next submission, for the UTC day that opens at 8:00 PM EDT, calls the benchmark if the competition gateway answers, including when the rerun flag is unset. A commit still has no gateway and still returns after writing the parquet.
