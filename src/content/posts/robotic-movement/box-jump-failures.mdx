@@ -1,0 +1,289 @@
+---
+title: "Where the box jumps fail"
+startDate: 2026-10-29
+description: "Every missed trial of the current simulated 20 cm G1 box jump, rendered from the side, so the failures can be watched."
+tags: ["Robotics", "Simulation", "Humanoids"]
+draft: false
+order: 8
+---
+
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series. The undisturbed landing, and how the jump was built, is in [Designing a robot jump](/posts/robotic-movement/jumping/).
+
+## What these clips are
+
+This is a MuJoCo simulation of the stock Unitree G1, with the published motor ratings and a 10 ms motor lag. The box is 20 cm high. Nothing on this page is a hardware result.
+
+The count is a frozen list of 100 trials. A trial passes only when the same controller lands and holds at both the 1 ms timestep and the 0.5 ms timestep. The current controller passes 49. It falls on 21. The other 30 stay up and still miss the hold: the feet hop, a joint runs through its stop, the body is not quiet at the start, or the feet drift during the hold. Every one of those 72 misses is below, plus the undisturbed landing at both timesteps so there is something to compare against.
+
+The camera is fixed, from the side, in real time. The label on the frame is the trial, the timestep, and FALL, FAIL, or HOLDS. Scrub the bar if a fall happens quickly.
+
+## The undisturbed landing
+
+Both timesteps land on the box and hold.
+
+### N0
+
+<Clip src="/videos/robotic-movement/l1-failures/N0-0p5ms.mp4" caption="Undisturbed. Both feet land on the box and the body holds for three seconds." />
+
+<Clip src="/videos/robotic-movement/l1-failures/N0-1ms.mp4" caption="Undisturbed. Both feet land on the box and the body holds for three seconds." />
+
+## Falls
+
+Twenty-one trials fall. If both timesteps were rendered, they sit together, including a timestep that stays up when the other one falls.
+
+### P3
+
+<Clip src="/videos/robotic-movement/l1-failures/P3-0p5ms.mp4" caption="One of the four original disturbances. The body falls. The heel stops just short of the near edge." />
+
+### A01
+
+<Clip src="/videos/robotic-movement/l1-failures/A01-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The waist pitch joint runs past its stop during the land." />
+
+### A02
+
+<Clip src="/videos/robotic-movement/l1-failures/A02-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A02-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 14 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+### A04
+
+<Clip src="/videos/robotic-movement/l1-failures/A04-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 18 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A04-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 18 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+### A08
+
+<Clip src="/videos/robotic-movement/l1-failures/A08-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 17 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A08-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 26 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+### A10
+
+<Clip src="/videos/robotic-movement/l1-failures/A10-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 16 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A10-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The waist pitch joint runs past its stop during the land." />
+
+### A22
+
+<Clip src="/videos/robotic-movement/l1-failures/A22-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 35 cm short of the near edge. The left ankle pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A22-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls." />
+
+### A26
+
+<Clip src="/videos/robotic-movement/l1-failures/A26-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 5 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A26-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The waist pitch joint runs past its stop during the land." />
+
+### A29
+
+<Clip src="/videos/robotic-movement/l1-failures/A29-0p5ms.mp4" caption="The controller is nudged by a small random draw. The body falls. The heel finishes 56 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A29-1ms.mp4" caption="The controller is nudged by a small random draw. The body falls." />
+
+### B07
+
+<Clip src="/videos/robotic-movement/l1-failures/B07-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body falls. The heel stops just short of the near edge." />
+
+### B11
+
+<Clip src="/videos/robotic-movement/l1-failures/B11-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body falls. The heel finishes 20 cm short of the near edge." />
+
+### B14
+
+<Clip src="/videos/robotic-movement/l1-failures/B14-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body falls. The heel finishes 15 cm short of the near edge." />
+
+### B18
+
+<Clip src="/videos/robotic-movement/l1-failures/B18-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body falls. The heel finishes 18 cm short of the near edge. The waist pitch joint runs past its stop during the land." />
+
+<Clip src="/videos/robotic-movement/l1-failures/B18-1ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body is still moving at the start, so the trial does not count." />
+
+### B20
+
+<Clip src="/videos/robotic-movement/l1-failures/B20-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body falls. The waist pitch joint runs past its stop during the land." />
+
+### B26
+
+<Clip src="/videos/robotic-movement/l1-failures/B26-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body falls." />
+
+### C07
+
+<Clip src="/videos/robotic-movement/l1-failures/C07-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C07-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+### C12
+
+<Clip src="/videos/robotic-movement/l1-failures/C12-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C12-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+### C16
+
+<Clip src="/videos/robotic-movement/l1-failures/C16-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C16-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+### C23
+
+<Clip src="/videos/robotic-movement/l1-failures/C23-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The heel finishes 43 cm short of the near edge." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C23-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+### C30
+
+<Clip src="/videos/robotic-movement/l1-failures/C30-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+### C31
+
+<Clip src="/videos/robotic-movement/l1-failures/C31-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C31-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The body falls. The feet stay on the box while the body tips." />
+## Up, but not a pass
+
+These thirty trials never fall in the clips below. They still miss the hold.
+
+### P2
+
+<Clip src="/videos/robotic-movement/l1-failures/P2-0p5ms.mp4" caption="One of the four original disturbances. The waist pitch joint runs past its stop during the push." />
+
+<Clip src="/videos/robotic-movement/l1-failures/P2-1ms.mp4" caption="One of the four original disturbances. The waist pitch joint runs past its stop during the push." />
+
+### A06
+
+<Clip src="/videos/robotic-movement/l1-failures/A06-0p5ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 38 ms, starting 0.06 s after touchdown." />
+
+### A12
+
+<Clip src="/videos/robotic-movement/l1-failures/A12-0p5ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 25 ms, starting 0.05 s after touchdown." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A12-1ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 27 ms, starting 0.05 s after touchdown." />
+
+### A15
+
+<Clip src="/videos/robotic-movement/l1-failures/A15-0p5ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 27 ms, starting 0.05 s after touchdown." />
+
+### A21
+
+<Clip src="/videos/robotic-movement/l1-failures/A21-0p5ms.mp4" caption="The controller is nudged by a small random draw. The waist pitch joint runs past its stop during the push." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A21-1ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 23 ms, starting 0.05 s after touchdown." />
+
+### A23
+
+<Clip src="/videos/robotic-movement/l1-failures/A23-0p5ms.mp4" caption="The controller is nudged by a small random draw. The waist pitch joint runs past its stop during the push." />
+
+<Clip src="/videos/robotic-movement/l1-failures/A23-1ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 23 ms, starting 0.05 s after touchdown." />
+
+### A28
+
+<Clip src="/videos/robotic-movement/l1-failures/A28-0p5ms.mp4" caption="The controller is nudged by a small random draw. The feet unload for 25 ms, starting 0.05 s after touchdown." />
+
+### A30
+
+<Clip src="/videos/robotic-movement/l1-failures/A30-0p5ms.mp4" caption="The controller is nudged by a small random draw. The waist pitch joint runs past its stop during the push." />
+
+### B01
+
+<Clip src="/videos/robotic-movement/l1-failures/B01-1ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The feet unload for 20 ms, starting 0.17 s after touchdown. The feet or the pelvis keep drifting through the hold." />
+
+### B08
+
+<Clip src="/videos/robotic-movement/l1-failures/B08-1ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body is still moving at the start, so the trial does not count." />
+
+### B09
+
+<Clip src="/videos/robotic-movement/l1-failures/B09-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The feet unload for 21 ms, starting 0.05 s after touchdown." />
+
+### B22
+
+<Clip src="/videos/robotic-movement/l1-failures/B22-1ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The body is still moving at the start, so the trial does not count." />
+
+### B28
+
+<Clip src="/videos/robotic-movement/l1-failures/B28-1ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The feet or the pelvis keep drifting through the hold." />
+
+### B29
+
+<Clip src="/videos/robotic-movement/l1-failures/B29-0p5ms.mp4" caption="The box is 1 cm farther away, and the start pose is slightly off. The feet unload for 23 ms, starting 0.05 s after touchdown." />
+
+### C00
+
+<Clip src="/videos/robotic-movement/l1-failures/C00-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+### C01
+
+<Clip src="/videos/robotic-movement/l1-failures/C01-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 20 ms, starting 0.04 s after touchdown." />
+
+### C03
+
+<Clip src="/videos/robotic-movement/l1-failures/C03-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 37 ms, starting 0.05 s after touchdown." />
+
+### C04
+
+<Clip src="/videos/robotic-movement/l1-failures/C04-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+### C06
+
+<Clip src="/videos/robotic-movement/l1-failures/C06-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 21 ms, starting 0.04 s after touchdown." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C06-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+### C08
+
+<Clip src="/videos/robotic-movement/l1-failures/C08-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 20 ms, starting 0.04 s after touchdown." />
+
+### C09
+
+<Clip src="/videos/robotic-movement/l1-failures/C09-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 45 ms, starting 0.06 s after touchdown." />
+
+### C10
+
+<Clip src="/videos/robotic-movement/l1-failures/C10-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 26 ms, starting 0.06 s after touchdown." />
+
+### C14
+
+<Clip src="/videos/robotic-movement/l1-failures/C14-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 25 ms, starting 0.05 s after touchdown." />
+
+### C17
+
+<Clip src="/videos/robotic-movement/l1-failures/C17-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+### C18
+
+<Clip src="/videos/robotic-movement/l1-failures/C18-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C18-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+### C19
+
+<Clip src="/videos/robotic-movement/l1-failures/C19-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 31 ms, starting 0.05 s after touchdown." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C19-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 20 ms, starting 0.04 s after touchdown. The waist pitch joint runs past its stop during the push." />
+
+### C21
+
+<Clip src="/videos/robotic-movement/l1-failures/C21-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 21 ms, starting 0.05 s after touchdown." />
+
+### C22
+
+<Clip src="/videos/robotic-movement/l1-failures/C22-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 29 ms, starting 0.05 s after touchdown. The waist pitch joint runs past its stop during the push." />
+
+### C25
+
+<Clip src="/videos/robotic-movement/l1-failures/C25-0p5ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 24 ms, starting 0.05 s after touchdown. The waist pitch joint runs past its stop during the push." />
+
+<Clip src="/videos/robotic-movement/l1-failures/C25-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The waist pitch joint runs past its stop during the push." />
+
+### C29
+
+<Clip src="/videos/robotic-movement/l1-failures/C29-1ms.mp4" caption="Friction is 0.8 times stock, the box is 1 cm closer, and the controller is nudged. The feet unload for 27 ms, starting 0.05 s after touchdown." />
+Previous: [Designing a robot jump from its physical limits](/posts/robotic-movement/jumping/).
