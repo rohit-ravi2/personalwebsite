@@ -418,3 +418,19 @@ Welding when the side offset has just started to grow, instead of at 6 cm, engag
 <Clip src="/videos/robotic-movement/generalize/stack_servo_noweld.mp4" caption="Same reach with the weld withheld. The hand comes to 4.5 cm and leaves. The box stays on the table." />
 
 <Clip src="/videos/robotic-movement/generalize/stack_servo_turn.mp4" caption="Weld at the closest approach. The box is carried off to the side. It is not placed on the base." />
+
+## 2026-10-31 — with the yaw held, the stack stays standing and still misses
+
+The closed light stack is 0 of 4, and that count stands. The reaches below are the same nominal pair on G1 at 1 ms. The leg servo is on. The reach prior keeps waist yaw and waist roll at the stance and bends at the waist instead. These are not a new stack score. This is simulation.
+
+With the grasp weld withheld, the palm comes to 1.1 cm off the center of the top face and 1.0 cm above it. The box never moves. Both feet stay loaded. The distance to the center of the box is 4.1 cm. The reach gate is 3 cm, so the reach does not pass.
+
+Welding once the hand has just passed that point attaches the box 1.2 cm off the center of the top. The robot stays standing. The box stays on the table.
+
+The lift raises the box. The place brings it part of the way and sets it back on the table, 7.8 cm from the base. The torso stays upright. The base is still on the table. This is not a stack.
+
+<Clip src="/videos/robotic-movement/generalize/stack_cap_noweld.mp4" caption="G1, yaw held in the plan, 1 ms. The hand stops 1 cm above the box. Both feet stay loaded. The box does not move." />
+
+<Clip src="/videos/robotic-movement/generalize/stack_cap_turn.mp4" caption="Same plan, weld at that approach. The box is attached 1.2 cm off the top. The robot stays standing." />
+
+<Clip src="/videos/robotic-movement/generalize/stack_cap_cell.mp4" caption="Grasp, lift, and place. The box is lifted, then set back on the table, 7.8 cm from the base. This is not a stack." />
