@@ -102,3 +102,9 @@ On the 25 local games, the official score function puts a cap of 21.14 on cleari
 ## 31 October, 1:12 AM EDT
 
 The memory kernel's first commit did not play. Loading the weights took 26 minutes. On the previous commit the same load took 5 minutes. The launcher waits 12 minutes, then starts the game while the server is still loading. The server printed ready at 05:02:16 UTC. The game ended at 05:02:17. The rehearsal finished 0 of 6 levels, one RESET, and zero model tokens. The placeholder file was written only after the guard line. This is not a Kaggle score. It is not evidence about the 31.46 figure. A second commit is queued. On a commit it waits for the local server before the rehearsal clock starts. The scoring path is unchanged. Nothing was submitted. The public score is still 22.38.
+
+## 31 October, 1:28 AM EDT
+
+The rules the model wrote for one game match the local click. On `ft09`, the first click that changes the cell and at most 64 other cells is a 2-cycle on levels 1, 2, and 3, and a 3-cycle on level 4. Level 4 goes 8, 12, 9, and back to 8. The model had already written those cycle lengths. This is that one game.
+
+On `m0r0` and `sc25`, the same kind of click matched the next level on 6 of 6 adjacent pairs. Five of the six pairs are `sc25`, a 2-cycle on every level. Copying the level-3 rule onto `ft09` level 4 would name the wrong cycle. The stored action list still does not solve the next level. This is not a Kaggle score. The public score is still 22.38.
