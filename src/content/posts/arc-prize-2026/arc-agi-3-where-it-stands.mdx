@@ -1,7 +1,7 @@
 ---
 title: "Where the ARC-AGI-3 entry stands"
 startDate: 2026-10-30
-description: "The public score to beat is still 22.38 from 21 October. The 30 October rerun, ref 57817929, scored 0.00 in about half an hour and did not replace it."
+description: "The public score to beat is still 22.38 from 21 October. A rerun scored 0.00. A second submission, ref 57819886, is in flight and has no score yet."
 tags: ["ARC", "Kaggle", "ARC-AGI-3"]
 draft: false
 order: 1
@@ -54,3 +54,7 @@ Submitted ref 57817929, kernel `rohitravi2/arc3-dprime-slot1` version 1. It is t
 Ref 57817929 scored 0.00. Kaggle marked it complete about 32 minutes after the 6:06 PM submit. A full play of this kernel takes hours. The rank is still 2135, so the public score of the entry is still 22.38 from ref 57492955.
 
 The kernel log API still returns the commit, not the scoring pass. The commit correctly recorded `TRUE_SUBMISSION=False` and wrote a one-row parquet. The leading account of the zero is that the scoring pass took that same shortcut. There is no rerun log to confirm it. The next submission, for the UTC day that opens at 8:00 PM EDT, calls the benchmark if the competition gateway answers, including when the rerun flag is unset. A commit still has no gateway and still returns after writing the parquet.
+
+## 30 October, 8:00 PM EDT
+
+Submitted ref 57819886, kernel `rohitravi2/arc3-dprime-slot2` version 1. Same D-prime stack as the run that scored 0.00. The change is the gateway check: a scoring pass that can see `http://gateway:8001/` calls the benchmark even if the rerun flag is unset. The commit of this version had no gateway, wrote the one-row parquet, and returned. The model server reached health in 517 seconds on that commit. Kaggle has accepted the submission and the status is pending. The public score is still 22.38 until this one comes back. No submissions remain in the UTC day that ends at 8:00 PM EDT on 31 October.
