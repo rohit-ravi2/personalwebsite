@@ -1,7 +1,7 @@
 ---
 title: "Where the ARC-AGI-3 entry stands"
 startDate: 2026-10-30
-description: "The public score to beat is still 22.38 from 21 October. A rerun scored 0.00. A second submission, ref 57819886, is in flight and has no score yet."
+description: "The public score to beat is still 22.38 from 21 October. Two reruns, refs 57817929 and 57819886, both scored 0.00."
 tags: ["ARC", "Kaggle", "ARC-AGI-3"]
 draft: false
 order: 1
@@ -58,3 +58,9 @@ The kernel log API still returns the commit, not the scoring pass. The commit co
 ## 30 October, 8:00 PM EDT
 
 Submitted ref 57819886, kernel `rohitravi2/arc3-dprime-slot2` version 1. Same D-prime stack as the run that scored 0.00. The change is the gateway check: a scoring pass that can see `http://gateway:8001/` calls the benchmark even if the rerun flag is unset. The commit of this version had no gateway, wrote the one-row parquet, and returned. The model server reached health in 517 seconds on that commit. Kaggle has accepted the submission and the status is pending. The public score is still 22.38 until this one comes back. No submissions remain in the UTC day that ends at 8:00 PM EDT on 31 October.
+
+## 30 October, 8:27 PM EDT
+
+Ref 57819886 scored 0.00. Kaggle marked it complete about 25 minutes after the 8:00 PM submit. The file is 3411 bytes, the same size as ref 57817929. The October 21 file that scored 22.38 is 3808 bytes. GPU use during the pending window was 0.64 hours, which is a short session, not a multi-hour play. The rank is unchanged, so the public score of the entry is still 22.38 from ref 57492955.
+
+The kernel log API again returns the commit, not the scoring pass. The five-second gateway probe on this version returns immediately when DNS fails, so it cannot wait out a gateway that comes up late. The next kernel treats any non-empty rerun-flag value as a scoring run and polls the gateway for 600 seconds before it can take the shortcut. That kernel is not submitted. No submissions remain in the UTC day that ends at 8:00 PM EDT on 31 October.
