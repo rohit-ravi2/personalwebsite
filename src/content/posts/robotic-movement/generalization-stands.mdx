@@ -402,3 +402,19 @@ This is simulation. No heavier box was started.
 <Clip src="/videos/robotic-movement/generalize/bat_stack_H1_s_1ms.mp4" caption="H1 stack, shifted, 1 ms. The boxes stay put. The body leaves its feet." />
 <Clip src="/videos/robotic-movement/generalize/bat_stack_H1_s_05ms.mp4" caption="H1 stack, shifted, 0.5 ms. The boxes stay apart. The body is not upright." />
 </div>
+
+## 2026-10-31 — with the legs holding, the grasp weld still misses the stack
+
+The closed light stack is 0 of 4, and that count stands. Those clips are the body on the floor before the hand arrives. The three reaches below are the same nominal pair on G1 at 1 ms, once the leg servo the reach already names is installed. The arm servo stays at 120. These are not a new stack score. This is simulation.
+
+The grasp is a weld. It engages when the palm comes within 6 cm of the free-box center. With the legs holding, the palm reaches that distance, the gap stays at 6 cm, and the box moves with the hand. One foot unloads. The reach tolerance is 3 cm.
+
+With the weld withheld, the box never moves. The palm comes to 4.5 cm, 2.5 cm off the center of the top face, and then the hand leaves. At 1.45 s the palm is 79 cm away and the box is still where it started.
+
+Welding when the side offset has just started to grow, instead of at 6 cm, engages 2.7 cm off the center. The gap freezes at 4.4 cm. By the end of the reach the box is 63 cm to the side of where it started, and it is not on the base. The stance is still lost.
+
+<Clip src="/videos/robotic-movement/generalize/stack_servo_weld.mp4" caption="G1, leg servo on, nominal pair, 1 ms. The weld engages at 6 cm and the gap stays there. One foot unloads. This is not a stack." />
+
+<Clip src="/videos/robotic-movement/generalize/stack_servo_noweld.mp4" caption="Same reach with the weld withheld. The hand comes to 4.5 cm and leaves. The box stays on the table." />
+
+<Clip src="/videos/robotic-movement/generalize/stack_servo_turn.mp4" caption="Weld at the closest approach. The box is carried off to the side. It is not placed on the base." />
