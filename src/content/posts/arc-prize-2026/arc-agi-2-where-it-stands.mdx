@@ -43,6 +43,16 @@ The two submitted kernels share the same test-time-training seeds: pass A is 1, 
 
 The commit finished at 20:39 EDT. Starter exit 0 in 0.49 hours. Same four public evaluation tasks, none timed out, `score_kgmon` reload again 2.5 out of 4. The same three subkeys were correct as in the 16-view commit. Two selected grids changed, and both of those grids were already wrong on this four-task check. That 2.5 is not a leaderboard score. Refs 57818172 and 57819901 were still pending. This kernel stays unsubmitted until 20:00 EDT on 31 October.
 
+## Overnight, 30 October 22:25 EDT
+
+The public leaderboard file downloaded at 02:12 UTC on 31 October has 3,547 teams. Using the Kaggle rule for competitions with at least 1,000 teams, bronze is the top 10 percent, rank 354, score 32.22. That score is tied from rank 278 through 380. Silver is rank 177, score 33.19. Rohit Ravi is rank 1,455, score 30.14. The gap to the bronze line is 2.08 points. Both newer submissions were still pending, so 30.14 is still the only official score.
+
+A CPU expert that rebuilds a rectangle hidden by a solid color block was copied from a public notebook and scored, frozen, on all 1,000 training tasks. It made one confident prediction, and that prediction matched the training output. Loosening the pair-count and confidence gates did not produce a second prediction. There were no wrong confident predictions. One of 1,076 training outputs is not a leaderboard score, and it does not close a 2.08 point gap. It is not the kernel staged for tomorrow.
+
+The current CPU grammar was scored once on its untouched training holdout: 10 of 135 outputs, the same count as the older wave on that split. One fitted program was wrong on the holdout test output. That is not a leaderboard score. The development-split gain did not show up on this holdout.
+
+The staged kernel remains `rohitravi2/arc2-nvarc-seed3-rr`. The same public notebook reports its own dual-pass leaderboard versions between 31.81 and 32.64, average 32.12. That is the author's report of those versions, not a score of this staged kernel. On this leaderboard file that author is at 32.64, the throughput-patched sorokin notebook's author is at 31.94, and a team running that sorokin pipeline is at 33.89.
+
 ## What is not in this run
 
 A program-synthesis leg was attempted twice earlier and produced no score. The first attempt loaded a grid model that has no chat template, so every task errored. The second had its time budget set to zero. It stays out until a commit actually finishes.
