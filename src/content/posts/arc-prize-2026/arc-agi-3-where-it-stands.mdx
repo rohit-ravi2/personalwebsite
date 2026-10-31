@@ -78,3 +78,9 @@ The public score is still 22.38. Nothing has been submitted since ref 57819886. 
 Bronze on this leaderboard is the top 10 percent. With 4995 teams, that is rank 499, and rank 499 scores 31.36. Rank 500 scores 31.35. A new entry tied at 31.36 can fall outside the medal, so the score that clears bronze is above 31.36. Our score is 22.38, rank 2139. The gap is 8.98 points. Silver at rank 249 is 32.66. Gold at rank 19 is 39.69.
 
 One public notebook on the same model image as the 22.38 kernel, `lalalia9/arc3-franzen-v19`, says its own public score is 31.46, and that the only harness change is a solved-level memory patch. 31.46 would sit inside bronze. That score is theirs. A new kernel copies that patch and treats a set `ARC_BASE_URL` as a scoring run. It is pushed and not submitted. The next window is 8:00 PM EDT on 31 October. Nothing is submitted before then, and nothing is submitted unless the commit shows the benchmark ran and the scoring path still refuses a placeholder file.
+
+## 30 October, 11:19 PM EDT
+
+That commit finished. The memory patch loaded. On the one rehearsal game the model wrote a rule for levels 1, 2, 3, and 4. The harness score was 47.62, 4 of 6 levels, 52 actions. The previous rehearsal of the same agent without the patch, same 5-minute cap, was also 47.62. The patch writes its lasting block only when the conversation is trimmed, and this game used about 40,000 tokens, so that block was not written. These are harness scores on one public game. They are not Kaggle public scores.
+
+The notebook that claims 31.46 does not include the D-prime priority change used in the 22.38 kernel. A second kernel, with that change removed and the memory patch kept, is committing and is not submitted. The public score is still 22.38.
