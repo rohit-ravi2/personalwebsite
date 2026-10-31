@@ -270,3 +270,15 @@ This is not a new way of choosing the swing, and it is not kept. The stored swin
 <Clip src="/videos/robotic-movement/generalize/strike_hz_task_n0_1ms.mp4" caption="Aimed prior, nominal tee, run to 0.80 s. The palm comes back to 24 cm at 0.64 s. The ball stays on the tee." />
 
 <Clip src="/videos/robotic-movement/generalize/strike_hz_task_hi_1ms.mp4" caption="Aimed prior, ball raised 12 cm, run to 0.80 s. The palm comes back to 26 cm. The ball stays on the tee." />
+
+## 2026-10-30 — a higher tracking gain loses the stance
+
+The aimed command gets the palm to 24 cm and does not use the shoulder's torque. Doubling the tracking gain from 20 to 40 was locked before this rollout. Nothing else changed.
+
+On the nominal tee the palm never gets closer than the stance, at either timestep. The grade says the stance is lost. The last frame is still on its feet, and the ball stays on the tee. On the raised tee the grade loses the stance and a joint exceeds its speed rating. The closest palm is 29 cm at 1 ms. The ball stays. Doubling the tracking gain loses the stance on the grade.
+
+This is not kept. The next gain on that grid was not run. This is simulation.
+
+<Clip src="/videos/robotic-movement/generalize/strike_gn_n0_1ms.mp4" caption="Tracking gain 40, nominal tee, run to 0.80 s. The ball stays on the tee. The last frame is still on its feet. The grade says the stance is lost." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_gn_hi_1ms.mp4" caption="Tracking gain 40, ball raised 12 cm, run to 0.80 s. The ball stays on the tee. The last frame is still on its feet. The grade loses the stance, and a joint exceeds its speed rating." />
