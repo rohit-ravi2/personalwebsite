@@ -478,3 +478,37 @@ The closed light stack is 0 of 4, and that count stands. This is grasp, lift, an
 The lift raises the box 4 cm and leaves it beside the base. The base has not moved. The hand then crosses at 0.78 m. The base slides 7.8 cm toward the robot. At the end of the reach the box is still held, upright, on the spot the base left. Releasing the weld sets the box on the table, 8 cm from the base. This is not a stack.
 
 <Clip src="/videos/robotic-movement/generalize/stack_upright_cell.mp4" caption="G1, 1 ms. The lift stays short. The place slides the base aside. The clip ends with the box still held. This is not a stack." />
+
+## 2026-10-31 — the hips cancel the pelvis pitch
+
+This is simulation, on G1. It is not a hardware result. The closed light stack is still 0 of 4.
+
+An empty-hand reach pitches the pelvis by the same amount the hips flex, with the opposite sign. The target is (0.35, −0.28, 0.90). At 1 ms the pitch is 0.094 rad and the mean hip change is −0.093 rad. The two hip pitches cancel that pelvis pitch to 0.001 rad. Putting that pelvis orientation onto the planned pose drops the palm 2.74 cm. The forward lever times the sine of the pitch predicts 2.69 cm. That reach arrives.
+
+The same reach at 0.5 ms keeps the pitch and misses the hand. The peak palm is 0.78 m instead of 0.88 m.
+
+A second target, on the other side of the same robot, at (0.28, 0.22, 0.85), gives a pitch of −0.122 rad and a hip change of +0.124 rad. The sum is 0.001 rad. The palm drop is −3.22 cm against −3.30 cm. The hand does not arrive. The capture point stays inside 1.4 cm. This target is not the H1 robot.
+
+Holding the reference torso cuts the first pitch from 0.094 rad to 0.009 rad, and that reach arrives. On the other side the pitch is 0.082 rad, the hip sum is 0.130 rad, and the reach records the stance as unbalanced. The capture point reaches 15.5 cm.
+
+Raising the first target by 8 cm lowers the peak palm from 0.881 m to 0.815 m. The hand does not go up.
+
+One light-box place uses the same torso flag. The pitch peaks at 0.10 rad, against a line of 0.08 rad. The base slides 9.9 cm toward the robot. The box is left 7.5 cm from the base. The clip ends with the box still held. This is not a stack.
+
+<Clip src="/videos/robotic-movement/generalize/pitch_d1_vertical.mp4" caption="G1, 1 ms. Empty hand. The torso is held vertical. The pelvis pitches 0.094 rad with the hips." />
+
+<Clip src="/videos/robotic-movement/generalize/pitch_d1_tilt.mp4" caption="G1, 1 ms. The same target, holding the reference torso. The pitch falls to 0.009 rad and the hand arrives." />
+
+<Clip src="/videos/robotic-movement/generalize/pitch_side_vertical.mp4" caption="G1, 1 ms. The other side of the body. The pitch is −0.122 rad and the hand does not arrive." />
+
+<Clip src="/videos/robotic-movement/generalize/pitch_side_tilt.mp4" caption="G1, 1 ms. The other side, holding the reference torso. The stance gate fails." />
+
+<Clip src="/videos/robotic-movement/generalize/stack_tilt_place.mp4" caption="G1, 1 ms. The place holds the reference torso. The base slides. The clip ends with the box still held. This is not a stack." />
+
+The same test on the H1 does not show that pitch. On a forward target the pelvis pitch is 0.006 rad, the reach arrives, and the band passes because there is nothing to cancel. On a target to the other side the pitch is 0.130 rad and the hips change by −0.186 rad. The sum is −0.057 rad, outside the 0.04 rad band. The palm drop is −3.0 cm. The forward-lever prediction is +4.6 cm, 7.6 cm the other way. The hand does not arrive. Holding the reference torso raises that pitch to 0.194 rad. The identity stays a G1 result.
+
+<Clip src="/videos/robotic-movement/generalize/pitch_h1_forward.mp4" caption="H1, 1 ms. Forward reach. The pitch is 0.006 rad and the hand arrives." />
+
+<Clip src="/videos/robotic-movement/generalize/pitch_h1_side.mp4" caption="H1, 1 ms. The other side. The pitch is 0.130 rad and the hip sum misses the band." />
+
+<Clip src="/videos/robotic-movement/generalize/pitch_h1_side_tilt.mp4" caption="H1, 1 ms. The other side, holding the reference torso. The pitch rises to 0.194 rad. The hand does not arrive." />
