@@ -258,3 +258,15 @@ The first comparison had to be rerun. The 1 ms and 0.5 ms plants shared one mode
 <Clip src="/videos/robotic-movement/generalize/strike_task_n0_1ms.mp4" caption="Prior aimed at the ball, nominal tee, 1 ms. The palm travels 43 cm. The closest point is still the stance. The ball stays on the tee." />
 
 <Clip src="/videos/robotic-movement/generalize/strike_task_hi_1ms.mp4" caption="Prior aimed at the ball, raised 12 cm, 1 ms. The palm travels 35 cm. The closest point is still the stance. The ball stays on the tee." />
+
+## 2026-10-30 — the aimed swing comes back and still misses
+
+The wind-up reference, played on its own at the prior's amplitude, passes 8 cm from the nominal ball at 0.49 s. The graded rollout stops at 0.54 s. At that instant the palm is still 54 cm away, coming back from a cock that peaked at 65 cm.
+
+The same controller was then run to 0.80 s. Knots, amplitude, timing, and aim were not changed. On the nominal tee at 1 ms the palm is closest at 0.64 s, 24 cm from the ball. The ball stays on the tee. On the raised tee the closest is 26 cm, and the ball stays. At 0.5 ms on the raised tee the stance is lost as well. The forward prior, which is not aimed at the ball, gets to 26 cm. Waiting until 0.80 s does not bring the palm to the ball.
+
+This is not a new way of choosing the swing, and it is not kept. The stored swing is still the one that hits the nominal tee. This is simulation.
+
+<Clip src="/videos/robotic-movement/generalize/strike_hz_task_n0_1ms.mp4" caption="Aimed prior, nominal tee, run to 0.80 s. The palm comes back to 24 cm at 0.64 s. The ball stays on the tee." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_hz_task_hi_1ms.mp4" caption="Aimed prior, ball raised 12 cm, run to 0.80 s. The palm comes back to 26 cm. The ball stays on the tee." />
