@@ -544,3 +544,27 @@ On these eight rows the right wrist stays inside 0.04 rad. The earlier dev reach
 <Clip src="/videos/robotic-movement/generalize/sign_C05.mp4" caption="G1, 0.5 ms. Predicted hold. The pelvis moves 0.2 cm and the hand arrives." />
 
 <Clip src="/videos/robotic-movement/generalize/sign_D05.mp4" caption="G1, 0.5 ms. Predicted slide. The pelvis moves 15.9 cm. The hand does not arrive." />
+
+## 2026-10-31 — one hold is short of the waist cap
+
+This is simulation, on G1. It is not a hardware result. The eight rows above stand. The closed light stack is still 0 of 4.
+
+The same rule, unchanged. Further targets kept landing on the two caps, and those rows matched. One did not.
+
+Target I peaks at −0.145 rad. The waist there is short of the cap that produced the −0.27 rad holds. At 1 ms and at 0.5 ms the pelvis moves 0.4 cm, the capture point stays at 0.6 cm, and the hand arrives.
+
+Target K peaks at −0.271 rad and the prior ends at +0.246 rad. The grade uses the peak. At 1 ms the pelvis moves 1.8 cm and the capture point stays at 4.5 cm. At 0.5 ms the pelvis moves 1.5 cm and the capture point stays at 4.2 cm. The hand does not arrive. The stance gate does not fire.
+
+Target J peaks at +0.429 rad, the same cap as the slide above. At 1 ms the pelvis moves 14.0 cm. At 0.5 ms it moves 13.9 cm. The hand does not arrive, and the stance gate fails.
+
+A shorter reach peaked at +0.079 rad, the stance, so the rule made no prediction. That row is not counted. On these clips the right wrist stays small. The earlier dev reach at 0.5 ms, where the wrist went to about 1.1 rad, still stands.
+
+<Clip src="/videos/robotic-movement/generalize/sign_I.mp4" caption="G1, 1 ms. Prior peak −0.145 rad, short of the cap. The pelvis moves 0.4 cm and the hand arrives." />
+
+<Clip src="/videos/robotic-movement/generalize/sign_I05.mp4" caption="G1, 0.5 ms. The same prior. The pelvis moves 0.4 cm and the hand arrives." />
+
+<Clip src="/videos/robotic-movement/generalize/sign_K.mp4" caption="G1, 1 ms. The prior peaks at −0.271 rad and ends at +0.246 rad. The pelvis moves 1.8 cm. The hand does not arrive." />
+
+<Clip src="/videos/robotic-movement/generalize/sign_K05.mp4" caption="G1, 0.5 ms. The same prior. The pelvis moves 1.5 cm. The hand does not arrive." />
+
+<Clip src="/videos/robotic-movement/generalize/sign_J.mp4" caption="G1, 1 ms. Prior peak +0.429 rad. The pelvis moves 14.0 cm. The hand does not arrive." />
