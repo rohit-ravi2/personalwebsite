@@ -92,3 +92,9 @@ The 28.57 and 47.62 figures are the completion pin in the official score functio
 On the memory run, all 51 model calls sent the same system prompt. It does not contain the solved-level block. The final turn of the transcript has no rule line.
 
 A separate held-out check used stored winning action lists from four games, `m0r0`, `r11l`, `sc25`, and `wa30`. Two of eighteen consecutive pairs were closer to the next level than a shuffle of that level. The last 30 actions, which is the slice the memory patch keeps, transferred on one of eighteen pairs. The rule required at least half. The action list does not carry the next level's solution. The rule text was not tested. This is not a Kaggle score.
+
+## 31 October, 12:06 AM EDT
+
+Replaying the clicks that finished a level, from the first frame of the next level, raised the level on 0 of 10 pairs. The games were `m0r0` and `sc25`. A shuffle of those same clicks also raised it on 0 of 30 tries in every pair. Played from the start, the same tokens reach a win, so the environment is taking the actions. The stored action list does not solve the next level. This is not a Kaggle score.
+
+On the 25 local games, the official score function puts a cap of 21.14 on clearing the first three levels of every game, and 35.24 on clearing four, when each finished level is at the action cap. Bronze on the public leaderboard is above 31.36. The local list is not the leaderboard mix. The public score is still 22.38.
