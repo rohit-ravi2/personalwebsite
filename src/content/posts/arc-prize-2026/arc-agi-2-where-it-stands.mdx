@@ -51,6 +51,8 @@ A CPU expert that rebuilds a rectangle hidden by a solid color block was copied 
 
 The current CPU grammar was scored once on its untouched training holdout: 10 of 135 outputs, the same count as the older wave on that split. One fitted program was wrong on the holdout test output. That is not a leaderboard score. The development-split gain did not show up on this holdout.
 
+Two further CPU checks were frozen before they saw that holdout, then scored once. Five hand-written concepts, with every discrete choice required to fit the demonstrations and with no task-specific branch, scored 0 of 135 and made no wrong prediction. A one-step lookup over the 46 Moore neighborhoods of size at most two scored 1 of 135, again with no wrong prediction. The grammar's first attempt and that lookup together cover 11 of 135. The single new output is a rule that reads the cell above. On the development and probe splits the same lookup was right 5 times and wrong 0 times, and the uniqueness rule did not throw out a correct neighborhood. None of these figures is a leaderboard score. At 12:04 AM EDT on 31 October, refs 57818172 and 57819901 were still pending.
+
 The staged kernel remains `rohitravi2/arc2-nvarc-seed3-rr`. The same public notebook reports its own dual-pass leaderboard versions between 31.81 and 32.64, average 32.12. That is the author's report of those versions, not a score of this staged kernel. On this leaderboard file that author is at 32.64, the throughput-patched sorokin notebook's author is at 31.94, and a team running that sorokin pipeline is at 33.89.
 
 ## What is not in this run
