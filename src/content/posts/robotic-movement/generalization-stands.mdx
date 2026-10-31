@@ -228,3 +228,33 @@ Both directions at 0.031 s are closed. The hundred trials were not re-run. Forty
 <Clip src="/videos/robotic-movement/generalize/land_tuck_plus_n0_1ms.mp4" caption="Undisturbed, 1 ms, flight tuck lengthened by 0.031 s. The jump that was landing falls short of the box. At touchdown the heel is 20 cm short of the edge." />
 
 <Clip src="/videos/robotic-movement/generalize/land_tuck_plus_c07_1ms.mp4" caption="Stored trial, 1 ms, the same longer tuck. The body falls forward, short of the box. The heel is 19 cm short of the edge. This is not the backward fall from the shorter tuck." />
+
+## 2026-10-30 — aiming the swing at the ball does not reach it
+
+Simulation. A ball sits on a tee at hip height, and the right palm is asked to strike it. The same ball is then raised 12 cm. Five ways of choosing the swing were locked before these rollouts. Each one gets two evaluations. An evaluation is both tees at both timesteps. The old search that found the stored swing, 2400 evaluations, is not repeated. The hundred landing trials were not re-run.
+
+Copying the stored swing hits the nominal tee at both timesteps: 2.67 m/s at 1 ms and 2.62 m/s at 0.5 ms. On the raised tee the ball stays put. The closest approach is 9.5 cm, about 5 mm outside the palm and the ball. At 1 ms the stance is lost. At 0.5 ms the only failed reason is the miss. The closest frame shows the hand under the ball, not on it.
+
+Moving the swing 0.028 s earlier, one quarter of the way from the stored timing toward the construction prior, still hits the nominal tee: 2.60 m/s at 1 ms and 2.61 m/s at 0.5 ms. The raised ball is missed the same way, and at 1 ms the stance is lost again. That does not beat the stored swing.
+
+The construction prior never gets closer than the stance. The closest palm is 26 cm from the nominal ball and 32 cm from the raised ball. The palm does move, about half a metre on the nominal tee, and it ends farther from the ball than it started. The ball stays on the tee.
+
+Pointing that same prior along the line from the palm to the ball does not close the gap. The closest palm is still the stance, on both tees. The palm travels 43 cm on the nominal tee and 35 cm on the raised tee, and the ball stays on the tee. The step from that palm toward the ball is too small to count as a correction, so no second swing is rolled. Aiming the swing at the ball does not bring the palm closer.
+
+Valid cells out of four: stored swing 2, earlier timing 2, prior 0, aimed prior 0, aimed prior with a correction 0. The earlier timing's miss is not closer than the stored miss. Nothing is kept.
+
+The first comparison had to be rerun. The 1 ms and 0.5 ms plants shared one model, so the rows labelled 1 ms were actually 0.5 ms. The counts above are the rerun. This is simulation.
+
+<Clip src="/videos/robotic-movement/generalize/strike_im_n0_1ms.mp4" caption="Stored swing, nominal tee, 1 ms. The palm meets the ball and the ball leaves the tee at 2.67 m/s." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_im_hi_1ms.mp4" caption="Stored swing, ball raised 12 cm, 1 ms. The hand passes under the ball. The ball stays on the tee. The stance is lost." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_rules_n0_1ms.mp4" caption="Construction prior, nominal tee, 1 ms. The palm moves about half a metre and never gets closer than the stance. The ball stays on the tee." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_ex_n0_1ms.mp4" caption="Swing 0.028 s earlier, nominal tee, 1 ms. The ball still leaves the tee, at 2.60 m/s." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_ex_hi_1ms.mp4" caption="Swing 0.028 s earlier, ball raised 12 cm, 1 ms. The hand passes under the ball. The ball stays on the tee. The stance is lost." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_task_n0_1ms.mp4" caption="Prior aimed at the ball, nominal tee, 1 ms. The palm travels 43 cm. The closest point is still the stance. The ball stays on the tee." />
+
+<Clip src="/videos/robotic-movement/generalize/strike_task_hi_1ms.mp4" caption="Prior aimed at the ball, raised 12 cm, 1 ms. The palm travels 35 cm. The closest point is still the stance. The ball stays on the tee." />
