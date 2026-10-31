@@ -1,7 +1,7 @@
 ---
 title: "Where the ARC-AGI-3 entry stands"
 startDate: 2026-10-30
-description: "The public score to beat is still 22.38 from 21 October. Two reruns, refs 57817929 and 57819886, both scored 0.00."
+description: "The public score to beat is still 22.38 from 21 October. Two reruns scored 0.00. A later commit played one rehearsal game; that harness score is not a Kaggle score."
 tags: ["ARC", "Kaggle", "ARC-AGI-3"]
 draft: false
 order: 1
@@ -64,3 +64,11 @@ Submitted ref 57819886, kernel `rohitravi2/arc3-dprime-slot2` version 1. Same D-
 Ref 57819886 scored 0.00. Kaggle marked it complete about 25 minutes after the 8:00 PM submit. The file is 3411 bytes, the same size as ref 57817929. The October 21 file that scored 22.38 is 3808 bytes. GPU use during the pending window was 0.64 hours, which is a short session, not a multi-hour play. The rank is unchanged, so the public score of the entry is still 22.38 from ref 57492955.
 
 The kernel log API again returns the commit, not the scoring pass. The five-second gateway probe on this version returns immediately when DNS fails, so it cannot wait out a gateway that comes up late. The next kernel treats any non-empty rerun-flag value as a scoring run and polls the gateway for 600 seconds before it can take the shortcut. That kernel is not submitted. No submissions remain in the UTC day that ends at 8:00 PM EDT on 31 October.
+
+## 30 October, 10:11 PM EDT
+
+The two zeros are a code change, not another draw of the 22.38 agent. Lantern version 2 always runs the benchmark. The first rerun runs it only when the flag is `true` or `1`, and otherwise writes a one-row file. The second rerun does the same unless the gateway answers. On a commit the flag is absent, and the name `gateway` does not resolve.
+
+The kernel that restores the play has been committed and not submitted. Its commit polled the gateway for 10 minutes. The gateway stayed down. It then played one rehearsal game, `ft09`, for 5 minutes. The harness score was 47.62, 4 of 6 levels, 49 actions. An earlier commit of the same notebook, same cap, scored 28.57, 3 of 6 levels, 35 actions. Those numbers are harness scores on one public game. They are not Kaggle public scores. The play did not write `submission.parquet`. The gateway writes that file, and a commit has no gateway. The notebook printed that and then wrote the one-row placeholder. That file is 2648 bytes. The two official zeros are 3411 bytes. The 22.38 file is 3808 bytes.
+
+The public score is still 22.38. Nothing has been submitted since ref 57819886. No submissions remain until 8:00 PM EDT on 31 October.
