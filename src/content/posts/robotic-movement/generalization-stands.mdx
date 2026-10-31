@@ -190,3 +190,27 @@ The undisturbed jump still landed at both timesteps. On the stored trial the tou
 Both directions at 0.05 rad are closed. The hundred trials were not re-run. Forty-nine of one hundred is not a certified landing. This is simulation.
 
 <Clip src="/videos/robotic-movement/generalize/land_phi_m_c07_1ms.mp4" caption="Stored trial, 1 ms, launch aimed 0.05 rad less horizontal. The body falls forward. At touchdown the heels are 13 cm short of the edge. By the end the heel is 4 cm past it, and the feet are not both on the top." />
+
+## 2026-10-30 — five landing variants, none kept
+
+The five were locked before these rollouts. One copies the counted jump. One uses the construction's own default. One shortens the flight tuck by 0.031 s, a quarter of the way back toward that default. One asks for 2 cm less yield, and the body refuses it before a rollout because the step meets the low stop. The last one takes the largest legal step in that same direction, which lands on the stop. The hundred trials were not re-run.
+
+Copying the counted jump matches the stored rows. The undisturbed jump lands. The stored trial falls.
+
+The construction default leaves the ground and does not touch the box, on the undisturbed jump and on the stored trial, at both timesteps. At 1 ms the end heel is 7 cm short of the edge on the undisturbed jump and 1 cm short on the stored trial. A joint limit fails. Not kept.
+
+The shorter tuck does not leave the undisturbed jump valid. It ends upright at both timesteps, and the only failed gate is a hop. On the stored trial at 1 ms the touchdown line moves from 0.90 rad to 0.84 rad. The end line is 1.26 rad the other way, the head behind the hips. The touchdown heel is 8 cm past the edge, and the grade says the feet are not both on the top. At 0.5 ms the touchdown line moves from 0.942 rad to 0.939 rad, the end line stays the forward fall at 1.12 rad, and the feet hop. The prediction was that the undisturbed jump would stay valid and that the touchdown line would move by less than 0.05 rad. The 1 ms trial breaks both. Not kept.
+
+The legal yield step leaves the undisturbed jump valid. On the stored trial the touchdown line, the touchdown speed, the capture point, and the heel match the stored fall at both timesteps. The body still falls, and a joint limit is now among the failed gates. Not kept.
+
+None of the five is kept. Counted by valid cells, copying the jump still ranks first. Forty-nine of one hundred is not a certified landing. This is simulation.
+
+<Clip src="/videos/robotic-movement/generalize/land_default_n0_1ms.mp4" caption="Undisturbed, 1 ms, the construction default. The body leaves the ground and does not touch the box. At the end the heel is 7 cm short of the edge." />
+
+<Clip src="/videos/robotic-movement/generalize/land_default_c07_1ms.mp4" caption="Stored trial, 1 ms, the same default. The body leaves the ground and does not touch the box. At the end the heel is 1 cm short of the edge." />
+
+<Clip src="/videos/robotic-movement/generalize/land_tuck_n0_1ms.mp4" caption="Undisturbed, 1 ms, flight tuck shortened by 0.031 s. The body ends upright on the box. The grade fails because the feet hop." />
+
+<Clip src="/videos/robotic-movement/generalize/land_tuck_c07_1ms.mp4" caption="Stored trial, 1 ms, the same shorter tuck. The body falls the other way, head behind the hips. The touchdown heel is 8 cm past the edge, and the grade says the feet are not both on the top." />
+
+<Clip src="/videos/robotic-movement/generalize/land_absorb_c07_1ms.mp4" caption="Stored trial, 1 ms, yield set to its low stop. The body falls forward on the box. The touchdown line is the stored 0.90 rad." />
