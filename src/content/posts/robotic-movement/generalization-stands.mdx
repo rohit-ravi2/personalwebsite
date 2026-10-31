@@ -304,3 +304,101 @@ The derived place point passes none of the four cells. The fixed nudge passes no
 <Clip src="/videos/robotic-movement/generalize/stack_task_n0_1ms.mp4" caption="Derived place point, nominal pair, 1 ms. The body falls. The two boxes stay apart on the table." />
 
 <Clip src="/videos/robotic-movement/generalize/stack_rules_n0_1ms.mp4" caption="Fixed nudge, nominal pair, 1 ms. The body falls. The two boxes stay apart on the table." />
+
+## 2026-10-31 — one frozen config, six tasks, three bodies
+
+One frozen config was run on six tasks and three bodies. The spec hash is `dd09b5600c96ed4a10227b5ea083fa138b399c1d5be79fb7ff8ba7534046047b`. Nothing was retuned after that hash was recorded.
+
+Balance-law's lipm-v6 is used read-only, at k = 1. Its own gate, recorded at the freeze, stands on 3 of 7 and predicts 4 of 7. The reach, the box push, and the stack use the ReachTask defaults: arm servo 60, timescale 0.87. The strike uses the locked raised-tee scalars: amplitude 0.6, timescale 1.02, tracker omega 20. The graded five-variant comparison stands as it was posted. The closed light stack, 0 of 4 at servo 120, stands as it was posted.
+
+A body passes a task only when every cell passes.
+
+| task | G1 | H1 | T1 |
+| --- | --- | --- | --- |
+| push | PASS 4/4 | FAIL 3/4 | PASS 4/4 |
+| reach | FAIL 0/4 | FAIL 2/4 | UNSUPPORTED |
+| box | FAIL 0/2 | FAIL 0/2 | UNSUPPORTED |
+| strike | FAIL 0/2 | FAIL 0/2 | UNSUPPORTED |
+| step | UNSUPPORTED | UNSUPPORTED | UNSUPPORTED |
+| stack | FAIL 0/4 | FAIL 0/4 | UNSUPPORTED |
+
+T1 has no landing-parameter entry, so the reach, the box, the strike, and the stack are unsupported there. No tuning file was added. H1's palm body has no geom, so the box contact pair is refused and that cell has no clip. The step clips are the settled stand. The box center is 16 cm beyond the nearest sampled foot reach on G1, 20 cm on H1, and 22 cm on T1, so no step is commanded.
+
+The pushes are 45 N for 0.11 s, flat, in four directions. Those triples are outside the balance-law dev list and outside both held-out lists. G1 stands on all four. T1 stands on all four. H1 stands on forward, left, and right. On the backward push the first executed decision is the ankle, one step is started, and the last frame is tipped over backward. The analytic prediction for that push was a hip-and-arm lean, and recoverable. The rollout tips.
+
+The reach target is a point. It is not drawn in the scene. G1 falls on all four cells. At 1 ms the closest approach is the standing distance. At 0.5 ms the closest is 6 cm and 5 cm, outside the 3 cm tolerance. H1 passes both targets at 0.5 ms, at 1.3 cm, and falls at 1 ms.
+
+The 0.20 kg box does not move on G1. The body ends on the floor at both timesteps.
+
+The strike clips are the graded cutoff, about half a second, on the ball raised 12 cm. On G1 the hand stays down, the ball stays on the tee, and the closest palm is 32 cm. On H1 the body is on the floor by a third of a second, the ball stays on the tee, and the closest palm is 1.28 m.
+
+The stack clips are the reach sequence. The score adds a further half-second with the grasp released. On G1 at 1 ms the body is under the table and the boxes stay apart. At 0.5 ms the free box leaves the table with the falling body. On H1 the body falls, leaves its feet, or puts the free box on the floor. None of the eight scored cells stack. On the H1 1 ms cells, that extra half-second is when the base box leaves the table, and it is not in the clip.
+
+This is simulation. No heavier box was started.
+
+### Pushes, 45 N for 0.11 s
+
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.5rem 1.25rem" }}>
+<Clip src="/videos/robotic-movement/generalize/bat_push_G1_forward.mp4" caption="G1, 45 N forward. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_G1_backward.mp4" caption="G1, 45 N backward. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_G1_left.mp4" caption="G1, 45 N to the left. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_G1_right.mp4" caption="G1, 45 N to the right. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_H1_forward.mp4" caption="H1, 45 N forward. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_H1_backward.mp4" caption="H1, 45 N backward. It tips over backward. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_H1_left.mp4" caption="H1, 45 N to the left. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_H1_right.mp4" caption="H1, 45 N to the right. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_T1_forward.mp4" caption="T1, 45 N forward. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_T1_backward.mp4" caption="T1, 45 N backward. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_T1_left.mp4" caption="T1, 45 N to the left. It stays up. The first decision is the ankle." />
+<Clip src="/videos/robotic-movement/generalize/bat_push_T1_right.mp4" caption="T1, 45 N to the right. It stays up. The first decision is the ankle." />
+</div>
+
+### Reach
+
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.5rem 1.25rem" }}>
+<Clip src="/videos/robotic-movement/generalize/bat_reach_G1_A_1ms.mp4" caption="G1 reach A, 1 ms. The body falls. The hand does not reach." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_G1_A_05ms.mp4" caption="G1 reach A, 0.5 ms. Closest is 6 cm. The body falls." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_G1_B_1ms.mp4" caption="G1 reach B, 1 ms. The body falls. The hand does not reach." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_G1_B_05ms.mp4" caption="G1 reach B, 0.5 ms. The body falls. Closest is 5 cm." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_H1_A_1ms.mp4" caption="H1 reach A, 1 ms. The body falls. The hand does not reach." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_H1_A_05ms.mp4" caption="H1 reach A, 0.5 ms. The grade passes. Closest is 1.3 cm." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_H1_B_1ms.mp4" caption="H1 reach B, 1 ms. The body falls. The hand does not reach." />
+<Clip src="/videos/robotic-movement/generalize/bat_reach_H1_B_05ms.mp4" caption="H1 reach B, 0.5 ms. The grade passes. Closest is 1.3 cm." />
+</div>
+
+### Light box on the floor
+
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.5rem 1.25rem" }}>
+<Clip src="/videos/robotic-movement/generalize/bat_box_G1_1ms.mp4" caption="G1, light box, 1 ms. The box does not move. The body is on the floor." />
+<Clip src="/videos/robotic-movement/generalize/bat_box_G1_05ms.mp4" caption="G1, light box, 0.5 ms. The box does not move. The body is on the floor." />
+</div>
+
+### Raised ball
+
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.5rem 1.25rem" }}>
+<Clip src="/videos/robotic-movement/generalize/bat_strike_G1_1ms.mp4" caption="G1, raised ball, 1 ms. The hand stays down. The ball stays on the tee." />
+<Clip src="/videos/robotic-movement/generalize/bat_strike_G1_05ms.mp4" caption="G1, raised ball, 0.5 ms. The hand stays down. The ball stays on the tee." />
+<Clip src="/videos/robotic-movement/generalize/bat_strike_H1_1ms.mp4" caption="H1, raised ball, 1 ms. The body is on the floor. The ball stays on the tee." />
+<Clip src="/videos/robotic-movement/generalize/bat_strike_H1_05ms.mp4" caption="H1, raised ball, 0.5 ms. The body is on the floor. The ball stays on the tee." />
+</div>
+
+### Four-centimetre step
+
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.5rem 1.25rem" }}>
+<Clip src="/videos/robotic-movement/generalize/bat_step_G1.mp4" caption="G1, 4 cm box. The box is in front of the feet. No step is commanded." />
+<Clip src="/videos/robotic-movement/generalize/bat_step_H1.mp4" caption="H1, 4 cm box. The box is in front of the feet. No step is commanded." />
+<Clip src="/videos/robotic-movement/generalize/bat_step_T1.mp4" caption="T1, 4 cm box. The box is in front of the feet. No step is commanded." />
+</div>
+
+### Two light boxes
+
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "0.5rem 1.25rem" }}>
+<Clip src="/videos/robotic-movement/generalize/bat_stack_G1_n_1ms.mp4" caption="G1 stack, nominal, 1 ms. The body falls. The boxes stay apart." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_G1_n_05ms.mp4" caption="G1 stack, nominal, 0.5 ms. The body falls. The free box is thrown." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_G1_s_1ms.mp4" caption="G1 stack, shifted, 1 ms. The body falls. The boxes stay apart." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_G1_s_05ms.mp4" caption="G1 stack, shifted, 0.5 ms. The body falls. The free box is thrown." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_H1_n_1ms.mp4" caption="H1 stack, nominal, 1 ms. The body falls. The boxes stay apart." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_H1_n_05ms.mp4" caption="H1 stack, nominal, 0.5 ms. The free box is on the floor." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_H1_s_1ms.mp4" caption="H1 stack, shifted, 1 ms. The boxes stay put. The body leaves its feet." />
+<Clip src="/videos/robotic-movement/generalize/bat_stack_H1_s_05ms.mp4" caption="H1 stack, shifted, 0.5 ms. The boxes stay apart. The body is not upright." />
+</div>
