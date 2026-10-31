@@ -84,3 +84,11 @@ One public notebook on the same model image as the 22.38 kernel, `lalalia9/arc3-
 That commit finished. The memory patch loaded. On the one rehearsal game the model wrote a rule for levels 1, 2, 3, and 4. The harness score was 47.62, 4 of 6 levels, 52 actions. The previous rehearsal of the same agent without the patch, same 5-minute cap, was also 47.62. The patch writes its lasting block only when the conversation is trimmed, and this game used about 40,000 tokens, so that block was not written. These are harness scores on one public game. They are not Kaggle public scores.
 
 The notebook that claims 31.46 does not include the D-prime priority change used in the 22.38 kernel. A second kernel, with that change removed and the memory patch kept, is committing and is not submitted. The public score is still 22.38.
+
+## 30 October, 11:43 PM EDT
+
+The 28.57 and 47.62 figures are the completion pin in the official score function. Three finished levels pin at 28.57. Four pin at 47.62. Every finished level in these rehearsals scored at the 115 cap, so the action counts do not enter the number. The memory run used 52 actions and the run without it used 49. Both score 47.62. These remain harness scores on one public game. They are not Kaggle public scores.
+
+On the memory run, all 51 model calls sent the same system prompt. It does not contain the solved-level block. The final turn of the transcript has no rule line.
+
+A separate held-out check used stored winning action lists from four games, `m0r0`, `r11l`, `sc25`, and `wa30`. Two of eighteen consecutive pairs were closer to the next level than a shuffle of that level. The last 30 actions, which is the slice the memory patch keeps, transferred on one of eighteen pairs. The rule required at least half. The action list does not carry the next level's solution. The rule text was not tested. This is not a Kaggle score.
