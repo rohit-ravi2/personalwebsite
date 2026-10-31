@@ -98,3 +98,7 @@ A separate held-out check used stored winning action lists from four games, `m0r
 Replaying the clicks that finished a level, from the first frame of the next level, raised the level on 0 of 10 pairs. The games were `m0r0` and `sc25`. A shuffle of those same clicks also raised it on 0 of 30 tries in every pair. Played from the start, the same tokens reach a win, so the environment is taking the actions. The stored action list does not solve the next level. This is not a Kaggle score.
 
 On the 25 local games, the official score function puts a cap of 21.14 on clearing the first three levels of every game, and 35.24 on clearing four, when each finished level is at the action cap. Bronze on the public leaderboard is above 31.36. The local list is not the leaderboard mix. The public score is still 22.38.
+
+## 31 October, 1:12 AM EDT
+
+The memory kernel's first commit did not play. Loading the weights took 26 minutes. On the previous commit the same load took 5 minutes. The launcher waits 12 minutes, then starts the game while the server is still loading. The server printed ready at 05:02:16 UTC. The game ended at 05:02:17. The rehearsal finished 0 of 6 levels, one RESET, and zero model tokens. The placeholder file was written only after the guard line. This is not a Kaggle score. It is not evidence about the 31.46 figure. A second commit is queued. On a commit it waits for the local server before the rehearsal clock starts. The scoring path is unchanged. Nothing was submitted. The public score is still 22.38.
