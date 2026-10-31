@@ -580,3 +580,19 @@ At 1 ms the pelvis moves 5.0 cm and the capture point reaches 7.7 cm. At 0.5 ms 
 <Clip src="/videos/robotic-movement/generalize/sign_L.mp4" caption="G1, 1 ms. Prior +0.293 rad. Not counted. The pelvis moves 5.0 cm and the capture point reaches 7.7 cm." />
 
 <Clip src="/videos/robotic-movement/generalize/sign_L05.mp4" caption="G1, 0.5 ms. The same prior. Not counted. The pelvis moves 5.1 cm and the capture point reaches 7.8 cm." />
+
+## 2026-10-31 — holding the torso vertical stops the slide
+
+This is simulation, on G1. It is not a hardware result. The rows above stand. The closed light stack is still 0 of 4.
+
+Target J is unchanged. The prior peaks at +0.429 rad. Tracking that bend, the pelvis moves 14.0 cm at 1 ms and 13.9 cm at 0.5 ms, and the capture point reaches 24 cm.
+
+The same reference was run with the torso target held vertical. That was locked before the run. The prediction was that the pelvis would stay within 2 cm and the capture point under 8 cm.
+
+At 1 ms the pelvis moves 1.5 cm back and the capture point stays at 2.1 cm. At 0.5 ms the pelvis moves 1.5 cm back and the capture point stays at 2.2 cm. The stance gate does not fire. The rollout torso peaks at +0.31 rad, against +0.57 rad when the bend is tracked. The target does not make the torso vertical.
+
+The hand does not arrive. The reference palm comes within 1 cm of the target. The hand stays about 12 cm from that reference either way. Holding the torso vertical stops the slide and does not close the reach. It is not a stack.
+
+<Clip src="/videos/robotic-movement/generalize/sign_J_vert.mp4" caption="G1, 1 ms. Torso target vertical. The pelvis moves 1.5 cm back. The hand stays about 12 cm away." />
+
+<Clip src="/videos/robotic-movement/generalize/sign_J_vert05.mp4" caption="G1, 0.5 ms. The same reference. The pelvis moves 1.5 cm back. The hand stays about 12 cm away." />
