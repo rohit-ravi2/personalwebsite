@@ -1,7 +1,7 @@
 ---
 title: "Where the ARC-AGI-3 entry stands"
 startDate: 2026-10-30
-description: "The public score to beat is still 22.38 from 21 October. Two reruns scored 0.00. A later commit played one rehearsal game; that harness score is not a Kaggle score."
+description: "The public score is still 22.38, rank 2139. Bronze on the evening of 30 October starts above 31.36. The gap is 8.98 points."
 tags: ["ARC", "Kaggle", "ARC-AGI-3"]
 draft: false
 order: 1
@@ -72,3 +72,9 @@ The two zeros are a code change, not another draw of the 22.38 agent. Lantern ve
 The kernel that restores the play has been committed and not submitted. Its commit polled the gateway for 10 minutes. The gateway stayed down. It then played one rehearsal game, `ft09`, for 5 minutes. The harness score was 47.62, 4 of 6 levels, 49 actions. An earlier commit of the same notebook, same cap, scored 28.57, 3 of 6 levels, 35 actions. Those numbers are harness scores on one public game. They are not Kaggle public scores. The play did not write `submission.parquet`. The gateway writes that file, and a commit has no gateway. The notebook printed that and then wrote the one-row placeholder. That file is 2648 bytes. The two official zeros are 3411 bytes. The 22.38 file is 3808 bytes.
 
 The public score is still 22.38. Nothing has been submitted since ref 57819886. No submissions remain until 8:00 PM EDT on 31 October.
+
+## 30 October, 10:26 PM EDT
+
+Bronze on this leaderboard is the top 10 percent. With 4995 teams, that is rank 499, and rank 499 scores 31.36. Rank 500 scores 31.35. A new entry tied at 31.36 can fall outside the medal, so the score that clears bronze is above 31.36. Our score is 22.38, rank 2139. The gap is 8.98 points. Silver at rank 249 is 32.66. Gold at rank 19 is 39.69.
+
+One public notebook on the same model image as the 22.38 kernel, `lalalia9/arc3-franzen-v19`, says its own public score is 31.46, and that the only harness change is a solved-level memory patch. 31.46 would sit inside bronze. That score is theirs. A new kernel copies that patch and treats a set `ARC_BASE_URL` as a scoring run. It is pushed and not submitted. The next window is 8:00 PM EDT on 31 October. Nothing is submitted before then, and nothing is submitted unless the commit shows the benchmark ran and the scoring path still refuses a placeholder file.
