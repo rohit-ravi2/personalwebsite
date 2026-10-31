@@ -1,0 +1,92 @@
+---
+title: "What the body can recover"
+startDate: 2026-10-30
+description: "A balance law derived from the robot's own mass, feet, and torque limits, scored against two baselines on a sealed set of pushes, slopes, and loads."
+tags: ["Robotics", "Simulation", "Humanoids"]
+draft: false
+order: 11
+---
+
+export const Clip = ({ src, caption }) => (
+  <figure style={{ margin: "1.25rem 0 2rem" }}>
+    <video src={src} controls muted loop playsInline preload="metadata" style={{ width: "100%", borderRadius: "10px", background: "#0a101a" }} />
+    <figcaption style={{ fontSize: "0.92rem", lineHeight: 1.55, marginTop: "0.5rem" }}>{caption}</figcaption>
+  </figure>
+);
+
+Part of the [Robotic Movement](/posts/robotic-movement/) series.
+
+## The law
+
+Balance here means keeping the body inside the set of states it can still return to a quiet stance. That set is computed from the MuJoCo model: mass, center of mass height, the sole, ankle torque, hip and arm inertia, joint speed and range, and the friction the situation leaves.
+
+The state is the divergent component of motion along the gravity line. On flat ground that is the usual capture point. On a slope the position is where the gravity line through the center of mass meets the floor. A sensing delay grows the error by exp(ω × delay).
+
+Five effects can answer, and the body picks the cheapest one that the model says is feasible:
+
+- Ankle, when the capture point is inside the sole, the torque-limited center of pressure, and a friction disk of radius μh.
+- Hip or arm angular momentum, which widens that set by H_max / (M ω h). H_max is the smaller of the speed limit and the range limit of that flywheel.
+- A step, when a foothold in the leg's sampled reach covers the capture point after the model's own step time.
+- A grab, when a rail is inside the arm's sampled reach and adding it to the sole covers the capture point.
+
+The task asks for an effect. It does not send a joint trajectory. The same three controllers share the servos and the stepper. What changes is the decision. The gain is chosen on G1 only, four candidates each, and then frozen.
+
+This is a MuJoCo simulation at each model's own timestep. It is not a hardware result.
+
+## Dev, then the sealed set
+
+Dev is seven G1 conditions: quiet stance, 50 N forward and back, 120 N forward and back, a 160 N lateral push, and 70 N forward on friction 0.5. The derived law passed 4 of 7. Fixed-gain ankle and hip PD passed 3. Textbook capture-point stepping passed 3. The frozen gains are 0.15 for PD, 0.50 for capture-point stepping, and 0.60 for the derived law. Those seven conditions are tuning, not the claim.
+
+The sealed set was written down before these rollouts. Seventeen conditions, three bodies (Unitree G1, Unitree H1, Booster T1), three frozen methods. A pass is two and a half seconds with no non-foot contact on the ground, the body staying up, and a quiet stance over the last 0.4 s.
+
+| condition | G1 PD | G1 CP | G1 law | H1 PD | H1 CP | H1 law | T1 PD | T1 CP | T1 law |
+|---|---|---|---|---|---|---|---|---|---|
+| 90 N forward | tip | fall | tip | fall | pass | pass | tip | pass | tip |
+| 160 N backward | fall | tip | tip | fall | tip | tip | tip | tip | tip |
+| 70 N lateral | pass | pass | pass | pass | pass | pass | pass | pass | pass |
+| 80 N diagonal | tip | pass | pass | fall | pass | pass | pass | pass | pass |
+| friction 0.3, 100 N | tip | tip | tip | fall | tip | tip | tip | tip | tip |
+| friction 0.12, 80 N | tip | tip | tip | pass | pass | pass | tip | tip | tip |
+| 8° slope, 50 N down | tip | tip | tip | tip | tip | tip | tip | tip | tip |
+| 8° slope, 50 N up | tip | tip | tip | tip | pass | tip | tip | tip | tip |
+| 3 kg load, 60 N | tip | tip | tip | fall | pass | pass | pass | pass | tip |
+| 4 kg load, no push | pass | pass | pass | pass | pass | pass | pass | pass | pass |
+| 6 cm bar, 50 N forward | fall | fall | tip | fall | tip | fall | fall | fall | tip |
+| 6 cm bar, 40 N lateral | pass | pass | pass | fall | tip | fall | pass | pass | pass |
+| 5 cm stair, 90 N | tip | tip | tip | fall | pass | pass | tip | pass | tip |
+| 40 ms delay, 80 N | tip | fall | tip | fall | tip | tip | tip | tip | tip |
+| 80 ms delay, 60 N | tip | tip | tip | fall | fall | tip | pass | pass | tip |
+| rail, 180 N | tip | tip | tip | unsettled | tip | unsettled | tip | tip | tip |
+| no rail, 180 N | tip | tip | tip | unsettled | tip | tip | tip | tip | tip |
+
+Held-out passes, out of 17:
+
+- G1: PD 3, capture-point 4, derived law 4
+- H1: PD 3, capture-point 8, derived law 7
+- T1: PD 6, capture-point 8, derived law 4
+
+Across all 51 sealed trials the capture-point stepper passes 20, the derived law 15, and PD 12. A carried load with no push stands on every body. A moderate lateral push stands on every body. The 160 N backward push, the 8° downhill push, and the 180 N push with or without a rail stand on none.
+
+Of the derived law's 36 failures, 33 are tips, 2 are collapses (H1 on the 6 cm bar), and 1 is a body that stays up and does not settle (H1, holding the rail under 180 N).
+
+## The set is optimistic
+
+The prediction is made before the rollout, from the settled state plus the push as an impulse. On the 51 sealed trials of the derived law it called every one recoverable. Fifteen stood. Accuracy is 15/51.
+
+When the cheapest feasible effect was the ankle, 14 of 21 stood. When it was the hip flywheel, 1 of 30 stood. The hip term widens the set by 15 to 50 cm, which the model's inertia and torque limits allow on paper. The execution does not cash that out. That gap is the result.
+
+## Clips
+
+One pass and one failure for each body, re-simulated from the frozen law. The camera is fixed, from the side.
+
+<Clip src="/videos/robotic-movement/balance/g1-lateral-pass.mp4" caption="G1. A 70 N push to the side for 0.18 s. The body stays up and settles." />
+
+<Clip src="/videos/robotic-movement/balance/g1-hard-fail.mp4" caption="G1. A 160 N push backward for 0.10 s. The set called the hip flywheel. The body tips." />
+
+<Clip src="/videos/robotic-movement/balance/h1-push-pass.mp4" caption="H1. A 90 N push forward for 0.12 s. The body returns to stance." />
+
+<Clip src="/videos/robotic-movement/balance/h1-slope-fail.mp4" caption="H1. An 8 degree slope and a 50 N push downhill. The body tips." />
+
+<Clip src="/videos/robotic-movement/balance/t1-diagonal-pass.mp4" caption="T1. An 80 N diagonal push for 0.12 s. The body stays up." />
+
+<Clip src="/videos/robotic-movement/balance/t1-narrow-fail.mp4" caption="T1. A 6 cm support and a 50 N push forward. The body tips." />
