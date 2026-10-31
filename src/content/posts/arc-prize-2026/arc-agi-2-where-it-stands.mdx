@@ -35,6 +35,12 @@ The next kernel, `rohitravi2/arc2-nvarc-rescore16-rr` version 1, was pushed at 1
 
 Kaggle accepted submission ref 57819901 at 00:00:31 UTC on 31 October. Kernel `rohitravi2/arc2-nvarc-rescore16-rr` version 1. Status at submit time: pending. There is no public score yet. This is the one submission for the UTC day that opened at 20:00 EDT. Ref 57818172 was still pending when this one went in. The next UTC day opens at 20:00 EDT on 31 October.
 
+## Next kernel, pushed 30 October 20:08 EDT
+
+`rohitravi2/arc2-nvarc-seed3-rr` version 1 was pushed at 20:08 EDT. The commit was running then. It is not submitted. The UTC day that opened at 20:00 EDT already used its one submission.
+
+The two submitted kernels share the same test-time-training seeds: pass A is 1, 42, and 2. This copy changes those seeds and nothing else in the model. Pass A is 101, 242, and 202. The leftover-time pass is 117, 337, and 229. Rescoring stays at 16 views. The 25 October note treats the spread from 29.72 to 33.89 as best-of-N plus run variance on one pipeline. This kernel is another draw from that pipeline. It is not a new model. The four-task commit has not finished, so there is no smoke-test number for it yet.
+
 ## What is not in this run
 
 A program-synthesis leg was attempted twice earlier and produced no score. The first attempt loaded a grid model that has no chat template, so every task errored. The second had its time budget set to zero. It stays out until a commit actually finishes.
@@ -43,4 +49,4 @@ A separate CPU grammar, scored only on the training distribution, solves 81 of 8
 
 ## The submissions left
 
-The competition allows one submission per UTC day, and the deadline is 2 November 2026 at 23:59 UTC, which is 6:59 PM EST. The UTC day changes at 8:00 PM EDT on 30 October and again on 31 October, then at 7:00 PM EST on 1 and 2 November. The plan is to use each of those days: the throughput-patched pipeline first, then a variant that rescores each candidate under 16 views instead of 8, then whatever the returned scores justify. Each official score will get its own note, with the kernel version and the public number Kaggle returns. A commit-run printout will not be reported as a leaderboard score.
+The competition allows one submission per UTC day, and the deadline is 2 November 2026 at 23:59 UTC, which is 6:59 PM EST. The UTC day changes at 8:00 PM EDT on 30 October and again on 31 October, then at 7:00 PM EST on 1 and 2 November. The plan is to use each of those days: the throughput-patched pipeline first, then 16-view rescoring, then an independent seed of that same pipeline if its commit finishes cleanly. Later days follow whatever the returned scores justify. Each official score will get its own note, with the kernel version and the public number Kaggle returns. A commit-run printout will not be reported as a leaderboard score.
